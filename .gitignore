@@ -1,0 +1,3 @@
+# ignore select config files
+Configuration/auth.json
+Configuration/config.json
