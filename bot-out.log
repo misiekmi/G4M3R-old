@@ -1,0 +1,13 @@
+{"level":"info","message":"Started bot application","timestamp":"2017-01-20T00:01:01.939Z"}
+{"level":"info","message":"Shard 1/1 connected: 1 guilds","timestamp":"2017-01-20T00:01:02.577Z"}
+{"level":"info","message":"All shards connected","timestamp":"2017-01-20T00:01:02.588Z"}
+{"level":"info","message":"Created documents for 1 new servers","timestamp":"2017-01-20T00:01:02.646Z"}
+{"level":"info","message":"Successfully inserted 1 new server documents into database","timestamp":"2017-01-20T00:01:02.693Z"}
+{"level":"info","message":"Started the best Discord bot, version 4.0\n     _\t\t\t\t\t\t\t\t\t\t ____\t\t_   \n\t/ \\__\t  _____  ___  ___  _ __ ___   ___| __ )  ___ | |_ \n   / _ \\ \\ /\\ / / _ \\/ __|/ _ \\| '_ ` _ \\ / _ \\  _ \\ / _ \\| __|\n  / ___ \\ V  V /  __/\\__ \\ (_) | | | | | |  __/ |_) | (_) | |_ \n /_/   \\_\\_/\\_/ \\___||___/\\___/|_| |_| |_|\\___|____/ \\___/ \\__|\n","timestamp":"2017-01-20T00:01:02.723Z"}
+{"level":"info","message":"Opened web interface on 192.168.178.80:6666","timestamp":"2017-01-20T00:01:02.729Z"}
+{"svrid":"223909216866402304","chid":"223909216866402304","usrid":"154380076828459008","level":"info","message":"Treating '@g4m3r-beta' as a chatterbot prompt","timestamp":"2017-01-20T00:03:37.598Z"}
+{"code":11000,"index":0,"errmsg":"E11000 duplicate key error collection: g4m3r.users index: _id_ dup key: { : \"154380076828459008\" }","op":{"_id":"154380076828459008","upvoted_gallery_extensions":[],"isProfilePublic":true,"profile_background_image":"http://i.imgur.com/8UIlbtg.jpg","reminders":[],"server_nicks":[],"points":1,"past_names":[],"__v":0}}
+{"svrid":"223909216866402304","chid":"223909216866402304","usrid":"154380076828459008","level":"info","message":"Treating '@g4m3r-beta hello' as a chatterbot prompt","timestamp":"2017-01-20T00:04:16.557Z"}
+{"svrid":"223909216866402304","chid":"223909216866402304","usrid":"154380076828459008","level":"info","message":"Treating '@g4m3r-beta prefix -' as a command","timestamp":"2017-01-20T00:04:37.630Z"}
+{"svrid":"223909216866402304","chid":"223909216866402304","usrid":"154380076828459008","level":"info","message":"Treating '-help' as a command","timestamp":"2017-01-20T00:04:40.885Z"}
+{"usrid":"154380076828459008","level":"info","message":"Treating 'config g4m3r' as a PM command","timestamp":"2017-01-20T00:05:19.196Z"}
