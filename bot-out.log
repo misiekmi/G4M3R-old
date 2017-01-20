@@ -11,3 +11,11 @@
 {"svrid":"223909216866402304","chid":"223909216866402304","usrid":"154380076828459008","level":"info","message":"Treating '@g4m3r-beta prefix -' as a command","timestamp":"2017-01-20T00:04:37.630Z"}
 {"svrid":"223909216866402304","chid":"223909216866402304","usrid":"154380076828459008","level":"info","message":"Treating '-help' as a command","timestamp":"2017-01-20T00:04:40.885Z"}
 {"usrid":"154380076828459008","level":"info","message":"Treating 'config g4m3r' as a PM command","timestamp":"2017-01-20T00:05:19.196Z"}
+{"level":"info","message":"Started bot application","timestamp":"2017-01-20T00:48:10.006Z"}
+{"level":"info","message":"Shard 1/1 connected: 1 guilds","timestamp":"2017-01-20T00:48:10.566Z"}
+{"level":"info","message":"All shards connected","timestamp":"2017-01-20T00:48:10.568Z"}
+{"level":"info","message":"Started the best Discord bot, version 0.1\n     _\t\t\t\t\t\t\t\t\t\t ____\t\t_   \n\t/ \\__\t  _____  ___  ___  _ __ ___   ___| __ )  ___ | |_ \n   / _ \\ \\ /\\ / / _ \\/ __|/ _ \\| '_ ` _ \\ / _ \\  _ \\ / _ \\| __|\n  / ___ \\ V  V /  __/\\__ \\ (_) | | | | | |  __/ |_) | (_) | |_ \n /_/   \\_\\_/\\_/ \\___||___/\\___/|_| |_| |_|\\___|____/ \\___/ \\__|\n","timestamp":"2017-01-20T00:48:10.638Z"}
+{"level":"info","message":"Opened web interface on 127.0.0.1:8080","timestamp":"2017-01-20T00:48:10.643Z"}
+{"level":"info","message":"Shard 1/1 connected: 1 guilds","timestamp":"2017-01-20T00:54:25.592Z"}
+{"svrid":"223909216866402304","level":"info","message":"Left server 'g4m3r'","timestamp":"2017-01-20T00:58:46.276Z"}
+{"svrid":"223909216866402304","level":"info","message":"Joined server 'g4m3r'","timestamp":"2017-01-20T01:01:47.670Z"}
