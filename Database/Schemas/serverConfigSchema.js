@@ -16,6 +16,9 @@ const getCommands = () => {
 
 // Server's configs (commands, admins, etc.)
 module.exports = {
+	gevent: [new mongoose.Schema({
+		event_title: {type: String, required: true}
+	})],
 	admins: [new mongoose.Schema({
 		_id: {type: String, required: true},
 		level: {type: Number, default: 1, enum: [1, 2, 3]}
