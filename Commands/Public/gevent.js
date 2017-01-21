@@ -14,6 +14,7 @@ this.eTitle = "";
 		});
 		serverDocument.config.gevent.push({event_title: this.eTitle});
 };
+
 /*
 		this.list = () => {
 			const gevents = serverDocument.config.gevent.map(eve => {
