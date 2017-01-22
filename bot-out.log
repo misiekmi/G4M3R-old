@@ -1,22 +1,10 @@
-{"level":"info","message":"Started bot application","timestamp":"2017-01-20T00:01:01.939Z"}
-{"level":"info","message":"Shard 1/1 connected: 1 guilds","timestamp":"2017-01-20T00:01:02.577Z"}
-{"level":"info","message":"All shards connected","timestamp":"2017-01-20T00:01:02.588Z"}
-{"level":"info","message":"Created documents for 1 new servers","timestamp":"2017-01-20T00:01:02.646Z"}
-{"level":"info","message":"Successfully inserted 1 new server documents into database","timestamp":"2017-01-20T00:01:02.693Z"}
-{"level":"info","message":"Started the best Discord bot, version 4.0\n     _\t\t\t\t\t\t\t\t\t\t ____\t\t_   \n\t/ \\__\t  _____  ___  ___  _ __ ___   ___| __ )  ___ | |_ \n   / _ \\ \\ /\\ / / _ \\/ __|/ _ \\| '_ ` _ \\ / _ \\  _ \\ / _ \\| __|\n  / ___ \\ V  V /  __/\\__ \\ (_) | | | | | |  __/ |_) | (_) | |_ \n /_/   \\_\\_/\\_/ \\___||___/\\___/|_| |_| |_|\\___|____/ \\___/ \\__|\n","timestamp":"2017-01-20T00:01:02.723Z"}
-{"level":"info","message":"Opened web interface on 192.168.178.80:6666","timestamp":"2017-01-20T00:01:02.729Z"}
-{"svrid":"223909216866402304","chid":"223909216866402304","usrid":"154380076828459008","level":"info","message":"Treating '@g4m3r-beta' as a chatterbot prompt","timestamp":"2017-01-20T00:03:37.598Z"}
-{"code":11000,"index":0,"errmsg":"E11000 duplicate key error collection: g4m3r.users index: _id_ dup key: { : \"154380076828459008\" }","op":{"_id":"154380076828459008","upvoted_gallery_extensions":[],"isProfilePublic":true,"profile_background_image":"http://i.imgur.com/8UIlbtg.jpg","reminders":[],"server_nicks":[],"points":1,"past_names":[],"__v":0}}
-{"svrid":"223909216866402304","chid":"223909216866402304","usrid":"154380076828459008","level":"info","message":"Treating '@g4m3r-beta hello' as a chatterbot prompt","timestamp":"2017-01-20T00:04:16.557Z"}
-{"svrid":"223909216866402304","chid":"223909216866402304","usrid":"154380076828459008","level":"info","message":"Treating '@g4m3r-beta prefix -' as a command","timestamp":"2017-01-20T00:04:37.630Z"}
-{"svrid":"223909216866402304","chid":"223909216866402304","usrid":"154380076828459008","level":"info","message":"Treating '-help' as a command","timestamp":"2017-01-20T00:04:40.885Z"}
-{"usrid":"154380076828459008","level":"info","message":"Treating 'config g4m3r' as a PM command","timestamp":"2017-01-20T00:05:19.196Z"}
-{"level":"info","message":"Started bot application","timestamp":"2017-01-20T00:48:10.006Z"}
-{"level":"info","message":"Shard 1/1 connected: 1 guilds","timestamp":"2017-01-20T00:48:10.566Z"}
-{"level":"info","message":"All shards connected","timestamp":"2017-01-20T00:48:10.568Z"}
-{"level":"info","message":"Started the best Discord bot, version 0.1\n     _\t\t\t\t\t\t\t\t\t\t ____\t\t_   \n\t/ \\__\t  _____  ___  ___  _ __ ___   ___| __ )  ___ | |_ \n   / _ \\ \\ /\\ / / _ \\/ __|/ _ \\| '_ ` _ \\ / _ \\  _ \\ / _ \\| __|\n  / ___ \\ V  V /  __/\\__ \\ (_) | | | | | |  __/ |_) | (_) | |_ \n /_/   \\_\\_/\\_/ \\___||___/\\___/|_| |_| |_|\\___|____/ \\___/ \\__|\n","timestamp":"2017-01-20T00:48:10.638Z"}
-{"level":"info","message":"Opened web interface on 127.0.0.1:8080","timestamp":"2017-01-20T00:48:10.643Z"}
-{"level":"info","message":"Shard 1/1 connected: 1 guilds","timestamp":"2017-01-20T00:54:25.592Z"}
-{"svrid":"223909216866402304","level":"info","message":"Left server 'g4m3r'","timestamp":"2017-01-20T00:58:46.276Z"}
-{"svrid":"223909216866402304","level":"info","message":"Joined server 'g4m3r'","timestamp":"2017-01-20T01:01:47.670Z"}
-{"message":"Failed to connect to database","stack":"MongooseError: Ran out of retries trying to reconnect to \"localhost:27017\". Try setting `server.reconnectTries` and `server.reconnectInterval` to something higher.\n    at DisconnectedError (C:\\Coding\\G4M3R\\node_modules\\mongoose\\lib\\error\\disconnected.js:21:11)\n    at Server.<anonymous> (C:\\Coding\\G4M3R\\node_modules\\mongoose\\lib\\drivers\\node-mongodb-native\\connection.js:64:31)\n    at emitOne (events.js:101:20)\n    at Server.emit (events.js:188:7)\n    at Pool.<anonymous> (C:\\Coding\\G4M3R\\node_modules\\mongodb-core\\lib\\topologies\\server.js:317:16)\n    at emitOne (events.js:96:13)\n    at Pool.emit (events.js:188:7)\n    at Connection.<anonymous> (C:\\Coding\\G4M3R\\node_modules\\mongodb-core\\lib\\connection\\pool.js:307:16)\n    at emitTwo (events.js:106:13)\n    at Connection.emit (events.js:191:7)\n    at Socket.<anonymous> (C:\\Coding\\G4M3R\\node_modules\\mongodb-core\\lib\\connection\\connection.js:175:49)\n    at Object.onceWrapper (events.js:290:19)\n    at emitOne (events.js:96:13)\n    at Socket.emit (events.js:188:7)\n    at emitErrorNT (net.js:1281:8)\n    at _combinedTickCallback (internal/process/next_tick.js:74:11)\n    at process._tickDomainCallback (internal/process/next_tick.js:122:9)","name":"DisconnectedError","level":"error","timestamp":"2017-01-20T01:19:31.652Z"}
+{"level":"info","message":"Started bot application","timestamp":"2017-01-21T23:56:43.617Z"}
+{"level":"info","message":"Shard 1/1 connected: 1 guilds","timestamp":"2017-01-21T23:56:44.091Z"}
+{"level":"info","message":"All shards connected","timestamp":"2017-01-21T23:56:44.095Z"}
+{"level":"info","message":"Started the best Discord bot, version 0.1\n     _\t\t\t\t\t\t\t\t\t\t ____\t\t_   \n\t/ \\__\t  _____  ___  ___  _ __ ___   ___| __ )  ___ | |_ \n   / _ \\ \\ /\\ / / _ \\/ __|/ _ \\| '_ ` _ \\ / _ \\  _ \\ / _ \\| __|\n  / ___ \\ V  V /  __/\\__ \\ (_) | | | | | |  __/ |_) | (_) | |_ \n /_/   \\_\\_/\\_/ \\___||___/\\___/|_| |_| |_|\\___|____/ \\___/ \\__|\n","timestamp":"2017-01-21T23:56:44.414Z"}
+{"level":"info","message":"Opened web interface on 127.0.0.1:7777","timestamp":"2017-01-21T23:56:44.439Z"}
+{"level":"info","message":"Started bot application","timestamp":"2017-01-21T23:58:52.257Z"}
+{"level":"info","message":"Shard 1/1 connected: 1 guilds","timestamp":"2017-01-21T23:58:52.675Z"}
+{"level":"info","message":"All shards connected","timestamp":"2017-01-21T23:58:52.679Z"}
+{"level":"info","message":"Started the best Discord bot, version 0.1\n     _\t\t\t\t\t\t\t\t\t\t ____\t\t_   \n\t/ \\__\t  _____  ___  ___  _ __ ___   ___| __ )  ___ | |_ \n   / _ \\ \\ /\\ / / _ \\/ __|/ _ \\| '_ ` _ \\ / _ \\  _ \\ / _ \\| __|\n  / ___ \\ V  V /  __/\\__ \\ (_) | | | | | |  __/ |_) | (_) | |_ \n /_/   \\_\\_/\\_/ \\___||___/\\___/|_| |_| |_|\\___|____/ \\___/ \\__|\n","timestamp":"2017-01-21T23:58:52.928Z"}
+{"level":"info","message":"Opened web interface on 127.0.0.1:7777","timestamp":"2017-01-21T23:58:52.951Z"}
