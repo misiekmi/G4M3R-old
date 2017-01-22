@@ -1,43 +1,25 @@
 module.exports = (bot, db, config, winston, userDocument, serverDocument, channelDocument, memberDocument, msg, suffix, commandData) => {
-this.eTitle = "test";
-this.eContent = "bla";
-this.isCommand = true,
-this.isLocked = false;
-//this._id = "bla";
+    let title, start;
 
+    msg.channel.createMessage("What is the title the event?").then(() => {
+        bot.awaitMessage(msg.channel.id, msg.author.id, message => {
+            title = message.content.trim();
 
-	winston.info("Event command triggered", {svrid: msg.guild.id, chid: msg.channel.id, usrid: msg.author.id});
-	msg.channel.createMessage("Event command triggered");
+            msg.channel.createMessage("When does the event start?").then(() => {
+                bot.awaitMessage(msg.channel.id, msg.author.id, message => {
+                    start = Date.now();
 
-		msg.channel.createMessage("What is the title or your event?").then(() => {
-			bot.awaitMessage(msg.channel.id, msg.author.id, message => {
-					this.eTitle = message.content.trim();
+                    if (!title)
+                        title = "(no title)";
 
-					msg.channel.createMessage(`**Your event:**\n\`\`\`\nTitle: ${this.eTitle}\nhas been saved successfully\`\`\``);
+                    serverDocument.gameEvents.push({
+                        e_title: title,
+                        start: start
+                    });
 
-					this.save = () => {
-						serverDocument.config.tags.list.push({
-							_id: this.eTitle,
-							content: this.eContent,
-							isCommand: this.isCommand,
-							isLocked: this.isLocked
-						});
-					};
-
-					this.save();
-					/*
-					serverDocument.gameEvents.push({
-						e_title: this.eTitle
-					});
-					*/
-
-			});
-		});
-};
-
-/*
-		this.list = () => {
-			const gevents = serverDocument.config.gevent.map(eve => {
-				return `**${eve.event_title}**`;
-			});
-*/
+                    msg.channel.createMessage(`**Your event:**\n\`\`\`\nTitle: ${title}\nStart: ${start}\nhas been saved successfully\`\`\``);
+                });
+            });
+        });
+    });
+}
