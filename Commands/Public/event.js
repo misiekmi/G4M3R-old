@@ -9,12 +9,12 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
                 bot.awaitMessage(msg.channel.id, msg.author.id, message => {
                     start = Date.now();
 
-                    if (!title)
-                        title = "(no title)";
+                    serverDocument.gameEvents.push({e_title: title, start: start}); // create event, push it to gameEvents
 
-                    serverDocument.gameEvents.push({
-                        e_title: title,
-                        start: start
+                    serverDocument.save(err => {    // 'save' the server and handle error
+                        if(err) {
+                            winston.error("Failed to save server data for message", {svrid: msg.guild.id}, err);
+                        }
                     });
 
                     msg.channel.createMessage(`**Your event:**\n\`\`\`\nTitle: ${title}\nStart: ${start}\nhas been saved successfully\`\`\``);
@@ -22,4 +22,4 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
             });
         });
     });
-}
+};
