@@ -1,5 +1,8 @@
 module.exports = (bot, db, config, winston, userDocument, serverDocument, channelDocument, memberDocument, msg, suffix, commandData) => {
-this.eTitle = "";
+this.eTitle = "test";
+this.eContent = "bla";
+this.isCommand = true,
+this.isLocked = false;
 //this._id = "bla";
 
 
@@ -12,14 +15,24 @@ this.eTitle = "";
 
 					msg.channel.createMessage(`**Your event:**\n\`\`\`\nTitle: ${this.eTitle}\nhas been saved successfully\`\`\``);
 
-					serverDocument.config.gamingEvents.push({eTitle: this.eTitle});
+					this.save = () => {
+						serverDocument.config.tags.list.push({
+							_id: this.eTitle,
+							content: this.eContent,
+							isCommand: this.isCommand,
+							isLocked: this.isLocked
+						});
+					};
+
+					this.save();
+					/*
+					serverDocument.gameEvents.push({
+						e_title: this.eTitle
+					});
+					*/
+
 			});
 		});
-		/*
-		serverDocument.gameEvents.push({
-			e_title: this.eTitle
-		});
-		*/
 };
 
 /*
