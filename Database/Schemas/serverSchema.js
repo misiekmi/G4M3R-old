@@ -8,7 +8,7 @@ module.exports = new mongoose.Schema({
 	members: [require("./serverMembersSchema.js")],
 	games: [require("./serverGamesSchema.js")],
 	//events
-	//gevents: [require("./serverEventsSchema.js")],
+	gameEvents: [require("./serverEventsSchema.js")],
 	channels: [require("./serverChannelsSchema.js")],
 	command_usage: mongoose.Schema.Types.Mixed,
 	messages_today: {type: Number, default: 0},

@@ -35,7 +35,7 @@
         }
     },
     "public": {
-      "gevent": {
+      "event": {
           "usage": "",
           "description": "Create / Edit events people can RSVP to",
           "defaults": {
