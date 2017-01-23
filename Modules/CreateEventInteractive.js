@@ -4,8 +4,8 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
     const hasDeletePerm = msg.channel.permissionsOf(bot.user.id).has("manageMessages");
     let title, start, end, description;
 
-    // http://momentjs.com/docs/#/parsing/string-format/
-    const formats = [ "YYYY/MM/DD h:mm"];
+    // for format options, reference: http://momentjs.com/docs/#/parsing/string-format/
+    const formats = [ "YYYY/MM/DD H:mm", "YYYY/MM/DD h:mma", "YYYY/MM/DD"];
 
     // message prompt for title
     msg.channel.createMessage("What is the title the event?").then(bot_message => {
@@ -16,7 +16,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                 bot_message.delete().then(() => usr_message.delete());
 
             // message prompt for start date time
-            msg.channel.createMessage("When does the event start?").then(bot_message => {
+            msg.channel.createMessage("When does the event start? <\YYYY/MM/DD h:mm>").then(bot_message => {
                 bot.awaitMessage(msg.channel.id, msg.author.id, usr_message => {
 
                     start = moment(usr_message.content.trim(), formats, true);     // parse start time
@@ -25,7 +25,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
 
                     if (start.isValid())
                         // message prompt for end date time
-                        msg.channel.createMessage("When does the event end?").then(bot_message => {
+                        msg.channel.createMessage("When does the event end? <\YYYY/MM/DD h:mm>").then(bot_message => {
                             bot.awaitMessage(msg.channel.id, msg.author.id, usr_message => {
 
                                 end = moment(usr_message.content.trim(), formats, true);     // parse start time
