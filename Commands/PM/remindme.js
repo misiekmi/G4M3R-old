@@ -14,7 +14,7 @@ module.exports = (bot, db, config, winston, userDocument, msg, suffix, commandDa
 	} else {
 		const info = [];
 		userDocument.reminders.forEach(reminderDocument => {
-			info.push(`\`${reminderDocument.name}\` ${moment(reminderDocument.expiry_timestamp).toNow()}`);
+			info.push(`\`${reminderDocument.name}\` ${moment(reminderDocument.expiry_timestamp).fromNow()}`);
 		});
 		msg.channel.createMessage(info.join("\n") || `No reminders set yet, use \`${commandData.name} ${commandData.usage}\` ⏰`);
 	}
