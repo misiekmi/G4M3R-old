@@ -1,25 +1,25 @@
 // Import and setup files and modules
 const eventHandlers = {
-	ready: require("./Events/ready.js"),
-	shardReady: require("./Events/shardReady.js"),
-	guildCreate: require("./Events/guildCreate.js"),
-	guildUpdate: require("./Events/guildUpdate.js"),
-	guildDelete: require("./Events/guildDelete.js"),
-	channelDelete: require("./Events/channelDelete.js"),
-	guildRoleDelete: require("./Events/guildRoleDelete.js"),
-	guildMemberAdd: require("./Events/guildMemberAdd.js"),
-	guildMemberUpdate: require("./Events/guildMemberUpdate.js"),
-	guildMemberRemove: require("./Events/guildMemberRemove.js"),
-	guildBanAdd: require("./Events/guildBanAdd.js"),
-	guildBanRemove: require("./Events/guildBanRemove.js"),
-	message: require("./Events/messageCreate.js"),
-	messageUpdate: require("./Events/messageUpdate.js"),
-	messageDelete: require("./Events/messageDelete.js"),
-	presenceUpdate: require("./Events/presenceUpdate.js"),
-	userUpdate: require("./Events/userUpdate.js"),
-	voiceChannelJoin: require("./Events/voiceChannelJoin.js"),
-	voiceStateUpdate: require("./Events/voiceStateUpdate.js"),
-	voiceChannelLeave: require("./Events/voiceChannelLeave.js")
+    ready: require("./Events/ready.js"),
+    shardReady: require("./Events/shardReady.js"),
+    guildCreate: require("./Events/guildCreate.js"),
+    guildUpdate: require("./Events/guildUpdate.js"),
+    guildDelete: require("./Events/guildDelete.js"),
+    channelDelete: require("./Events/channelDelete.js"),
+    guildRoleDelete: require("./Events/guildRoleDelete.js"),
+    guildMemberAdd: require("./Events/guildMemberAdd.js"),
+    guildMemberUpdate: require("./Events/guildMemberUpdate.js"),
+    guildMemberRemove: require("./Events/guildMemberRemove.js"),
+    guildBanAdd: require("./Events/guildBanAdd.js"),
+    guildBanRemove: require("./Events/guildBanRemove.js"),
+    message: require("./Events/messageCreate.js"),
+    messageUpdate: require("./Events/messageUpdate.js"),
+    messageDelete: require("./Events/messageDelete.js"),
+    presenceUpdate: require("./Events/presenceUpdate.js"),
+    userUpdate: require("./Events/userUpdate.js"),
+    voiceChannelJoin: require("./Events/voiceChannelJoin.js"),
+    voiceStateUpdate: require("./Events/voiceStateUpdate.js"),
+    voiceChannelLeave: require("./Events/voiceChannelLeave.js")
 };
 const database = require("./Database/Driver.js");
 
@@ -33,6 +33,7 @@ const domain = require("domain");
 winston.add(winston.transports.File, {
 	filename: "bot-out.log"
 });
+
 
 // Connect to and initialize database
 database.initialize(config.db_url, err => {

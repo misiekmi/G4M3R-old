@@ -2,3 +2,6 @@
 Configuration/auth.json
 Configuration/config.json
 bot-out.log
+
+#ignore selected folders
+node_modules/
