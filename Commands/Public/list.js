@@ -4,7 +4,7 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
 			return `${listDocument.isCompleted ? "✅" : "📝"} **${++i}:** ${listDocument.content}`;
 		}).join("\n") || (`❎ No to-do list items! Use \`${bot.getCommandPrefix(msg.guild, serverDocument)}${commandData.name} <content>\` to add one.`));
 	};
-	
+
 	if(suffix) {
 		if(suffix.indexOf("|")>-1) {
 			const args = suffix.split("|");

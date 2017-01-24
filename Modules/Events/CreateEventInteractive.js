@@ -2,7 +2,7 @@ const moment = require("moment");
 
 module.exports = (bot, db, winston, serverDocument, msg) => {
     const hasDeletePerm = msg.channel.permissionsOf(bot.user.id).has("manageMessages");
-    let title, start, end, description;
+    let title, start, end, description, amountMembers;
 
     // for format options, reference: http://momentjs.com/docs/#/parsing/string-format/
     const formats = [ "YYYY/MM/DD H:mm", "YYYY/MM/DD h:mma", "YYYY/MM/DD"];
