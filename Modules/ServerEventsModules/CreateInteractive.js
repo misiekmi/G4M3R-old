@@ -52,23 +52,28 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                                                     msg.channel.createMessage("Something went wrong! I failed to save your event. It's my dev's fault!");
                                                 }
                                                 else {
-                                                    msg.channel.createMessage(
-                                                        `**Your event:**\n\`\`\`\n` +
-                                                        `Title: ${title}` +
-                                                        `\nStart: ${start.toString()}` +
-                                                        `\nEnd: ${end.toString()}` +
-                                                        `\nDescription: ${description}\`\`\`` +
-                                                        `**has been saved successfully**`);
+                                                    msg.channel.createMessage({
+                                                        embed: {
+                                                            author: {
+                                                                name: "~~ Event successfully created ~~",
+                                                            },
+                                                            color: 0xffffff,
+                                                            fields: [{name:"**Title**",value:`${title}`,inline:true},
+                                                                {name:"**Description**",value:`${description}`,inline:true},
+                                                                {name:"**Start**",value:`${moment(start)}`,inline:true},
+                                                                {name:"**End**",value:`${moment(end)}`,inline:true}]
+                                                        }
+                                                    })
                                                 }
                                             });
                                         });
                                     });
                                 else
-                                    msg.channel.createMessage("I couldn't understand that date and time message. Exiting interactive");
+                                    msg.channel.createMessage("I couldn't understand that last message. Try using the form <\YYYY/MM/DD H:mm>.");
                             });
                         });
                     else
-                        msg.channel.createMessage("I couldn't understand that date and time message. Exiting interactive");
+                        msg.channel.createMessage("I couldn't understand that last message. Try using the form <\YYYY/MM/DD H:mm>.");
                 });
             });
         });
