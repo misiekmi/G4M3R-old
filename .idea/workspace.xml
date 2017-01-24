@@ -1,0 +1,1714 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="517e6001-f11a-4c60-b51c-4c8f37aeefa9" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint-config-google/LICENSE" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint-config-google/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint-config-google/index.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint-config-google/package.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/CHANGELOG.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/LICENSE" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/README.md" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/bin/eslint.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/conf/blank-script.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/conf/category-list.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/conf/cli-options.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/conf/environments.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/conf/eslint-all.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/conf/eslint.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/conf/json-schema-schema.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/conf/replacements.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/api.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/ast-utils.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/cli-engine.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/cli.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/code-path-analysis/code-path-analyzer.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/code-path-analysis/code-path-segment.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/code-path-analysis/code-path-state.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/code-path-analysis/code-path.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/code-path-analysis/debug-helpers.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/code-path-analysis/fork-context.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/code-path-analysis/id-generator.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/config.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/config/autoconfig.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/config/config-file.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/config/config-initializer.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/config/config-ops.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/config/config-rule.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/config/config-validator.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/config/environments.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/config/plugins.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/eslint.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/file-finder.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/formatters/checkstyle.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/formatters/codeframe.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/formatters/compact.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/formatters/html-template-message.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/formatters/html-template-page.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/formatters/html-template-result.html" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/formatters/html.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/formatters/jslint-xml.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/formatters/json.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/formatters/junit.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/formatters/stylish.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/formatters/table.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/formatters/tap.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/formatters/unix.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/formatters/visualstudio.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/ignored-paths.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/internal-rules/.eslintrc.yml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/internal-rules/internal-consistent-docs-description.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/internal-rules/internal-no-invalid-meta.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/load-rules.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/logging.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/options.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rule-context.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/.eslintrc.yml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/accessor-pairs.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/array-bracket-spacing.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/array-callback-return.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/arrow-body-style.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/arrow-parens.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/arrow-spacing.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/block-scoped-var.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/block-spacing.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/brace-style.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/callback-return.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/camelcase.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/capitalized-comments.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/class-methods-use-this.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/comma-dangle.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/comma-spacing.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/comma-style.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/complexity.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/computed-property-spacing.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/consistent-return.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/consistent-this.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/constructor-super.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/curly.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/default-case.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/dot-location.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/dot-notation.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/eol-last.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/eqeqeq.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/func-call-spacing.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/func-name-matching.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/func-names.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/func-style.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/generator-star-spacing.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/global-require.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/guard-for-in.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/handle-callback-err.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/id-blacklist.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/id-length.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/id-match.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/indent.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/init-declarations.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/jsx-quotes.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/key-spacing.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/keyword-spacing.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/line-comment-position.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/linebreak-style.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/lines-around-comment.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/lines-around-directive.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/max-depth.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/max-len.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/max-lines.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/max-nested-callbacks.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/max-params.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/max-statements-per-line.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/max-statements.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/multiline-ternary.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/new-cap.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/new-parens.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/newline-after-var.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/newline-before-return.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/newline-per-chained-call.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-alert.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-array-constructor.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-await-in-loop.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-bitwise.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-caller.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-case-declarations.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-catch-shadow.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-class-assign.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-cond-assign.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-confusing-arrow.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-console.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-const-assign.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-constant-condition.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-continue.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-control-regex.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-debugger.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-delete-var.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-div-regex.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-dupe-args.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-dupe-class-members.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-dupe-keys.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-duplicate-case.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-duplicate-imports.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-else-return.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-empty-character-class.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-empty-function.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-empty-pattern.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-empty.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-eq-null.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-eval.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-ex-assign.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-extend-native.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-extra-bind.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-extra-boolean-cast.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-extra-label.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-extra-parens.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-extra-semi.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-fallthrough.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-floating-decimal.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-func-assign.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-global-assign.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-implicit-coercion.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-implicit-globals.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-implied-eval.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-inline-comments.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-inner-declarations.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-invalid-regexp.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-invalid-this.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-irregular-whitespace.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-iterator.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-label-var.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-labels.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-lone-blocks.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-lonely-if.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-loop-func.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-magic-numbers.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-mixed-operators.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-mixed-requires.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-mixed-spaces-and-tabs.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-multi-assign.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-multi-spaces.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-multi-str.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-multiple-empty-lines.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-native-reassign.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-negated-condition.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-negated-in-lhs.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-nested-ternary.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-new-func.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-new-object.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-new-require.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-new-symbol.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-new-wrappers.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-new.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-obj-calls.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-octal-escape.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-octal.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-param-reassign.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-path-concat.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-plusplus.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-process-env.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-process-exit.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-proto.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-prototype-builtins.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-redeclare.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-regex-spaces.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-restricted-globals.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-restricted-imports.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-restricted-modules.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-restricted-properties.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-restricted-syntax.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-return-assign.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-return-await.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-script-url.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-self-assign.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-self-compare.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-sequences.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-shadow-restricted-names.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-shadow.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-spaced-func.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-sparse-arrays.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-sync.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-tabs.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-template-curly-in-string.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-ternary.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-this-before-super.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-throw-literal.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-trailing-spaces.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-undef-init.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-undef.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-undefined.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-underscore-dangle.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-unexpected-multiline.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-unmodified-loop-condition.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-unneeded-ternary.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-unreachable.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-unsafe-finally.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-unsafe-negation.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-unused-expressions.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-unused-labels.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-unused-vars.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-use-before-define.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-useless-call.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-useless-computed-key.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-useless-concat.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-useless-constructor.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-useless-escape.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-useless-rename.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-useless-return.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-var.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-void.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-warning-comments.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-whitespace-before-property.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/no-with.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/object-curly-newline.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/object-curly-spacing.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/object-property-newline.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/object-shorthand.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/one-var-declaration-per-line.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/one-var.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/operator-assignment.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/operator-linebreak.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/padded-blocks.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/prefer-arrow-callback.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/prefer-const.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/prefer-destructuring.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/prefer-numeric-literals.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/prefer-promise-reject-errors.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/prefer-reflect.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/prefer-rest-params.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/prefer-spread.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/prefer-template.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/quote-props.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/quotes.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/radix.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/require-await.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/require-jsdoc.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/require-yield.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/rest-spread-spacing.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/semi-spacing.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/semi.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/sort-imports.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/sort-keys.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/sort-vars.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/space-before-blocks.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/space-before-function-paren.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/space-in-parens.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/space-infix-ops.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/space-unary-ops.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/spaced-comment.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/strict.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/symbol-description.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/template-curly-spacing.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/unicode-bom.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/use-isnan.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/valid-jsdoc.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/valid-typeof.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/vars-on-top.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/wrap-iife.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/wrap-regex.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/yield-star-spacing.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/rules/yoda.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/testers/event-generator-tester.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/testers/rule-tester.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/timing.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/token-store.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/util/comment-event-generator.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/util/glob-util.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/util/glob.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/util/hash.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/util/keywords.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/util/module-resolver.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/util/node-event-generator.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/util/npm-util.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/util/path-util.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/util/patterns/letters.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/util/rule-fixer.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/util/source-code-fixer.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/util/source-code-util.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/util/source-code.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/util/traverser.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/lib/util/xml-escape.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/messages/no-config-found.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/messages/plugin-missing.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/messages/whitespace-found.txt" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/node_modules/eslint/package.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Commands/Public/event.js" afterPath="$PROJECT_DIR$/Commands/Public/event.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Database/Schemas/serverEventsSchema.js" afterPath="$PROJECT_DIR$/Database/Schemas/serverEventsSchema.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Modules/ServerEventsModules/ListInteractive.js" afterPath="$PROJECT_DIR$/Modules/ServerEventsModules/ListInteractive.js" />
+    </list>
+    <ignored path="$PROJECT_DIR$/out/" />
+    <ignored path="$PROJECT_DIR$/.idea/shelf/" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="TRACKING_ENABLED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CreatePatchCommitExecutor">
+    <option name="PATCH_PATH" value="" />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file leaf-file-name="event.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Commands/Public/event.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="432">
+              <caret line="24" column="4" lean-forward="false" selection-start-line="24" selection-start-column="4" selection-end-line="24" selection-end-column="4" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="serverConfigSchema.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Database/Schemas/serverConfigSchema.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="234">
+              <caret line="13" column="28" lean-forward="false" selection-start-line="13" selection-start-column="28" selection-end-line="13" selection-end-column="28" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="EditInteractive.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Modules/ServerEventsModules/EditInteractive.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ListInteractive.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Modules/ServerEventsModules/ListInteractive.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="630">
+              <caret line="35" column="0" lean-forward="false" selection-start-line="35" selection-start-column="0" selection-end-line="35" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="serverEventsSchema.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Database/Schemas/serverEventsSchema.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="252">
+              <caret line="14" column="9" lean-forward="false" selection-start-line="14" selection-start-column="9" selection-end-line="14" selection-end-column="9" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="RemoveInteractive.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Modules/ServerEventsModules/RemoveInteractive.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="CreateInteractive.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Modules/ServerEventsModules/CreateInteractive.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="324">
+              <caret line="18" column="0" lean-forward="false" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JavaScript File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="UPDATE_TYPE" value="MERGE" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GradleLocalSettings">
+    <option name="externalProjectsViewState">
+      <projects_view />
+    </option>
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/Configuration/auth.json" />
+        <option value="$PROJECT_DIR$/Web/WebServer.js" />
+        <option value="$PROJECT_DIR$/Configuration/config.json" />
+        <option value="$PROJECT_DIR$/Database/Schemas/eventsSchema.js" />
+        <option value="$PROJECT_DIR$/Database/Driver.js" />
+        <option value="$PROJECT_DIR$/Database/Schemas/eventSchema.js" />
+        <option value="$PROJECT_DIR$/Commands/PM/event.js" />
+        <option value="$PROJECT_DIR$/Modules/CreateEvent.js" />
+        <option value="$PROJECT_DIR$/Modules/EventParser.js" />
+        <option value="$PROJECT_DIR$/Commands/PM/remindme.js" />
+        <option value="$PROJECT_DIR$/Modules/SetReminder.js" />
+        <option value="$PROJECT_DIR$/Modules/CreateEventInteractive.js" />
+        <option value="$PROJECT_DIR$/Modules/RemoveEvent.js" />
+        <option value="$PROJECT_DIR$/Modules/GameEvents/Driver.js" />
+        <option value="$PROJECT_DIR$/Modules/GameEvents/CreateEventInteractive.js" />
+        <option value="$PROJECT_DIR$/Modules/GameEvents/EventDriver.js" />
+        <option value="$PROJECT_DIR$/.gitignore" />
+        <option value="$PROJECT_DIR$/Modules/GameEvents/RemoveEventInteractive.js" />
+        <option value="$PROJECT_DIR$/Modules/GameEvents/EditInteractive.js" />
+        <option value="$PROJECT_DIR$/Modules/GameEvents/ListInteractive.js" />
+        <option value="$PROJECT_DIR$/Modules/Events/ListEventInteractive.js" />
+        <option value="$PROJECT_DIR$/Commands/Public/event.js" />
+        <option value="$PROJECT_DIR$/Database/Schemas/serverEventsSchema.js" />
+        <option value="$PROJECT_DIR$/Modules/ServerEventsModules/ListInteractive.js" />
+      </list>
+    </option>
+  </component>
+  <component name="JsBowerSettings">
+    <exe-path />
+    <config-path />
+  </component>
+  <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsBuildToolPackageJson" detection-done="true" sorting="DEFINITION_ORDER">
+    <package-json value="$PROJECT_DIR$/package.json" />
+  </component>
+  <component name="JsFlowSettings">
+    <service-enabled>false</service-enabled>
+    <exe-path />
+    <annotation-enable>false</annotation-enable>
+    <other-services-enabled>false</other-services-enabled>
+  </component>
+  <component name="JsGulpfileManager">
+    <detection-done>true</detection-done>
+    <sorting>DEFINITION_ORDER</sorting>
+  </component>
+  <component name="NodeModulesDirectoryManager">
+    <handled-path value="$PROJECT_DIR$/node_modules" />
+  </component>
+  <component name="ProjectFrameBounds">
+    <option name="x" value="5" />
+    <option name="y" value="7" />
+    <option name="width" value="1356" />
+    <option name="height" value="735" />
+  </component>
+  <component name="ProjectView">
+    <navigator currentView="ProjectPane" proportions="" version="1">
+      <flattenPackages />
+      <showMembers />
+      <showModules />
+      <showLibraryContents />
+      <hideEmptyPackages />
+      <abbreviatePackageNames />
+      <autoscrollToSource />
+      <autoscrollFromSource />
+      <sortByType />
+      <manualOrder />
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="PackagesPane" />
+      <pane id="ProjectPane">
+        <subPane>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="G4M3R" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="G4M3R" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="G4M3R" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="G4M3R" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Platform" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="G4M3R" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="G4M3R" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="node_modules" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="G4M3R" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="G4M3R" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Modules" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="G4M3R" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="G4M3R" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Modules" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ServerEventsModules" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="G4M3R" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="G4M3R" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Database" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="G4M3R" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="G4M3R" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Database" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Schemas" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="G4M3R" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="G4M3R" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Configuration" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="G4M3R" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="G4M3R" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Commands" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Public" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="G4M3R" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="G4M3R" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Commands" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="PM" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
+      <pane id="Scratches" />
+      <pane id="Scope" />
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="settings.editor.selected.configurable" value="JavaScript.Libraries" />
+    <property name="project.structure.last.edited" value="Project" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.2" />
+    <property name="nodejs_interpreter_path" value="/usr/bin/node" />
+    <property name="js.eslint.eslintPackage" value="" />
+    <property name="js-jscs-nodeInterpreter" value="/usr/bin/node" />
+    <property name="javascript.nodejs.core.library.configured.version" value="7.4.0" />
+    <property name="JavaScriptPreferStrict" value="false" />
+    <property name="JavaScriptWeakerCompletionTypeGuess" value="true" />
+    <property name="prop_add_unversioned_files" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/Modules/GameEvents" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/Modules" />
+      <recent name="$PROJECT_DIR$/Commands/PM" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Node.js.bot.js">
+    <configuration default="false" name="bot.js" type="NodeJSConfigurationType" factoryName="Node.js" temporary="true" path-to-node="project" path-to-js-file="bot.js" working-dir="$PROJECT_DIR$">
+      <method />
+    </configuration>
+    <configuration default="false" name="start" type="js.build_tools.npm" factoryName="npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="start" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType" factoryName="Plugin">
+      <module name="" />
+      <option name="VM_PARAMETERS" value="-Xmx512m -Xms256m -XX:MaxPermSize=250m -ea" />
+      <option name="PROGRAM_PARAMETERS" />
+      <predefined_log_file id="idea.log" enabled="true" />
+      <method />
+    </configuration>
+    <configuration default="true" type="AndroidRunConfigurationType" factoryName="Android App">
+      <module name="" />
+      <option name="DEPLOY" value="true" />
+      <option name="ARTIFACT_NAME" value="" />
+      <option name="PM_INSTALL_OPTIONS" value="" />
+      <option name="ACTIVITY_EXTRA_FLAGS" value="" />
+      <option name="MODE" value="default_activity" />
+      <option name="TARGET_SELECTION_MODE" value="SHOW_DIALOG" />
+      <option name="PREFERRED_AVD" value="" />
+      <option name="CLEAR_LOGCAT" value="false" />
+      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="false" />
+      <option name="SKIP_NOOP_APK_INSTALLATIONS" value="true" />
+      <option name="FORCE_STOP_RUNNING_APP" value="true" />
+      <option name="DEBUGGER_TYPE" value="Java" />
+      <option name="USE_LAST_SELECTED_DEVICE" value="false" />
+      <option name="PREFERRED_AVD" value="" />
+      <Java />
+      <Profilers>
+        <option name="ENABLE_ADVANCED_PROFILING" value="true" />
+        <option name="GAPID_ENABLED" value="false" />
+        <option name="GAPID_DISABLE_PCS" value="false" />
+        <option name="SUPPORT_LIB_ENABLED" value="true" />
+        <option name="INSTRUMENTATION_ENABLED" value="true" />
+      </Profilers>
+      <option name="DEEP_LINK" value="" />
+      <option name="ACTIVITY_CLASS" value="" />
+      <method />
+    </configuration>
+    <configuration default="true" type="AndroidTestRunConfigurationType" factoryName="Android Tests">
+      <module name="" />
+      <option name="TESTING_TYPE" value="0" />
+      <option name="INSTRUMENTATION_RUNNER_CLASS" value="" />
+      <option name="METHOD_NAME" value="" />
+      <option name="CLASS_NAME" value="" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="EXTRA_OPTIONS" value="" />
+      <option name="TARGET_SELECTION_MODE" value="SHOW_DIALOG" />
+      <option name="PREFERRED_AVD" value="" />
+      <option name="CLEAR_LOGCAT" value="false" />
+      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="false" />
+      <option name="SKIP_NOOP_APK_INSTALLATIONS" value="true" />
+      <option name="FORCE_STOP_RUNNING_APP" value="true" />
+      <option name="DEBUGGER_TYPE" value="Java" />
+      <option name="USE_LAST_SELECTED_DEVICE" value="false" />
+      <option name="PREFERRED_AVD" value="" />
+      <Java />
+      <Profilers>
+        <option name="ENABLE_ADVANCED_PROFILING" value="true" />
+        <option name="GAPID_ENABLED" value="false" />
+        <option name="GAPID_DISABLE_PCS" value="false" />
+        <option name="SUPPORT_LIB_ENABLED" value="true" />
+        <option name="INSTRUMENTATION_ENABLED" value="true" />
+      </Profilers>
+      <method />
+    </configuration>
+    <configuration default="true" type="Applet" factoryName="Applet">
+      <option name="HTML_USED" value="false" />
+      <option name="WIDTH" value="400" />
+      <option name="HEIGHT" value="300" />
+      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
+      <module />
+      <method />
+    </configuration>
+    <configuration default="true" type="Application" factoryName="Application">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="ENABLE_SWING_INSPECTOR" value="false" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <module name="" />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <module name="" />
+      <option name="arquillianRunConfiguration">
+        <value>
+          <option name="containerStateName" value="" />
+        </value>
+      </option>
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="METHOD_NAME" />
+      <option name="TEST_OBJECT" value="class" />
+      <option name="VM_PARAMETERS" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="singleModule" />
+      </option>
+      <envs />
+      <patterns />
+      <method />
+    </configuration>
+    <configuration default="true" type="ArquillianTestNG" factoryName="">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <module name="" />
+      <option name="arquillianRunConfiguration">
+        <value>
+          <option name="containerStateName" value="" />
+        </value>
+      </option>
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="SUITE_NAME" />
+      <option name="PACKAGE_NAME" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="METHOD_NAME" />
+      <option name="GROUP_NAME" />
+      <option name="TEST_OBJECT" value="CLASS" />
+      <option name="VM_PARAMETERS" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" />
+      <option name="OUTPUT_DIRECTORY" />
+      <option name="ANNOTATION_TYPE" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="singleModule" />
+      </option>
+      <option name="USE_DEFAULT_REPORTERS" value="false" />
+      <option name="PROPERTIES_FILE" />
+      <envs />
+      <properties />
+      <listeners />
+      <method />
+    </configuration>
+    <configuration default="true" type="Cold Fusion runner description" factoryName="Cold Fusion" custom_browser="" web_path="">
+      <method />
+    </configuration>
+    <configuration default="true" type="CucumberJavaRunConfigurationType" factoryName="Cucumber java">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <option name="myFilePath" />
+      <option name="GLUE" />
+      <option name="myNameFilter" />
+      <option name="myGeneratedName" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="WORKING_DIRECTORY" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="ENABLE_SWING_INSPECTOR" value="false" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <module name="" />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="FlashRunConfigurationType" factoryName="Flash App">
+      <option name="BCName" value="" />
+      <option name="IOSSimulatorSdkPath" value="" />
+      <option name="adlOptions" value="" />
+      <option name="airProgramParameters" value="" />
+      <option name="appDescriptorForEmulator" value="Android" />
+      <option name="debugTransport" value="USB" />
+      <option name="debuggerSdkRaw" value="BC SDK" />
+      <option name="emulator" value="NexusOne" />
+      <option name="emulatorAdlOptions" value="" />
+      <option name="fastPackaging" value="true" />
+      <option name="fullScreenHeight" value="0" />
+      <option name="fullScreenWidth" value="0" />
+      <option name="launchUrl" value="false" />
+      <option name="launcherParameters">
+        <LauncherParameters>
+          <option name="browser" value="a7bb68e0-33c0-4d6f-a81a-aac1fdb870c8" />
+          <option name="launcherType" value="OSDefault" />
+          <option name="newPlayerInstance" value="false" />
+          <option name="playerPath" value="/usr/bin/flashplayerdebugger" />
+        </LauncherParameters>
+      </option>
+      <option name="mobileRunTarget" value="Emulator" />
+      <option name="moduleName" value="" />
+      <option name="overriddenMainClass" value="" />
+      <option name="overriddenOutputFileName" value="" />
+      <option name="overrideMainClass" value="false" />
+      <option name="runTrusted" value="true" />
+      <option name="screenDpi" value="0" />
+      <option name="screenHeight" value="0" />
+      <option name="screenWidth" value="0" />
+      <option name="url" value="http://" />
+      <option name="usbDebugPort" value="7936" />
+      <method />
+    </configuration>
+    <configuration default="true" type="FlexUnitRunConfigurationType" factoryName="FlexUnit" appDescriptorForEmulator="Android" class_name="" emulatorAdlOptions="" method_name="" package_name="" scope="Class">
+      <option name="BCName" value="" />
+      <option name="launcherParameters">
+        <LauncherParameters>
+          <option name="browser" value="a7bb68e0-33c0-4d6f-a81a-aac1fdb870c8" />
+          <option name="launcherType" value="OSDefault" />
+          <option name="newPlayerInstance" value="false" />
+          <option name="playerPath" value="/usr/bin/flashplayerdebugger" />
+        </LauncherParameters>
+      </option>
+      <option name="moduleName" value="" />
+      <option name="trusted" value="true" />
+      <method />
+    </configuration>
+    <configuration default="true" type="GradleRunConfiguration" factoryName="Gradle">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list />
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <method />
+    </configuration>
+    <configuration default="true" type="GrailsRunConfigurationType" factoryName="Grails">
+      <setting name="vmparams" value="" />
+      <setting name="cmdLine" value="run-app" />
+      <setting name="passParentEnv" value="true" />
+      <setting name="launchBrowser" value="true" />
+      <setting name="launchBrowserUrl" value="" />
+      <setting name="depsClasspath" value="false" />
+      <method />
+    </configuration>
+    <configuration default="true" type="JUnit" factoryName="JUnit">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <module name="" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="METHOD_NAME" />
+      <option name="TEST_OBJECT" value="class" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="singleModule" />
+      </option>
+      <envs />
+      <patterns />
+      <method />
+    </configuration>
+    <configuration default="true" type="JarApplication" factoryName="JAR Application">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="Java Scratch" factoryName="Java Scratch">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <option name="SCRATCH_FILE_ID" value="0" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="WORKING_DIRECTORY" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="ENABLE_SWING_INSPECTOR" value="false" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <module name="" />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="JavaScriptTestRunnerProtractor" factoryName="Protractor">
+      <config-file value="" />
+      <node-interpreter value="project" />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="JavascriptDebugType" factoryName="JavaScript Debug">
+      <method />
+    </configuration>
+    <configuration default="true" type="JetRunConfigurationType" factoryName="Kotlin">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="WORKING_DIRECTORY" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <module name="G4M3R" />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType" factoryName="Kotlin script">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <option name="filePath" />
+      <option name="vmParameters" />
+      <option name="alternativeJrePath" />
+      <option name="programParameters" />
+      <option name="passParentEnvs" value="true" />
+      <option name="workingDirectory" />
+      <option name="isAlternativeJrePathEnabled" value="false" />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="NodeJSConfigurationType" factoryName="Node.js" path-to-node="project" working-dir="">
+      <method />
+    </configuration>
+    <configuration default="true" type="Remote" factoryName="Remote">
+      <option name="USE_SOCKET_TRANSPORT" value="true" />
+      <option name="SERVER_MODE" value="false" />
+      <option name="SHMEM_ADDRESS" value="javadebug" />
+      <option name="HOST" value="localhost" />
+      <option name="PORT" value="5005" />
+      <method />
+    </configuration>
+    <configuration default="true" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <module name="" />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="TestNG" factoryName="TestNG">
+      <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
+      <module name="" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="SUITE_NAME" />
+      <option name="PACKAGE_NAME" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="METHOD_NAME" />
+      <option name="GROUP_NAME" />
+      <option name="TEST_OBJECT" value="CLASS" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
+      <option name="OUTPUT_DIRECTORY" />
+      <option name="ANNOTATION_TYPE" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="singleModule" />
+      </option>
+      <option name="USE_DEFAULT_REPORTERS" value="false" />
+      <option name="PROPERTIES_FILE" />
+      <envs />
+      <properties />
+      <listeners />
+      <method />
+    </configuration>
+    <configuration default="true" type="js.build_tools.gulp" factoryName="Gulp.js">
+      <node-interpreter>project</node-interpreter>
+      <node-options />
+      <gulpfile />
+      <tasks />
+      <arguments />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="js.build_tools.npm" factoryName="npm">
+      <command value="run" />
+      <scripts />
+      <node-interpreter value="project" />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="mocha-javascript-test-runner" factoryName="Mocha">
+      <node-interpreter>project</node-interpreter>
+      <node-options />
+      <working-directory />
+      <pass-parent-env>true</pass-parent-env>
+      <envs />
+      <ui />
+      <extra-mocha-options />
+      <test-kind>DIRECTORY</test-kind>
+      <test-directory />
+      <recursive>false</recursive>
+      <method />
+    </configuration>
+    <configuration default="true" type="osgi.bnd.run" factoryName="Run Launcher">
+      <method />
+    </configuration>
+    <configuration default="true" type="osgi.bnd.run" factoryName="Test Launcher (JUnit)">
+      <method />
+    </configuration>
+    <list size="2">
+      <item index="0" class="java.lang.String" itemvalue="Node.js.bot.js" />
+      <item index="1" class="java.lang.String" itemvalue="npm.start" />
+    </list>
+    <recent_temporary>
+      <list size="2">
+        <item index="0" class="java.lang.String" itemvalue="Node.js.bot.js" />
+        <item index="1" class="java.lang.String" itemvalue="npm.start" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="ShelveChangesManager" show_recycled="false">
+    <option name="remove_strategy" value="false" />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="517e6001-f11a-4c60-b51c-4c8f37aeefa9" name="Default" comment="" />
+      <created>1485035748080</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1485035748080</updated>
+      <workItem from="1485035753290" duration="906000" />
+      <workItem from="1485036987734" duration="15314000" />
+      <workItem from="1485115568596" duration="10998000" />
+      <workItem from="1485189334556" duration="23196000" />
+      <workItem from="1485274541675" duration="390000" />
+      <workItem from="1485275951037" duration="11604000" />
+      <workItem from="1485297808084" duration="66000" />
+    </task>
+    <task id="LOCAL-00001" summary="removed bot log from git">
+      <created>1485043298035</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1485043298035</updated>
+    </task>
+    <task id="LOCAL-00002" summary="reverted changes made to db schemas.  Fixed remindme output.">
+      <created>1485114976656</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1485114976656</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Merge remote-tracking branch 'remotes/origin/peter' into notem&#10;&#10;">
+      <created>1485116229645</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1485116229645</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Modified event.js and serverEventsSchema.js">
+      <created>1485121860468</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1485121860468</updated>
+    </task>
+    <task id="LOCAL-00005" summary="is it gone again?">
+      <created>1485122504042</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1485122504042</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Updated event.js, mongo doc seems to save now!">
+      <created>1485125664078</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1485125664078</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Moved the interactive event creation to a new file in Modules.  Expanded upon the interactive.">
+      <created>1485192668667</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1485192668667</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Added checks to the event creation interactive to error out at invalid dates, and to check perms before deleting messages.">
+      <created>1485200936215</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1485200936215</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Added more string option to formatting, mostly to test behavior.">
+      <created>1485206647852</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1485206647852</updated>
+    </task>
+    <task id="LOCAL-00010" summary="Basic 'list' for event command implemented using async. Organized event related files in modules, placing into a dedicated subfolder.">
+      <created>1485277180803</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1485277180803</updated>
+    </task>
+    <task id="LOCAL-00011" summary="Merge branches 'notem' and 'peter' of https://github.com/pedall/G4M3R into notem&#10;&#10;# Conflicts:&#10;#&#9;Commands/Public/event.js&#10;#&#9;Database/Schemas/serverEventsSchema.js&#10;#&#9;Modules/CreateEventInteractive.js&#10;#&#9;Modules/Events/CreateEventInteractive.js&#10;#&#9;Modules/ServerEventsModules/CreateInteractive.js&#10;">
+      <created>1485289171206</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1485289171206</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="62474000" />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="5" y="7" width="1356" height="735" extended-state="0" />
+    <editor active="false" />
+    <layout>
+      <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Nl-Palette" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Palette&#9;" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.31538463" sideWeight="0.5029455" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3276923" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.31538463" sideWeight="0.4970545" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="npm" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2496318" sideWeight="0.50800914" order="6" side_tool="true" content_ui="tabs" />
+      <window_info id="Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3246154" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2982327" sideWeight="0.49199083" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.26153848" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3276923" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+    </layout>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="processedProjectFiles" value="true" />
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="removed bot log from git" />
+    <MESSAGE value="reverted changes made to db schemas.  Fixed remindme output." />
+    <MESSAGE value="Merge remote-tracking branch 'remotes/origin/peter' into notem&#10;&#10;" />
+    <MESSAGE value="Modified event.js and serverEventsSchema.js" />
+    <MESSAGE value="is it gone again?" />
+    <MESSAGE value="Updated event.js, mongo doc seems to save now!" />
+    <MESSAGE value="Moved the interactive event creation to a new file in Modules.  Expanded upon the interactive." />
+    <MESSAGE value="Added checks to the event creation interactive to error out at invalid dates, and to check perms before deleting messages." />
+    <MESSAGE value="Added more string option to formatting, mostly to test behavior." />
+    <MESSAGE value="Basic 'list' for event command implemented using async. Organized event related files in modules, placing into a dedicated subfolder." />
+    <MESSAGE value="Changed if/else if chain into a switch.  Modified listinteractive to be better, but it's buggy atm. Added more params to serverEvent.&#10;" />
+    <MESSAGE value="Merge branches 'notem' and 'peter' of https://github.com/pedall/G4M3R into notem&#10;&#10;# Conflicts:&#10;#&#9;Commands/Public/event.js&#10;#&#9;Database/Schemas/serverEventsSchema.js&#10;#&#9;Modules/CreateEventInteractive.js&#10;#&#9;Modules/Events/CreateEventInteractive.js&#10;#&#9;Modules/ServerEventsModules/CreateInteractive.js&#10;" />
+    <option name="LAST_COMMIT_MESSAGE" value="Merge branches 'notem' and 'peter' of https://github.com/pedall/G4M3R into notem&#10;&#10;# Conflicts:&#10;#&#9;Commands/Public/event.js&#10;#&#9;Database/Schemas/serverEventsSchema.js&#10;#&#9;Modules/CreateEventInteractive.js&#10;#&#9;Modules/Events/CreateEventInteractive.js&#10;#&#9;Modules/ServerEventsModules/CreateInteractive.js&#10;" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager />
+    <watches-manager />
+  </component>
+  <component name="antWorkspaceConfiguration">
+    <option name="IS_AUTOSCROLL_TO_SOURCE" value="false" />
+    <option name="FILTER_TARGETS" value="false" />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/Configuration/commands.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="45" column="30" lean-forward="false" selection-start-line="45" selection-start-column="30" selection-end-line="45" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Commands/Public/translate.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Commands/Public/time.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Commands/PM/servernick.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1512">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Commands/PM/say.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-597">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Commands/PM/remindme.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Commands/PM/reload.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Modules/StreamerUtils.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Modules/RSS.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Modules/SetCountdown.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Modules/ReminderParser.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="15">
+          <caret line="7" column="23" lean-forward="false" selection-start-line="7" selection-start-column="23" selection-end-line="7" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bot.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="29" column="0" lean-forward="false" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Database/Driver.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="47">
+          <caret line="26" column="17" lean-forward="true" selection-start-line="26" selection-start-column="17" selection-end-line="26" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Events/guildCreate.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="198">
+          <caret line="11" column="0" lean-forward="false" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Modules/SetReminder.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="162">
+          <caret line="9" column="19" lean-forward="false" selection-start-line="9" selection-start-column="19" selection-end-line="9" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Database/Schemas/serverModlogSchema.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Database/Schemas/serverSchema.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Database/Schemas/serverGamesSchema.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Database/Schemas/serverMembersSchema.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Commands/Public/eval.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Commands/Public/enable.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Commands/Public/prefix.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Commands/Public/8ball.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Commands/Public/afk.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Commands/Public/cat.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Commands/Public/dog.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Platform/Platform.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Modules/UserProfile.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-345">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Modules/VoiceStatsCollector.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-601">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Platform/Discord.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Commands/Public/catfact.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Commands/Public/fortune.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Commands/PM/profile.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Modules/GameEvents/RemoveEvent.js" />
+    <entry file="file://$PROJECT_DIR$/Modules/GameEvents/EventDriver.js" />
+    <entry file="file://$PROJECT_DIR$/Modules/MessageOfTheDay.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Modules/Giveaways.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Modules/FilterChecker.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Database/Schemas/serverConfigSchema.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="234">
+          <caret line="13" column="28" lean-forward="false" selection-start-line="13" selection-start-column="28" selection-end-line="13" selection-end-column="28" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/embedexample.js" />
+    <entry file="file://$PROJECT_DIR$/.eslintrc" />
+    <entry file="file://$PROJECT_DIR$/Modules/Events/CreateEventInteractive.js" />
+    <entry file="file://$PROJECT_DIR$/Modules/Events/ListEventInteractive.js" />
+    <entry file="file://$PROJECT_DIR$/Commands/Public/list.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Modules/ServerEventsModules/RemoveInteractive.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Commands/Public/event.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="432">
+          <caret line="24" column="4" lean-forward="false" selection-start-line="24" selection-start-column="4" selection-end-line="24" selection-end-column="4" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Modules/ServerEventsModules/EditInteractive.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Modules/ServerEventsModules/CreateInteractive.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="324">
+          <caret line="18" column="0" lean-forward="false" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Modules/ServerEventsModules/ListInteractive.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="630">
+          <caret line="35" column="0" lean-forward="false" selection-start-line="35" selection-start-column="0" selection-end-line="35" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Database/Schemas/serverEventsSchema.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="252">
+          <caret line="14" column="9" lean-forward="false" selection-start-line="14" selection-start-column="9" selection-end-line="14" selection-end-column="9" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+  </component>
+  <component name="masterDetails">
+    <states>
+      <state key="ArtifactsStructureConfigurable.UI">
+        <settings>
+          <artifact-editor />
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="FacetStructureConfigurable.UI">
+        <settings>
+          <last-edited>No facets are configured</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="GlobalLibrariesConfigurable.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="JdkListConfigurable.UI">
+        <settings>
+          <last-edited>1.8</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ModuleStructureConfigurable.UI">
+        <settings>
+          <last-edited>G4M3R</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+                <option value="0.6" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ProjectJDKs.UI">
+        <settings>
+          <last-edited>1.8</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ProjectLibrariesConfigurable.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ScopeChooserConfigurable.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+    </states>
+  </component>
+</project>

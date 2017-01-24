@@ -7,5 +7,10 @@ module.exports = new mongoose.Schema({
 
 		start: {type: Date, required: true },
 		end: {type: Date, default: this.start },
-		isStarted: {type: Boolean, default: false}
+		isStarted: {type: Boolean, default: false},
+
+		maxAttendees: {type: Number, required: true, default: 0},
+		members: new mongoose.Schema({
+			_id: {type: String, required: true}
+		})
 });
