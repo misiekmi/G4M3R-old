@@ -39,7 +39,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
     let usr_err = false;
     let err_msg;
 
-    async.whilst(() => {
+async.whilst(() => {
             return cancel;
         },
         (callback) => {

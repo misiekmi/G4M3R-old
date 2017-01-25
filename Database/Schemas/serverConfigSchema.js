@@ -16,9 +16,6 @@ const getCommands = () => {
 
 // Server's configs (commands, admins, etc.)
 module.exports = {
-	gamingEvents: [new mongoose.Schema({
-		eTitle: {type: String, required: false, maxlength: 200}
-	})],
 	admins: [new mongoose.Schema({
 		_id: {type: String, required: true},
 		level: {type: Number, default: 1, enum: [1, 2, 3]}
