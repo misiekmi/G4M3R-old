@@ -36,7 +36,7 @@
     },
     "public": {
       "event": {
-          "usage": "",
+          "usage": "<add/edit/remove/list>",
           "description": "Create / Edit events people can RSVP to",
           "defaults": {
               "is_enabled": true,
