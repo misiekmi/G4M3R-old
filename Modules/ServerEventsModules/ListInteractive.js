@@ -35,7 +35,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
 
         description += `\`\`[cancel]\`\` **Exit view**\n`;
 
-        return {embed: {description: description, footer: {text: `page ${current_page}/${pages_size}`}}}
+        return {embed: {description: description, footer: {text: `page ${current_page}/${pages.length}`}}}
     };
 
     let embed = getPage(current_page_no);
