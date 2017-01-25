@@ -57,7 +57,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                     let usr_input = usr_message.content.trim();
 
                     // get event
-                    if (usr_message.content.trim() <= pages[current_page].length && usr_input > 0) {
+                    if (usr_message.content.trim() <= pages[current_page_no].length && usr_input > 0) {
                         // TODO
                     }
                     // go to next page
@@ -67,16 +67,16 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                         else
                             current_page += 1;
 
-                        embed = getPage(current_page);
+                        embed = getPage();
                     }
                     // go to previous page
-                    else if (usr_input == max_page_size+2 && current_page>1) {
+                    else if (usr_input == max_page_size+2 && current_page_no>1) {
                         if(current_page-1 <= 0)
                             current_page = pages.length;
                         else
                             current_page -= 1;
 
-                        embed = getPage(current_page);
+                        embed = getPage();
                     }
                     // exit interactive
                     else if(usr_input.toLowerCase() == "cancel") {
