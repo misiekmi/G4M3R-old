@@ -25,7 +25,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
 
         let description = "";
         for (let i=0; i<pages[x-1].length; i++) {
-            description += `\`\`[${i+1}]\`\` **${pages[current_page_no-1][i].title}**\n`;
+            description += `\`\`[${i+1}]\`\` **${current_page[i].title}**\n`;
         }
         
         if(pages.length>1 && current_page<pages.length )
@@ -38,7 +38,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
         return {embed: {description: description, footer: {text: `page ${x}/${pages_size}`}}}
     };
 
-    let embed = getPage(current_page);
+    let embed = getPage(current_page_no);
     let cancel = true;
     let usr_err = false;
     let err_msg;
