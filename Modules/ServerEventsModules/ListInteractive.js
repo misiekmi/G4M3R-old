@@ -18,6 +18,8 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
     if(new_page.length>0)
         pages.push(new_page);
 
+    let current_page_no = 1;
+
     let getPage = () => {
         let current_page = pages[current_page_no-1];
 
@@ -36,7 +38,6 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
         return {embed: {description: description, footer: {text: `page ${x}/${pages_size}`}}}
     };
 
-    let current_page = 1;
     let embed = getPage(current_page);
     let cancel = true;
     let usr_err = false;
