@@ -27,15 +27,17 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
         for (let i=0; i<current_page.length; i++) {
             description += `\`\`[${i+1}]\`\` **${current_page[i].title}**\n`;
         }
+
+        description += "\n";
         
-        if(pages.length>1 && current_page<pages.length )
-            description += `\n\`\`[${max_page_size+1}]\`\` **Go to next page**\n`;
+        //if(pages.length>1 && current_page<pages.length )
+            description += `\`\`[${max_page_size+1}]\`\` **Go to next page**\n`;
         if(current_page>1)
             description += `\`\`[${max_page_size+2}]\`\` **Return to previous page**\n`;
 
         description += `\`\`[cancel]\`\` **Exit view**\n`;
 
-        return {embed: {description: description, footer: {text: `page ${current_page}/${pages.length}`}}}
+        return {embed: {description: description, footer: {text: `page ${current_page_no}/${pages.length}`}}}
     };
 
     let embed = getPage(current_page_no);
