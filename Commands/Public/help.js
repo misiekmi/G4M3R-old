@@ -1,8 +1,9 @@
 module.exports = (bot, db, config, winston, userDocument, serverDocument, channelDocument, memberDocument, msg, suffix) => {
 	if(suffix) {
 		const getCommandHelp = (name, type, usage, description) => {
-			//Rewrite URL
-			return `__Help for ${type} command **${name}**__\n${description ? (`Description: ${description}\n`) : ""}${usage ? (`Usage: \`${usage}\`\n`) : ""}<https://awesomebot.xyz/wiki/Commands#${name}>`;
+
+			return `__Help for ${type} command **${name}**__\n${description ? (`Description: ${description}\n`) : ""}${usage ? (`Usage: \`${usage}\`\n`) : ""}<${config.hosting_url}wiki/Commands#${name}>`;
+
 		};
 
 		const info = [];
@@ -36,8 +37,8 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
 		Object.keys(commands).sort().forEach(category => {
 			info.push(`**${category}**\`\`\`${commands[category].sort().join("\n")}\`\`\``);
 		});
-		//Rewrite URL
-		info.push(`For detailed information about each command and all of AwesomeBot's other features, head over to our wiki: <https://awesomebot.xyz/wiki/Commands>. If you need support using AwesomeBot, please join our Discord server: <${config.discord_link}>. Have fun! 🙂🐬`);
+
+		info.push(`For detailed information about each command and all of G4M3R's other features, head over to our wiki: <${config.hosting_url}wiki/Commands>. If you need support using AwesomeBot, please join our Discord server: <${config.discord_link}>. Have fun! 🙂🎮`);
 
 		msg.author.getDMChannel().then(ch => {
 			bot.sendArray(ch, info);

@@ -28,7 +28,6 @@ const config = require("./Configuration/config.json");
 const winston = require("winston");
 const domain = require("domain");
 
-
 // Set up default winston logger
 winston.add(winston.transports.File, {
 	filename: "bot-out.log"

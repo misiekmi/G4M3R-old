@@ -45,7 +45,18 @@
           },
           "category": "Utility 🔦"
       },
+      "trello": {
+          "usage": "",
+          "description": "Shows the Trello Link for G4M3R",
+          "defaults": {
+              "is_enabled": true,
+              "is_nsfw_filtered": false,
+              "admin_level": 0
+          },
+          "category": "G4M3R 🤖"
+      },
       "8ball": {
+
             "usage": "",
             "description": "Predicts the answer to a question",
             "defaults": {
@@ -63,7 +74,7 @@
                 "is_nsfw_filtered": false,
                 "admin_level": 0
             },
-            "category": "AwesomeBot 🤖"
+            "category": "G4M3R 🤖"
         },
         "afk": {
             "usage": "\".\" or <message>",
@@ -233,7 +244,7 @@
                 "is_nsfw_filtered": false,
                 "admin_level": 0
             },
-            "category": "AwesomeBot 🤖"
+            "category": "G4M3R 🤖"
         },
         "disable": {
             "usage": "[<command>]",
@@ -293,7 +304,7 @@
                 "is_nsfw_filtered": false,
                 "admin_level": 4
             },
-            "category": "AwesomeBot 🤖"
+            "category": "G4M3R 🤖"
         },
         "fortune": {
             "usage": "[<category>]",
@@ -354,7 +365,7 @@
                 "is_nsfw_filtered": false,
                 "admin_level": 0
             },
-            "category": "AwesomeBot 🤖"
+            "category": "G4M3R 🤖"
         },
         "image": {
             "usage": "<query> [\"random\"]",
@@ -404,7 +415,7 @@
                 "is_nsfw_filtered": false,
                 "admin_level": 0
             },
-            "category": "AwesomeBot 🤖"
+            "category": "G4M3R 🤖"
         },
         "joke": {
             "usage": "",
@@ -417,7 +428,7 @@
             "category": "Fun 🎪"
         },
         "kick": {
-            "usage": "<user>",
+            "usage": "<user>[|<reason>]",
             "description": "Removes a member from the server",
             "defaults": {
                 "is_enabled": true,
@@ -467,7 +478,7 @@
             "category": "Fun 🎪"
         },
         "messages": {
-            "usage": "[<user>]",
+            "usage": "[<user or \"me\">]",
             "description": "Command that shows the top members on the server by activity",
             "defaults": {
                 "is_enabled": true,
@@ -485,16 +496,6 @@
                 "admin_level": 3
             },
             "category": "Moderation ⚒"
-        },
-        "music": {
-            "usage": "",
-            "description": "Plays audio from YouTube in a voice channel",
-            "defaults": {
-                "is_enabled": false,
-                "is_nsfw_filtered": false,
-                "admin_level": 0
-            },
-            "category": "Search & Media 🎬"
         },
         "mute": {
             "usage": "<user>[|<reason>]",
@@ -554,7 +555,7 @@
                 "is_nsfw_filtered": false,
                 "admin_level": 0
             },
-            "category": "AwesomeBot 🤖"
+            "category": "G4M3R 🤖"
         },
         "points": {
             "usage": "[<user>]",
