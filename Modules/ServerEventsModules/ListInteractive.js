@@ -10,7 +10,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
     let new_page = [];
     for( let i = 0; i<tmp.length; i++ ) {
         new_page.push(tmp[i]);
-        if((i+1)%max_size==0) {     // if page size has been reached
+        if((i+1)%max_page_size==0) {     // if page size has been reached
             pages.push(new_page);   // push the page onto pages,
             new_page = [];          // reset page,
         }
