@@ -8,3 +8,7 @@ Configuration/config.json
 #ignore folders
 node_modules/
 .idea/
+
+#auto add
+/G4M3R.iml
+/.tern-project
