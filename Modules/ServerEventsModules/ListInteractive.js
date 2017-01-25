@@ -24,7 +24,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
         let current_page = pages[current_page_no-1];
 
         let description = "";
-        for (let i=0; i<pages[current_page-1].length; i++) {
+        for (let i=0; i<current_page.length; i++) {
             description += `\`\`[${i+1}]\`\` **${current_page[i].title}**\n`;
         }
         
