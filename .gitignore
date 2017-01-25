@@ -4,3 +4,7 @@ Configuration/config.json
 
 #ignore logs
 *.log
+
+#ignore folders
+node_modules/
+.idea/
