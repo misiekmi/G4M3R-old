@@ -63,18 +63,18 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                     // go to next page
                     else if (usr_input == max_page_size+1) {
                         if(current_page_no+1 > pages.length)
-                            current_page = 1;
+                            current_page_no = 1;
                         else
-                            current_page += 1;
+                            current_page_no += 1;
 
                         embed = getPage();
                     }
                     // go to previous page
                     else if (usr_input == max_page_size+2 && current_page_no>1) {
                         if(current_page_no-1 <= 0)
-                            current_page = pages.length;
+                            current_page_no = pages.length;
                         else
-                            current_page -= 1;
+                            current_page_no -= 1;
 
                         embed = getPage();
                     }
