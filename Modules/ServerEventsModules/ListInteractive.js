@@ -32,10 +32,10 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
             description += `\n\`\`[${max_page_size+1}]\`\` **Go to next page**\n`;
         if(current_page>1)
             description += `\`\`[${max_page_size+2}]\`\` **Return to previous page**\n`;
-        
+
         description += `\`\`[cancel]\`\` **Exit view**\n`;
 
-        return {embed: {description: description, footer: {text: `page ${x}/${pages_size}`}}}
+        return {embed: {description: description, footer: {text: `page ${current_page}/${pages_size}`}}}
     };
 
     let embed = getPage(current_page_no);
