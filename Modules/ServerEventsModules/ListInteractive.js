@@ -10,9 +10,9 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
     let new_page = [];
     for( let i = 0; i<tmp.length; i++ ) {
         new_page.push(tmp[i]);
-        if((i+1)%max_page_size==0) {     // if page size has been reached
-            pages.push(new_page);   // push the page onto pages,
-            new_page = [];          // reset page,
+        if((i+1)%max_page_size==0) {    // if page size has been reached
+            pages.push(new_page);       // push the page onto pages,
+            new_page = [];              // reset page,
         }
     }
     if(new_page.length>0)
@@ -64,20 +64,12 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                     }
                     // go to next page
                     else if (usr_input == max_page_size+1) {
-                        if(current_page_no+1 > pages.length)
-                            current_page_no = 1;
-                        else
-                            current_page_no += 1;
-
+                        current_page_no++;
                         embed = getPage(current_page_no);
                     }
                     // go to previous page
                     else if (usr_input == max_page_size+2 && current_page_no>1) {
-                        if(current_page_no-1 <= 0)
-                            current_page_no = pages.length;
-                        else
-                            current_page_no -= 1;
-
+                        current_page_no--;
                         embed = getPage(current_page_no);
                     }
                     // exit interactive
@@ -96,5 +88,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                     callback();
                 });
             });
+        }, (err) => {
+            // TODO have winston handle erro
         });
 };
