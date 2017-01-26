@@ -20,8 +20,8 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
 
     let current_page_no = 1;
 
-    let getPage = (current_page_no) => {
-        let current_page = pages[current_page_no-1];
+    let getPage = (page_no) => {
+        let current_page = pages[page_no-1];
 
         let description = "";
         for (let i=0; i<current_page.length; i++) {
@@ -30,14 +30,14 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
 
         description += "\n";
         
-        if(pages.length>1 && current_page_no<pages.length )
+        if(pages.length>1 && page_no<pages.length )
             description += `\`\`[${max_page_size+1}]\`\` **Go to next page**\n`;
-        if(current_page_no>1)
+        if(page_no>1)
             description += `\`\`[${max_page_size+2}]\`\` **Return to previous page**\n`;
 
         description += `\`\`[cancel]\`\` **Exit view**\n`;
 
-        return {embed: {description: description, footer: {text: `page ${current_page_no}/${pages.length}`}}}
+        return {embed: {description: description, footer: {text: `page ${page_no}/${pages.length}`}}}
     };
 
     let embed = getPage(current_page_no);
@@ -50,6 +50,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
         },
         (callback) => {
             msg.channel.createMessage(embed).then(bot_message => {
+                winston.info(`Current page no: '${current_page_no}'`, {srvrid: serverDocument._id});
                 bot.awaitMessage(msg.channel.id, msg.author.id, usr_message => {
                     //if (usr_err) {
                     //    err_msg.delete();
@@ -57,13 +58,14 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                     //}
 
                     let usr_input = usr_message.content.trim();
+                    winston.info(`User input: '${usr_input}'`, {srvrid: serverDocument._id});
 
                     // get event
                     if (usr_message.content.trim() <= pages[current_page_no].length && usr_input > 0) {
                         // TODO
                     }
                     // go to next page
-                    else if (usr_input == max_page_size+1) {
+                    else if (usr_input == max_page_size+1 && current_page_no<pages.length) {
                         current_page_no++;
                         embed = getPage(current_page_no);
                     }
@@ -74,7 +76,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                     }
                     // exit interactive
                     else if(usr_input.toLowerCase() == "cancel") {
-                        cancel = true;
+                        cancel = false;
                     }
                     // error
                     //else {
@@ -82,7 +84,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                     //    usr_err = true;
                     //}
                     else {
-                        cancel = true;
+                        cancel = false;
                     }
 
                     if (hasDeletePerm)
