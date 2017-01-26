@@ -87,16 +87,19 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                     }
                     // error
                     else {
-                        err_msg = msg.channel.createMessage("That's not an option! Please try again.");
+                        err_msg = msg.channel.createMessage("That's not an option! Please try again.").then((msg)=> {
+                            setTimeout((msg)=>{msg.delete();},20000)
+                        });
                         usr_err = true;
                     }
 
                     bot_message.delete();
-                    usr_message.delete();
+                    if(hasDeletePerm)
+                        usr_message.delete();
 
                     winston.info(`Calling back. . .`, {srvrid: serverDocument._id});
                     callback();
-                });
+                }, bot_message => { bot_message.delete(); });
             });
         }, (err) => {
             winston.error(`Failed during event list interactive`, {srvrid: serverDocument._id}, err);

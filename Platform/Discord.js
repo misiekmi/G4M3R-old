@@ -45,7 +45,7 @@ module.exports = (db, auth, config) => {
 
 	// Setup a message listener for a user in a channel ()
 	bot.messageListeners = {};
-	bot.awaitMessage = (chid, usrid, filter, callback) => {
+	bot.awaitMessage = (chid, usrid, filter, callback, timeout) => {
 		if(!callback) {
 			callback = filter;
 			filter = () => {
@@ -65,6 +65,7 @@ module.exports = (db, auth, config) => {
 				if(Object.keys(bot.messageListeners[chid])==0) {
 					delete bot.messageListeners[chid];
 				}
+				timeout();
 			}
 		}, 60000);
 	};
