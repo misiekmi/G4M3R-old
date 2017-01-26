@@ -114,7 +114,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                         usr_message.delete();
 
                     callback();
-                });
-            }, bot_message);
+                }, bot_message);
+            });
         });
 };
