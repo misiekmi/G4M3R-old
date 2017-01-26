@@ -18,9 +18,9 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
     if(new_page.length>0)
         pages.push(new_page);
 
-    //pages.push([])
+    pages.push([])                          // weird fix, add an extra empty page
+    let real_page_size = pages.length-1;    // set to never logically access it
 
-    let real_page_size = pages.length;
     let current_page_no = 1;
 
     const getPage = (page_no) => {
