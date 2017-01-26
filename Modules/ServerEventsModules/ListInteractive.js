@@ -89,10 +89,10 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
 
                     if (hasDeletePerm)
                         bot_message.delete().then(() => usr_message.delete());
-
-                    callback();
                 });
             });
+
+            callback();
         }, (err) => {
             winston.error(`Failed during event list interactive`, {srvrid: serverDocument._id}, err);
         });
