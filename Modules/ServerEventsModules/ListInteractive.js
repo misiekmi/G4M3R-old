@@ -51,10 +51,10 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
         (callback) => {
             msg.channel.createMessage(embed).then(bot_message => {
                 bot.awaitMessage(msg.channel.id, msg.author.id, usr_message => {
-                    if (usr_err) {
-                        err_msg.delete();
-                        usr_err = false;
-                    }
+                    //if (usr_err) {
+                    //    err_msg.delete();
+                    //    usr_err = false;
+                    //}
 
                     let usr_input = usr_message.content.trim();
 
@@ -77,9 +77,12 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                         cancel = true;
                     }
                     // error
+                    //else {
+                    //    err_msg = msg.channel.createMessage("That's not an option! Please try again.");
+                    //    usr_err = true;
+                    //}
                     else {
-                        err_msg = msg.channel.createMessage("That's not an option! Please try again.");
-                        usr_err = true;
+                        cancel = true;
                     }
 
                     if (hasDeletePerm)
@@ -89,6 +92,6 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                 });
             });
         }, (err) => {
-            // TODO have winston handle erro
+            winston.error(`Failed during event list interactive`, {srvrid: serverDocument._id}, err);
         });
 };
