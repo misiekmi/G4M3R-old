@@ -46,6 +46,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
     let embed = getPage(current_page_no);
     let cancel = true;
     let usr_err = false;
+
     let err_msg;
 
     async.whilst(() => {
@@ -56,6 +57,8 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
             msg.channel.createMessage(embed).then(bot_message => {
                 winston.info(`Current page no: '${current_page_no}', size of pages: ${pages.length}`, {srvrid: serverDocument._id});
                 bot.awaitMessage(msg.channel.id, msg.author.id, usr_message => {
+                    bot.removeMessageListener(msg.channel.id, msg.author.id);
+
                     if (usr_err) {
                     //    err_msg.delete();
                         usr_err = false;
@@ -84,7 +87,9 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                     }
                     // error
                     else {
-                        err_msg = msg.channel.createMessage("That's not an option! Please try again.");
+                        err_msg = msg.channel.createMessage("That's not an option! Please try again.").then((msg)=> {
+                            setTimeout((msg)=>{msg.delete();},20000)
+                        });
                         usr_err = true;
                     }
 
