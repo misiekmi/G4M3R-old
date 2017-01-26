@@ -65,7 +65,7 @@ module.exports = (db, auth, config) => {
 				if(Object.keys(bot.messageListeners[chid])==0) {
 					delete bot.messageListeners[chid];
 				}
-				timeout();
+				timeout;
 			}
 		}, 60000);
 	};
