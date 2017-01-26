@@ -57,7 +57,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                 winston.info(`Current page no: '${current_page_no}', size of pages: ${pages.length}`, {srvrid: serverDocument._id});
                 bot.awaitMessage(msg.channel.id, msg.author.id, usr_message => {
                     if (usr_err) {
-                        err_msg.delete();
+                    //    err_msg.delete();
                         usr_err = false;
                     }
 
