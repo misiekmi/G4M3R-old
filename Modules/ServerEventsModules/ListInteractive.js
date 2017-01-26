@@ -99,7 +99,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
 
                     winston.info(`Calling back. . .`, {srvrid: serverDocument._id});
                     callback();
-                }, () => { bot_message.delete(); });
+                }, () => bot_message.delete());
             });
         }, (err) => {
             winston.error(`Failed during event list interactive`, {srvrid: serverDocument._id}, err);
