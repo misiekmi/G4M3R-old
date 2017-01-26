@@ -3,5 +3,6 @@
     "debug.allowBreakpointsEverywhere": true,
     "vsicons.projectDetection.autoReload": true,
     "eslint.enable": true,
-    "eslint.run": "onType"
+    "eslint.run": "onType",
+    "vsicons.presets.angular": false
 }
