@@ -20,7 +20,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
 
     let current_page_no = 1;
 
-    let getPage = () => {
+    let getPage = (current_page_no) => {
         let current_page = pages[current_page_no-1];
 
         let description = "";
@@ -30,9 +30,9 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
 
         description += "\n";
         
-        //if(pages.length>1 && current_page<pages.length )
+        if(pages.length>1 && current_page_no<pages.length )
             description += `\`\`[${max_page_size+1}]\`\` **Go to next page**\n`;
-        if(current_page>1)
+        if(current_page_no>1)
             description += `\`\`[${max_page_size+2}]\`\` **Return to previous page**\n`;
 
         description += `\`\`[cancel]\`\` **Exit view**\n`;
@@ -69,7 +69,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                         else
                             current_page_no += 1;
 
-                        embed = getPage();
+                        embed = getPage(current_page_no);
                     }
                     // go to previous page
                     else if (usr_input == max_page_size+2 && current_page_no>1) {
@@ -78,7 +78,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                         else
                             current_page_no -= 1;
 
-                        embed = getPage();
+                        embed = getPage(current_page_no);
                     }
                     // exit interactive
                     else if(usr_input.toLowerCase() == "cancel") {
