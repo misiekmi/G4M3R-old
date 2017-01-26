@@ -42,14 +42,8 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
 
         return {embed: {description: description, footer: {text: `page ${page_no}/${real_page_size}`}}}
     };
-<<<<<<< HEAD
-    
-    let current_page = 1;
-    let page = getPage(current_page);
-=======
 
     let embed = getPage(current_page_no);
->>>>>>> refs/remotes/origin/notem
     let cancel = true;
     let usr_err = false;
 
