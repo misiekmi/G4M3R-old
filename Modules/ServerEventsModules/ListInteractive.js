@@ -23,7 +23,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
     let real_page_size = pages.length-1;
     let current_page_no = 1;
 
-    let getPage = (page_no) => {
+    const getPage = (page_no) => {
         let current_page = pages[page_no-1];
 
         let description = "";
@@ -49,23 +49,39 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
 
     let err_msg;
 
+    const awaitMessageOverride = (chid, usrid, callback, message) => {
+        if(!bot.messageListeners[chid]) {
+            bot.messageListeners[chid] = {};
+        }
+        bot.messageListeners[chid][usrid] = {
+            callback,
+            filter
+        };
+        setTimeout(() => {
+            if(bot.messageListeners[chid] && bot.messageListeners[chid][usrid]) {
+                delete bot.messageListeners[chid][usrid];
+                if(Object.keys(bot.messageListeners[chid])==0) {
+                    delete bot.messageListeners[chid];
+                }
+                err_msg = msg.channel.createMessage("Interactive timed out.");
+                message.delete();
+            }
+        }, 30000);
+    };
+
     async.whilst(() => {
-            winston.info(`Checking cancel. . . cancel is: '${cancel}'`, {srvrid: serverDocument._id});
             return cancel;
         },
         (callback) => {
             msg.channel.createMessage(embed).then(bot_message => {
-                winston.info(`Current page no: '${current_page_no}', size of pages: ${pages.length}`, {srvrid: serverDocument._id});
-                bot.awaitMessage(msg.channel.id, msg.author.id, usr_message => {
+                awaitMessageOverride(msg.channel.id, msg.author.id, usr_message => {
                     bot.removeMessageListener(msg.channel.id, msg.author.id);
 
                     if (usr_err) {
-                    //    err_msg.delete();
                         usr_err = false;
                     }
 
                     let usr_input = usr_message.content.trim();
-                    winston.info(`User input: '${usr_input}'`, {srvrid: serverDocument._id});
 
                     // get event
                     if (usr_message.content.trim() <= pages[current_page_no].length && usr_input > 0) {
@@ -97,11 +113,8 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                     if(hasDeletePerm)
                         usr_message.delete();
 
-                    winston.info(`Calling back. . .`, {srvrid: serverDocument._id});
                     callback();
-                }, () => bot_message.delete());
-            });
-        }, (err) => {
-            winston.error(`Failed during event list interactive`, {srvrid: serverDocument._id}, err);
+                });
+            }, bot_message);
         });
 };
