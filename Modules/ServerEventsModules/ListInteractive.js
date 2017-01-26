@@ -87,9 +87,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                     }
                     // error
                     else {
-                        err_msg = msg.channel.createMessage("That's not an option! Please try again.").then((msg)=> {
-                            setTimeout((msg)=>{msg.delete();},20000)
-                        });
+                        err_msg = msg.channel.createMessage("That's not an option! Please try again.");
                         usr_err = true;
                     }
 
