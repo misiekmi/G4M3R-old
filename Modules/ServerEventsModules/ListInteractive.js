@@ -46,6 +46,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
     let err_msg;
 
     async.whilst(() => {
+            winston.info(`Checking cancel. . . cancel is: '${cancel}'`, {srvrid: serverDocument._id});
             return cancel;
         },
         (callback) => {
@@ -87,12 +88,13 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                         cancel = false;
                     }
 
-                    if (hasDeletePerm)
-                        bot_message.delete().then(() => usr_message.delete());
+                    bot_message.delete();
+                    usr_message.delete();
+
+                    winston.info(`Calling back. . .`, {srvrid: serverDocument._id});
+                    callback();
                 });
             });
-
-            callback();
         }, (err) => {
             winston.error(`Failed during event list interactive`, {srvrid: serverDocument._id}, err);
         });
