@@ -50,6 +50,9 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
     let err_msg;
 
     const awaitMessageOverride = (chid, usrid, callback, message) => {
+        () => {
+            return true;
+        };
         if(!bot.messageListeners[chid]) {
             bot.messageListeners[chid] = {};
         }
