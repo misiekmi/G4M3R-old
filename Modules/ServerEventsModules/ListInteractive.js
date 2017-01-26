@@ -32,7 +32,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
 
         return {embed: {description: description, footer: {text: `page ${x}/${pages_size}`}}}
     };
-
+    
     let current_page = 1;
     let page = getPage(current_page);
     let cancel = true;
