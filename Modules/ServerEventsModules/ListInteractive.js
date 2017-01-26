@@ -18,9 +18,9 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
     if(new_page.length>0)
         pages.push(new_page);
 
-    pages.push([])
+    //pages.push([])
 
-    let real_page_size = pages.length-1;
+    let real_page_size = pages.length;
     let current_page_no = 1;
 
     const getPage = (page_no) => {
@@ -49,35 +49,12 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
 
     let err_msg;
 
-    const awaitMessageOverride = (chid, usrid, callback, message) => {
-        () => {
-            return true;
-        };
-        if(!bot.messageListeners[chid]) {
-            bot.messageListeners[chid] = {};
-        }
-        bot.messageListeners[chid][usrid] = {
-            callback,
-            filter
-        };
-        setTimeout(() => {
-            if(bot.messageListeners[chid] && bot.messageListeners[chid][usrid]) {
-                delete bot.messageListeners[chid][usrid];
-                if(Object.keys(bot.messageListeners[chid])==0) {
-                    delete bot.messageListeners[chid];
-                }
-                err_msg = msg.channel.createMessage("Interactive timed out.");
-                message.delete();
-            }
-        }, 30000);
-    };
-
     async.whilst(() => {
             return cancel;
         },
         (callback) => {
             msg.channel.createMessage(embed).then(bot_message => {
-                awaitMessageOverride(msg.channel.id, msg.author.id, usr_message => {
+                bot.awaitMessage(msg.channel.id, msg.author.id, usr_message => {
                     bot.removeMessageListener(msg.channel.id, msg.author.id);
 
                     if (usr_err) {
@@ -117,7 +94,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                         usr_message.delete();
 
                     callback();
-                }, bot_message);
+                });
             });
         });
 };
