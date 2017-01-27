@@ -9,6 +9,7 @@
     },
     "license": "GPL v2",
     "dependencies": {
+        "ascii-table": "*",
         "bing-translate": "*",
         "body-parser": "*",
         "compression": ">=1.6.0",
@@ -29,6 +30,7 @@
         "goo.gl": "*",
         "google": ">=2.0",
         "google-play-scraper": ">=3.1.2",
+        //"highlight.js": "*",
         "imgur-node-api": ">=0.1.0",
         "mathjs": ">=3.0",
         "moment": ">=2.0",
