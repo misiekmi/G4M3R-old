@@ -10,12 +10,14 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
     let new_page = [];
     for( let i = 0; i<tmp.length; i++ ) {
         new_page.push(tmp[i]);
-        if((i+1)%max_page_size==0) {    // if page size has been reached
-            pages.push(new_page);       // push the page onto pages,
-            new_page = [];              // reset page,
+
+        if((i+1)%max_size===0) {     // if page size has been reached
+            pages.push(new_page);   // push the page onto pages,
+            pages_size++;           // increase size counter,
+            new_page = [];          // reset page,
         }
     }
-    if(new_page.length>0)
+    if(new_page.length!==0)
         pages.push(new_page);
 
     pages.push([])                          // weird fix, add an extra empty page

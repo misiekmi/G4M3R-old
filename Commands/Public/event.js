@@ -1,7 +1,7 @@
-const create = require("./../../Modules/ServerEventsModules/CreateInteractive.js");
-const remove = require("./../../Modules/ServerEventsModules/RemoveInteractive.js");
-const edit = require("./../../Modules/ServerEventsModules/EditInteractive.js");
-const list = require("./../../Modules/ServerEventsModules/ListInteractive.js");
+const create = require("./../../Modules/Events/CreateInteractive.js");
+const remove = require("./../../Modules/Events/RemoveInteractive.js");
+const edit = require("./../../Modules/Events/EditInteractive.js");
+const list = require("./../../Modules/Events/ListInteractive.js");
 
 module.exports = (bot, db, config, winston, userDocument, serverDocument, channelDocument, memberDocument, msg, suffix, commandData) => {
 
