@@ -112,7 +112,6 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
 
                     if (description.length > 2000 || description === "exit") {
                         msg.channel.createMessage("ℹ **You just exited the Event creation process!**");
-                        winston
                         return;
                     } else {
                         if (description === "skip") {
@@ -122,13 +121,13 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                     }
                 });
             });
-        }
-    }
+        };
+    };
 
     getTitle()
-        .then( getStartDate,winston.error('Error while trying to get Start Date for Event creation'))
-        .then( getEndDate,winston.error('Error while trying to get End Date for Event creation'))
-        .then( getDescription,winston.error('Error while trying to get Description for Event creation'));
+        .then( getStartDate(),winston.error('Error while trying to get Start Date for Event creation'))
+        .then( getEndDate(),winston.error('Error while trying to get End Date for Event creation'))
+        .then( getDescription(),winston.error('Error while trying to get Description for Event creation'));
 
 
     let embed_fields = [];
