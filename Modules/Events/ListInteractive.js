@@ -11,13 +11,13 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
     let pages_size = 0;
     for( let i = 0; i<tmp.length; i++ ) {
         new_page.push(tmp[i]);
-        if((i+1)%max_size==0) {     // if page size has been reached
+        if((i+1)%max_size===0) {     // if page size has been reached
             pages.push(new_page);   // push the page onto pages,
             pages_size++;           // increase size counter,
             new_page = [];          // reset page,
         }
     }
-    if(new_page.length!=0)
+    if(new_page.length!==0)
         pages.push(new_page);
 
     let getPage = (x) => {
@@ -30,7 +30,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
         description += `\`\`[${counter++}]\`\` **Return to previous page**\n`;
         description += `\`\`[${counter++}]\`\` **Exit view**\n`;
 
-        return {embed: {description: description, footer: {text: `page ${x}/${pages_size}`}}}
+        return {embed: {description: description, footer: {text: `page ${x}/${pages_size}`}}};
     };
     
     let current_page = 1;
