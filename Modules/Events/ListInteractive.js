@@ -11,16 +11,16 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
     for( let i = 0; i<tmp.length; i++ ) {
         new_page.push(tmp[i]);
 
-        if((i+1)%max_size===0) {     // if page size has been reached
+        if((i+1)%max_page_size===0) {     // if page size has been reached
             pages.push(new_page);   // push the page onto pages,
-            pages_size++;           // increase size counter,
+            pages++;           // increase size counter,
             new_page = [];          // reset page,
         }
     }
     if(new_page.length!==0)
         pages.push(new_page);
 
-    pages.push([])                          // weird fix, add an extra empty page
+    pages.push([]);                         // weird fix, add an extra empty page
     let real_page_size = pages.length-1;    // set to never logically access it
 
     let current_page_no = 1;
@@ -30,7 +30,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
 
         let description = "";
         for (let i=0; i<current_page.length; i++) {
-            description += `\`\`[${i+1}]\`\` **${current_page[i].title}**\n`;
+            description += `\`\`[#${current_page[i]._id}**}]\`\` **${current_page[i].title}**\n*by ${current_page[i]._author} on ${current_page[i].start}\n`;
         }
 
         description += "\n";
@@ -42,7 +42,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
 
         description += `\`\`[cancel]\`\` **Exit view**\n`;
 
-        return {embed: {description: description, footer: {text: `page ${page_no}/${real_page_size}`}}}
+        return {embed: {description: description, footer: {text: `page ${page_no}/${real_page_size}`}}};
     };
 
     let embed = getPage(current_page_no);
@@ -86,7 +86,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                     // error
                     else {
                         err_msg = msg.channel.createMessage("That's not an option! Please try again.").then((msg)=> {
-                            setTimeout(()=>{msg.delete();},10000)
+                            setTimeout(()=>{msg.delete();},10000);
                         });
                         usr_err = true;
                     }
