@@ -4,7 +4,11 @@ Configuration/config.json
 
 #ignore logs
 *.log
+.*
+!.gitignore
+
 
 #ignore folders
 node_modules/
 .idea/
+.vscode/
