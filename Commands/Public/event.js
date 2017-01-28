@@ -22,7 +22,7 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
         }
     }
     else {
-        // probably return a help message TODO
+        // probably return a help message TODO yupp
     }
 
 };
