@@ -11,6 +11,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
     // message prompt for title
     msg.channel.createMessage("What is the title the event?").then(bot_message => {
         bot.awaitMessage(msg.channel.id, msg.author.id, usr_message => {
+            bot.removeMessageListener(msg.channel.id, msg.author.id);
 
             title = usr_message.content.trim();
             if (hasDeletePerm)
@@ -19,6 +20,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
             // message prompt for start date time
             msg.channel.createMessage("Please enter the start date of the event. (format: <\YYYY/MM/DD h:mm>) or type \`skip\` to continue.").then(bot_message => {
                 bot.awaitMessage(msg.channel.id, msg.author.id, usr_message => {
+                    bot.removeMessageListener(msg.channel.id, msg.author.id);
 
                     start = moment(usr_message.content.trim(), formats, true); // parse start time
                     if (hasDeletePerm)
@@ -42,6 +44,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                         // message prompt for end date time
                         msg.channel.createMessage("Please enter the end date of the event. (format: <\YYYY/MM/DD h:mm>) or type \`skip\` to continue.").then(bot_message => {
                             bot.awaitMessage(msg.channel.id, msg.author.id, usr_message => {
+                                bot.removeMessageListener(msg.channel.id, msg.author.id);
 
                                 end = moment(usr_message.content.trim(), formats, true); // parse start time
                                 if (hasDeletePerm)
@@ -65,6 +68,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                                     // message prompt for end date time
                                     msg.channel.createMessage("Can you give a description of the event").then(bot_message => {
                                         bot.awaitMessage(msg.channel.id, msg.author.id, usr_message => {
+                                            bot.removeMessageListener(msg.channel.id, msg.author.id);
 
                                             description = usr_message.content.trim();
                                             bot_message.delete().then(() => usr_message.delete());
