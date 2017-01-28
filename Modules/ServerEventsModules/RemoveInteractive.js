@@ -44,7 +44,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
 
     // function which is used to generate a page which confirms which event to delete
     const getRemoveVerify = (event_no) => {
-        let event = pages[current_page_no][event_no-1];
+        let event = pages[current_page_no-1][event_no-1];
         let page_content = "" +
             `Title: ${event.title}\n` +
             `Start: ${event.start}\n` +
