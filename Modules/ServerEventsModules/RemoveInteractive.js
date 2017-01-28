@@ -20,7 +20,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
     pages.push([]);                         // weird fix, add an extra empty page
     let real_page_size = pages.length-1;    // set to never logically access it
 
-    // function that is used to generate
+    // function that is used to generate list of events to delete
     const getPage = (page_no) => {
         let current_page = pages[page_no-1];
 
@@ -40,7 +40,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
         return {embed: {description: page_content, footer: {text: footer_content}}}
     };
 
-    // function which is used to generate the page view of a single event entry
+    // function which is used to generate a page which confirms which event to delete
     const getRemoveVerify = (event_no) => {
         let event = pages[current_page_no][event_no-1];
         let page_content = "" +
