@@ -64,7 +64,6 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
     let embed = getPage(current_page_no);
     let cancel = false;
     let view_event = false;
-    let err_msg;
 
     async.whilst(() => {
             return !cancel;
@@ -109,7 +108,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                         }
                         // error
                         else {
-                            err_msg = msg.channel.createMessage("That's not an option! Please try again.").then((msg)=> {
+                            msg.channel.createMessage("That's not an option! Please try again.").then((msg)=> {
                                 setTimeout(()=>{msg.delete();},10000)
                             });
                         }
