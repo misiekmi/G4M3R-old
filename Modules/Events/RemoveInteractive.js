@@ -44,7 +44,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                 page_content += `\`\`[${max_page_size+2}]\`\` **Return to previous page**\n`;
             }
         }
-        page_content += `\`\`[cancel]\`\` **Exit view**\n`;
+        page_content += `## \`\`[cancel]\`\` **Exit view**\n`;
 
         let footer_content = `page ${page_no}/${real_page_size}`;
 
@@ -55,12 +55,14 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
     const getRemoveVerify = (event_no) => {
         let event = pages[current_page_no-1][event_no-1];
         let page_content = "" +
-            `Title: ${event.title}\n` +
-            `Start: ${event.start}\n` +
-            `End: ${event.end}\n\n` +
-            `\`\`[confirm]\`\` to delete the event\n` +
-            `\`\`[back]\`\` to return to event list\n` +
-            `\`\`[cancel]\`\` to quit the interactive`;
+            `\`\`Title\`\`: ${event.title}\n` +
+            `\`\`ID\`\`: ${event._id}\n` +
+            `\`\`Author\`\`: <@${event._author}>\n` +
+            `\`\`Start\`\`: ${event.start}\n` +
+            `\`\`End: ${event.end}\n\n` +
+            `##\`\`[confirm]\`\` to delete the event\n` +
+            `## \`\`[back]\`\` to return to event list\n` +
+            `## \`\`[cancel]\`\` to quit the interactive`;
 
         let footer_content = `event ${event_no}/${pages[current_page_no].length}`;
 

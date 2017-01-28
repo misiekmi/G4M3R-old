@@ -35,7 +35,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
         }                                                                        //
         else {
             for (let i=0; i<current_page.length; i++) {
-                page_content += `\`\`[#${i+1}]\`\` **${current_page[i].title}**#${current_page[i]._id}\n` +
+                page_content += `\`\`[${i+1}]\`\` **${current_page[i].title}**#${current_page[i]._id}\n` +
                     `        -by <@${current_page[i]._author}>\n\n`;
             }
             page_content += "\n";
@@ -58,8 +58,9 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
     const getEventPage = (event_no) => {
         let event = pages[current_page_no-1][event_no-1];
         let page_content = "" +
-            `\`\`Author\`\`: <@${event._author}>\n` +
             `\`\`Title\`\`: ${event.title}\n` +
+            `\`\`ID\`\`: ${event._id}\n` +
+            `\`\`Author\`\`: <@${event._author}>\n` +
             `\`\`Start\`\`: ${event.start}\n` +
             `\`\`End\`\`: ${event.end}\n` +
             `\`\`Description\`\`: ${event.description}\n` +
