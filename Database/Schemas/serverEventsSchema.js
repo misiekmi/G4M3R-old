@@ -2,9 +2,9 @@ const mongoose = require("mongoose");
 
 // Server's events data
 module.exports = new mongoose.Schema({
-		_id: {type: Number, required: true, },
+		_id: {type: Number, required: true },
 		title: {type: String, required: false, default: "(no title)"},
-		_author: {type: String, required: false, default: "unidentified"},
+		_author: {type: String, required: true, default: "unidentified"},
     	description: {type: String, required: false},
 		start: {type: Date, required: false },
 		end: {type: Date, default: this.start },

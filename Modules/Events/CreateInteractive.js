@@ -12,8 +12,15 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
     const formats = ["YYYY/MM/DD H:mm", "YYYY/MM/DD h:mma", "YYYY/MM/DD"];
 
     // message prompt for title
-    msg.channel.createMessage(`\`\`\`\n **## EVENT CREATION ##**\n\nWhat is the title the event?\n\n# Enter any title as string\n
-    # Enter \`exit\` to exit the process.\`\`\``).then(bot_message => {
+    var embedMsg = "", embedFooter = "", embedTitle = "", embedAuthor = "";
+
+    //Define the embed message for Title Question
+    embedAuthor = "EVENT CREATION PROCESS";
+    embedTitle = "~ What is the title of your event? ~";
+    embedMsg = `\n\n# enter any title as string *(max. 2000 chars)*\n`;
+    embedFooter =  `# enter \`exit\` to quit the event cration process.`;
+
+    msg.channel.createMessage({embed: {author: { name: embedAuthor},color: 0xffffff, title: embedTitle, description: embedMsg, footer: {text: embedFooter}}}).then(bot_message => {
         bot.awaitMessage(msg.channel.id, msg.author.id, usr_message => {
 
             title = usr_message.content.trim();
@@ -22,7 +29,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                 msg.channel.createMessage("ℹ **You just exited the Event creation process!**");
                 return;
             }
-
+            //only delete message if bot has the correct rights to do it.
             if (hasDeletePerm) {
                 bot_message.delete();
             }
@@ -58,6 +65,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                     }
 
                     // message prompt for end date time
+
                     msg.channel.createMessage(`\`\`\`\n **## EVENT CREATION ##**\n\nPlease enter the end date of the event!\n\n# **Format**: 
                         <YYYY/MM/DD h:mm>\n# Enter \`exit\` to exit the process.\n# Enter \`skip\` to continue without a description.\`\`\``).then(bot_message => {
                         bot.awaitMessage(msg.channel.id, msg.author.id, usr_message => {
@@ -110,15 +118,21 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
 
                                     //get max id from server document and count up
 
-                                        var newEventID;
-                                        var maxEventID;
+                                        var newEventID = 0;
+                                        var maxEventID= 0;
 
                                         if(serverDocument.gameEvents[0] === null) {
                                              maxEventID = 0;
-                                        } else {
-                                            maxEventID = Math.max(serverDocument.gameEvents.map(a=>a._id));
+                                        } else {    
+                                            maxEventID = Math.max.apply(Math, serverDocument.gameEvents.map(a=>a._id));
                                         }
-                                         newEventID = maxEventID +1;
+
+                                        if (!isNaN(maxEventID)) {
+                                            newEventID = maxEventID +1;
+                                        } else {
+                                            winston.error("Max Event ID could not be evaluated (see CreateInterActive.js) - line 119")
+                                        }
+                                         
 
                                     //get author of event
 
@@ -193,7 +207,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                                             msg.channel.createMessage({
                                                 embed: {
                                                     author: {
-                                                        name: "~~ Event with **🆔{newEventID}** successfully created ~~",
+                                                        name: `~~ Event with **🆔[${newEventID}]** successfully created ~~`,
                                                     },
                                                     color: 0xffffff,
                                                     fields: embed_fields
