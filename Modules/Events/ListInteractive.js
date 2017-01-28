@@ -12,10 +12,10 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
     for( let i = 0; i<tmp.length; i++ ) {
         new_page.push(tmp[i]);
 
-        if((i+1)%max_page_size===0) {     // if page size has been reached
-            pages.push(new_page);   // push the page onto pages,
-            pages++;           // increase size counter,
-            new_page = [];          // reset page,
+        if((i+1)%max_page_size===0) {   // if page size has been reached
+            pages.push(new_page);       // push the page onto pages,
+            pages++;                    // increase size counter,
+            new_page = [];              // reset page,
         }
     }
     if(new_page.length>0)           // add the last page if it wasn't filled
@@ -28,9 +28,9 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
     const getPage = (page_no) => {
         let current_page = pages[page_no-1];
 
-        let page_content = "", description = "";
+        let page_content = "";
         for (let i=0; i<current_page.length; i++) {
-            description += `\`\`[#${current_page[i]._id}**}]\`\` **${current_page[i].title}**\n*by ${current_page[i]._author} on ${current_page[i].start}\n`;
+            page_content += `\`\`[#${current_page[i]._id}**}]\`\` **${current_page[i].title}**\n*by ${current_page[i]._author} on ${current_page[i].start}\n`;
         }
         page_content += "\n\n";
         if(real_page_size>1 && page_no<real_page_size )
