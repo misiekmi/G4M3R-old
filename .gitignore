@@ -11,3 +11,6 @@ Configuration/config.json
 node_modules/
 .idea/
 .vscode/
+
+#auto added
+/G4M3R.iml

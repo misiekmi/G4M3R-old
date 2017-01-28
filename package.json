@@ -30,7 +30,7 @@
         "goo.gl": "*",
         "google": ">=2.0",
         "google-play-scraper": ">=3.1.2",
-        //"highlight.js": "*",
+        "highlight.js": "*",
         "imgur-node-api": ">=0.1.0",
         "mathjs": ">=3.0",
         "moment": ">=2.0",
