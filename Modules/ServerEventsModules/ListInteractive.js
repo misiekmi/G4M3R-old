@@ -75,7 +75,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
 
                     let usr_input = usr_message.content.trim();
 
-                    if(!view_event) {       // if in event view
+                    if(view_event) {       // if in event view
                         // return to event list page
                         if(usr_input == "back") {
                             view_event = false;

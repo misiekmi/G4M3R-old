@@ -1,3 +1,5 @@
+const async = require("async");
+
 module.exports = (bot, db, winston, serverDocument, msg) => {
     const hasDeletePerm = msg.channel.permissionsOf(bot.user.id).has("manageMessages");
     const max_page_size = 7;    // maximum events viewable per page
@@ -60,7 +62,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
     let current_event_no;
     let embed = getPage(current_page_no);
     let cancel = false;
-    let view_event = false;
+    let confirm = false;
 
     async.whilst(() => {
             return !cancel;
@@ -72,7 +74,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
 
                     let usr_input = usr_message.content.trim();
 
-                    if(!view_event) {       // if in event view
+                    if(confirm) {       // if in event view
                         if(usr_input == "confirm"){
                             pages[current_page_no-1][current_event_no-1].remove().exec().then(()=> {
                                 msg.channel.createMessage("The event has been successfully removed").then((msg)=> {
@@ -80,10 +82,11 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                                 })
                             });
                             embed = getPage(current_page_no);
+                            confirm = false;
                         }
                         // return to event list page
                         else if(usr_input == "back") {
-                            view_event = false;
+                            confirm = false;
                             embed = getPage(current_page_no);
                         }
                         // exit
@@ -95,7 +98,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                         // get event
                         if (usr_message.content.trim() <= pages[current_page_no].length && usr_input > 0) {
                             embed = getRemoveVerify(usr_input);
-                            view_event = true;
+                            confirm = true;
                         }
                         // go to next page
                         else if (usr_input == max_page_size+1 && current_page_no<real_page_size) {
