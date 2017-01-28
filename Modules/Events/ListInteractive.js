@@ -30,9 +30,10 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
 
         let page_content = "";
         for (let i=0; i<current_page.length; i++) {
-            page_content += `\`\`[#${current_page[i]._id}**}]\`\` **${current_page[i].title}**\n*by ${current_page[i]._author} on ${current_page[i].start}\n`;
+            page_content += `\`\`[#${current_page[i]._id}]\`\` **${current_page[i].title}**\n` +
+                            `*by <@${current_page[i]._author}>\n`;
         }
-        page_content += "\n\n";
+        page_content += "\n";
         if(real_page_size>1 && page_no<real_page_size )
             page_content += `## \`\`[${max_page_size+1}]\`\` **Go to next page**\n`;
         if(page_no>1)
