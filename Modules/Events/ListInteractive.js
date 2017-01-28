@@ -18,8 +18,9 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
             new_page = [];              // reset page,
         }
     }
-    if(new_page.length>0)           // add the last page if it wasn't filled
+    if(new_page.length>0){          // add the last page if it wasn't filled
         pages.push(new_page);       // and added in the previous loop
+    }
 
     pages.push([]);                         // weird fix, add an extra empty page
     let real_page_size = pages.length-1;    // set to never logically access it
@@ -27,18 +28,26 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
     // function that is used to generate
     const getPage = (page_no) => {
         let current_page = pages[page_no-1];
-
         let page_content = "";
-        for (let i=0; i<current_page.length; i++) {
-            page_content += `\`\`[#${current_page[i]._id}]\`\` **${current_page[i].title}**\n` +
-                            `*by <@${current_page[i]._author}>\n`;
+
+        if(real_page_size == 0) {                                                // if there are
+            page_content = "There are no events scheduled on this server.\n\n";  // no entries
+        }                                                                        //
+        else {
+            for (let i=0; i<current_page.length; i++) {
+                page_content += `\`\`[#${i+1}]\`\` **${current_page[i].title}**#${current_page[i]._id}\n` +
+                    `        -by <@${current_page[i]._author}>\n\n`;
+            }
+            page_content += "\n";
+            if(real_page_size>1 && page_no<real_page_size ) {
+                page_content += `## \`\`[${max_page_size+1}]\`\` Go to next page\n`;
+            }
+            if(page_no>1){
+                page_content += `## \`\`[${max_page_size+2}]\`\` Return to previous page\n`;
+            }
         }
-        page_content += "\n";
-        if(real_page_size>1 && page_no<real_page_size )
-            page_content += `## \`\`[${max_page_size+1}]\`\` **Go to next page**\n`;
-        if(page_no>1)
-            page_content += `## \`\`[${max_page_size+2}]\`\` **Return to previous page**\n`;
-        page_content += `## Type \`\`[cancel]\`\` **to exit the menu**\n`;
+
+        page_content += `## \`\`[cancel]\`\` to exit the menu\n`;
 
         let footer_content = `page ${page_no}/${real_page_size}`;
 
@@ -49,15 +58,15 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
     const getEventPage = (event_no) => {
         let event = pages[current_page_no-1][event_no-1];
         let page_content = "" +
-            `Author: $(event._author)\n` +
-            `Title: ${event.title}\n` +
-            `Start: ${event.start}\n` +
-            `End: ${event.end}\n` +
-            `Description: ${event.description}\n` +
-            `Max Attendees: ${event.maxAttendees}\n` +
-            `Member: ${event.members}\n\n` +
+            `\`\`Author\`\`: <@${event._author}>\n` +
+            `\`\`Title\`\`: ${event.title}\n` +
+            `\`\`Start\`\`: ${event.start}\n` +
+            `\`\`End\`\`: ${event.end}\n` +
+            `\`\`Description\`\`: ${event.description}\n` +
+            `\`\`Max Attendees\`\`: ${event.maxAttendees}\n` +
+            `\`\`Members\`\`: ${event.members}\n\n` +
             `## \`\`[back]\`\` to return to event list\n` +
-            `## \`\`[cancel]\`\` to quit the menu`;
+            `## \`\`[cancel]\`\` to exit the menu`;
 
         let footer_content = `event ${event_no}/${pages[current_page_no].length}`;
 
@@ -119,8 +128,9 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                     }
 
                     bot_message.delete();
-                    if(hasDeletePerm)
+                    if(hasDeletePerm){
                         usr_message.delete();
+                    }
 
                     callback();
                 });
