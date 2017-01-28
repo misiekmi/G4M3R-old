@@ -88,7 +88,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                     }
                     else {      // otherwise
                         // get event
-                        if (usr_message.content.trim() <= pages[current_page_no].length && usr_input > 0) {
+                        if (usr_message.content.trim() <= pages[current_page_no-1].length && usr_input > 0) {
                             embed = getEventPage(usr_input);
                             view_event = true;
                         }
