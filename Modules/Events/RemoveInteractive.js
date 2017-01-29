@@ -89,17 +89,19 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
 
                     if(confirm) {       // if in event view
                         if(usr_input == "confirm"){
+                            let id = pages[current_page_no-1][current_event_no-1]._id;
+                            pages[current_page_no-1] = pages[current_page_no-1].splice(current_event_no-1, 1);
                             pages[current_page_no-1][current_event_no-1].remove();
+
                             serverDocument.save(err => {
                                 if(err) {
                                     winston.error(`Failed to remove event placeholder info`, {srvid: serverDocument._id}, err);
                                 } else {
-                                    msg.channel.createMessage(`Event #${pages[current_page_no-1][current_event_no-1]._id} has been successfully removed`).then((msg)=> {
+                                    msg.channel.createMessage(`Event #${id} has been successfully removed`).then((msg)=> {
                                         setTimeout(()=>{msg.delete();},10000);
                                     });
                                 }
                             });
-                            pages[current_page_no-1] = pages[current_page_no-1].splice(current_event_no-1, 1);
 
                             embed = getPage(current_page_no);
                             confirm = false;
