@@ -12,7 +12,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
     const formats = ["YYYY/MM/DD H:mm", "YYYY/MM/DD h:mma", "YYYY/MM/DD"];
 
     // message prompt for title
-    var embedMsg = "", embedFooter = "", embedTitle = "", embedAuthor = "";
+    let embedMsg = "", embedFooter = "", embedTitle = "", embedAuthor = "";
 
     //Define the embed message for Title Question
     embedAuthor = "EVENT CREATION PROCESS";
@@ -118,20 +118,22 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
 
                                     //get max id from server document and count up
 
-                                        var newEventID = 0;
-                                        var maxEventID= 0;
+                                    let newEventID = 0;
+                                    let maxEventID= 0;
 
-                                        if(serverDocument.gameEvents.length <= 0) {
-                                             maxEventID = 0;
-                                        } else {    
-                                            maxEventID = Math.max.apply(Math, serverDocument.gameEvents.map(a=>a._id));
-                                        }
+                                    if(serverDocument.gameEvents.length <= 0) {
+                                            maxEventID = 0;
+                                    } else {    
+                                        maxEventID = Math.max.apply(Math, serverDocument.gameEvents.map(a=>a._id));
+                                    }
 
-                                        if (!isNaN(maxEventID)) {
-                                            newEventID = maxEventID +1;
-                                        } else {
-                                            winston.error("Max Event ID could not be evaluated (see CreateInterActive.js) - line 119")
-                                        }
+                                    if (!isNaN(maxEventID)) {
+                                        newEventID = maxEventID +1;
+                                    } else {
+                                        winston.error("Max Event ID could not be evaluated (see CreateInterActive.js) - line 119")
+                                    }
+
+                                    //let newEventID = serverDocument.gameEvents.length+1;
                                          
 
                                     //get author of event

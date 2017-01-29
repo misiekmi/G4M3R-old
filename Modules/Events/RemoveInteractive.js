@@ -11,6 +11,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
     let new_page = [];
     for( let i = 0; i<tmp.length; i++ ) {
         new_page.push(tmp[i]);
+
         if((i+1)%max_page_size==0) {    // if page size has been reached
             pages.push(new_page);       // push the page onto pages,
             new_page = [];              // reset page,
@@ -25,17 +26,25 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
     // function that is used to generate list of events to delete
     const getPage = (page_no) => {
         let current_page = pages[page_no-1];
-
         let page_content = "Please select the event you wish to delete\n\n";
-        for (let i=0; i<current_page.length; i++) {
-            page_content += `\`\`[${i+1}]\`\` **${current_page[i].title}**\n`;
+
+        if(real_page_size == 0) {                                                // if there are
+            page_content = "There are no events scheduled on this server.\n\n";  // no entries
+        }                                                                        //
+        else {
+            for (let i=0; i<current_page.length; i++) {
+                page_content += `\`\`[${i+1}]\`\` **${current_page[i].title}**#${current_page[i]._id}\n` +
+                                `        -by <@${current_page[i]._author}>\n\n`;
+            }
+            page_content += "\n";
+            if(real_page_size>1 && page_no<real_page_size ) {
+                page_content += `\`\`[${max_page_size+1}]\`\` **Go to next page**\n`;
+            }
+            if(page_no>1){
+                page_content += `\`\`[${max_page_size+2}]\`\` **Return to previous page**\n`;
+            }
         }
-        page_content += "\n";
-        if(real_page_size>1 && page_no<real_page_size )
-            page_content += `\`\`[${max_page_size+1}]\`\` **Go to next page**\n`;
-        if(page_no>1)
-            page_content += `\`\`[${max_page_size+2}]\`\` **Return to previous page**\n`;
-        page_content += `\`\`[cancel]\`\` **Exit view**\n`;
+        page_content += `## \`\`[cancel]\`\` **Exit view**\n`;
 
         let footer_content = `page ${page_no}/${real_page_size}`;
 
@@ -46,12 +55,14 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
     const getRemoveVerify = (event_no) => {
         let event = pages[current_page_no-1][event_no-1];
         let page_content = "" +
-            `Title: ${event.title}\n` +
-            `Start: ${event.start}\n` +
-            `End: ${event.end}\n\n` +
-            `\`\`[confirm]\`\` to delete the event\n` +
-            `\`\`[back]\`\` to return to event list\n` +
-            `\`\`[cancel]\`\` to quit the interactive`;
+            `\`\`Title\`\`: ${event.title}\n` +
+            `\`\`ID\`\`: ${event._id}\n` +
+            `\`\`Author\`\`: <@${event._author}>\n` +
+            `\`\`Start\`\`: ${event.start}\n` +
+            `\`\`End: ${event.end}\n\n` +
+            `##\`\`[confirm]\`\` to delete the event\n` +
+            `## \`\`[back]\`\` to return to event list\n` +
+            `## \`\`[cancel]\`\` to quit the interactive`;
 
         let footer_content = `event ${event_no}/${pages[current_page_no].length}`;
 
@@ -76,16 +87,16 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
 
                     if(confirm) {       // if in event view
                         if(usr_input == "confirm"){
-                            pages[current_page_no-1][current_event_no-1].remove();
-                            serverDocument.save(err => {
-                                if(err) {
-                                    winston.error(`Failed to remove event placeholder info`, {srvid: serverDocument._id}, err);
-                                } else {
-                                    msg.channel.createMessage("The event has been successfully removed").then((msg)=> {
-                                        setTimeout(()=>{msg.delete();},10000);
-                                    });
-                                }
-                            });
+                          //  pages[current_page_no-1][current_event_no-1].remove();
+                          //  serverDocument.save(err => {
+                          //      if(err) {
+                          //          winston.error(`Failed to remove event placeholder info`, {srvid: serverDocument._id}, err);
+                          //      } else {
+                          //          msg.channel.createMessage("The event has been successfully removed").then((msg)=> {
+                          //              setTimeout(()=>{msg.delete();},10000);
+                          //          });
+                          //      }
+                          //  });
                             embed = getPage(current_page_no);
                             confirm = false;
                         }
@@ -128,8 +139,9 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                     }
 
                     bot_message.delete();
-                    if(hasDeletePerm)
+                    if(hasDeletePerm) {
                         usr_message.delete();
+                    }
 
                     callback();
                 });
