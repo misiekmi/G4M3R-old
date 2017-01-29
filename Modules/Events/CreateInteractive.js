@@ -74,6 +74,11 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                 bot.awaitMessage(msg.channel.id, msg.author.id, usr_message => {
 
                     start = moment(usr_message.content.trim(), formats, true); // parse start time
+                    let secondStart = moment();
+
+                    msg.channel.createMessage(`${start}`);
+                    msg.channel.createMessage(`${secondStart}`);
+
                     let usrResponse = usr_message.content.trim().toLowerCase();
 
                     if (hasDeletePerm) {
@@ -89,10 +94,9 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                                 return;
                             case "skip":
                                 //TODO tried to store current date if users skips
-                                //let currentDate = new Date();
-                                //start = moment(currentDate, formats, true);
-                                //msg.channel.createMessage(`⏩ **Default start date ${start} added!**`);
-                                msg.channel.createMessage(`⏩ **No start date entered!**`);
+                                start = moment();
+                                msg.channel.createMessage(`⏩ **Default start date ${start} added!**`);
+                                //msg.channel.createMessage(`⏩ **No start date entered!**`);
                                 skipStart = true;
                                 break;
 
@@ -286,7 +290,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
 
                                                     let embed_fields = [];
                                                     
-                                                    if (skipStart) {
+                                                    /*if (skipStart) {
                                                         
                                                         serverDocument.gameEvents.push({
                                                             _id: newEventID,
@@ -306,7 +310,17 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                                                             _author: eventAuthor,
                                                             maxAttendees: maxAttendees
                                                         });
-                                                    }
+                                                    }*/
+
+                                                        serverDocument.gameEvents.push({
+                                                            _id: newEventID,
+                                                            title: title,
+                                                            start: start,
+                                                            end: end,
+                                                            description: description,
+                                                            _author: eventAuthor,
+                                                            maxAttendees: maxAttendees
+                                                        });
 
                                                     embed_fields = [{
                                                             name: "**Title**",
