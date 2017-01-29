@@ -5,7 +5,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
     let title = "",
         start, end, description,
         tags = [],
-        maxAttendees = "";
+        maxAttendees = 3;
     let skipStart = false;
 
     // for format options, reference: http://momentjs.com/docs/#/parsing/string-format/
@@ -74,10 +74,11 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                 bot.awaitMessage(msg.channel.id, msg.author.id, usr_message => {
 
                     start = moment(usr_message.content.trim(), formats, true); // parse start time
-                    let secondStart = moment();
-
-                    msg.channel.createMessage(`${start}`);
-                    msg.channel.createMessage(`${secondStart}`);
+                    //let secondStart = moment();
+                    
+                    //testing differences
+                    //msg.channel.createMessage(`${start}`);
+                    //msg.channel.createMessage(`${secondStart}`);
 
                     let usrResponse = usr_message.content.trim().toLowerCase();
 
@@ -94,9 +95,9 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                                 return;
                             case "skip":
                                 //TODO tried to store current date if users skips
-                                start = moment();
+                                start = moment(new Date(),formats,true);
                                 msg.channel.createMessage(`⏩ **Default start date ${start} added!**`);
-                                //msg.channel.createMessage(`⏩ **No start date entered!**`);
+                                // msg.channel.createMessage(`⏩ **No start date entered!**`);
                                 skipStart = true;
                                 break;
 
@@ -135,7 +136,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                                 bot_message.delete();
                             }
 
-                            if (!start.isValid()) {
+                            if (!end.isValid()) {
                                 switch (usrResponse) {
 
                                     case "exit":
@@ -143,7 +144,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                                         return;
 
                                     case "skip":
-                                        end = start;
+                                        end = start; //moment(new Date(),formats,true);
                                         msg.channel.createMessage(`⏩ **Default end date ${end} added!**`);
                                         break;
 
@@ -251,20 +252,22 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                                                 bot.awaitMessage(msg.channel.id, msg.author.id, usr_message => {
 
                                                     maxAttendees = parseInt(usr_message.content.trim());
+                                                    let strMaxAttendees = usr_message.content.trim();
                                                     if (hasDeletePerm) {
                                                         bot_message.delete();
                                                     }
-
-                                                    if (description.length > 2000 || description === "exit") {
-                                                        msg.channel.createMessage("ℹ **You just exited the Event creation process!**");
-                                                        return;
-                                                    } else {
-                                                        if (description === "skip") {
-                                                            maxAttendees = 3;
-                                                            msg.channel.createMessage("⏩ **Default maximum of 3 members set.**");
+                                                    if (isNaN(maxAttendees)) {
+                                                        
+                                                        if (strMaxAttendees.length > 2000 || strMaxAttendees === "exit") {
+                                                            msg.channel.createMessage("ℹ **You just exited the Event creation process!**");
+                                                            return;
+                                                        } else {
+                                                            if (strMaxAttendees === "skip") {
+                                                                maxAttendees = 3;
+                                                                msg.channel.createMessage("⏩ **Default maximum of 3 members set.**");
+                                                            }
                                                         }
                                                     }
-
                                                     //get max id from server document and count up
 
                                                     let newEventID = 0;
@@ -290,7 +293,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
 
                                                     let embed_fields = [];
                                                     
-                                                    /*if (skipStart) {
+                                                   /* if (skipStart) {
                                                         
                                                         serverDocument.gameEvents.push({
                                                             _id: newEventID,
@@ -334,12 +337,12 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                                                         },
                                                         {
                                                             name: "**Start**",
-                                                            value: `${moment(start)}`,
+                                                            value: `${start}`,
                                                             inline: false
                                                         },
                                                         {
                                                             name: "**End**",
-                                                            value: `${moment(end)}`,
+                                                            value: `${end}`,
                                                             inline: false
 
                                                         },

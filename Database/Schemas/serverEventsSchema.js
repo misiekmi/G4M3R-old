@@ -7,9 +7,9 @@ module.exports = new mongoose.Schema({
 		_author: {type: String, required: false, default: "unidentified"},
     	description: {type: String, required: false},
 		start: {type: Date, required: false},
-		end: {type: Date, required: false, default: this.start },
+		end: {type: Date, required: false },
 		isStarted: {type: Boolean, default: false},
-		maxAttendees: {type: Number, required: false, default: 3},
+		maxAttendees: {type: Number, required: false},
 		members: new mongoose.Schema({
 			_id: {type: String, required: false}
 		}),
