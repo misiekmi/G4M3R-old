@@ -218,7 +218,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                             event_edit = true;
                             event_view = false;
                             event_edit_attrib = 0;
-                            embed = getEditPage();
+                            embed = getEditPage(current_event_no);
                         }
                         // return to eventDocument list page
                         else if(usr_input == "back") {
@@ -295,7 +295,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                                         event_edit_attrib = 0;
                                         break;
                                     case 5:
-                                        if(isNaN(usr_input) && usr_input>=0) {
+                                        if(!isNaN(usr_input) && usr_input>=0) {
                                             eventDocument.maxAttendees = usr_input;
                                             event_edit_attrib = 0;
                                         } else {
@@ -313,8 +313,9 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                     }
                     else {      // otherwise in list view mode
                         // get eventDocument
-                        if (usr_message.content.trim() <= pages[current_page_no-1].length && usr_input > 0) {
+                        if (!isNaN(usr_input) && usr_input <= pages[current_page_no-1].length && usr_input > 0) {
                             current_event_no = usr_input;
+                            winston.info(`current event # ${current_event_no}`);
                             embed = getEventPage();
                             event_view = true;
                         }
