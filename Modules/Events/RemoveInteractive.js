@@ -56,7 +56,6 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
         let event = pages[current_page_no-1][event_no-1];
         let page_content = "" +
             `\`\`Title\`\`: ${event.title}\n` +
-            `\`\`ID\`\`: ${event._id}\n` +
             `\`\`Author\`\`: <@${event._author}>\n` +
             `\`\`Start\`\`: ${event.start}\n` +
             `\`\`End: ${event.end}\n\n` +
@@ -64,7 +63,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
             `## \`\`[back]\`\` to return to event list\n` +
             `## \`\`[exit]\`\` to quit the interactive`;
 
-        let footer_content = `event ${event_no}/${pages[current_page_no].length}`;
+        let footer_content = `event ID# ${event._id}`;
 
         return {embed: {description: page_content, footer: {text: footer_content}}}
     };

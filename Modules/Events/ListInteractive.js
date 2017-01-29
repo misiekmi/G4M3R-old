@@ -49,7 +49,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
 
         page_content += `## \`\`[exit]\`\` to exit the menu\n`;
 
-        let footer_content = `page ${page_no}/${real_page_size}`;
+        let footer_content = real_page_size>0 ? `page ${page_no}/${real_page_size}` : `page 1/1`;
 
         return {embed: {description: page_content, footer: {text: footer_content}}};
     };
@@ -59,17 +59,16 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
         let event = pages[current_page_no-1][event_no-1];
         let page_content = "" +
             `\`\`Title\`\`: ${event.title}\n` +
-            `\`\`ID\`\`: ${event._id}\n` +
             `\`\`Author\`\`: <@${event._author}>\n` +
             `\`\`Start\`\`: ${event.start}\n` +
             `\`\`End\`\`: ${event.end}\n` +
             `\`\`Description\`\`: ${event.description}\n` +
-            `\`\`Max Attendees\`\`: ${event.maxAttendees}\n` +
-            `\`\`Members\`\`: ${event.members}\n\n` +
+            `\`\`Members\`\`: ${event.members.length}\n\n` +
+            `\`\`Max Members\`\`: ${event.maxAttendees}\n` +
             `## \`\`[back]\`\` to return to event list\n` +
             `## \`\`[exit]\`\` to exit the menu`;
 
-        let footer_content = `event ${event_no}/${pages[current_page_no].length}`;
+        let footer_content = `event ID# ${event._id}`;
 
         return {embed: {description: page_content, footer: {text: footer_content}}};
     };
