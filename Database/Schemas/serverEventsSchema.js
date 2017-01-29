@@ -15,6 +15,5 @@ module.exports = new mongoose.Schema({
 		}),
 		tags: new mongoose.Schema({
 			_id: {type: String, required: false}
-		}),
-		platform: {type: String, required: false}
+		})
 });
