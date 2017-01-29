@@ -120,8 +120,8 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
 
                                     let newEventID = 0;
                                     let maxEventID= 0;
-
-                                    if(serverDocument.gameEvents.length <= 0) {
+                                            
+                                    if(typeof serverDocument.gameEvents[0] === 'undefined' || typeof serverDocument.gameEvents.length === 0 || serverDocument.gameEvents[0] === null) {
                                             maxEventID = 0;
                                     } else {    
                                         maxEventID = Math.max.apply(Math, serverDocument.gameEvents.map(a=>a._id));
