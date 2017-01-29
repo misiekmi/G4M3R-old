@@ -12,7 +12,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
     for( let i = 0; i<tmp.length; i++ ) {
         new_page.push(tmp[i]);
 
-        if((i+1)%max_page_size===0) {   // if page size has been reached
+        if((i+1)%max_page_size==0) {   // if page size has been reached
             pages.push(new_page);       // push the page onto pages,
             pages++;                    // increase size counter,
             new_page = [];              // reset page,
@@ -47,9 +47,9 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
             }
         }
 
-        page_content += `## \`\`[cancel]\`\` to exit the menu\n`;
+        page_content += `## \`\`[exit]\`\` to exit the menu\n`;
 
-        let footer_content = `page ${page_no}/${real_page_size}`;
+        let footer_content = real_page_size>0 ? `page ${page_no}/${real_page_size}` : `page 1/1`;
 
         return {embed: {description: page_content, footer: {text: footer_content}}};
     };
@@ -57,9 +57,19 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
     // function which is used to generate the page view of a single event entry
     const getEventPage = (event_no) => {
         let event = pages[current_page_no-1][event_no-1];
+        let page_content = "" +
+            `\`\`Title\`\`: ${event.title}\n` +
+            `\`\`Author\`\`: <@${event._author}>\n` +
+            `\`\`Start\`\`: ${event.start}\n` +
+            `\`\`End\`\`: ${event.end}\n` +
+            `\`\`Description\`\`: ${event.description}\n` +
+            //`\`\`Tags\`\`: ${event.tags}\n` +
+            `\`\`Members\`\`: ${event.members.length}\n\n` +
+            `\`\`Max Members\`\`: ${event.maxAttendees}\n` +
+            `## \`\`[back]\`\` to return to event list\n` +
+            `## \`\`[exit]\`\` to exit the menu`;
 
-
-        let footer_content = `event ${event_no}/${pages[current_page_no].length}`;
+        let footer_content = `event ID# ${event._id}`;
 
         return {embed: {description: page_content, footer: {text: footer_content}}};
     };
@@ -74,8 +84,11 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
         },
         (callback) => {
             msg.channel.createMessage(embed).then(bot_message => {
+                let timeout = setTimeout(()=>{bot_message.delete();}, 60000); //delete message in 1 minute
+
                 bot.awaitMessage(msg.channel.id, msg.author.id, usr_message => {
                     bot.removeMessageListener(msg.channel.id, msg.author.id);
+                    clearTimeout(timeout);  //clear the active timeout
 
                     let usr_input = usr_message.content.trim();
 
@@ -86,7 +99,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                             embed = getPage(current_page_no);
                         }
                         // exit
-                        else if(usr_input == "cancel") {
+                        else if(usr_input == "exit") {
                             cancel = true;
                         }
                     }
@@ -107,7 +120,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                             embed = getPage(current_page_no);
                         }
                         // exit interactive
-                        else if(usr_input.toLowerCase() == "cancel") {
+                        else if(usr_input.toLowerCase() == "exit") {
                             cancel = true;
                         }
                         // error
