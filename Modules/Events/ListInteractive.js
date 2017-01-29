@@ -30,7 +30,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
         let current_page = pages[page_no-1];
         let page_content = "";
 
-        if(real_page_size == 0) {                                                // if there are
+        if(real_page_size === 0) {                                                // if there are
             page_content = "There are no events scheduled on this server.\n\n";  // no entries
         }                                                                        //
         else {
@@ -57,17 +57,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
     // function which is used to generate the page view of a single event entry
     const getEventPage = (event_no) => {
         let event = pages[current_page_no-1][event_no-1];
-        let page_content = "" +
-            `\`\`Title\`\`: ${event.title}\n` +
-            `\`\`ID\`\`: ${event._id}\n` +
-            `\`\`Author\`\`: <@${event._author}>\n` +
-            `\`\`Start\`\`: ${event.start}\n` +
-            `\`\`End\`\`: ${event.end}\n` +
-            `\`\`Description\`\`: ${event.description}\n` +
-            `\`\`Max Attendees\`\`: ${event.maxAttendees}\n` +
-            `\`\`Members\`\`: ${event.members}\n\n` +
-            `## \`\`[back]\`\` to return to event list\n` +
-            `## \`\`[cancel]\`\` to exit the menu`;
+
 
         let footer_content = `event ${event_no}/${pages[current_page_no].length}`;
 
