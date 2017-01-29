@@ -46,7 +46,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
         }
         page_content += `## \`\`[exit]\`\` to quit the interactive\n`;
 
-        let footer_content = `page ${page_no}/${real_page_size}`;
+        let footer_content = real_page_size>0 ? `page ${page_no}/${real_page_size}` : `page 1/1`;
 
         return {embed: {description: page_content, footer: {text: footer_content}}}
     };
@@ -58,7 +58,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
             `\`\`Title\`\`: ${event.title}\n` +
             `\`\`Author\`\`: <@${event._author}>\n` +
             `\`\`Start\`\`: ${event.start}\n` +
-            `\`\`End: ${event.end}\n\n` +
+            `\`\`End:\`\` ${event.end}\n\n` +
             `##\`\`[confirm]\`\` to delete the event\n` +
             `## \`\`[back]\`\` to return to event list\n` +
             `## \`\`[exit]\`\` to quit the interactive`;
@@ -94,11 +94,13 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                                 if(err) {
                                     winston.error(`Failed to remove event placeholder info`, {srvid: serverDocument._id}, err);
                                 } else {
-                                    msg.channel.createMessage("The event has been successfully removed").then((msg)=> {
+                                    msg.channel.createMessage(`Event #${pages[current_page_no-1][current_event_no-1]._id} has been successfully removed`).then((msg)=> {
                                         setTimeout(()=>{msg.delete();},10000);
                                     });
                                 }
                             });
+                            pages[current_page_no-1] = pages[current_page_no-1].splice(current_event_no-1, 1);
+
                             embed = getPage(current_page_no);
                             confirm = false;
                         }

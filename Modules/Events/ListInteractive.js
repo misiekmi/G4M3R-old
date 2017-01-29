@@ -12,7 +12,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
     for( let i = 0; i<tmp.length; i++ ) {
         new_page.push(tmp[i]);
 
-        if((i+1)%max_page_size===0) {   // if page size has been reached
+        if((i+1)%max_page_size==0) {   // if page size has been reached
             pages.push(new_page);       // push the page onto pages,
             pages++;                    // increase size counter,
             new_page = [];              // reset page,
@@ -63,6 +63,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
             `\`\`Start\`\`: ${event.start}\n` +
             `\`\`End\`\`: ${event.end}\n` +
             `\`\`Description\`\`: ${event.description}\n` +
+            `\`\`Tags\`\`: ${event.tags}\n` +
             `\`\`Members\`\`: ${event.members.length}\n\n` +
             `\`\`Max Members\`\`: ${event.maxAttendees}\n` +
             `## \`\`[back]\`\` to return to event list\n` +
