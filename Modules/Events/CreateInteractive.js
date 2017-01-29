@@ -121,7 +121,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                                         var newEventID = 0;
                                         var maxEventID= 0;
 
-                                        if(serverDocument.gameEvents[0] === null) {
+                                        if(serverDocument.gameEvents.length <= 0) {
                                              maxEventID = 0;
                                         } else {    
                                             maxEventID = Math.max.apply(Math, serverDocument.gameEvents.map(a=>a._id));
