@@ -94,7 +94,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                                 msg.channel.createMessage("ℹ **You just exited the Event creation process!**");
                                 return;
                             case "skip":
-                                //TODO tried to store current date if users skips
+                                //getting current date as start date (and end date)
                                 start = moment(new Date(),formats,true);
                                 msg.channel.createMessage(`⏩ **Default start date ${start} added!**`);
                                 // msg.channel.createMessage(`⏩ **No start date entered!**`);
@@ -292,29 +292,6 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                                                     let eventAuthor = msg.author.id;
 
                                                     let embed_fields = [];
-                                                    
-                                                   /* if (skipStart) {
-                                                        
-                                                        serverDocument.gameEvents.push({
-                                                            _id: newEventID,
-                                                            title: title,
-                                                            description: description,
-                                                            _author: eventAuthor,
-                                                            maxAttendees: maxAttendees
-                                                        });
-                                                    } else {
-                                                        
-                                                        serverDocument.gameEvents.push({
-                                                            _id: newEventID,
-                                                            title: title,
-                                                            start: start,
-                                                            end: end,
-                                                            description: description,
-                                                            _author: eventAuthor,
-                                                            maxAttendees: maxAttendees
-                                                        });
-                                                    }*/
-
                                                         serverDocument.gameEvents.push({
                                                             _id: newEventID,
                                                             title: title,
