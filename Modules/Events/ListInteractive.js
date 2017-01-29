@@ -63,12 +63,12 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
         let page_content = "" +
             `\`\`Title\`\`: ${event.title}\n` +
             `\`\`Author\`\`: <@${event._author}>\n` +
-            `\`\`Start\`\`: ${event.start}\n` +
-            `\`\`End\`\`: ${event.end}\n` +
-            `\`\`Description\`\`: ${event.description}\n` +
+            //`\`\`Start\`\`: ${event.start}\n` +
+            //`\`\`End\`\`: ${event.end}\n` +
+            //`\`\`Description\`\`: ${event.description}\n` +
             //`\`\`Tags\`\`: ${event.tags}\n` +
-            `\`\`Members\`\`: ${event.members.length}\n\n` +
-            `\`\`Max Members\`\`: ${event.maxAttendees}\n` +
+            //`\`\`Members\`\`: ${event.members.length}\n\n` +
+            //`\`\`Max Members\`\`: ${event.maxAttendees}\n` +
             `##\`\`[edit]\`\` to edit the event\n` +
             `##\`\`[delete]\`\` to delete the event\n` +
             `## \`\`[back]\`\` to return to event list\n` +
