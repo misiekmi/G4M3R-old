@@ -63,13 +63,13 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
         let page_content = "" +
             `\`\`Title\`\`: ${event.title}\n` +
             `\`\`Author\`\`: <@${event._author}>\n` +
-            //`\`\`Start\`\`: ${event.start}\n` +
-            //`\`\`End\`\`: ${event.end}\n` +
-            //`\`\`Description\`\`: ${event.description}\n` +
+            `\`\`Start\`\`: ${event.start}\n` +
+            `\`\`End\`\`: ${event.end}\n` +
+            `\`\`Description\`\`: ${event.description}\n` +
             //`\`\`Tags\`\`: ${event.tags}\n` +
             //`\`\`Members\`\`: ${event.members.length}\n\n` +
-            //`\`\`Max Members\`\`: ${event.maxAttendees}\n` +
-            `##\`\`[edit]\`\` to edit the event\n` +
+            `\`\`Max Members\`\`: ${event.maxAttendees}\n` +
+            `\n##\`\`[edit]\`\` to edit the event\n` +
             `##\`\`[delete]\`\` to delete the event\n` +
             `## \`\`[back]\`\` to return to event list\n` +
             `## \`\`[exit]\`\` to exit the menu`;
@@ -86,7 +86,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
             `\`\`[2]\`\` Start: ${event.start}\n` +
             `\`\`[3]\`\` End: ${event.end}\n` +
             `\`\`[4]\`\` Desc: ${event.description}\n` +
-            `\`\`[5]\`\`: ${event.maxAttendees}\n\n` +
+            `\`\`[5]\`\` Max Members: ${event.maxAttendees}\n\n` +
             //`\`\`[6]\`\` Tags: ${event.tags}\n` +
             `## \`\`[back]\`\` to return to event page\n` +
             `## \`\`[exit]\`\` to exit the menu`;
@@ -198,7 +198,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                         if(usr_input == "delete"){
                             let id = pages[current_page_no-1][current_event_no-1]._id;
                             pages[current_page_no-1][current_event_no-1].remove();
-                            pages[current_page_no-1] = pages[current_page_no-1].splice(current_event_no-1, 1);
+                            pages[current_page_no-1].splice(current_event_no-1, 1);
 
                             serverDocument.save(err => {
                                 if(err) {
@@ -235,23 +235,23 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                             }
                             else {
                                 switch(usr_input) {
-                                    case 1: // title
+                                    case "1": // title
                                         embed = getEditTitle();
                                         event_edit_attrib = 1;
                                         break;
-                                    case 2: // start
+                                    case "2": // start
                                         embed = getEditStart();
                                         event_edit_attrib = 2;
                                         break;
-                                    case 3: // end
+                                    case "3": // end
                                         embed = getEditEnd();
                                         event_edit_attrib = 3;
                                         break;
-                                    case 4: // description
+                                    case "4": // description
                                         embed = getEditDesc();
                                         event_edit_attrib = 4;
                                         break;
-                                    case 5: // maximum members
+                                    case "5": // maximum members
                                         embed = getEditMaxMem();
                                         event_edit_attrib = 5;
                                         break;
