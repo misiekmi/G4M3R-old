@@ -210,7 +210,6 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
 
                                             tags.push(usr_message.content.trim().split(","));
                                             //testing tags
-                                            msg.channel.createMessage(tags);
 
                                             if (hasDeletePerm) {
                                                 bot_message.delete();
@@ -360,15 +359,6 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                                                                     },
                                                                     color: 0xffffff,
                                                                     fields: embed_fields
-                                                                }
-                                                            });
-                                                            msg.channel.createMessage({
-                                                                embed: {
-                                                                    author: {
-                                                                        name: `~~ Event with **🆔[${newEventID}]** successfully created ~~`,
-                                                                    },
-                                                                    color: 0xffffff,
-                                                                    description: embed_string
                                                                 }
                                                             });
                                                         }
