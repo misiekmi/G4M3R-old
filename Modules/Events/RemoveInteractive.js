@@ -44,7 +44,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                 page_content += `\`\`[${max_page_size+2}]\`\` **Return to previous page**\n`;
             }
         }
-        page_content += `## \`\`[cancel]\`\` **Exit view**\n`;
+        page_content += `## \`\`[exit]\`\` to quit the interactive\n`;
 
         let footer_content = `page ${page_no}/${real_page_size}`;
 
@@ -62,7 +62,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
             `\`\`End: ${event.end}\n\n` +
             `##\`\`[confirm]\`\` to delete the event\n` +
             `## \`\`[back]\`\` to return to event list\n` +
-            `## \`\`[cancel]\`\` to quit the interactive`;
+            `## \`\`[exit]\`\` to quit the interactive`;
 
         let footer_content = `event ${event_no}/${pages[current_page_no].length}`;
 
@@ -80,23 +80,26 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
         },
         (callback) => {
             msg.channel.createMessage(embed).then(bot_message => {
+                let timeout = setTimeout(()=>{bot_message.delete();}, 60000); //delete message in 1 minute
+
                 bot.awaitMessage(msg.channel.id, msg.author.id, usr_message => {
-                    bot.removeMessageListener(msg.channel.id, msg.author.id);
+                    bot.removeMessageListener(msg.channel.id, msg.author.id); // remove the awaitMessage listener
+                    clearTimeout(timeout);  //clear the active timeout
 
                     let usr_input = usr_message.content.trim();
 
                     if(confirm) {       // if in event view
                         if(usr_input == "confirm"){
-                          //  pages[current_page_no-1][current_event_no-1].remove();
-                          //  serverDocument.save(err => {
-                          //      if(err) {
-                          //          winston.error(`Failed to remove event placeholder info`, {srvid: serverDocument._id}, err);
-                          //      } else {
-                          //          msg.channel.createMessage("The event has been successfully removed").then((msg)=> {
-                          //              setTimeout(()=>{msg.delete();},10000);
-                          //          });
-                          //      }
-                          //  });
+                            pages[current_page_no-1][current_event_no-1].remove();
+                            serverDocument.save(err => {
+                                if(err) {
+                                    winston.error(`Failed to remove event placeholder info`, {srvid: serverDocument._id}, err);
+                                } else {
+                                    msg.channel.createMessage("The event has been successfully removed").then((msg)=> {
+                                        setTimeout(()=>{msg.delete();},10000);
+                                    });
+                                }
+                            });
                             embed = getPage(current_page_no);
                             confirm = false;
                         }
@@ -106,13 +109,14 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                             embed = getPage(current_page_no);
                         }
                         // exit
-                        else if(usr_input == "cancel") {
+                        else if(usr_input == "exit") {
                             cancel = true;
                         }
                     }
                     else {      // otherwise
                         // get event
                         if (usr_message.content.trim() <= pages[current_page_no-1].length && usr_input > 0) {
+                            current_event_no = usr_input;
                             embed = getRemoveVerify(usr_input);
                             confirm = true;
                         }
@@ -127,7 +131,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                             embed = getPage(current_page_no);
                         }
                         // exit interactive
-                        else if(usr_input.toLowerCase() == "cancel") {
+                        else if(usr_input.toLowerCase() == "exit") {
                             cancel = true;
                         }
                         // error

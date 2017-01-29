@@ -47,7 +47,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
             }
         }
 
-        page_content += `## \`\`[cancel]\`\` to exit the menu\n`;
+        page_content += `## \`\`[exit]\`\` to exit the menu\n`;
 
         let footer_content = `page ${page_no}/${real_page_size}`;
 
@@ -67,7 +67,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
             `\`\`Max Attendees\`\`: ${event.maxAttendees}\n` +
             `\`\`Members\`\`: ${event.members}\n\n` +
             `## \`\`[back]\`\` to return to event list\n` +
-            `## \`\`[cancel]\`\` to exit the menu`;
+            `## \`\`[exit]\`\` to exit the menu`;
 
         let footer_content = `event ${event_no}/${pages[current_page_no].length}`;
 
@@ -84,8 +84,11 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
         },
         (callback) => {
             msg.channel.createMessage(embed).then(bot_message => {
+                let timeout = setTimeout(()=>{bot_message.delete();}, 60000); //delete message in 1 minute
+
                 bot.awaitMessage(msg.channel.id, msg.author.id, usr_message => {
                     bot.removeMessageListener(msg.channel.id, msg.author.id);
+                    clearTimeout(timeout);  //clear the active timeout
 
                     let usr_input = usr_message.content.trim();
 
@@ -96,7 +99,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                             embed = getPage(current_page_no);
                         }
                         // exit
-                        else if(usr_input == "cancel") {
+                        else if(usr_input == "exit") {
                             cancel = true;
                         }
                     }
@@ -117,7 +120,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                             embed = getPage(current_page_no);
                         }
                         // exit interactive
-                        else if(usr_input.toLowerCase() == "cancel") {
+                        else if(usr_input.toLowerCase() == "exit") {
                             cancel = true;
                         }
                         // error
