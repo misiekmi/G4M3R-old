@@ -270,13 +270,11 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                                 switch(event_edit_attrib) {
                                     case 1:
                                         eventDocument.title = usr_input;
-                                        event_edit_attrib = 0;
                                         break;
                                     case 2:
                                         time = moment(usr_message.content.trim(), formats, true); // parse start time
                                         if(time.isValid()){
                                             eventDocument.start = time;
-                                            event_edit_attrib = 0;
                                         } else {
                                             // TODO error message
                                         }
@@ -285,19 +283,16 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                                         time = moment(usr_message.content.trim(), formats, true); // parse start time
                                         if(time.isValid()){
                                             eventDocument.end = time;
-                                            event_edit_attrib = 0;
                                         } else {
                                             // TODO error message
                                         }
                                         break;
                                     case 4:
                                         eventDocument.description = usr_input;
-                                        event_edit_attrib = 0;
                                         break;
                                     case 5:
                                         if(!isNaN(usr_input) && usr_input>=0) {
                                             eventDocument.maxAttendees = usr_input;
-                                            event_edit_attrib = 0;
                                         } else {
                                             // TODO error message
                                         }
@@ -308,6 +303,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                                         winston.error(`Failed to save event changes`, {srvid: serverDocument._id}, err);
                                     }
                                 });
+                                event_edit_attrib = 0;
                             }
                         }
                     }
