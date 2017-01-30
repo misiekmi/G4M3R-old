@@ -349,7 +349,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                                                             msg.channel.createMessage({
                                                                 embed: {
                                                                     author: {
-                                                                        name: `~~ Event with **🆔[${newEventID}]** successfully created ~~`,
+                                                                        name: `~~ Event with 🆔[${newEventID}] successfully created ~~`,
                                                                     },
                                                                     color: 0xffffff,
                                                                     fields: embed_fields
