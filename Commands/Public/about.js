@@ -33,7 +33,7 @@ let strTitle = "";
 					icon_url: bot.user.avatarURL,
 					url: "https://github.com/pedall/G4M3R"
 				},
-				color: 0x9ECDF2,
+				color: 0x2ee1e4,
 				title: "Information about G4M3R",
 				description: strTitle,
 				footer: {

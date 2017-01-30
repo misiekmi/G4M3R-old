@@ -15,7 +15,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
     for( let i = 0; i<tmp.length; i++ ) {
         new_page.push(tmp[i]);
 
-        if((i+1)%max_page_size==0) {    // if page size has been reached
+        if((i+1)%max_page_size===0) {   // if page size has been reached
             pages.push(new_page);       // push the page onto pages,
             pages++;                    // increase size counter,
             new_page = [];              // reset page,
@@ -33,7 +33,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
         let current_page = pages[current_page_no-1];
         let page_content = "";
 
-        if(real_page_size == 0) {                                                // if there are
+        if(real_page_size === 0) {                                                // if there are
             page_content = "There are no events scheduled on this server.\n\n";  // no entries
         }                                                                        //
         else {
