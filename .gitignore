@@ -6,6 +6,8 @@
 *.log
 .*
 !.gitignore
+!.gitattributes
+
 
 #ignore folders
 node_modules/
