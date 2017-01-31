@@ -66,7 +66,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
             `\`\`Start\`\`: ${event.start}\n` +
             `\`\`End\`\`: ${event.end}\n` +
             `\`\`Description\`\`: ${event.description}\n` +
-            //`\`\`Tags\`\`: ${event.tags}\n` +
+            `\`\`Tags\`\`: ${event.tags}\n` +
             //`\`\`Members\`\`: ${event.members.length}\n\n` +
             `\`\`Max Members\`\`: ${event.maxAttendees}\n` +
             `\n##\`\`[edit]\`\` to edit the event\n` +
