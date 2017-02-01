@@ -1,65 +1,23 @@
 const async = require("async");
 const moment = require("moment");
 
-module.exports = (bot, db, winston, serverDocument, msg) => {
+module.exports = (bot, db, winston, serverDocument, msg, hasArgs, firstArg, secondArg) => {
     const hasDeletePerm = msg.channel.permissionsOf(bot.user.id).has("manageMessages");
-    const max_page_size = 7;    // maximum events viewable per page
+    
     // for format options, reference: http://momentjs.com/docs/#/parsing/string-format/
     const formats = ["YYYY/MM/DD H:mm", "YYYY/MM/DD h:mma", "YYYY/MM/DD"];
 
     let tmp = serverDocument.gameEvents;
-    let pages = [];
+    let event = tmp.find(findEvent);
 
-    // generate a nested array representing viewable pages of events
-    let new_page = [];
-    for( let i = 0; i<tmp.length; i++ ) {
-        new_page.push(tmp[i]);
 
-        if((i+1)%max_page_size===0) {   // if page size has been reached
-            pages.push(new_page);       // push the page onto pages,
-            pages++;                    // increase size counter,
-            new_page = [];              // reset page,
-        }
+    function findEvent(_event) {
+        return _event._id === firstArg;
     }
-    if(new_page.length>0){          // add the last page if it wasn't filled
-        pages.push(new_page);       // and added in the previous loop
-    }
-
-    pages.push([]);                         // weird fix, add an extra empty page
-    let real_page_size = pages.length-1;    // set to never logically access it
-
-    // function that is used to generate
-    const getPage = () => {
-        let current_page = pages[current_page_no-1];
-        let page_content = "";
-
-        if(real_page_size === 0) {                                                // if there are
-            page_content = "There are no events scheduled on this server.\n\n";  // no entries
-        }                                                                        //
-        else {
-            for (let i=0; i<current_page.length; i++) {
-                page_content += `\`\`[#${current_page[i]._id}]\`\` **${current_page[i].title}\n` +
-                    `        -by <@${current_page[i]._author}>\n\n`;
-            }
-            page_content += "\n";
-            if(real_page_size>1 && current_page_no<real_page_size ) {
-                page_content += `## \`\`[${max_page_size+1}]\`\` Go to next page\n`;
-            }
-            if(current_page_no>1){
-                page_content += `## \`\`[${max_page_size+2}]\`\` Return to previous page\n`;
-            }
-        }
-
-        page_content += `## \`\`[exit]\`\` to exit the menu\n`;
-
-        let footer_content = real_page_size>0 ? `page ${current_page_no}/${real_page_size}` : `page 1/1`;
-
-        return {embed: {description: page_content, footer: {text: footer_content}}};
-    };
+  
 
     // function which is used to generate the page view of a single event entry
     const getEventPage = () => {
-        let event = pages[current_page_no-1][current_event_no-1];
         let page_content
          = "" +
             `\`\`Title\`\`: ${event.title}\n` +
@@ -98,7 +56,6 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
     };
 
     const getEditTitle = () => {
-        let event = pages[current_page_no-1][current_event_no-1];
 
         let page_content = "" +
             `Current title: \`\`${event.title}\`\`\n` +
@@ -112,7 +69,6 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
     };
 
     const getEditStart = () => {
-        let event = pages[current_page_no-1][current_event_no-1];
 
         let page_content = "" +
             `Current start: \`\`${event.start}\n\`\`` +
@@ -126,7 +82,6 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
     };
 
     const getEditEnd = () => {
-        let event = pages[current_page_no-1][current_event_no-1];
 
         let page_content = "" +
             `Current start: \`\`${event.end}\n\`\`` +
@@ -140,7 +95,6 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
     };
 
     const getEditDesc = () => {
-        let event = pages[current_page_no-1][current_event_no-1];
 
         let page_content = "" +
             `Current Description: \n\`\`${event.description}\`\`\n\n` +
@@ -154,7 +108,6 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
     };
 
     const getEditMaxMem = () => {
-        let event = pages[current_page_no-1][current_event_no-1];
 
         let page_content = "" +
             `Current maximum member count: \n\`\`${event.maxAttendees}\`\`\n\n` +
@@ -166,9 +119,6 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
 
         return {embed: {description: page_content, footer: {text: footer_content}}};
     };
-
-    let current_page_no = 1;
-    let current_event_no = 1;
 
     let embed = getPage();
     let cancel = false;
