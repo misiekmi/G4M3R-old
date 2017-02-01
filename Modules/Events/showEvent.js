@@ -8,13 +8,14 @@ module.exports = (bot, db, winston, serverDocument, msg, hasArgs, firstArg, seco
     const formats = ["YYYY/MM/DD H:mm", "YYYY/MM/DD h:mma", "YYYY/MM/DD"];
 
     let tmp = serverDocument.gameEvents;
-    let event = tmp.find(findEvent);
+    
 
 
     function findEvent(_event) {
         return _event._id === firstArg;
     }
   
+    let event = tmp.find(findEvent);
 
     // function which is used to generate the page view of a single event entry
     const getEventPage = () => {
@@ -38,6 +39,10 @@ module.exports = (bot, db, winston, serverDocument, msg, hasArgs, firstArg, seco
         return {embed: {description: page_content, footer: {text: footer_content}}};
     };
 
+let embed = getEventPage();
+msg.channel.createMessage(embed);
+
+/*
     const getEditPage = () => {
         let event = pages[current_page_no-1][current_event_no-1];
         let page_content = "" +
@@ -120,7 +125,7 @@ module.exports = (bot, db, winston, serverDocument, msg, hasArgs, firstArg, seco
         return {embed: {description: page_content, footer: {text: footer_content}}};
     };
 
-    let embed = getPage();
+    let embed = getEventPage();
     let cancel = false;
 
     let event_view = false;
@@ -297,4 +302,5 @@ module.exports = (bot, db, winston, serverDocument, msg, hasArgs, firstArg, seco
                 });
             });
         });
+*/
 };
