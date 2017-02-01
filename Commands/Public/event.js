@@ -9,6 +9,7 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
 	let isAdmin = false;
 	let firstArg = 0;
 	let secondArg;
+    let embed = "";
 
 
     if( suffix ) {
@@ -23,7 +24,13 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
                 if (parse) {
                 show(bot, db, winston, serverDocument, msg, hasArgs, firstArg, secondArg);
                 } else {
-                    msg.channel.createMessage("Parsing Args failed!");
+                    embed = {embed: 
+                        {
+                        title: `Missing event ID to get event information!`,
+                        description: `Please enter a valid event ID 'event show <ID>'`, 
+                        }
+                    };
+                    msg.channel.createMessage(embed);
                 }
                 break;
         }
@@ -36,7 +43,7 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
 		const params = suffix.split(" ");
 
 		if(params.length >= 1) {
-			firstArg = params[1].trim().toLowerCase();
+			firstArg = params[1].trim();
 		}
 
 		if(params.length >= 2) {
