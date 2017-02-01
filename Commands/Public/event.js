@@ -5,10 +5,10 @@ const show = require("./../../Modules/Events/showEvent.js");
 module.exports = (bot, db, config, winston, userDocument, serverDocument, channelDocument, memberDocument, msg, suffix, commandData) => {
    
     // settings
-	this.hasArgs = false;
-	this.isAdmin = false;
-	this.firstArg = "";
-	this.secondArg = "";
+	let hasArgs = false;
+	let isAdmin = false;
+	let firstArg = 0;
+	let secondArg;
 
 
     if( suffix ) {
@@ -20,7 +20,11 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
                 list(bot, db, winston, serverDocument, msg);
                 break;
             case "show":
-                show(bot, db, winston, serverDocument, msg, this.hasArgs, this.firstArg, this.secondArg);
+                if (parse) {
+                show(bot, db, winston, serverDocument, msg, hasArgs, firstArg, secondArg);
+                } else {
+                    msg.channel.createMessage("Parsing Args failed!");
+                }
                 break;
         }
     }
@@ -28,20 +32,20 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
         // probably return a help message TODO yupp
     }
 
-	this.parse = () => {
+	var parse = () => {
 		const params = suffix.split(" ");
 
 		if(params.length >= 1) {
-			this.firstArg = params[1].trim().toLowerCase();
+			firstArg = params[1].trim().toLowerCase();
 		}
 
 		if(params.length >= 2) {
-			this.secondArg = params[2].trim();
+			secondArg = params[2].trim();
 		}
         
 		const admin_user = serverDocument.config.admins.id(msg.author.id);
-		this.isAdmin = admin_user && admin_user.level;
-		this.hasArgs = params.length > 1;
+		isAdmin = admin_user && admin_user.level;
+		hasArgs = params.length > 1;
 
 		return true;
 	};
