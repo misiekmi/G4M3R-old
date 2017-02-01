@@ -7,16 +7,13 @@ module.exports = (bot, db, winston, serverDocument, msg, hasArgs, firstArg, seco
     // for format options, reference: http://momentjs.com/docs/#/parsing/string-format/
     const formats = ["YYYY/MM/DD H:mm", "YYYY/MM/DD h:mma", "YYYY/MM/DD"];
 
-    let tmp = [];
-    tmp = serverDocument.gameEvents;
+    this.get = _eventID => {
+		 _eventID = firstArg;
+		return serverDocument.gameEvents._id(_eventID);
+	};
 
-
-    function findEvent(_event) {
-        return _event._id === firstArg;
-    }
-  
-    let event = tmp.find(findEvent);
-
+    let event = this.get();
+    
     msg.channel.createMessage(event);
 
     // function which is used to generate the page view of a single event entry

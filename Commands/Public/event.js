@@ -27,7 +27,7 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
                     embed = {embed: 
                         {
                         title: `Missing event ID to get event information!`,
-                        description: `Please enter a valid event ID 'event show <ID>'`, 
+                        description: `Please enter a valid event ID!\n\nUsage: 'event show <ID>'`, 
                         }
                     };
                     msg.channel.createMessage(embed);
