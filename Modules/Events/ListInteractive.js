@@ -61,14 +61,14 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
     const getEventPage = () => {
         let event = pages[current_page_no-1][current_event_no-1];
         let page_content = "" +
-            `\`\`Title\`\`: ${event.title}\n` +
-            `\`\`Author\`\`: <@${event._author}>\n` +
-            `\`\`Start\`\`: ${event.start}\n` +
-            `\`\`End\`\`: ${event.end}\n` +
-            `\`\`Description\`\`: ${event.description}\n` +
-            `\`\`Tags\`\`: ${event.tags}\n` +
-            //`\`\`Members\`\`: ${event.members.length}\n\n` +
-            `\`\`Max Members\`\`: ${event.maxAttendees}\n` +
+            `Title: ${event.title}\n` +
+            `Author: <@${event._author}>\n` +
+            `Start: ${event.start}\n` +
+            `End: ${event.end}\n` +
+            `Description: ${event.description}\n` +
+            `Tags: ${event.tags}\n` +
+            `Attendee Count: ${event.members.length}\n` +
+            `Attendee Max: ${event.attendee_max}\n` +
             `\n##\`\`[edit]\`\` to edit the event\n` +
             `##\`\`[delete]\`\` to delete the event\n` +
             `## \`\`[back]\`\` to return to event list\n` +

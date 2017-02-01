@@ -45,9 +45,10 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                 msg.channel.createMessage("ℹ **You just exited the Event creation process!**");
                 return;
             }
-            //only delete message if bot has the correct rights to do it.
+
+            bot_message.delete();
             if (hasDeletePerm) {
-                bot_message.delete();
+                usr_message.delete();
             }
 
 
@@ -82,8 +83,9 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
 
                     let usrResponse = usr_message.content.trim().toLowerCase();
 
+                    bot_message.delete();
                     if (hasDeletePerm) {
-                        bot_message.delete();
+                        usr_message.delete();
                     }
 
                     // If users enters no valid date but a string, check if he wants to exit or its just an unvalid string
@@ -132,8 +134,9 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                             end = moment(usr_message.content.trim(), formats, true); // parse start time
                             let usrResponse = usr_message.content.trim().toLowerCase();
 
+                            bot_message.delete();
                             if (hasDeletePerm) {
-                                bot_message.delete();
+                                usr_message.delete();
                             }
 
                             if (!end.isValid()) {
@@ -177,8 +180,10 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                                 bot.awaitMessage(msg.channel.id, msg.author.id, usr_message => {
 
                                     description = usr_message.content.trim();
+
+                                    bot_message.delete();
                                     if (hasDeletePerm) {
-                                        bot_message.delete();
+                                        usr_message.delete();
                                     }
 
                                     if (description.length > 2000 || description === "exit") {
@@ -213,11 +218,12 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                                     }).then(bot_message => {
                                         bot.awaitMessage(msg.channel.id, msg.author.id, usr_message => {
 
-                                            tags.push(usr_message.content.trim().split(","));
+                                            tags = usr_message.content.trim().split(",");
                                             //testing tags
 
+                                            bot_message.delete();
                                             if (hasDeletePerm) {
-                                                bot_message.delete();
+                                                usr_message.delete();
                                             }
 
                                             if (description.length > 2000 || description === "exit") {
@@ -253,9 +259,12 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
 
                                                     maxAttendees = parseInt(usr_message.content.trim());
                                                     let strMaxAttendees = usr_message.content.trim();
+
+                                                    bot_message.delete();
                                                     if (hasDeletePerm) {
-                                                        bot_message.delete();
+                                                        usr_message.delete();
                                                     }
+
                                                     if (isNaN(maxAttendees)) {
                                                         
                                                         if (strMaxAttendees.length > 2000 || strMaxAttendees === "exit") {
@@ -292,15 +301,17 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                                                     let eventAuthor = msg.author.id;
 
                                                     let embed_fields = [];
-                                                        serverDocument.gameEvents.push({
-                                                            _id: newEventID,
-                                                            title: title,
-                                                            start: start,
-                                                            end: end,
-                                                            description: description,
-                                                            _author: eventAuthor,
-                                                            maxAttendees: maxAttendees
-                                                        });
+
+                                                    serverDocument.gameEvents.push({
+                                                        _id: newEventID,
+                                                        _author: eventAuthor,
+                                                        start: start,
+                                                        end: end,
+                                                        title: title,
+                                                        description: description,
+                                                        attendee_max: maxAttendees,
+                                                        tags: tags
+                                                    });
 
                                                     embed_fields = [{
                                                             name: "**Title**",
