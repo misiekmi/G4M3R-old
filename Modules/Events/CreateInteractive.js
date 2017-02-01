@@ -6,7 +6,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
         start, end, description,
         tags = [],
         maxAttendees = 3;
-    let skipStart = false;
+    //let skipStart = false; TODO not used anymore?
 
     // for format options, reference: http://momentjs.com/docs/#/parsing/string-format/
     const formats = ["YYYY/MM/DD H:mm", "YYYY/MM/DD h:mma", "YYYY/MM/DD"];
@@ -98,7 +98,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                                 start = moment(new Date(),formats,true);
                                 msg.channel.createMessage(`⏩ **Default start date ${start} added!**`);
                                 // msg.channel.createMessage(`⏩ **No start date entered!**`);
-                                skipStart = true;
+                                //skipStart = true; Not used anymore TODO
                                 break;
 
                             default:

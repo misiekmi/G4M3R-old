@@ -20,7 +20,7 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
                 list(bot, db, winston, serverDocument, msg);
                 break;
             case "show":
-                show(bot, db, winston, serverDocument, msg, hasArgs, firstArg, secondArg);
+                show(bot, db, winston, serverDocument, msg, this.hasArgs, this.firstArg, this.secondArg);
                 break;
         }
     }

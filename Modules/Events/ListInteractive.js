@@ -228,7 +228,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                         }
                     }
                     else if( event_edit ) {  // if in eventDocument edit mode
-                        if(event_edit_attrib == 0) {
+                        if(event_edit_attrib === 0) {
                             if(usr_input == "back") {
                                 embed = getEventPage();
                                 event_view = true;
