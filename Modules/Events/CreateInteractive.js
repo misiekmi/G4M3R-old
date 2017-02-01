@@ -214,18 +214,21 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                                         bot.awaitMessage(msg.channel.id, msg.author.id, usr_message => {
 
                                             tags.push(usr_message.content.trim().split(","));
+
+                                            usrResponse = usr_message.content.trim().toLowerCase();
                                             //testing tags
 
                                             if (hasDeletePerm) {
                                                 bot_message.delete();
                                             }
 
-                                            if (description.length > 2000 || description === "exit") {
+                                            if (usrResponse.length > 2000 || usrResponse === "exit") {
                                                 msg.channel.createMessage("ℹ **You just exited the Event creation process!**");
                                                 return;
                                             } else {
-                                                if (description === "skip") {
+                                                if (usrResponse === "skip") {
                                                     msg.channel.createMessage("⏩ **No tags added.**");
+                                                    tags = "";
                                                 }
                                             }
 
@@ -339,7 +342,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
 
                                                     // create event, save serverDocument
 
-                                                    serverDocument.save(err => { // 'save' the server and handle error
+                                                        serverDocument.save(err => { // 'save' the server and handle error
                                                         if (err) {
                                                             winston.error("Failed to save server data for event creation", {
                                                                 svrid: msg.guild.id

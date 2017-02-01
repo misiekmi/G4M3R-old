@@ -1,16 +1,41 @@
 const async = require("async");
 const moment = require("moment");
 
-module.exports = (bot, db, winston, serverDocument, msg, hasArgs, firstArg, secondArg) => {
+module.exports = (bot, db, winston, serverDocument, msg) => {
     const hasDeletePerm = msg.channel.permissionsOf(bot.user.id).has("manageMessages");
     
     // for format options, reference: http://momentjs.com/docs/#/parsing/string-format/
     const formats = ["YYYY/MM/DD H:mm", "YYYY/MM/DD h:mma", "YYYY/MM/DD"];
+    // settings
+	let hasArgs = false;
+	let isAdmin = false;
+	var firstArg = 0;
+	let secondArg;
+    let embed = "";
 
-    this.get = _eventID => {
-		 _eventID = firstArg;
-		return serverDocument.gameEvents._id(_eventID);
+	this.parse = () => {
+		const params = suffix.split(" ");
+
+		if(params.length >= 1) {
+            firstArg = parseInt(params[0]);
+		}
+
+		if(params.length >= 2) {
+			secondArg = params[1].trim();
+		}
+        
+		const admin_user = serverDocument.config.admins.id(msg.author.id);
+		isAdmin = admin_user && admin_user.level;
+		hasArgs = params.length > 1;
+
+		return true;
 	};
+
+  if (this.parse()) {
+    this.get = _eventID => {
+        _eventID = firstArg;
+        return serverDocument.gameEvents._id(_eventID);
+    };
 
     let event = this.get();
     
@@ -18,8 +43,7 @@ module.exports = (bot, db, winston, serverDocument, msg, hasArgs, firstArg, seco
 
     // function which is used to generate the page view of a single event entry
     const getEventPage = () => {
-        let page_content
-         = "" +
+        let page_content = "" +
             `\`\`Title\`\`: ${event.title}\n` +
             `\`\`Author\`\`: <@${event._author}>\n` +
             `\`\`Start\`\`: ${event.start}\n` +
@@ -37,9 +61,10 @@ module.exports = (bot, db, winston, serverDocument, msg, hasArgs, firstArg, seco
 
         return {embed: {description: page_content, footer: {text: footer_content}}};
     };
-
-let embed = getEventPage();
-msg.channel.createMessage(embed);
+    let embed = getEventPage();
+    msg.channel.createMessage(embed);      
+  }
+};
 
 /*
     const getEditPage = () => {
@@ -302,4 +327,4 @@ msg.channel.createMessage(embed);
             });
         });
 */
-};
+
