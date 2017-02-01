@@ -1,7 +1,7 @@
 module.exports = (bot, db, config, winston, userDocument, serverDocument, channelDocument, memberDocument, msg, suffix) => {
 let strTitle = "";
 
-	if(suffix && ["bug", "suggestion", "feature", "issue"].indexOf(suffix.toLowerCase())>-1) {
+	if(suffix && ["bugs", "suggestions", "features", "issues"].indexOf(suffix.toLowerCase())>-1) {
 
 		strTitle = `🐜 Please file your ${suffix.toLowerCase()} here: https://github.com/pedall/G4M3R/issues`;
 
@@ -22,9 +22,10 @@ let strTitle = "";
 		//msg.channel.createMessage(`🐜 Please file your ${suffix.toLowerCase()} here: https://github.com/pedall/G4M3R/issues`);
 	} else {
 
-		let strTitle = `Hi, I'm **G4M3R**, a discord bot for gaming communities by pedall and notem! 🎮 \nUse \`${bot.getCommandPrefix(msg.guild, serverDocument)}help\` to list all commands.\n\nThis bot is based on **AwesomeBot** by BitQuote as well as the continued **GAwesomeBot** by GG142.`;
+		let strTitle = `Hi, I'm **G4M3R**, a discord bot for gaming communities by pedall and notem! 🎮 \nUse \`${bot.getCommandPrefix(msg.guild, serverDocument)}help\` to list all commands. +
+		\n\nGo to <${config.hosting_url}> to learn more, or join our Discord server: <${config.discord_link}>`;
 
-		let strFooter = `Built on NodeJS with Eris. Go to <${config.hosting_url}> to learn more, or join our Discord server: <${config.discord_link}>`;
+		let strFooter = `This bot is based on **AwesomeBot** by BitQuote as well as the continued **GAwesomeBot** by GG142.`;
 
 		msg.channel.createMessage({
 			embed: {
