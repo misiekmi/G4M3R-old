@@ -218,10 +218,9 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                                     }).then(bot_message => {
                                         bot.awaitMessage(msg.channel.id, msg.author.id, usr_message => {
 
-                                            tags.push(usr_message.content.trim().split(","));
+                                            tags = usr_message.content.trim().split(",");
 
                                             usrResponse = usr_message.content.trim().toLowerCase();
-                                            tags = usr_message.content.trim().split(",");
                                             //testing tags
 
                                             bot_message.delete();
