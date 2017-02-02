@@ -5,7 +5,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
     let title = "",
         start, end, description,
         tags = [],
-        maxAttendees = 3;
+        attendee_max = 3;
     //let skipStart = false; TODO not used anymore?
 
     // for format options, reference: http://momentjs.com/docs/#/parsing/string-format/
@@ -260,7 +260,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                                             }).then(bot_message => {
                                                 bot.awaitMessage(msg.channel.id, msg.author.id, usr_message => {
 
-                                                    maxAttendees = parseInt(usr_message.content.trim());
+                                                    attendee_max = parseInt(usr_message.content.trim());
                                                     let strMaxAttendees = usr_message.content.trim();
 
                                                     bot_message.delete();
@@ -268,14 +268,14 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                                                         usr_message.delete();
                                                     }
 
-                                                    if (isNaN(maxAttendees)) {
+                                                    if (isNaN(attendee_max)) {
                                                         
                                                         if (strMaxAttendees.length > 2000 || strMaxAttendees === "exit") {
                                                             msg.channel.createMessage("ℹ **You just exited the Event creation process!**");
                                                             return;
                                                         } else {
                                                             if (strMaxAttendees === "skip") {
-                                                                maxAttendees = 3;
+                                                                attendee_max = 3;
                                                                 msg.channel.createMessage("⏩ **Default maximum of 3 members set.**");
                                                             }
                                                         }
@@ -310,7 +310,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                                                         end: end,
                                                         title: title,
                                                         description: description,
-                                                        attendee_max: maxAttendees,
+                                                        attendee_max: attendee_max,
                                                         tags: tags
                                                     });
 
@@ -337,7 +337,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                                                         },
                                                         {
                                                             name: "**Max Attendees**",
-                                                            value: `${maxAttendees}`,
+                                                            value: `${attendee_max}`,
                                                             inline: false
 
                                                         },
