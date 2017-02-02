@@ -15,7 +15,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
     for( let i = 0; i<tmp.length; i++ ) {
         new_page.push(tmp[i]);
 
-        if((i+1)%max_page_size===0) {   // if page size has been reached
+        if((i+1)%max_page_size==0) {   // if page size has been reached
             pages.push(new_page);       // push the page onto pages,
             pages++;                    // increase size counter,
             new_page = [];              // reset page,
@@ -33,7 +33,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
         let current_page = pages[current_page_no-1];
         let page_content = "";
 
-        if(real_page_size === 0) {                                                // if there are
+        if(real_page_size == 0) {                                                // if there are
             page_content = "There are no events scheduled on this server.\n\n";  // no entries
         }                                                                        //
         else {
@@ -86,7 +86,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
             `\`\`[2]\`\` Start: ${event.start}\n` +
             `\`\`[3]\`\` End: ${event.end}\n` +
             `\`\`[4]\`\` Desc: ${event.description}\n` +
-            `\`\`[5]\`\` Max Members: ${event.maxAttendees}\n\n` +
+            `\`\`[5]\`\` Max Members: ${event.attendee_max}\n\n` +
             //`\`\`[6]\`\` Tags: ${event.tags}\n` +
             `## \`\`[back]\`\` to return to event page\n` +
             `## \`\`[exit]\`\` to exit the menu`;
@@ -156,7 +156,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
         let event = pages[current_page_no-1][current_event_no-1];
 
         let page_content = "" +
-            `Current maximum member count: \n\`\`${event.maxAttendees}\`\`\n\n` +
+            `Current maximum member count: \n\`\`${event.attendee_max}\`\`\n\n` +
             "Enter the new end time for the event, or\n\n" +
             `## \`\`[back]\`\` to return to event page\n` +
             `## \`\`[exit]\`\` to exit the menu`;
@@ -292,7 +292,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                                         break;
                                     case 5:
                                         if(!isNaN(usr_input) && usr_input>=0) {
-                                            eventDocument.maxAttendees = usr_input;
+                                            eventDocument.attendee_max = usr_input;
                                         } else {
                                             // TODO error message
                                         }

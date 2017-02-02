@@ -294,8 +294,6 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                                                         winston.error("Max Event ID could not be evaluated (see CreateInterActive.js) - line 119");
                                                     }
 
-                                                    //let newEventID = serverDocument.gameEvents.length+1;
-
 
                                                     //get author of event
                                                     let eventAuthor = msg.author.id;
