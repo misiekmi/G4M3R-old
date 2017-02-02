@@ -3,72 +3,55 @@ const moment = require("moment");
 
 module.exports = (bot, db, winston, serverDocument, msg) => {
     const hasDeletePerm = msg.channel.permissionsOf(bot.user.id).has("manageMessages");
-    const max_page_size = 7;    // maximum events viewable per page
+    
     // for format options, reference: http://momentjs.com/docs/#/parsing/string-format/
     const formats = ["YYYY/MM/DD H:mm", "YYYY/MM/DD h:mma", "YYYY/MM/DD"];
+    // settings
+	let hasArgs = false;
+	let isAdmin = false;
+	var firstArg = 0;
+	let secondArg;
+    let embed = "";
 
-    let tmp = serverDocument.gameEvents;
-    let pages = [];
+	this.parse = () => {
+		const params = suffix.split(" ");
 
-    // generate a nested array representing viewable pages of events
-    let new_page = [];
-    for( let i = 0; i<tmp.length; i++ ) {
-        new_page.push(tmp[i]);
+		if(params.length >= 1) {
+            firstArg = parseInt(params[0]);
+		}
 
-        if((i+1)%max_page_size==0) {   // if page size has been reached
-            pages.push(new_page);       // push the page onto pages,
-            pages++;                    // increase size counter,
-            new_page = [];              // reset page,
-        }
-    }
-    if(new_page.length>0){          // add the last page if it wasn't filled
-        pages.push(new_page);       // and added in the previous loop
-    }
+		if(params.length >= 2) {
+			secondArg = params[1].trim();
+		}
+        
+		const admin_user = serverDocument.config.admins.id(msg.author.id);
+		isAdmin = admin_user && admin_user.level;
+		hasArgs = params.length > 1;
 
-    pages.push([]);                         // weird fix, add an extra empty page
-    let real_page_size = pages.length-1;    // set to never logically access it
+		return true;
+	};
 
-    // function that is used to generate
-    const getPage = () => {
-        let current_page = pages[current_page_no-1];
-        let page_content = "";
-
-        if(real_page_size == 0) {                                                // if there are
-            page_content = "There are no events scheduled on this server.\n\n";  // no entries
-        }                                                                        //
-        else {
-            for (let i=0; i<current_page.length; i++) {
-                page_content += `\`\`[#${current_page[i]._id}]\`\` **${current_page[i].title}\n` +
-                    `        -by <@${current_page[i]._author}>\n\n`;
-            }
-            page_content += "\n";
-            if(real_page_size>1 && current_page_no<real_page_size ) {
-                page_content += `## \`\`[${max_page_size+1}]\`\` Go to next page\n`;
-            }
-            if(current_page_no>1){
-                page_content += `## \`\`[${max_page_size+2}]\`\` Return to previous page\n`;
-            }
-        }
-
-        page_content += `## \`\`[exit]\`\` to exit the menu\n`;
-
-        let footer_content = real_page_size>0 ? `page ${current_page_no}/${real_page_size}` : `page 1/1`;
-
-        return {embed: {description: page_content, footer: {text: footer_content}}};
+  if (this.parse()) {
+    this.get = _eventID => {
+        _eventID = firstArg;
+        return serverDocument.gameEvents._id(_eventID);
     };
+
+    let event = this.get();
+    
+    msg.channel.createMessage(event);
 
     // function which is used to generate the page view of a single event entry
     const getEventPage = () => {
-        let event = pages[current_page_no-1][current_event_no-1];
         let page_content = "" +
-            `Title: ${event.title}\n` +
-            `Author: <@${event._author}>\n` +
-            `Start: ${event.start}\n` +
-            `End: ${event.end}\n` +
-            `Description: ${event.description}\n` +
-            `Tags: ${event.tags}\n` +
-            `Attendee Count: ${event.members.length}\n` +
-            `Attendee Max: ${event.attendee_max}\n` +
+            `\`\`Title\`\`: ${event.title}\n` +
+            `\`\`Author\`\`: <@${event._author}>\n` +
+            `\`\`Start\`\`: ${event.start}\n` +
+            `\`\`End\`\`: ${event.end}\n` +
+            `\`\`Description\`\`: ${event.description}\n` +
+            //`\`\`Tags\`\`: ${event.tags}\n` +
+            //`\`\`Members\`\`: ${event.members.length}\n\n` +
+            `\`\`Max Members\`\`: ${event.maxAttendees}\n` +
             `\n##\`\`[edit]\`\` to edit the event\n` +
             `##\`\`[delete]\`\` to delete the event\n` +
             `## \`\`[back]\`\` to return to event list\n` +
@@ -78,7 +61,12 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
 
         return {embed: {description: page_content, footer: {text: footer_content}}};
     };
+    let embed = getEventPage();
+    msg.channel.createMessage(embed);      
+  }
+};
 
+/*
     const getEditPage = () => {
         let event = pages[current_page_no-1][current_event_no-1];
         let page_content = "" +
@@ -86,7 +74,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
             `\`\`[2]\`\` Start: ${event.start}\n` +
             `\`\`[3]\`\` End: ${event.end}\n` +
             `\`\`[4]\`\` Desc: ${event.description}\n` +
-            `\`\`[5]\`\` Max Members: ${event.attendee_max}\n\n` +
+            `\`\`[5]\`\` Max Members: ${event.maxAttendees}\n\n` +
             //`\`\`[6]\`\` Tags: ${event.tags}\n` +
             `## \`\`[back]\`\` to return to event page\n` +
             `## \`\`[exit]\`\` to exit the menu`;
@@ -97,7 +85,6 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
     };
 
     const getEditTitle = () => {
-        let event = pages[current_page_no-1][current_event_no-1];
 
         let page_content = "" +
             `Current title: \`\`${event.title}\`\`\n` +
@@ -111,7 +98,6 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
     };
 
     const getEditStart = () => {
-        let event = pages[current_page_no-1][current_event_no-1];
 
         let page_content = "" +
             `Current start: \`\`${event.start}\n\`\`` +
@@ -125,7 +111,6 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
     };
 
     const getEditEnd = () => {
-        let event = pages[current_page_no-1][current_event_no-1];
 
         let page_content = "" +
             `Current start: \`\`${event.end}\n\`\`` +
@@ -139,7 +124,6 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
     };
 
     const getEditDesc = () => {
-        let event = pages[current_page_no-1][current_event_no-1];
 
         let page_content = "" +
             `Current Description: \n\`\`${event.description}\`\`\n\n` +
@@ -153,10 +137,9 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
     };
 
     const getEditMaxMem = () => {
-        let event = pages[current_page_no-1][current_event_no-1];
 
         let page_content = "" +
-            `Current maximum member count: \n\`\`${event.attendee_max}\`\`\n\n` +
+            `Current maximum member count: \n\`\`${event.maxAttendees}\`\`\n\n` +
             "Enter the new end time for the event, or\n\n" +
             `## \`\`[back]\`\` to return to event page\n` +
             `## \`\`[exit]\`\` to exit the menu`;
@@ -166,10 +149,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
         return {embed: {description: page_content, footer: {text: footer_content}}};
     };
 
-    let current_page_no = 1;
-    let current_event_no = 1;
-
-    let embed = getPage();
+    let embed = getEventPage();
     let cancel = false;
 
     let event_view = false;
@@ -270,11 +250,13 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                                 switch(event_edit_attrib) {
                                     case 1:
                                         eventDocument.title = usr_input;
+                                        event_edit_attrib = 0;
                                         break;
                                     case 2:
                                         time = moment(usr_message.content.trim(), formats, true); // parse start time
                                         if(time.isValid()){
                                             eventDocument.start = time;
+                                            event_edit_attrib = 0;
                                         } else {
                                             // TODO error message
                                         }
@@ -283,16 +265,19 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                                         time = moment(usr_message.content.trim(), formats, true); // parse start time
                                         if(time.isValid()){
                                             eventDocument.end = time;
+                                            event_edit_attrib = 0;
                                         } else {
                                             // TODO error message
                                         }
                                         break;
                                     case 4:
                                         eventDocument.description = usr_input;
+                                        event_edit_attrib = 0;
                                         break;
                                     case 5:
                                         if(!isNaN(usr_input) && usr_input>=0) {
-                                            eventDocument.attendee_max = usr_input;
+                                            eventDocument.maxAttendees = usr_input;
+                                            event_edit_attrib = 0;
                                         } else {
                                             // TODO error message
                                         }
@@ -303,7 +288,6 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                                         winston.error(`Failed to save event changes`, {srvid: serverDocument._id}, err);
                                     }
                                 });
-                                event_edit_attrib = 0;
                             }
                         }
                     }
@@ -342,4 +326,5 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                 });
             });
         });
-};
+*/
+

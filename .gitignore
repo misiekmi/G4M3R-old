@@ -1,11 +1,13 @@
 # ignore select config files
-Configuration/auth.json
-Configuration/config.json
+#Configuration/auth.json
+#Configuration/config.json
 
 #ignore logs
 *.log
 .*
 !.gitignore
+!.gitattributes
+
 
 #ignore folders
 node_modules/

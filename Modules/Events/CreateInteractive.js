@@ -6,7 +6,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
         start, end, description,
         tags = [],
         maxAttendees = 3;
-    let skipStart = false;
+    //let skipStart = false; TODO not used anymore?
 
     // for format options, reference: http://momentjs.com/docs/#/parsing/string-format/
     const formats = ["YYYY/MM/DD H:mm", "YYYY/MM/DD h:mma", "YYYY/MM/DD"];
@@ -100,7 +100,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                                 start = moment(new Date(),formats,true);
                                 msg.channel.createMessage(`⏩ **Default start date ${start} added!**`);
                                 // msg.channel.createMessage(`⏩ **No start date entered!**`);
-                                skipStart = true;
+                                //skipStart = true; Not used anymore TODO
                                 break;
 
                             default:
@@ -218,6 +218,9 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                                     }).then(bot_message => {
                                         bot.awaitMessage(msg.channel.id, msg.author.id, usr_message => {
 
+                                            tags.push(usr_message.content.trim().split(","));
+
+                                            usrResponse = usr_message.content.trim().toLowerCase();
                                             tags = usr_message.content.trim().split(",");
                                             //testing tags
 
@@ -226,12 +229,13 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                                                 usr_message.delete();
                                             }
 
-                                            if (description.length > 2000 || description === "exit") {
+                                            if (usrResponse.length > 2000 || usrResponse === "exit") {
                                                 msg.channel.createMessage("ℹ **You just exited the Event creation process!**");
                                                 return;
                                             } else {
-                                                if (description === "skip") {
+                                                if (usrResponse === "skip") {
                                                     msg.channel.createMessage("⏩ **No tags added.**");
+                                                    tags = "";
                                                 }
                                             }
 
@@ -348,7 +352,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
 
                                                     // create event, save serverDocument
 
-                                                    serverDocument.save(err => { // 'save' the server and handle error
+                                                        serverDocument.save(err => { // 'save' the server and handle error
                                                         if (err) {
                                                             winston.error("Failed to save server data for event creation", {
                                                                 svrid: msg.guild.id
@@ -358,7 +362,9 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                                                             msg.channel.createMessage({
                                                                 embed: {
                                                                     author: {
-                                                                        name: `~~ Event with 🆔[${newEventID}] successfully created ~~`,
+                                                                        name: `~~ Event with 🆔[${newEventID}]
+                                                                        
+                                                                         successfully created ~~`,
                                                                     },
                                                                     color: 0xffffff,
                                                                     fields: embed_fields
