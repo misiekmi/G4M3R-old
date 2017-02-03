@@ -21,7 +21,30 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
             viewer = new EventViewer(serverDocument, page_size);
             let event = viewer.getEvent(tmp);
             if(event){
-                list(bot, db, winston, serverDocument, msg, viewer, viewer.getEventView(event));
+                viewer.event = event;
+                list(bot, db, winston, serverDocument, msg, viewer, viewer.getEventView());
+            } else {
+                // TODO error, event does not exist
+            }
+        }
+        else if(suffix.toLowerCase().startsWith("remove")) {
+            let tmp = suffix.toLowerCase().split("remove")[1].trim();
+            viewer = new EventViewer(serverDocument, page_size);
+            let event = viewer.getEvent(tmp);
+            if(event) {
+                viewer.event = event;
+                list(bot, db, winston, serverDocument, msg, viewer, viewer.deleteEvent());
+            } else {
+                // TODO error, event does not exist
+            }
+        }
+        else if(suffix.toLowerCase().startsWith("edit")) {
+            let tmp = suffix.toLowerCase().split("edit")[1].trim();
+            viewer = new EventViewer(serverDocument, page_size);
+            let event = viewer.getEvent(tmp);
+            if(event){
+                viewer.event = event;
+                list(bot, db, winston, serverDocument, msg, viewer, viewer.getEventEditView());
             } else {
                 // TODO error, event does not exist
             }

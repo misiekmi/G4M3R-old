@@ -4,21 +4,19 @@ const moment = require("moment");
 module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
     const hasDeletePerm = msg.channel.permissionsOf(bot.user.id).has("manageMessages");
     const page_size = viewer.page_size;
+    const formats = ["YYYY/MM/DD H:mm", "YYYY/MM/DD h:mma", "YYYY/MM/DD"];
 
     let current_page_no = 1;
-    let current_event;
 
     let cancel = false;
     let error = false;
-    let delete_view = false;
-    let event_view = false;
 
     async.whilst(() => {
             return !cancel;
         },
         (callback) => {
             msg.channel.createMessage(embed).then(bot_message => {
-                let timeout = setTimeout(()=>{bot_message.delete();}, 60000); //delete message in 1 minute
+                let timeout = setTimeout(()=>{bot_message.delete();}, 20000); //delete message in 1 minute
 
                 bot.awaitMessage(msg.channel.id, msg.author.id, usr_message => {
                     bot.removeMessageListener(msg.channel.id, msg.author.id);
@@ -37,37 +35,18 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                             embed = viewer.getPageView(current_page_no);
                         }
                     }
-                    else if(delete_view) {
-                        if(usr_input == "back") {
-                            delete_view = false;
-                            embed = viewer.getPageView(current_page_no);
-                        }
-                    }
-                    else if(viewer.mode==2) {       // if in eventDocument view mode
-                        // return to eventDocument list page
-                        if(usr_input == "back") {
-                            event_view = false;
-                            embed = viewer.getPageView(current_page_no);
-                        }
-                        else if(usr_input == "delete"){
-                            delete_view = true;
-                            embed = viewer.deleteEvent(current_event);
-                            current_event = null;
-                        }
-                    }
-                    else if(viewer.mode==1) {      // otherwise in list view mode
+                    else if(viewer.mode==1) {      // list view mode
                         // get eventDocument
                         if (!isNaN(usr_input) && usr_input > 0) {
-                            current_event = viewer.getEvent(usr_input);
-                            if(!current_event) {
+                            viewer.event = viewer.getEvent(usr_input);
+                            if(!viewer.event) {
                                 let body = `Event #${usr_input} does not exists!\n\n` +
                                     `## \`\`[back]\`\` to return to event list\n` +
                                     `## \`\`[exit]\`\` to quit view`;
                                 embed = {embed: {description: body, footer: `error!`}};
                                 error = true;
                             } else {
-                                embed = viewer.getEventView(current_event);
-                                event_view = true;
+                                embed = viewer.getEventView();
                             }
                         }
                         // go to next page
@@ -78,6 +57,95 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                         // go to previous page
                         else if (usr_input == `-` && current_page_no>1) {
                             current_page_no--;
+                            embed = viewer.getPageView(current_page_no);
+                        }
+                    }
+                    else if(viewer.mode==2) {       // event view mode
+                        // return to eventDocument list page
+                        if(usr_input == "back") {
+                            embed = viewer.getPageView(current_page_no);
+                        }
+                        else if(usr_input == "edit") {
+                            embed = viewer.getEventEditView();
+                        }
+                        else if(usr_input == "delete") {
+                            embed = viewer.deleteEvent(viewer.event);
+                        }
+                    }
+                    else if(viewer.mode==3) {       // editor mode
+                        if(viewer.edit_mode==0) {
+                            if(usr_input == "back") {
+                                serverDocument.save((err)=>{
+                                    if(err) {
+                                        winston.error(`Failed to save event changes`, {srvid: serverDocument._id}, err);
+                                    }
+                                });
+                                embed = viewer.getEventView();
+                            }
+                            else {
+                                if(!isNaN(usr_input)){
+                                    viewer.edit_mode = Number(usr_input);
+                                    embed = viewer.getEditorView();
+                                }
+                            }
+                        } else {
+                            if(usr_input == "back"){
+                                embed = viewer.getEventEditView();
+                                viewer.edit_mode = 0;
+                            } else {
+                                let time, body;
+                                switch(viewer.edit_mode) {
+                                    case 1:
+                                        viewer.event.title = usr_input;
+                                        break;
+                                    case 2:
+                                        time = moment(usr_message.content.trim(), formats, true); // parse start time
+                                        if(time.isValid()){
+                                            viewer.event.start = time;
+                                        } else {
+                                            body = `Your input ${usr_input} is not a valid start time!\n\n` +
+                                                `## \`\`[back]\`\` to return to event list\n` +
+                                                `## \`\`[exit]\`\` to quit view`;
+                                            embed = {embed: {description: body, footer: `error!`}};
+                                            error = true;
+                                        }
+                                        break;
+                                    case 3:
+                                        time = moment(usr_message.content.trim(), formats, true); // parse start time
+                                        if(time.isValid()){
+                                            viewer.event.end = time;
+                                        } else {
+                                            body = `Your input ${usr_input} is not a valid end time!\n\n` +
+                                                `## \`\`[back]\`\` to return to event list\n` +
+                                                `## \`\`[exit]\`\` to quit view`;
+                                            embed = {embed: {description: body, footer: `error!`}};
+                                            error = true;
+                                        }
+                                        break;
+                                    case 4:
+                                        viewer.event.description = usr_input;
+                                        break;
+                                    case 5:
+                                        if(!isNaN(usr_input) && usr_input>=0) {
+                                            viewer.event.attendee_max = usr_input;
+                                        } else {
+                                            body = `Your input ${usr_input} is not a number!\n\n` +
+                                                `## \`\`[back]\`\` to return to event list\n` +
+                                                `## \`\`[exit]\`\` to quit view`;
+                                            embed = {embed: {description: body, footer: `error!`}};
+                                            error = true;
+                                        }
+                                        break;
+                                }
+                                if(!error) {
+                                    embed = viewer.getEventEditView();
+                                    viewer.edit_mode = 0;
+                                }
+                            }
+                        }
+                    }
+                    else if(viewer.mode==4) {       // delete queued mode
+                        if(usr_input == "back") {
                             embed = viewer.getPageView(current_page_no);
                         }
                     }
