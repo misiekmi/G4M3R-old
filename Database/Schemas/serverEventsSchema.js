@@ -29,8 +29,7 @@ module.exports = new mongoose.Schema({
 		})], default: []},
 
 		// privacy settings
-		isPublicToLocal: {type: Boolean, default: true},// public to server/clan
-		isPublicToWorld: {type: Boolean, default: true},// public to all users
+		isPublic: {type: Boolean, default: true},		// if true, all can see; if false, only clan/server can see
 		whitelist_users: {type: [String], default: []},	// users who always have access to event
 		whitelist_roles: {type: [String], default: []},	// roles who always have access to event
 		blacklist_users: {type: [String], default: []},	// users who never have access to event
