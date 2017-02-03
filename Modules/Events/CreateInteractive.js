@@ -310,8 +310,6 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                                                         end: end,
                                                         title: title,
                                                         description: description,
-                                                        attendee_max: attendee_max,
-                                                        tags: tags
                                                     });
 
                                                     embed_fields = [{

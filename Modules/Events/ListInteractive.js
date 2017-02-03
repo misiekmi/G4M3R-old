@@ -3,7 +3,7 @@ const moment = require("moment");
 
 module.exports = (bot, db, winston, serverDocument, msg) => {
     const hasDeletePerm = msg.channel.permissionsOf(bot.user.id).has("manageMessages");
-    const max_page_size = 7;    // maximum events viewable per page
+    const max_page_size = 3;    // maximum events viewable per page
     // for format options, reference: http://momentjs.com/docs/#/parsing/string-format/
     const formats = ["YYYY/MM/DD H:mm", "YYYY/MM/DD h:mma", "YYYY/MM/DD"];
 
@@ -17,7 +17,6 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
 
         if((i+1)%max_page_size==0) {   // if page size has been reached
             pages.push(new_page);       // push the page onto pages,
-            pages++;                    // increase size counter,
             new_page = [];              // reset page,
         }
     }
@@ -25,40 +24,46 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
         pages.push(new_page);       // and added in the previous loop
     }
 
-    pages.push([]);                         // weird fix, add an extra empty page
-    let real_page_size = pages.length-1;    // set to never logically access it
+    for( let i = 0; i<pages.length; i++ ) {
+        let tmp = pages[i];
+        for( let j = 0; j<tmp.length; j++ ) {
+            winston.info(`${i}/${j} ${pages[i][j].title}`)
+        }
+    }
 
     // function that is used to generate
     const getPage = () => {
+        winston.info(`page ${current_page_no}`);
         let current_page = pages[current_page_no-1];
         let page_content = "";
 
-        if(real_page_size == 0) {                                                // if there are
+        if(current_page.length == 0) {                                           // if there are
             page_content = "There are no events scheduled on this server.\n\n";  // no entries
         }                                                                        //
         else {
             for (let i=0; i<current_page.length; i++) {
-                page_content += `\`\`[#${current_page[i]._id}]\`\` **${current_page[i].title}\n` +
+                page_content += `\`\`[${current_page[i]._id}]\`\` **${current_page[i].title}\n` +
                     `        -by <@${current_page[i]._author}>\n\n`;
             }
             page_content += "\n";
-            if(real_page_size>1 && current_page_no<real_page_size ) {
-                page_content += `## \`\`[${max_page_size+1}]\`\` Go to next page\n`;
+            if(pages.length>1 && current_page_no<pages.length ) {
+                page_content += `## \`\`[+]\`\` next page\n`;
             }
             if(current_page_no>1){
-                page_content += `## \`\`[${max_page_size+2}]\`\` Return to previous page\n`;
+                page_content += `## \`\`[-]\`\` previous page\n`;
             }
         }
 
         page_content += `## \`\`[exit]\`\` to exit the menu\n`;
 
-        let footer_content = real_page_size>0 ? `page ${current_page_no}/${real_page_size}` : `page 1/1`;
+        let footer_content = pages.length>0 ? `page ${current_page_no}/${pages.length}` : `page 1/1`;
 
         return {embed: {description: page_content, footer: {text: footer_content}}};
     };
 
     // function which is used to generate the page view of a single event entry
     const getEventPage = () => {
+        winston.info(`event ${current_event_no} on page ${current_page_no}`);
         let event = pages[current_page_no-1][current_event_no-1];
         let page_content = "" +
             `Title: ${event.title}\n` +
@@ -67,7 +72,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
             `End: ${event.end}\n` +
             `Description: ${event.description}\n` +
             `Tags: ${event.tags}\n` +
-            `Attendee Count: ${event.members.length}\n` +
+            `Attendee Count: ${event.attendees.length}\n` +
             `Attendee Max: ${event.attendee_max}\n` +
             `\n##\`\`[edit]\`\` to edit the event\n` +
             `##\`\`[delete]\`\` to delete the event\n` +
@@ -226,7 +231,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                             embed = getPage();
                         }
                     }
-                    else if( event_edit ) {  // if in eventDocument edit mode
+                    else if( event_edit ) {  // if in edit mode
                         if(event_edit_attrib == 0) {
                             if(usr_input == "back") {
                                 embed = getEventPage();
@@ -303,6 +308,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                                         winston.error(`Failed to save event changes`, {srvid: serverDocument._id}, err);
                                     }
                                 });
+                                embed = getEditPage();
                                 event_edit_attrib = 0;
                             }
                         }
@@ -316,12 +322,12 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                             event_view = true;
                         }
                         // go to next page
-                        else if (usr_input == max_page_size+1 && current_page_no<real_page_size) {
+                        else if (usr_input == `+` && current_page_no<pages.length) {
                             current_page_no++;
                             embed = getPage();
                         }
                         // go to previous page
-                        else if (usr_input == max_page_size+2 && current_page_no>1) {
+                        else if (usr_input == `-` && current_page_no>1) {
                             current_page_no--;
                             embed = getPage();
                         }

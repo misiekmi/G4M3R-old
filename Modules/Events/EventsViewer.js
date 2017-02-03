@@ -1,3 +1,4 @@
+const moment = require("moment");
 
 function Viewer(serverDocument, page_size, filter) {
     this.server = serverDocument;
@@ -45,7 +46,8 @@ Viewer.prototype.getPageView = function(page_no) {
 
         for (let i = start_index; i < end_index; i++) {
             page_content += `\`\`[${this.events[i]._id}]\`\` **${this.events[i].title}\n` +
-                `        -by <@${this.events[i]._author}>\n\n`;
+                `-by: <@${this.events[i]._author}>\n` +
+                `-start: ${moment(this.events[i].start).format(`MMM D @ HH:mm`)}\n\n`;
         }
 
         if(events_length > end_index) {
@@ -85,6 +87,8 @@ Viewer.prototype.getEvent = function(event_id) {
 };
 
 Viewer.prototype.getEventView = function(event) {
+    this.mode = 2;
+
     let page_content = "" +
         `Title: ${event.title}\n` +
         `Author: <@${event._author}>\n` +
@@ -92,7 +96,7 @@ Viewer.prototype.getEventView = function(event) {
         `End: ${event.end}\n` +
         `Description: ${event.description}\n` +
         `Tags: ${event.tags}\n` +
-        //`Attendee Count: ${event.attendees.length}\n` +
+        `Attendee Count: ${event.attendees.length}\n` +
         `Attendee Max: ${event.attendee_max}\n` +
         //`\n##\`\`[edit]\`\` to edit the event\n` +
         `\n##\`\`[delete]\`\` to delete the event\n` +
