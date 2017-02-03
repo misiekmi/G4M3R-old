@@ -1,6 +1,5 @@
 const create = require("./../../Modules/Events/CreateInteractive.js");
 const list = require("./../../Modules/Events/InteractiveLoop.js");
-const show = require("./../../Modules/Events/showEvent.js");
 const EventViewer = require("./../../Modules/Events/EventsViewer");
 
 module.exports = (bot, db, config, winston, userDocument, serverDocument, channelDocument, memberDocument, msg, suffix) => {
