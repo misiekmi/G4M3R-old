@@ -1,7 +1,7 @@
 const async = require("async");
 const moment = require("moment");
 
-module.exports = (bot, db, winston, serverDocument, msg) => {
+module.exports = (bot, db, winston, serverDocument, msg, suffix) => {
     const hasDeletePerm = msg.channel.permissionsOf(bot.user.id).has("manageMessages");
     
     // for format options, reference: http://momentjs.com/docs/#/parsing/string-format/
