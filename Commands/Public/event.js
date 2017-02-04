@@ -30,10 +30,9 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
         else if(suffix.toLowerCase().startsWith("remove")) {
             let tmp = suffix.toLowerCase().split("remove")[1].trim();
             viewer = new EventViewer(serverDocument, page_size);
-            let event = viewer.getEvent(tmp);
-            if(event) {
-                viewer.event = event;
-                list(bot, db, winston, serverDocument, msg, viewer, viewer.deleteEvent());
+            viewer.event = viewer.getEvent(tmp);
+            if(viewer.event) {
+                list(bot, db, winston, serverDocument, msg, viewer, viewer.deleteEvent(viewer.event));
             } else {
                 // TODO error, event does not exist
             }
