@@ -1,4 +1,6 @@
 const moment = require("moment");
+const config = require("../../Configuration/config.json");
+const msg_color = 0xff8c00;
 
 function Viewer(serverDocument, page_size, filter) {
     this.server = serverDocument;
@@ -8,6 +10,7 @@ function Viewer(serverDocument, page_size, filter) {
     this.edit_mode = 0;
 
     if(filter) {
+        this.filter_disp = "";
         let allEvents = serverDocument.gameEvents;
         for(let i=0; i<allEvents.length; i++) {
             let event = allEvents[i];
@@ -33,7 +36,12 @@ function Viewer(serverDocument, page_size, filter) {
                 this.events.push(event);
             }
         }
-        this.isFiltered = true;
+        if(filter._author) {
+            this.filter_disp += " | a: <@" + filter._author + ">"
+        }
+        if(filter.tags) {
+            this.filter_disp += " | t: " + filter.tags;
+        }
     }
     else {
         this.events = serverDocument.gameEvents;
@@ -53,9 +61,9 @@ Viewer.prototype.getPageView = function(page_no) {
             let end_index = (start_index + page_size) > events_length ? events_length : start_index + 3;
 
             for (let i = start_index; i < end_index; i++) {
-                page_content += `\`\`[${this.events[i]._id}]\`\` ${this.events[i].title}\n` +
+                page_content += `\`\`[${this.events[i]._id}]\`\` **${this.events[i].title}**\n` +
                     `-by: <@${this.events[i]._author}>\n` +
-                    `-start: ${moment(this.events[i].start).format(`MMM D @ HH:mm`)}\n\n`;
+                    `-start: ${moment(this.events[i].start).format(`${config.moment_date_format}`)}\n\n`;
             }
 
             if(events_length > end_index) {
@@ -72,13 +80,20 @@ Viewer.prototype.getPageView = function(page_no) {
         }
 
         page_content += `## \`\`[exit]\`\` to exit the menu\n`;
+<<<<<<< HEAD
         if(this.isFiltered){
             footer_content += "  |  filtered";
         } else {
             footer_content += "  |  unfiltered";
+=======
+        if(this.filter_disp){
+            footer_content += this.filter_disp;
+        } else {
+            footer_content += " | unfiltered"
+>>>>>>> 3c7a9872ad1c8ae31257e39e2e88c5795075a862
         }
 
-        return {embed: {description: page_content, footer: {text: footer_content}}};
+        return {embed: {color: msg_color, description: page_content, footer: {text: footer_content}}};
     }
     catch(err) {
         console.log(err.stack);
@@ -103,22 +118,22 @@ Viewer.prototype.getEventView = function() {
         this.mode = 2;
 
         let page_content = "" +
-            `Title: ${this.event.title}\n` +
-            `Author: <@${this.event._author}>\n` +
-            `Start: ${this.event.start}\n` +
-            `End: ${this.event.end}\n` +
-            `Description: ${this.event.description}\n` +
+            `Title: **${this.event.title}**\n` +
+            `Author: <@${this.event._author}>\n\n` +
+            `Start: ${moment(this.event.start).format(`${config.moment_date_format}`)}\n` +
+            `End: ${moment(this.event.end).format(`${config.moment_date_format}`)}\n\n` +
             `Tags: ${this.event.tags}\n` +
+            `Description: \n\`\`\`md\n${this.event.description}\n\`\`\`\n` +
             `Attendee Count: ${this.event.attendees.length}\n` +
             `Attendee Max: ${this.event.attendee_max}\n` +
             `\n##\`\`[edit]\`\` to edit the event\n` +
-            `##\`\`[delete]\`\` to delete the event\n` +
+            `##\`\`[delete]\`\` to delete the event\n\n` +
             `## \`\`[back]\`\` to return to event list\n` +
             `## \`\`[exit]\`\` to exit the menu`;
 
         let footer_content = `event ID# ${this.event._id}`;
 
-        return {embed: {description: page_content, footer: {text: footer_content}}};
+        return {embed: {color: msg_color, description: page_content, footer: {text: footer_content}}};
     }
     catch(err) {
         console.log(err.stack);
@@ -130,18 +145,18 @@ Viewer.prototype.getEventEditView = function() {
         this.mode = 3;
 
         let page_content = "" +
-            `\`\`[1]\`\` Title: ${this.event.title}\n` +
-            `\`\`[2]\`\` Start: ${this.event.start}\n` +
-            `\`\`[3]\`\` End: ${this.event.end}\n` +
-            `\`\`[4]\`\` Desc: ${this.event.description}\n` +
-            `\`\`[5]\`\` Max Members: ${this.event.attendee_max}\n` +
-            `\`\`[6]\`\` Tags: ${this.event.tags}\n` +
+            `\`\`[1]\`\` Event Title\n` +
+            `\`\`[2]\`\` Start Time\n` +
+            `\`\`[3]\`\` End Time\n` +
+            `\`\`[4]\`\` Description\n` +
+            `\`\`[5]\`\` Max Attendees\n` +
+            `\`\`[6]\`\` Tags\n` +
             `\n## \`\`[back]\`\` to return to event page\n` +
             `## \`\`[exit]\`\` to exit the menu`;
 
         let footer_content = `event ID# ${this.event._id}`;
 
-        return {embed: {description: page_content, footer: {text: footer_content}}};
+        return {embed: {color: msg_color, description: page_content, footer: {text: footer_content}}};
     }
     catch( err ) {
         console.log(err.stack);
@@ -158,48 +173,68 @@ Viewer.prototype.getEditorView = function() {
         switch(this.edit_mode) {
             case 1:
                 page_content = "" +
-                    `Current title: \`\`${this.event.title}\`\`\n` +
+                    `Current title: \n\`\`${this.event.title}\`\`\n\n` +
                     "Enter the new title for the event, or\n\n" +
                     `## \`\`[back]\`\` to return to event edit page\n` +
                     `## \`\`[exit]\`\` to exit the menu`;
 
                 footer_content = `event ID# ${this.event._id}`;
 
+<<<<<<< HEAD
                 return {embed: {description: page_content, footer: {text: footer_content}}};
                 //break; unreachable break
+=======
+                return {embed: {color: msg_color, description: page_content, footer: {text: footer_content}}};
+                break;
+>>>>>>> 3c7a9872ad1c8ae31257e39e2e88c5795075a862
             case 2:
                 page_content = "" +
-                    `Current start: \`\`${this.event.start}\n\`\`` +
+                    `Current start: \n\`\`${moment(this.event.start).format(`${config.moment_date_format}`)}\`\`\n\n` +
                     "Enter the new start time for the event, or\n\n" +
                     `## \`\`[back]\`\` to return to event edit page\n` +
                     `## \`\`[exit]\`\` to exit the menu`;
 
                 footer_content = `event ID# ${this.event._id}`;
 
+<<<<<<< HEAD
                 return {embed: {description: page_content, footer: {text: footer_content}}};
                 //break; unreachable break
+=======
+                return {embed: {color: msg_color, description: page_content, footer: {text: footer_content}}};
+                break;
+>>>>>>> 3c7a9872ad1c8ae31257e39e2e88c5795075a862
             case 3:
                 page_content = "" +
-                    `Current start: \`\`${this.event.end}\n\`\`` +
+                    `Current start: \n\`\`${moment(this.event.end).format(`${config.moment_date_format}`)}\`\`\n\n` +
                     "Enter the new end time for the event, or\n\n" +
                     `## \`\`[back]\`\` to return to event edit page\n` +
                     `## \`\`[exit]\`\` to exit the menu`;
 
                 footer_content = `event ID# ${this.event._id}`;
 
+<<<<<<< HEAD
                 return {embed: {description: page_content, footer: {text: footer_content}}};
                 //break; unreachable break
+=======
+                return {embed: {color: msg_color, description: page_content, footer: {text: footer_content}}};
+                break;
+>>>>>>> 3c7a9872ad1c8ae31257e39e2e88c5795075a862
             case 4:
                 page_content = "" +
-                    `Current Description: \n\`\`${this.event.description}\`\`\n\n` +
-                    "Enter the new end time for the event, or\n\n" +
+                    `Current Description: \n\`\`\`md\n${this.event.description}\n\`\`\`\n` +
+                    "Enter a new description for the event, or\n\n" +
                     `## \`\`[back]\`\` to return to event edit page\n` +
                     `## \`\`[exit]\`\` to exit the menu`;
 
                 footer_content = `event ID# ${this.event._id}`;
 
+<<<<<<< HEAD
                 return {embed: {description: page_content, footer: {text: footer_content}}};
                 //break; unreachable break
+=======
+                return {embed: {color: msg_color, description: page_content, footer: {text: footer_content}}};
+                break;
+>>>>>>> 3c7a9872ad1c8ae31257e39e2e88c5795075a862
             case 5:
                 page_content = "" +
                     `Current maximum member count: \n\`\`${this.event.attendee_max}\`\`\n\n` +
@@ -209,7 +244,7 @@ Viewer.prototype.getEditorView = function() {
 
                 footer_content = `event ID# ${this.event._id}`;
 
-                return {embed: {description: page_content, footer: {text: footer_content}}};
+                return {embed: {color: msg_color, description: page_content, footer: {text: footer_content}}};
                 break;
             case 6:
                 page_content = "" +
@@ -220,8 +255,13 @@ Viewer.prototype.getEditorView = function() {
 
                 footer_content = `event ID# ${this.event._id}`;
 
+<<<<<<< HEAD
                 return {embed: {description: page_content, footer: {text: footer_content}}};
                 //break; unreachable break
+=======
+                return {embed: {color: msg_color, description: page_content, footer: {text: footer_content}}};
+                break;
+>>>>>>> 3c7a9872ad1c8ae31257e39e2e88c5795075a862
             default:
                 return false; // something is wrong!
                 //break; unreachable break
@@ -251,7 +291,11 @@ Viewer.prototype.deleteEvent = function(event) {
     let body = `Event #${event._id} is queued for removal.\n\n` +
         `## \`\`[back]\`\` to return to event list\n` +
         `## \`\`[exit]\`\` to exit event viewer`;
+<<<<<<< HEAD
     return {embed: {description: body}};
+=======
+    return {embed: {color: msg_color, description: body}}
+>>>>>>> 3c7a9872ad1c8ae31257e39e2e88c5795075a862
 };
 
 module.exports = Viewer;
