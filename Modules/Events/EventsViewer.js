@@ -8,15 +8,19 @@ function Viewer(serverDocument, page_size, filter) {
     this.edit_mode = 0;
 
     if(filter) {
-        for(let event in serverDocument.gameEvents) {
+        let allEvents = serverDocument.gameEvents;
+        for(let i=0; i<allEvents.length; i++) {
+            let event = allEvents[i];
             let pass = true;
-            if(filter._author && event._author != filter._author) {
+
+            if(filter._author && event._author!=filter._author) {
                 pass = false;
-            } else if(filter.tags) {
+            }
+            else if(filter.tags) {
                 for(let i=0; i<filter.tags.length; i++) {
                     let found = false;
                     for(let j=0; j<event.tags.length; j++) {
-                        if(filter.tags[i] = event.tags[j]) {
+                        if(filter.tags[i] == event.tags[j]) {
                             found = true;
                             break;
                         }
@@ -24,6 +28,7 @@ function Viewer(serverDocument, page_size, filter) {
                     pass = found && pass;
                 }
             }
+
             if(pass) {
                 this.events.push(event);
             }
@@ -130,7 +135,7 @@ Viewer.prototype.getEventEditView = function() {
             `\`\`[3]\`\` End: ${this.event.end}\n` +
             `\`\`[4]\`\` Desc: ${this.event.description}\n` +
             `\`\`[5]\`\` Max Members: ${this.event.attendee_max}\n` +
-            //`\`\`[6]\`\` Tags: ${this.event.tags}\n` +
+            `\`\`[6]\`\` Tags: ${this.event.tags}\n` +
             `\n## \`\`[back]\`\` to return to event page\n` +
             `## \`\`[exit]\`\` to exit the menu`;
 
@@ -198,7 +203,18 @@ Viewer.prototype.getEditorView = function() {
             case 5:
                 page_content = "" +
                     `Current maximum member count: \n\`\`${this.event.attendee_max}\`\`\n\n` +
-                    "Enter the new end time for the event, or\n\n" +
+                    "Enter a new maximum member count for the event, or\n\n" +
+                    `## \`\`[back]\`\` to return to event edit page\n` +
+                    `## \`\`[exit]\`\` to exit the menu`;
+
+                footer_content = `event ID# ${this.event._id}`;
+
+                return {embed: {description: page_content, footer: {text: footer_content}}};
+                break;
+            case 6:
+                page_content = "" +
+                    `Current set tags: \n\`\`${this.event.tags}\`\`\n\n` +
+                    "Enter a new set of tags for the event, or\n\n" +
                     `## \`\`[back]\`\` to return to event edit page\n` +
                     `## \`\`[exit]\`\` to exit the menu`;
 

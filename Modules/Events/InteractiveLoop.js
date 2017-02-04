@@ -16,12 +16,12 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
         },
         (callback) => {
             msg.channel.createMessage(embed).then(bot_message => {
-                let timeout = setTimeout(()=>{bot_message.delete();}, 20000); //delete message in 1 minute
+                let timeout = setTimeout(()=>{bot_message.delete();}, 30000); //delete message in 1 minute
 
                 winston.info(`waiting for user message`);
                 bot.awaitMessage(msg.channel.id, msg.author.id, usr_message => {
                     winston.info(`read user message ${usr_message.content}`);
-                    bot.removeMessageListener(msg.channel.id, msg.author.id)
+                    bot.removeMessageListener(msg.channel.id, msg.author.id);
                     clearTimeout(timeout);  //clear the active timeout
 
                     let usr_input = usr_message.content.trim();
@@ -85,9 +85,15 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                                 embed = viewer.getEventView();
                             }
                             else {
-                                if(!isNaN(usr_input)){
+                                if(!isNaN(usr_input) && usr_input>0 && usr_input<=6){
                                     viewer.edit_mode = Number(usr_input);
                                     embed = viewer.getEditorView();
+                                } else {
+                                    let body = `Your input ${usr_input} option!\n\n` +
+                                        `## \`\`[back]\`\` to return to event list\n` +
+                                        `## \`\`[exit]\`\` to quit view`;
+                                    embed = {embed: {description: body, footer: `error!`}};
+                                    error = true;
                                 }
                             }
                         } else {
@@ -138,6 +144,9 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                                             error = true;
                                         }
                                         break;
+                                    case 6:
+                                        let tags = usr_input.split(",");
+                                        viewer.event.tags = tags;
                                 }
                                 if(!error) {
                                     embed = viewer.getEventEditView();
