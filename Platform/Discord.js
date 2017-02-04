@@ -55,20 +55,22 @@ module.exports = (db, auth, config) => {
 		if(!bot.messageListeners[chid]) {
 			bot.messageListeners[chid] = {};
 		}
+        let timeout = setTimeout(() => {
+            if(bot.messageListeners[chid] && bot.messageListeners[chid][usrid]) {
+                delete bot.messageListeners[chid][usrid];
+                if(Object.keys(bot.messageListeners[chid])==0) {
+                    delete bot.messageListeners[chid];
+                }
+            }
+        }, 30000);
 		bot.messageListeners[chid][usrid] = {
 			callback,
-			filter
+			filter,
+			timeout
 		};
-		setTimeout(() => {
-			if(bot.messageListeners[chid] && bot.messageListeners[chid][usrid]) {
-				delete bot.messageListeners[chid][usrid];
-				if(Object.keys(bot.messageListeners[chid])==0) {
-					delete bot.messageListeners[chid];
-				}
-			}
-		}, 20000);
 	};
 	bot.removeMessageListener = (chid, usrid) => {
+        clearTimeout(bot.messageListeners[chid][usrid].timeout);
 		delete bot.messageListeners[chid][usrid];
 		if(Object.keys(bot.messageListeners[chid])==0) {
 			delete bot.messageListeners[chid];

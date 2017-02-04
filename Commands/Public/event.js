@@ -49,8 +49,33 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
             }
         }
         else if(suffix.toLowerCase().startsWith("search")) {
-            // TODO parse args to make a filter
-            let filter = null;
+            let filter = {};
+            let args = suffix.toLowerCase().split("search")[1].trim().split(" ");
+            for(let i=0; i<args.length; i++){
+                let arg = args[i];
+
+                let attribute = arg.split(":")[0];
+                let instance = arg.split(":")[1];
+                winston.info(`${attribute} and ${instance}`);
+                switch(attribute){
+                    case "a":
+                        if(instance){
+                            filter._author = instance.replace("<@","").replace(">","");
+                        }
+                        break;
+                    case "t":
+                        if(instance){
+                            let tags = [];
+                            let tmp = instance.split(" ");
+                            for(let i=0; i<tmp.length; i++){
+                                tags.push(tmp[i]);
+                            }
+                            filter.tags = tags;
+                        }
+                        break;
+                }
+            }
+
             viewer = new EventViewer(serverDocument, page_size, filter);
             list(bot, db, winston, serverDocument, msg, viewer, viewer.getPageView(1));
         }
