@@ -50,13 +50,12 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
         }
         else if(suffix.toLowerCase().startsWith("search")) {
             let filter = {};
-            let args = suffix.toLowerCase().split("search")[1].trim().split(" ");
+            let args = suffix.toLowerCase().split("search")[1].trim().split("|");
             for(let i=0; i<args.length; i++){
-                let arg = args[i];
+                let arg = args[i].trim();
 
-                let attribute = arg.split(":")[0];
-                let instance = arg.split(":")[1];
-                winston.info(`${attribute} and ${instance}`);
+                let attribute = arg.split(":")[0].trim();
+                let instance = arg.split(":")[1].trim();
                 switch(attribute){
                     case "a":
                         if(instance){
