@@ -18,9 +18,10 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
             msg.channel.createMessage(embed).then(bot_message => {
                 let timeout = setTimeout(()=>{bot_message.delete();}, 20000); //delete message in 1 minute
 
+                winston.info(`waiting for user message`);
                 bot.awaitMessage(msg.channel.id, msg.author.id, usr_message => {
                     winston.info(`read user message ${usr_message.content}`);
-                    bot.removeMessageListener(msg.channel.id, msg.author.id);
+                    bot.removeMessageListener(msg.channel.id, msg.author.id)
                     clearTimeout(timeout);  //clear the active timeout
 
                     let usr_input = usr_message.content.trim();
@@ -40,11 +41,11 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                         // get eventDocument
                         if (!isNaN(usr_input) && usr_input > 0) {
                             viewer.event = viewer.getEvent(usr_input);
-                            if(viewer.event) {
+                            if(!viewer.event) {
                                 let body = `Event #${usr_input} does not exists!\n\n` +
                                     `## \`\`[back]\`\` to return to event list\n` +
                                     `## \`\`[exit]\`\` to quit view`;
-                                embed = {embed: {description: body, footer: `error!`}};
+                                embed = {embed: {description: body, footer: {text: `error!`}}};
                                 error = true;
                             } else {
                                 embed = viewer.getEventView();
