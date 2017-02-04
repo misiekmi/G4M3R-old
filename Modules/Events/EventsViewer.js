@@ -37,7 +37,7 @@ function Viewer(serverDocument, page_size, filter) {
             }
         }
         if(filter._author) {
-            this.filter_disp += " | a: <@" + filter._author + ">"
+            this.filter_disp += " | a: <@" + filter._author + ">";
         }
         if(filter.tags) {
             this.filter_disp += " | t: " + filter.tags;
@@ -80,17 +80,10 @@ Viewer.prototype.getPageView = function(page_no) {
         }
 
         page_content += `## \`\`[exit]\`\` to exit the menu\n`;
-<<<<<<< HEAD
-        if(this.isFiltered){
-            footer_content += "  |  filtered";
-        } else {
-            footer_content += "  |  unfiltered";
-=======
         if(this.filter_disp){
             footer_content += this.filter_disp;
         } else {
-            footer_content += " | unfiltered"
->>>>>>> 3c7a9872ad1c8ae31257e39e2e88c5795075a862
+            footer_content += " | unfiltered";
         }
 
         return {embed: {color: msg_color, description: page_content, footer: {text: footer_content}}};
@@ -180,13 +173,8 @@ Viewer.prototype.getEditorView = function() {
 
                 footer_content = `event ID# ${this.event._id}`;
 
-<<<<<<< HEAD
-                return {embed: {description: page_content, footer: {text: footer_content}}};
-                //break; unreachable break
-=======
                 return {embed: {color: msg_color, description: page_content, footer: {text: footer_content}}};
                 break;
->>>>>>> 3c7a9872ad1c8ae31257e39e2e88c5795075a862
             case 2:
                 page_content = "" +
                     `Current start: \n\`\`${moment(this.event.start).format(`${config.moment_date_format}`)}\`\`\n\n` +
@@ -196,13 +184,8 @@ Viewer.prototype.getEditorView = function() {
 
                 footer_content = `event ID# ${this.event._id}`;
 
-<<<<<<< HEAD
-                return {embed: {description: page_content, footer: {text: footer_content}}};
-                //break; unreachable break
-=======
                 return {embed: {color: msg_color, description: page_content, footer: {text: footer_content}}};
                 break;
->>>>>>> 3c7a9872ad1c8ae31257e39e2e88c5795075a862
             case 3:
                 page_content = "" +
                     `Current start: \n\`\`${moment(this.event.end).format(`${config.moment_date_format}`)}\`\`\n\n` +
@@ -212,13 +195,8 @@ Viewer.prototype.getEditorView = function() {
 
                 footer_content = `event ID# ${this.event._id}`;
 
-<<<<<<< HEAD
-                return {embed: {description: page_content, footer: {text: footer_content}}};
-                //break; unreachable break
-=======
                 return {embed: {color: msg_color, description: page_content, footer: {text: footer_content}}};
                 break;
->>>>>>> 3c7a9872ad1c8ae31257e39e2e88c5795075a862
             case 4:
                 page_content = "" +
                     `Current Description: \n\`\`\`md\n${this.event.description}\n\`\`\`\n` +
@@ -228,13 +206,8 @@ Viewer.prototype.getEditorView = function() {
 
                 footer_content = `event ID# ${this.event._id}`;
 
-<<<<<<< HEAD
-                return {embed: {description: page_content, footer: {text: footer_content}}};
-                //break; unreachable break
-=======
                 return {embed: {color: msg_color, description: page_content, footer: {text: footer_content}}};
                 break;
->>>>>>> 3c7a9872ad1c8ae31257e39e2e88c5795075a862
             case 5:
                 page_content = "" +
                     `Current maximum member count: \n\`\`${this.event.attendee_max}\`\`\n\n` +
@@ -255,13 +228,8 @@ Viewer.prototype.getEditorView = function() {
 
                 footer_content = `event ID# ${this.event._id}`;
 
-<<<<<<< HEAD
-                return {embed: {description: page_content, footer: {text: footer_content}}};
-                //break; unreachable break
-=======
                 return {embed: {color: msg_color, description: page_content, footer: {text: footer_content}}};
                 break;
->>>>>>> 3c7a9872ad1c8ae31257e39e2e88c5795075a862
             default:
                 return false; // something is wrong!
                 //break; unreachable break
@@ -291,11 +259,7 @@ Viewer.prototype.deleteEvent = function(event) {
     let body = `Event #${event._id} is queued for removal.\n\n` +
         `## \`\`[back]\`\` to return to event list\n` +
         `## \`\`[exit]\`\` to exit event viewer`;
-<<<<<<< HEAD
-    return {embed: {description: body}};
-=======
-    return {embed: {color: msg_color, description: body}}
->>>>>>> 3c7a9872ad1c8ae31257e39e2e88c5795075a862
+    return {embed: {color: msg_color, description: body}};
 };
 
 module.exports = Viewer;
