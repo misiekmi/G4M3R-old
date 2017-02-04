@@ -20,7 +20,7 @@ function Viewer(serverDocument, page_size, filter) {
                 for(let i=0; i<filter.tags.length; i++) {
                     let found = false;
                     for(let j=0; j<event.tags.length; j++) {
-                        if(filter.tags[i] == event.tags[j]) {
+                        if(filter.tags[i].toLowerCase() == event.tags[j].toLowerCase()) {
                             found = true;
                             break;
                         }
