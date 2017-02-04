@@ -16,7 +16,7 @@ function Viewer(serverDocument, page_size, filter) {
                 for(let i=0; i<filter.tags.length; i++) {
                     let found = false;
                     for(let j=0; j<event.tags.length; j++) {
-                        if(filter.tags[i] = event.tags[j]) {
+                        if(filter.tags[i] === event.tags[j]) {
                             found = true;
                             break;
                         }
@@ -68,9 +68,9 @@ Viewer.prototype.getPageView = function(page_no) {
 
         page_content += `## \`\`[exit]\`\` to exit the menu\n`;
         if(this.isFiltered){
-            footer_content += "  |  filtered"
+            footer_content += "  |  filtered";
         } else {
-            footer_content += "  |  unfiltered"
+            footer_content += "  |  unfiltered";
         }
 
         return {embed: {description: page_content, footer: {text: footer_content}}};
@@ -235,7 +235,7 @@ Viewer.prototype.deleteEvent = function(event) {
     let body = `Event #${event._id} is queued for removal.\n\n` +
         `## \`\`[back]\`\` to return to event list\n` +
         `## \`\`[exit]\`\` to exit event viewer`;
-    return {embed: {description: body}}
+    return {embed: {description: body}};
 };
 
 module.exports = Viewer;
