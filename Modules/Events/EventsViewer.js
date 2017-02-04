@@ -61,7 +61,7 @@ Viewer.prototype.getPageView = function(page_no) {
             let end_index = (start_index + page_size) > events_length ? events_length : start_index + 3;
 
             for (let i = start_index; i < end_index; i++) {
-                page_content += `\`\`[${this.events[i]._id}]\`\` ${this.events[i].title}\n` +
+                page_content += `\`\`[${this.events[i]._id}]\`\` **${this.events[i].title}**\n` +
                     `-by: <@${this.events[i]._author}>\n` +
                     `-start: ${moment(this.events[i].start).format(`${config.moment_date_format}`)}\n\n`;
             }
@@ -111,12 +111,12 @@ Viewer.prototype.getEventView = function() {
         this.mode = 2;
 
         let page_content = "" +
-            `Title: ${this.event.title}\n` +
+            `Title: **${this.event.title}**\n` +
             `Author: <@${this.event._author}>\n\n` +
             `Start: ${moment(this.event.start).format(`${config.moment_date_format}`)}\n` +
             `End: ${moment(this.event.end).format(`${config.moment_date_format}`)}\n\n` +
-            `Description: ${this.event.description}\n` +
-            `Tags: ${this.event.tags}\n\n` +
+            `Tags: ${this.event.tags}\n` +
+            `Description: \n\`\`\`md\n${this.event.description}\n\`\`\`\n` +
             `Attendee Count: ${this.event.attendees.length}\n` +
             `Attendee Max: ${this.event.attendee_max}\n` +
             `\n##\`\`[edit]\`\` to edit the event\n` +
@@ -199,7 +199,7 @@ Viewer.prototype.getEditorView = function() {
                 break;
             case 4:
                 page_content = "" +
-                    `Current Description: \n\`\`${this.event.description}\`\`\n\n` +
+                    `Current Description: \n\`\`\`md\n${this.event.description}\n\`\`\`\n` +
                     "Enter a new description for the event, or\n\n" +
                     `## \`\`[back]\`\` to return to event edit page\n` +
                     `## \`\`[exit]\`\` to exit the menu`;
