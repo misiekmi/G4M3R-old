@@ -117,8 +117,7 @@ Viewer.prototype.getEventView = function() {
             `End: ${moment(this.event.end).format(`${config.moment_date_format}`)}\n\n` +
             `Tags: ${this.event.tags}\n` +
             `Description: \n\`\`\`md\n${this.event.description}\n\`\`\`\n` +
-            `Attendee Count: ${this.event.attendees.length}\n` +
-            `Attendee Max: ${this.event.attendee_max}\n` +
+            `Spots Open: ${this.event.attendees.length}/${this.event.attendee_max}\n` +
             `\n##\`\`[edit]\`\` to edit the event\n` +
             `##\`\`[delete]\`\` to delete the event\n\n` +
             `## \`\`[back]\`\` to return to event list\n` +

@@ -10,7 +10,23 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
 
     if( suffix ) {
         if(suffix.toLowerCase()=="add") {
-            create(bot, db, winston, serverDocument, msg);
+            let newEventID, maxEventID;
+            if (serverDocument.gameEvents.length == 0) {
+                maxEventID = 0;
+            } else {
+                maxEventID = Math.max.apply(Math, serverDocument.gameEvents.map(a => a._id));
+            }
+            newEventID = maxEventID + 1;
+            serverDocument.gameEvents.push({_id: newEventID, _author: msg.author.id});
+            let viewer = new EventViewer(serverDocument, page_size);
+
+            let event = viewer.getEvent(newEventID);
+            if(event){
+                viewer.event = event;
+                list(bot, db, winston, serverDocument, msg, viewer, viewer.getEventEditView());
+            } else {
+                // TODO error, event does not exist
+            }
         }
         if(suffix.toLowerCase()=="list") {
             let viewer = new EventViewer(serverDocument, page_size);
