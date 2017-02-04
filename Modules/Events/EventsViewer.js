@@ -161,7 +161,7 @@ Viewer.prototype.getEditorView = function() {
                 footer_content = `event ID# ${this.event._id}`;
 
                 return {embed: {description: page_content, footer: {text: footer_content}}};
-                break;
+                //break; unreachable break
             case 2:
                 page_content = "" +
                     `Current start: \`\`${this.event.start}\n\`\`` +
@@ -172,7 +172,7 @@ Viewer.prototype.getEditorView = function() {
                 footer_content = `event ID# ${this.event._id}`;
 
                 return {embed: {description: page_content, footer: {text: footer_content}}};
-                break;
+                //break; unreachable break
             case 3:
                 page_content = "" +
                     `Current start: \`\`${this.event.end}\n\`\`` +
@@ -183,7 +183,7 @@ Viewer.prototype.getEditorView = function() {
                 footer_content = `event ID# ${this.event._id}`;
 
                 return {embed: {description: page_content, footer: {text: footer_content}}};
-                break;
+                //break; unreachable break
             case 4:
                 page_content = "" +
                     `Current Description: \n\`\`${this.event.description}\`\`\n\n` +
@@ -194,7 +194,7 @@ Viewer.prototype.getEditorView = function() {
                 footer_content = `event ID# ${this.event._id}`;
 
                 return {embed: {description: page_content, footer: {text: footer_content}}};
-                break;
+                //break; unreachable break
             case 5:
                 page_content = "" +
                     `Current maximum member count: \n\`\`${this.event.attendee_max}\`\`\n\n` +
@@ -205,10 +205,10 @@ Viewer.prototype.getEditorView = function() {
                 footer_content = `event ID# ${this.event._id}`;
 
                 return {embed: {description: page_content, footer: {text: footer_content}}};
-                break;
+                //break; unreachable break
             default:
                 return false; // something is wrong!
-                break;
+                //break; unreachable break
         }
     }
     catch(err) {
