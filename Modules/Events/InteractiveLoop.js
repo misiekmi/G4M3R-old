@@ -19,6 +19,7 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                 let timeout = setTimeout(()=>{bot_message.delete();}, 20000); //delete message in 1 minute
 
                 bot.awaitMessage(msg.channel.id, msg.author.id, usr_message => {
+                    winston.info(`read user message ${usr_message}`);
                     bot.removeMessageListener(msg.channel.id, msg.author.id);
                     clearTimeout(timeout);  //clear the active timeout
 
