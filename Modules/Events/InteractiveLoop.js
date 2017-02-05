@@ -73,6 +73,9 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                         else if(usr_input == "delete") {
                             embed = viewer.deleteEvent(viewer.event);
                         }
+                        else if(usr_input == "join") {
+                            embed = viewer.joinEvent(viewer.event, msg.author.id);
+                        }
                     }
                     else if(viewer.mode==3) {       // editor mode
                         if(viewer.edit_mode===0) {
@@ -164,6 +167,11 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                         }
                     }
                     else if(viewer.mode==4) {       // delete queued mode
+                        if(usr_input == "back") {
+                            embed = viewer.getPageView(current_page_no);
+                        }
+                    }
+                    else if(viewer.mode==5) {       // join queued mode
                         if(usr_input == "back") {
                             embed = viewer.getPageView(current_page_no);
                         }

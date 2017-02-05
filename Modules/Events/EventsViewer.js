@@ -2,7 +2,7 @@ const moment = require("moment");
 const config = require("../../Configuration/config.json");
 const msg_color = 0xff8c00;
 
-function Viewer(serverDocument, page_size, filter) {
+function Viewer(serverDocument, page_size, filter, msg) {
     this.server = serverDocument;
     this.events = [];
     this.page_size = page_size ? page_size : 3;
@@ -60,10 +60,11 @@ Viewer.prototype.getPageView = function(page_no) {
         if((page_no-1)*page_size < events_length) {
             let start_index = (page_no - 1) * page_size;
             let end_index = (start_index + page_size) > events_length ? events_length : start_index + 3;
+            //let actualAttendees = this.events.attendees.length;
 
             for (let i = start_index; i < end_index; i++) {
                 page_content += `\`\`[${this.events[i]._id}]\`\` **${this.events[i].title}**\n` +
-                    `-by: <@${this.events[i]._author}>\n` +
+                    `-by: <@${this.events[i]._author}> - \`(${this.events[i].attendees.length}/${this.events[i].attendee_max})\`\n` +
                     (moment(this.events[i].start).isAfter(moment.now()) ?
                         `-starts ${moment(this.events[i].start).fromNow()}\n` :
                         `-ends ${moment(this.events[i].end).fromNow()}\n`) +
@@ -121,7 +122,8 @@ Viewer.prototype.getEventView = function() {
             `End: ${moment(this.event.end).format(`${config.moment_date_format}`)}\n\n` +
             `Tags: ${this.event.tags}\n` +
             `Description: \n\`\`\`md\n${this.event.description}\n\`\`\`\n` +
-            `Spots Open: ${this.event.attendees.length}/${this.event.attendee_max}\n` +
+            `Spots Open: \`(${this.event.attendees.length}/${this.event.attendee_max})\`\n` +
+            `\n##\`\`[join]\`\` to join the event\n` +
             `\n##\`\`[edit]\`\` to edit the event\n` +
             `##\`\`[delete]\`\` to delete the event\n\n` +
             `## \`\`[back]\`\` to return to event list\n` +
@@ -269,6 +271,63 @@ Viewer.prototype.deleteEvent = function(event) {
         `## \`\`[back]\`\` to return to event list\n` +
         `## \`\`[exit]\`\` to exit event viewer`;
     return {embed: {color: msg_color, description: body}};
+};
+
+Viewer.prototype.joinEvent = function(event, msgAuthor) {
+    this.mode = 5;
+    let alreadyMember = false;
+
+    // check if msgAuthor is already an Attendee
+    for (let i = 0; i < event.attendees.length; i++) {
+        if (event.attendees[i]._id === msgAuthor) {
+            alreadyMember = true;
+        }
+    }
+    //check if msgAuthor alredy joined that event
+    if (alreadyMember) {
+
+        let body = `You __already__ joined the Event #${event._id}.\n\n` +
+        `Title: \`\`${event.title}\`\`\n` +
+        `Author: <@${event._author}>\n` +
+        `Attendees: (${event.attendees.length}/${event.attendee_max})\n\n` +
+        `## \`\`[back]\`\` to return to event list\n` +
+        `## \`\`[exit]\`\` to exit event viewer`;
+
+        return {embed: {color: msg_color, description: body}};
+
+    } else {
+        // check if attendee_max limit of eventDocument is reached
+        if (event.attendees.length < event.attendee_max) {
+
+            event.attendees.push({_id: msgAuthor, timestamp: Date()});
+            event.save(err => {
+                if(err) {
+                    // TODO if failure, give the user some indication
+                } else {
+                    // TODO if success, do likewise
+                }  
+            });
+
+            let body = `You just joined Event #${event._id}.\n\n` +
+                `Title: \`\`${event.title}\`\`\n` +
+                `Author: <@${event._author}>\n` +
+                `Attendees: (${event.attendees.length}/${event.attendee_max})\n\n` +
+                `## \`\`[back]\`\` to return to event list\n` +
+                `## \`\`[exit]\`\` to exit event viewer`;
+                return {embed: {color: msg_color, description: body}};
+                
+        } else {
+
+            let body = `You cannot join Event #${event._id} because it is full already.\n\n` +
+                `Title: \`\`${event.title}\`\`\n` +
+                `Author: <@${event._author}>\n` +
+                `Attendees: (${event.attendees.length}/${event.attendee_max})\n\n` +
+                `## \`\`[back]\`\` to return to event list\n` +
+                `## \`\`[exit]\`\` to exit event viewer`;
+            return {embed: {color: msg_color, description: body}};
+        }
+
+        }
 };
 
 module.exports = Viewer;

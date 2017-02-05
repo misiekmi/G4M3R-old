@@ -93,8 +93,20 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
             viewer = new EventViewer(serverDocument, page_size, filter);
             list(bot, db, winston, serverDocument, msg, viewer, viewer.getPageView(1));
         }
-    }
+    
+        else if(suffix.toLowerCase().startsWith("join")) {
+            let tmp = suffix.toLowerCase().split("join")[1].trim();
+            viewer = new EventViewer(serverDocument, page_size);
+            let event = viewer.getEvent(tmp);
+            let author = msg.author.id;
+            if(event){
+                viewer.event = event;
+                list(bot, db, winston, serverDocument, msg, viewer, viewer.joinEvent(viewer.event, author));
+            } else {
+                // TODO error, event does not exist
+            }
+        }
+    }    
     else {
-        // TODO
     }
 };

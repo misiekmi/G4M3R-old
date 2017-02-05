@@ -13,10 +13,10 @@ module.exports = new mongoose.Schema({
 		end: {type: Date, default: this.start }, // end date of the event in YYYY/MM/DD h:mm
 
 		attendee_max: {type: Number, default: 3}, // maximum number of people that can join the event
-		attendees: {type: [new mongoose.Schema({ // people that joined the event
-			_id: String,
-			_timestamp: Date
-		})], default: []},
+		attendees: [new mongoose.Schema({ // people that joined the event
+			_id: {type: String},
+			_timestamp: {type: Date}
+		})],
 
 		// notification settings
 		announce: {type: Boolean, default: false},		// if bot should announce when start/end
