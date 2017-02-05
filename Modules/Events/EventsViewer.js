@@ -294,13 +294,14 @@ Viewer.prototype.joinEvent = function(event, msgAuthor) {
         `## \`\`[exit]\`\` to exit event viewer`;
 
         return {embed: {color: msg_color, description: body}};
-
+    
+    //if user is not already an attendee of the event
     } else {
         // check if attendee_max limit of eventDocument is reached
         if (event.attendees.length < event.attendee_max) {
 
             event.attendees.push({_id: msgAuthor, timestamp: Date()});
-            event.save(err => {
+            this.server.save(err => {
                 if(err) {
                     // TODO if failure, give the user some indication
                 } else {
@@ -318,7 +319,7 @@ Viewer.prototype.joinEvent = function(event, msgAuthor) {
                 
         } else {
 
-            let body = `You cannot join Event #${event._id} because it is full already.\n\n` +
+            let body = `You cannot join Event #${event._id} because there is no open slot left.\n\n` +
                 `Title: \`\`${event.title}\`\`\n` +
                 `Author: <@${event._author}>\n` +
                 `Attendees: (${event.attendees.length}/${event.attendee_max})\n\n` +

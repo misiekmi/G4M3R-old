@@ -1,3 +1,4 @@
+
 const mongoose = require("mongoose");
 
 // schema for storing event information
