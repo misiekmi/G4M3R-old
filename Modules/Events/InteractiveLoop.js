@@ -83,17 +83,19 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                                     }
                                 });
                                 embed = viewer.getEventView();
+                                viewer.edits_made = {};
                             }
                             else {
                                 if(!isNaN(usr_input) && usr_input>0 && usr_input<=6){
                                     viewer.edit_mode = Number(usr_input);
                                     embed = viewer.getEditorView();
                                 } else {
-                                    let body = `Your input ${usr_input} option!\n\n` +
+                                    let body = `Your input ${usr_input} is not a valid option!\n\n` +
                                         `## \`\`[back]\`\` to return to event list\n` +
                                         `## \`\`[exit]\`\` to quit view`;
                                     embed = {embed: {description: body, footer: `error!`}};
                                     error = true;
+                                    viewer.edits_made = {};
                                 }
                             }
                         } else {
@@ -105,11 +107,13 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                                 switch(viewer.edit_mode) {
                                     case 1:
                                         viewer.event.title = usr_input;
+                                        viewer.edits_made.title = usr_input;
                                         break;
                                     case 2:
                                         time = moment(usr_message.content.trim(), formats, true); // parse start time
                                         if(time.isValid()){
                                             viewer.event.start = time;
+                                            viewer.edits_made.start = time;
                                         } else {
                                             body = `Your input ${usr_input} is not a valid start time!\n\n` +
                                                 `## \`\`[back]\`\` to return to event list\n` +
@@ -122,6 +126,7 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                                         time = moment(usr_message.content.trim(), formats, true); // parse start time
                                         if(time.isValid()){
                                             viewer.event.end = time;
+                                            viewer.edits_made.end = time;
                                         } else {
                                             body = `Your input ${usr_input} is not a valid end time!\n\n` +
                                                 `## \`\`[back]\`\` to return to event list\n` +
@@ -132,12 +137,14 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                                         break;
                                     case 4:
                                         viewer.event.description = usr_input;
+                                        viewer.edits_made.description = usr_input;
                                         break;
                                     case 5:
                                         if(!isNaN(usr_input) && usr_input>=0) {
                                             viewer.event.attendee_max = usr_input;
+                                            viewer.edits_made.attendee_max = usr_input;
                                         } else {
-                                            body = `Your input ${usr_input} is not a number!\n\n` +
+                                            body = `Your input ${usr_input} is not valid amount!\n\n` +
                                                 `## \`\`[back]\`\` to return to event list\n` +
                                                 `## \`\`[exit]\`\` to quit view`;
                                             embed = {embed: {description: body, footer: `error!`}};
@@ -147,6 +154,7 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                                     case 6:
                                         let tags = usr_input.split(",");
                                         viewer.event.tags = tags;
+                                        viewer.edits_made.tags = tags;
                                 }
                                 if(!error) {
                                     embed = viewer.getEventEditView();
