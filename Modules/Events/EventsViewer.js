@@ -8,6 +8,7 @@ function Viewer(serverDocument, page_size, filter) {
     this.page_size = page_size ? page_size : 3;
     this.mode = 0;
     this.edit_mode = 0;
+    this.edits_made = {};
 
     if(filter) {
         this.filter_disp = "";
@@ -63,7 +64,10 @@ Viewer.prototype.getPageView = function(page_no) {
             for (let i = start_index; i < end_index; i++) {
                 page_content += `\`\`[${this.events[i]._id}]\`\` **${this.events[i].title}**\n` +
                     `-by: <@${this.events[i]._author}>\n` +
-                    `-start: ${moment(this.events[i].start).format(`${config.moment_date_format}`)}\n\n`;
+                    (moment(this.events[i].start).isAfter(moment.now()) ?
+                        `-starts ${moment(this.events[i].start).fromNow()}\n` :
+                        `-ends ${moment(this.events[i].end).fromNow()}\n`) +
+                    "\n";
             }
 
             if(events_length > end_index) {
@@ -137,12 +141,18 @@ Viewer.prototype.getEventEditView = function() {
         this.mode = 3;
 
         let page_content = "" +
-            `\`\`[1]\`\` Event Title\n` +
-            `\`\`[2]\`\` Start Time\n` +
-            `\`\`[3]\`\` End Time\n` +
-            `\`\`[4]\`\` Description\n` +
-            `\`\`[5]\`\` Max Attendees\n` +
-            `\`\`[6]\`\` Tags\n` +
+            `\`\`[1]\`\` Event Title ` +
+            (this.edits_made.title?": **"+this.edits_made.title+"**\n":"\n") +
+            `\`\`[2]\`\` Start Time ` +
+            (this.edits_made.start?": **"+moment(this.edits_made.start).format(`${config.moment_date_format}`)+"**\n":"\n") +
+            `\`\`[3]\`\` End Time ` +
+            (this.edits_made.end?": **"+moment(this.edits_made.end).format(`${config.moment_date_format}`)+"**\n":"\n") +
+            `\`\`[4]\`\` Description ` +
+            (this.edits_made.description?"```md\n"+this.edits_made.description+"```\n":"\n")  +
+            `\`\`[5]\`\` Max Attendees ` +
+            (this.edits_made.attendee_max?": **"+this.edits_made.attendee_max+"**\n":"\n") +
+            `\`\`[6]\`\` Tags ` +
+            (this.edits_made.tags?": **"+this.edits_made.tags+"**\n":"\n") +
             `\n## \`\`[back]\`\` to return to event page\n` +
             `## \`\`[exit]\`\` to exit the menu`;
 
