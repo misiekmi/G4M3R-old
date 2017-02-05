@@ -286,14 +286,14 @@ Viewer.prototype.joinEvent = function(event, msgAuthor) {
     //check if msgAuthor alredy joined that event
     if (alreadyMember) {
 
-        let body = `You __already__ joined the Event #${event._id}.\n\n` +
-        `Title: \`\`${event.title}\`\`\n` +
-        `Author: <@${event._author}>\n` +
-        `Attendees: (${event.attendees.length}/${event.attendee_max})\n\n` +
-        `## \`\`[back]\`\` to return to event list\n` +
-        `## \`\`[exit]\`\` to exit event viewer`;
+        let title = `You __already__ joined the Event #${event._id}.`;
+        let body = `Title: \`\`${event.title}\`\`\n` +
+                    `Author: <@${event._author}>\n` +
+                    `Attendees: (${event.attendees.length}/${event.attendee_max})\n\n` +
+                    `## \`\`[back]\`\` to return to event list\n` +
+                    `## \`\`[exit]\`\` to exit event viewer`;
 
-        return {embed: {color: msg_color, description: body}};
+            return {embed: {color: msg_color, title: title, description: body}};
     
     //if user is not already an attendee of the event
     } else {
@@ -308,24 +308,23 @@ Viewer.prototype.joinEvent = function(event, msgAuthor) {
                     // TODO if success, do likewise
                 }  
             });
-
-            let body = `You just joined Event #${event._id}.\n\n` +
-                `Title: \`\`${event.title}\`\`\n` +
-                `Author: <@${event._author}>\n` +
-                `Attendees: (${event.attendees.length}/${event.attendee_max})\n\n` +
-                `## \`\`[back]\`\` to return to event list\n` +
-                `## \`\`[exit]\`\` to exit event viewer`;
-                return {embed: {color: msg_color, description: body}};
+            let title = `You just joined Event #${event._id}.`;
+            let body = `Title: \`\`${event.title}\`\`\n` +
+                        `Author: <@${event._author}>\n` +
+                        `Attendees: (${event.attendees.length}/${event.attendee_max})\n\n` +
+                        `## \`\`[back]\`\` to return to event list\n` +
+                        `## \`\`[exit]\`\` to exit event viewer`;
+            return {embed: {color: msg_color, title: title, description: body}};
                 
         } else {
 
-            let body = `You cannot join Event #${event._id} because there is no open slot left.\n\n` +
-                `Title: \`\`${event.title}\`\`\n` +
-                `Author: <@${event._author}>\n` +
-                `Attendees: (${event.attendees.length}/${event.attendee_max})\n\n` +
-                `## \`\`[back]\`\` to return to event list\n` +
-                `## \`\`[exit]\`\` to exit event viewer`;
-            return {embed: {color: msg_color, description: body}};
+            let title = `You cannot join Event #${event._id} because there is no open slot left.`;
+            let body = `Title: \`\`${event.title}\`\`\n` +
+                        `Author: <@${event._author}>\n` +
+                        `Attendees: (${event.attendees.length}/${event.attendee_max})\n\n` +
+                        `## \`\`[back]\`\` to return to event list\n` +
+                        `## \`\`[exit]\`\` to exit event viewer`;
+            return {embed: {color: msg_color, title: title, description: body}};
         }
 
         }
