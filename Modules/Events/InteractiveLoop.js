@@ -75,7 +75,7 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                         }
                     }
                     else if(viewer.mode==3) {       // editor mode
-                        if(viewer.edit_mode==0) {
+                        if(viewer.edit_mode===0) {
                             if(usr_input == "back") {
                                 serverDocument.save((err)=>{
                                     if(err) {
