@@ -1,7 +1,7 @@
 const moment = require("moment");
 const config = require("../../Configuration/config.json");
-let msg_color = 0xff8c00;
-let default_color = 0xff8c00;
+let msg_color = 0xff8c00; //start with orange embed color
+let default_color = 0xff8c00; // default color = orange
 
 function Viewer(serverDocument, page_size, filter) {
     this.server = serverDocument;
