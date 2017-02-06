@@ -127,7 +127,7 @@ Viewer.prototype.getEventView = function() {
             `End: ${moment(this.event.end).format(`${config.moment_date_format}`)}\n\n` +
             `Tags: ${this.event.tags}\n` +
             `Description: \n\`\`\`md\n${this.event.description}\n\`\`\`\n` +
-            `Spots Open: \`(${this.event.attendees.length}/${this.event.attendee_max})\``;
+            `Attendees: \`(${this.event.attendees.length}/${this.event.attendee_max})\``;
 
         footer_content = `## Options: [J]oin, [L]eave, [E]dit, [D]elete, [B]ack, [Q]uit`;
 
