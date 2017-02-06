@@ -144,7 +144,7 @@ Viewer.prototype.getEventEditView = function() {
         let title_content, page_content, footer_content;
         title_content = `Event #⃣ ${this.event._id}`;
         page_content = "" +
-            `\`\`:one:\`\` Event Title ` +
+            `\`\`[1]\`\` Event Title ` +
             (this.edits_made.title?": **"+this.edits_made.title+"**\n":"\n") +
             `\`\`[2]\`\` Start Time ` +
             (this.edits_made.start?": **"+moment(this.edits_made.start).format(`${config.moment_date_format}`)+"**\n":"\n") +
