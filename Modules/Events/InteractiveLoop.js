@@ -43,7 +43,7 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                         if (!isNaN(usr_input_no) && usr_input_no > 0) {
                             viewer.event = viewer.getEvent(usr_input_no);
                             if(!viewer.event) {
-                                embedColor = 0xecf925;
+                                embedColor = 0xecf925; //yellow color
                                 title = `⚠ Event #${usr_input_no} does not exists!`;
                                 body =  `\n## \`\`[B]ack\`\` or \`\`[Q]uit\`\``;
                                 embed = {embed: {color: embedColor, title: title, description: body, footer: `error!`}};
@@ -97,7 +97,7 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                                     viewer.edit_mode = Number(usr_input_no);
                                     embed = viewer.getEditorView();
                                 } else {
-                                    embedColor = 0xecf925;
+                                    embedColor = 0xecf925; //yellow color
                                     title = `⚠ Your input ${usr_message} is not a valid end time!`;
                                     body =  `\n## \`\`[B]ack\`\` or \`\`[Q]uit\`\``;
                                     embed = {embed: {color: embedColor, title: title, description: body, footer: `error!`}};
@@ -123,7 +123,7 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                                             viewer.event.start = time;
                                             viewer.edits_made.start = time;
                                         } else {
-                                            embedColor = 0xecf925;
+                                            embedColor = 0xecf925; //yellow color
                                             title = `⚠ Your input ${usr_message} is not a valid start time!`;
                                             body =  `\n## \`\`[B]ack\`\` or \`\`[Q]uit\`\``;
                                             embed = {embed: {color: embedColor, title: title, description: body, footer: `error!`}};
@@ -136,7 +136,7 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                                             viewer.event.end = time;
                                             viewer.edits_made.end = time;
                                         } else {
-                                            embedColor = 0xecf925;
+                                            embedColor = 0xecf925; //yellow color
                                             title = `⚠ Your input ${usr_message} is not a valid end time!`;
                                             body =  `\n## \`\`[B]ack\`\` or \`\`[Q]uit\`\``;
                                             embed = {embed: {color: embedColor, title: title, description: body, footer: `error!`}};
@@ -152,7 +152,7 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                                             viewer.event.attendee_max = usr_input_no;
                                             viewer.edits_made.attendee_max = usr_input_no;
                                         } else {
-                                            embedColor = 0xecf925;
+                                            embedColor = 0xecf925; //yellow color
                                             title = `⚠ Your input ${usr_message} is not valid amount!`;
                                             body =  `\n## \`\`[B]ack\`\` or \`\`[Q]uit\`\``;
                                             embed = {embed: {color: embedColor, title: title, description: body, footer: `error!`}};

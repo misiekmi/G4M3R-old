@@ -1,6 +1,7 @@
 const moment = require("moment");
 const config = require("../../Configuration/config.json");
 let msg_color = 0xff8c00;
+let default_color = 0xff8c00;
 
 function Viewer(serverDocument, page_size, filter) {
     this.server = serverDocument;
@@ -58,6 +59,8 @@ Viewer.prototype.getPageView = function(page_no) {
         let page_content = "";
         let footer_content = "";
         let title_content = "";
+        msg_color = default_color;
+
         if((page_no-1)*page_size < events_length) {
             let start_index = (page_no - 1) * page_size;
             let end_index = (start_index + page_size) > events_length ? events_length : start_index + 3;
@@ -118,7 +121,9 @@ Viewer.prototype.getEvent = function(event_id) {
 Viewer.prototype.getEventView = function() {
     try {
         this.mode = 2;
+        
         let title_content, page_content, footer_content;
+        msg_color = default_color;
         title_content = `Event #⃣ ${this.event._id}`;
         page_content = "" +
             `Title: **${this.event.title}**\n` +
@@ -142,6 +147,7 @@ Viewer.prototype.getEventEditView = function() {
     try {
         this.mode = 3;
         let title_content, page_content, footer_content;
+        msg_color = default_color;
         title_content = `Event #⃣ ${this.event._id}`;
         page_content = "" +
             `\`\`[1]\`\` Event Title ` +
@@ -171,7 +177,7 @@ Viewer.prototype.getEditorView = function() {
         if(this.mode!=3) {
             return false; // something is wrong!
         }
-
+        msg_color = default_color;
         let title_content, page_content, footer_content;
         switch(this.edit_mode) {
             case 1:
@@ -260,7 +266,7 @@ Viewer.prototype.deleteEvent = function(event) {
         }
     });
     
-    msg_color = 0x17f926;
+    msg_color = 0x17f926; //green color
     let body = `ℹ Event #${event._id} is queued for removal.`;
     let footer_content = `## Options: [B]ack, [Q]uit`;
     return {embed: {color: msg_color, description: body, footer: {text: footer_content}}};
@@ -279,7 +285,7 @@ Viewer.prototype.joinEvent = function(event, msgAuthor) {
     //check if msgAuthor alredy joined that event
     let title_content, page_content, footer_content;
     if (alreadyMember) {
-        msg_color = 0xecf925;
+        msg_color = 0xecf925; //yellow color
         title_content = `⚠ You __already__ joined the Event #${event._id}.`;
         page_content =  `Title: \`\`${event.title}\`\`\n` +
                         `Author: <@${event._author}>\n` +
@@ -300,7 +306,7 @@ Viewer.prototype.joinEvent = function(event, msgAuthor) {
                     // TODO if success, do likewise
                 }  
             });
-            msg_color = 0x17f926;
+            msg_color = 0x17f926; //green color
             title_content = `ℹ You just joined Event #${event._id}.`;
             page_content =  `Title: \`\`${event.title}\`\`\n` +
                             `Author: <@${event._author}>\n` +
@@ -310,7 +316,7 @@ Viewer.prototype.joinEvent = function(event, msgAuthor) {
 
         // Event attendee_max limit is already reached   
         } else {
-            msg_color = 0xecf925;
+            msg_color = 0xecf925; //yellow color
             title_content = `⚠ You cannot join Event #${event._id} because there is no open slot left.`;
             page_content =  `Title: \`\`${event.title}\`\`\n` +
                             `Author: <@${event._author}>\n` +
@@ -346,7 +352,7 @@ Viewer.prototype.leaveEvent = function(event, msgAuthor) {
     // msgAuthor was an attendee of the event
     if (wasMember) {
             
-            msg_color = 0x17f926;
+            msg_color = 0x17f926; //green color
             title_content = `ℹ You left the Event #${event._id}.`;
             page_content =  `Title: \`\`${event.title}\`\`\n` +
                             `Author: <@${event._author}>\n` +
@@ -356,7 +362,7 @@ Viewer.prototype.leaveEvent = function(event, msgAuthor) {
     
     // msgAuthor was no attendee of the event
     } else {
-            msg_color = 0xecf925;
+            msg_color = 0xecf925; //yellow color
             title_content = `⚠ You are not an attendee of the Event #${event._id}.`;
             page_content =  `Title: \`\`${event.title}\`\`\n` +
                             `Author: <@${event._author}>\n` +

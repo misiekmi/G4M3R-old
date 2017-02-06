@@ -36,8 +36,8 @@
     },
     "public": {
       "event": {
-          "usage": "<add/edit/remove/list/join/leave>",
-          "description": "Create / Edit events people can RSVP to",
+          "usage": "event add\nevent list\nevent show [ID]\nevent edit [ID]\nevent join [ID]\nevent leave [ID]",
+          "description": "Create events people can RSVP to",
           "defaults": {
               "is_enabled": true,
               "is_nsfw_filtered": false,
@@ -46,7 +46,7 @@
           "category": "Utility 🔦"
       },
       "myevents": {
-          "usage": "",
+          "usage": "myevents",
           "description": "Show the events you created",
           "defaults": {
               "is_enabled": true,
