@@ -65,7 +65,6 @@ Viewer.prototype.getPageView = function(page_no) {
         if((page_no-1)*page_size < events_length) {
             let start_index = (page_no - 1) * page_size;
             let end_index = (start_index + page_size) > events_length ? events_length : start_index + 3;
-            //let actualAttendees = this.events.attendees.length;
 
             for (let i = start_index; i < end_index; i++) {
                 page_content += `\`[${this.events[i]._id}]\` | \`${this.events[i].title}\`\n` +
@@ -133,7 +132,7 @@ Viewer.prototype.getEventView = function() {
             `End: **${moment(this.event.end).format(`${config.moment_date_format}`)}**\n\n` +
             `Tags: **${this.event.tags}**\n` +
             `Description: \n\`\`\`md\n${this.event.description}\n\`\`\`\n` +
-            `Attendees: \`(${this.event.attendees.length}/${this.event.attendee_max})\``;
+            `Attendees: \`[${this.event.attendees.length}/${this.event.attendee_max}]\``;
 
         footer_content = `## Options: [J]oin, [L]eave, [E]dit, [D]elete, [B]ack, [Q]uit`;
 
@@ -290,7 +289,7 @@ Viewer.prototype.joinEvent = function(event, msgAuthor) {
         title_content = `⚠ You __already__ joined the Event #${event._id}.`;
         page_content =  `Title: \`\`${event.title}\`\`\n` +
                         `Author: <@${event._author}>\n` +
-                        `Attendees: (${event.attendees.length}/${event.attendee_max})`;
+                        `Attendees: [${event.attendees.length}/${event.attendee_max}]`;
         footer_content = `## Options: [B]ack, [Q]uit`;
         return {embed: {color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
     
@@ -311,7 +310,7 @@ Viewer.prototype.joinEvent = function(event, msgAuthor) {
             title_content = `ℹ You just joined Event #${event._id}.`;
             page_content =  `Title: \`\`${event.title}\`\`\n` +
                             `Author: <@${event._author}>\n` +
-                            `Attendees: (${event.attendees.length}/${event.attendee_max})`;
+                            `Attendees: [${event.attendees.length}/${event.attendee_max}]`;
             footer_content = `## Options: [B]ack, [Q]uit`;
             return {embed: {color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
 
@@ -321,7 +320,7 @@ Viewer.prototype.joinEvent = function(event, msgAuthor) {
             title_content = `⚠ You cannot join Event #${event._id} because there is no open slot left.`;
             page_content =  `Title: \`\`${event.title}\`\`\n` +
                             `Author: <@${event._author}>\n` +
-                            `Attendees: (${event.attendees.length}/${event.attendee_max})`;
+                            `Attendees: [${event.attendees.length}/${event.attendee_max}]`;
             footer_content = `## Options: [B]ack, [Q]uit`;
             return {embed: {color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
         }
@@ -357,7 +356,7 @@ Viewer.prototype.leaveEvent = function(event, msgAuthor) {
             title_content = `ℹ You left the Event #${event._id}.`;
             page_content =  `Title: \`\`${event.title}\`\`\n` +
                             `Author: <@${event._author}>\n` +
-                            `Attendees: (${event.attendees.length}/${event.attendee_max})`;
+                            `Attendees: [${event.attendees.length}/${event.attendee_max}]`;
             footer_content = `## Options: [B]ack, [Q]uit`;
             return {embed: {color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
     
@@ -367,7 +366,7 @@ Viewer.prototype.leaveEvent = function(event, msgAuthor) {
             title_content = `⚠ You are not an attendee of the Event #${event._id}.`;
             page_content =  `Title: \`\`${event.title}\`\`\n` +
                             `Author: <@${event._author}>\n` +
-                            `Attendees: (${event.attendees.length}/${event.attendee_max})`;
+                            `Attendees: [${event.attendees.length}/${event.attendee_max}]`;
             footer_content = `## Options: [B]ack, [Q]uit`;
             return {embed: {color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
 
