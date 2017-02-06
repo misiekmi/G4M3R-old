@@ -64,10 +64,10 @@ Viewer.prototype.getPageView = function(page_no) {
             //let actualAttendees = this.events.attendees.length;
 
             for (let i = start_index; i < end_index; i++) {
-                page_content += `\`\`#⃣${this.events[i]._id} ||\`\` **${this.events[i].title}**\n` +
-                    `-by [<@${this.events[i]._author}>] || \`(${this.events[i].attendees.length}/${this.events[i].attendee_max})\`` +
+                page_content += `#⃣${this.events[i]._id} | \`**${this.events[i].title}**\`\n` +
+                    `-by <@${this.events[i]._author}> | \`(${this.events[i].attendees.length}/${this.events[i].attendee_max})\`` +
                     (moment(this.events[i].start).isAfter(moment.now()) ?
-                        ` || starts ${moment(this.events[i].start).fromNow()}` : ` || ends ${moment(this.events[i].end).fromNow()}\n`) +
+                        ` | starts ${moment(this.events[i].start).fromNow()}` : ` | ends ${moment(this.events[i].end).fromNow()}\n`) +
                     "\n";
             }
 
@@ -78,7 +78,7 @@ Viewer.prototype.getPageView = function(page_no) {
                 page_content += `## \`\`[-]\`\` previous page\n`;
             }
             footer_content = `page ${page_no}/${Math.ceil(events_length/page_size)}`;
-            title_content = `🔢 Type the Event 🆔 to show details`;
+            title_content = `Type the Event 🆔 to show details`;
         }
         else {
             title_content = `There are no events scheduled on this server.`;
@@ -86,13 +86,13 @@ Viewer.prototype.getPageView = function(page_no) {
             footer_content = "page 1/1";
         }
 
+        footer_content += ` | [Q]uit to leave the menu`;
+
         if(this.filter_disp){
 
-            page_content += `\n## filter: ${this.filter_disp} \n` +
-                        `## \`\`[q]uit\`\` to quit the menu\n`;
+            page_content += `\n## filter: ${this.filter_disp}`;
         } else {
-            page_content += `## unfiltered \n` +
-                `## \`\`[q]uit\`\` to quit the menu\n`;
+            page_content += `## unfiltered`;
         }
 
         return {embed: {color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
