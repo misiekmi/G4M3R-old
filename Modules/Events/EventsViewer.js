@@ -64,7 +64,7 @@ Viewer.prototype.getPageView = function(page_no) {
             //let actualAttendees = this.events.attendees.length;
 
             for (let i = start_index; i < end_index; i++) {
-                page_content += `\`#⃣\`**${this.events[i]._id}** | \`**${this.events[i].title}**\`\n` +
+                page_content += `\`#⃣\`**${this.events[i]._id}** | \`${this.events[i].title}\`\n` +
                     `-by <@${this.events[i]._author}> | \`(${this.events[i].attendees.length}/${this.events[i].attendee_max})\`` +
                     (moment(this.events[i].start).isAfter(moment.now()) ?
                         ` | starts ${moment(this.events[i].start).fromNow()}` : ` | ends ${moment(this.events[i].end).fromNow()}\n`) +
@@ -77,13 +77,13 @@ Viewer.prototype.getPageView = function(page_no) {
             if(page_no>1){
                 page_content += `## \`\`[-]\`\` previous page\n`;
             }
-            footer_content = `page ${page_no}/${Math.ceil(events_length/page_size)}`;
+            footer_content = `page (${page_no}/${Math.ceil(events_length/page_size)})`;
             title_content = `Type the Event 🆔 to show details`;
         }
         else {
             title_content = `There are no events scheduled on this server.`;
             page_content = "";  // no entries
-            footer_content = "page 1/1";
+            footer_content = "page (1/1)";
         }
 
         footer_content += ` | type [Q]uit to leave menu`;
@@ -259,7 +259,8 @@ Viewer.prototype.deleteEvent = function(event) {
             // TODO if success, do likewise
         }
     });
-
+    
+    msg_color = 0x17f926;
     let body = `ℹ Event #${event._id} is queued for removal.`;
     let footer_content = `## Options: [B]ack, [Q]uit`;
     return {embed: {color: msg_color, description: body, footer: {text: footer_content}}};
@@ -278,7 +279,7 @@ Viewer.prototype.joinEvent = function(event, msgAuthor) {
     //check if msgAuthor alredy joined that event
     let title_content, page_content, footer_content;
     if (alreadyMember) {
-
+        msg_color = 0xecf925;
         title_content = `⚠ You __already__ joined the Event #${event._id}.`;
         page_content =  `Title: \`\`${event.title}\`\`\n` +
                         `Author: <@${event._author}>\n` +
@@ -299,6 +300,7 @@ Viewer.prototype.joinEvent = function(event, msgAuthor) {
                     // TODO if success, do likewise
                 }  
             });
+            msg_color = 0x17f926;
             title_content = `ℹ You just joined Event #${event._id}.`;
             page_content =  `Title: \`\`${event.title}\`\`\n` +
                             `Author: <@${event._author}>\n` +
@@ -308,7 +310,7 @@ Viewer.prototype.joinEvent = function(event, msgAuthor) {
 
         // Event attendee_max limit is already reached   
         } else {
-            
+            msg_color = 0xecf925;
             title_content = `⚠ You cannot join Event #${event._id} because there is no open slot left.`;
             page_content =  `Title: \`\`${event.title}\`\`\n` +
                             `Author: <@${event._author}>\n` +
@@ -343,6 +345,8 @@ Viewer.prototype.leaveEvent = function(event, msgAuthor) {
     }
     // msgAuthor was an attendee of the event
     if (wasMember) {
+            
+            msg_color = 0x17f926;
             title_content = `ℹ You left the Event #${event._id}.`;
             page_content =  `Title: \`\`${event.title}\`\`\n` +
                             `Author: <@${event._author}>\n` +
@@ -352,7 +356,7 @@ Viewer.prototype.leaveEvent = function(event, msgAuthor) {
     
     // msgAuthor was no attendee of the event
     } else {
-        
+            msg_color = 0xecf925;
             title_content = `⚠ You are not an attendee of the Event #${event._id}.`;
             page_content =  `Title: \`\`${event.title}\`\`\n` +
                             `Author: <@${event._author}>\n` +

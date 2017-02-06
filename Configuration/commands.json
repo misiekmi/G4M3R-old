@@ -36,7 +36,7 @@
     },
     "public": {
       "event": {
-          "usage": "<add/edit/remove/list>",
+          "usage": "<add/edit/remove/list/join/leave>",
           "description": "Create / Edit events people can RSVP to",
           "defaults": {
               "is_enabled": true,
@@ -45,6 +45,17 @@
           },
           "category": "Utility 🔦"
       },
+      "myevents": {
+          "usage": "",
+          "description": "Show the events you created",
+          "defaults": {
+              "is_enabled": true,
+              "is_nsfw_filtered": false,
+              "admin_level": 0
+          },
+          "category": "Utility 🔦"
+      },
+
       "trello": {
           "usage": "",
           "description": "Shows the Trello Link for G4M3R",
