@@ -108,7 +108,7 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                                 embed = viewer.getEventEditView();
                                 viewer.edit_mode = 0;
                             } else {
-                                let time, body, title;
+                                
                                 let embedColor = 0xf4f142; 
                                 switch(viewer.edit_mode) {
                                     case 1:
