@@ -144,7 +144,7 @@ Viewer.prototype.getEventEditView = function() {
         let title_content, page_content, footer_content;
         title_content = `Event #⃣ ${this.event._id}`;
         page_content = "" +
-            `\`\`[1]\`\` Event Title ` +
+            `\`\`:one:\`\` Event Title ` +
             (this.edits_made.title?": **"+this.edits_made.title+"**\n":"\n") +
             `\`\`[2]\`\` Start Time ` +
             (this.edits_made.start?": **"+moment(this.edits_made.start).format(`${config.moment_date_format}`)+"**\n":"\n") +
@@ -260,7 +260,7 @@ Viewer.prototype.deleteEvent = function(event) {
         }
     });
 
-    let body = `Event #${event._id} is queued for removal.`;
+    let body = `ℹ Event #${event._id} is queued for removal.`;
     let footer_content = `## Options: [B]ack, [Q]uit`;
     return {embed: {color: msg_color, description: body, footer: {text: footer_content}}};
 };
@@ -279,7 +279,7 @@ Viewer.prototype.joinEvent = function(event, msgAuthor) {
     let title_content, page_content, footer_content;
     if (alreadyMember) {
 
-        title_content = `You __already__ joined the Event #${event._id}.`;
+        title_content = `⚠ You __already__ joined the Event #${event._id}.`;
         page_content =  `Title: \`\`${event.title}\`\`\n` +
                         `Author: <@${event._author}>\n` +
                         `Attendees: (${event.attendees.length}/${event.attendee_max})`;
@@ -299,7 +299,7 @@ Viewer.prototype.joinEvent = function(event, msgAuthor) {
                     // TODO if success, do likewise
                 }  
             });
-            title_content = `You just joined Event #${event._id}.`;
+            title_content = `ℹ You just joined Event #${event._id}.`;
             page_content =  `Title: \`\`${event.title}\`\`\n` +
                             `Author: <@${event._author}>\n` +
                             `Attendees: (${event.attendees.length}/${event.attendee_max})`;
@@ -309,7 +309,7 @@ Viewer.prototype.joinEvent = function(event, msgAuthor) {
         // Event attendee_max limit is already reached   
         } else {
             
-            title_content = `You cannot join Event #${event._id} because there is no open slot left.`;
+            title_content = `⚠ You cannot join Event #${event._id} because there is no open slot left.`;
             page_content =  `Title: \`\`${event.title}\`\`\n` +
                             `Author: <@${event._author}>\n` +
                             `Attendees: (${event.attendees.length}/${event.attendee_max})`;
@@ -343,7 +343,7 @@ Viewer.prototype.leaveEvent = function(event, msgAuthor) {
     }
     // msgAuthor was an attendee of the event
     if (wasMember) {
-            title_content = `You left the Event #${event._id}.`;
+            title_content = `ℹ You left the Event #${event._id}.`;
             page_content =  `Title: \`\`${event.title}\`\`\n` +
                             `Author: <@${event._author}>\n` +
                             `Attendees: (${event.attendees.length}/${event.attendee_max})`;
@@ -353,7 +353,7 @@ Viewer.prototype.leaveEvent = function(event, msgAuthor) {
     // msgAuthor was no attendee of the event
     } else {
         
-            title_content = `You are not an attendee of the Event #${event._id}.`;
+            title_content = `⚠ You are not an attendee of the Event #${event._id}.`;
             page_content =  `Title: \`\`${event.title}\`\`\n` +
                             `Author: <@${event._author}>\n` +
                             `Attendees: (${event.attendees.length}/${event.attendee_max})`;
