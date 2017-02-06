@@ -107,6 +107,19 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
                 // TODO error, event does not exist
             }
         }
+
+        else if(suffix.toLowerCase().startsWith("leave")) {
+            let tmp = suffix.toLowerCase().split("leave")[1].trim();
+            viewer = new EventViewer(serverDocument, page_size);
+            let event = viewer.getEvent(tmp);
+            let author = msg.author.id;
+            if(event){
+                viewer.event = event;
+                list(bot, db, winston, serverDocument, msg, viewer, viewer.leaveEvent(viewer.event, author));
+            } else {
+                // TODO error, event does not exist
+            }
+        }
     }    
     else {
     }

@@ -1,6 +1,6 @@
 const moment = require("moment");
 const config = require("../../Configuration/config.json");
-const msg_color = 0xff8c00;
+let msg_color = 0xff8c00;
 
 function Viewer(serverDocument, page_size, filter, msg) {
     this.server = serverDocument;
@@ -84,7 +84,8 @@ Viewer.prototype.getPageView = function(page_no) {
             footer_content = "page 1/1";
         }
 
-        page_content += `## \`\`[exit]\`\` to exit the menu\n`;
+        page_content += `## Type the Event ID to show details\n` +
+                        `## \`\`[(q)uit]\`\` to quit the menu\n`;
         if(this.filter_disp){
             footer_content += this.filter_disp;
         } else {
@@ -114,24 +115,20 @@ Viewer.prototype.getEvent = function(event_id) {
 Viewer.prototype.getEventView = function() {
     try {
         this.mode = 2;
-
-        let page_content = "" +
+        let title_content, page_content, footer_content;
+        title_content = `Event #⃣ ${this.event._id}`;
+        page_content = "" +
             `Title: **${this.event.title}**\n` +
             `Author: <@${this.event._author}>\n\n` +
             `Start: ${moment(this.event.start).format(`${config.moment_date_format}`)}\n` +
             `End: ${moment(this.event.end).format(`${config.moment_date_format}`)}\n\n` +
             `Tags: ${this.event.tags}\n` +
             `Description: \n\`\`\`md\n${this.event.description}\n\`\`\`\n` +
-            `Spots Open: \`(${this.event.attendees.length}/${this.event.attendee_max})\`\n` +
-            `\n##\`\`[join]\`\` to join the event\n` +
-            `\n##\`\`[edit]\`\` to edit the event\n` +
-            `##\`\`[delete]\`\` to delete the event\n\n` +
-            `## \`\`[back]\`\` to return to event list\n` +
-            `## \`\`[exit]\`\` to exit the menu`;
+            `Spots Open: \`(${this.event.attendees.length}/${this.event.attendee_max})\``;
 
-        let footer_content = `event ID# ${this.event._id}`;
+        footer_content = `## Options: (j)oin, (l)eave, (e)dit, (d)elete, (b)ack, (q)uit`;
 
-        return {embed: {color: msg_color, description: page_content, footer: {text: footer_content}}};
+        return {embed: {color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
     }
     catch(err) {
         console.log(err.stack);
@@ -141,8 +138,9 @@ Viewer.prototype.getEventView = function() {
 Viewer.prototype.getEventEditView = function() {
     try {
         this.mode = 3;
-
-        let page_content = "" +
+        let title_content, page_content, footer_content;
+        title_content = `Event #⃣ ${this.event._id}`;
+        page_content = "" +
             `\`\`[1]\`\` Event Title ` +
             (this.edits_made.title?": **"+this.edits_made.title+"**\n":"\n") +
             `\`\`[2]\`\` Start Time ` +
@@ -154,13 +152,11 @@ Viewer.prototype.getEventEditView = function() {
             `\`\`[5]\`\` Max Attendees ` +
             (this.edits_made.attendee_max?": **"+this.edits_made.attendee_max+"**\n":"\n") +
             `\`\`[6]\`\` Tags ` +
-            (this.edits_made.tags?": **"+this.edits_made.tags+"**\n":"\n") +
-            `\n## \`\`[back]\`\` to return to event page\n` +
-            `## \`\`[exit]\`\` to exit the menu`;
+            (this.edits_made.tags?": **"+this.edits_made.tags+"**\n":"\n");
 
-        let footer_content = `event ID# ${this.event._id}`;
+        footer_content = `## Options: (b)ack, (q)uit`;
 
-        return {embed: {color: msg_color, description: page_content, footer: {text: footer_content}}};
+        return {embed: {color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
     }
     catch( err ) {
         console.log(err.stack);
@@ -173,73 +169,67 @@ Viewer.prototype.getEditorView = function() {
             return false; // something is wrong!
         }
 
-        let page_content, footer_content;
+        let title_content, page_content, footer_content;
         switch(this.edit_mode) {
             case 1:
+                title_content = `Event #⃣ ${this.event._id}`;
                 page_content = "" +
                     `Current title: \n\`\`${this.event.title}\`\`\n\n` +
-                    "Enter the new title for the event, or\n\n" +
-                    `## \`\`[back]\`\` to return to event edit page\n` +
-                    `## \`\`[exit]\`\` to exit the menu`;
+                    `Enter the new title for the event`;
 
-                footer_content = `event ID# ${this.event._id}`;
+                footer_content = `## Options: (b)ack, (q)uit`;
 
-                return {embed: {color: msg_color, description: page_content, footer: {text: footer_content}}};
+                return {embed: {color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
                 break;
             case 2:
+                title_content = `Event #⃣ ${this.event._id}`;
                 page_content = "" +
                     `Current start: \n\`\`${moment(this.event.start).format(`${config.moment_date_format}`)}\`\`\n\n` +
-                    "Enter the new start time for the event, or\n\n" +
-                    `## \`\`[back]\`\` to return to event edit page\n` +
-                    `## \`\`[exit]\`\` to exit the menu`;
+                    "Enter the new start time for the event.";
 
-                footer_content = `event ID# ${this.event._id}`;
+                footer_content = `## Options: (b)ack, (q)uit`;
 
-                return {embed: {color: msg_color, description: page_content, footer: {text: footer_content}}};
+                return {embed: {color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
                 break;
             case 3:
+                title_content = `Event #⃣ ${this.event._id}`;
                 page_content = "" +
-                    `Current start: \n\`\`${moment(this.event.end).format(`${config.moment_date_format}`)}\`\`\n\n` +
-                    "Enter the new end time for the event, or\n\n" +
-                    `## \`\`[back]\`\` to return to event edit page\n` +
-                    `## \`\`[exit]\`\` to exit the menu`;
+                    `Current end: \n\`\`${moment(this.event.end).format(`${config.moment_date_format}`)}\`\`\n\n` +
+                    "Enter the new end time for the event.";
 
-                footer_content = `event ID# ${this.event._id}`;
+                footer_content = `## Options: (b)ack, (q)uit`;
 
-                return {embed: {color: msg_color, description: page_content, footer: {text: footer_content}}};
-                break;
+                return {embed: {color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
+               break;
             case 4:
+                title_content = `Event #⃣ ${this.event._id}`;
                 page_content = "" +
                     `Current Description: \n\`\`\`md\n${this.event.description}\n\`\`\`\n` +
-                    "Enter a new description for the event, or\n\n" +
-                    `## \`\`[back]\`\` to return to event edit page\n` +
-                    `## \`\`[exit]\`\` to exit the menu`;
+                    "Enter a new description for the event.";
 
-                footer_content = `event ID# ${this.event._id}`;
+                footer_content = `## Options: (b)ack, (q)uit`;
 
-                return {embed: {color: msg_color, description: page_content, footer: {text: footer_content}}};
+                return {embed: {color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
                 break;
             case 5:
+                title_content = `Event #⃣ ${this.event._id}`;
                 page_content = "" +
                     `Current maximum member count: \n\`\`${this.event.attendee_max}\`\`\n\n` +
-                    "Enter a new maximum member count for the event, or\n\n" +
-                    `## \`\`[back]\`\` to return to event edit page\n` +
-                    `## \`\`[exit]\`\` to exit the menu`;
+                    "Enter a new maximum member count for the event.";
 
-                footer_content = `event ID# ${this.event._id}`;
+                footer_content = `## Options: (b)ack, (q)uit`;
 
-                return {embed: {color: msg_color, description: page_content, footer: {text: footer_content}}};
+                return {embed: {color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
                 break;
             case 6:
+                title_content = `Event #⃣ ${this.event._id}`;
                 page_content = "" +
                     `Current set tags: \n\`\`${this.event.tags}\`\`\n\n` +
-                    "Enter a new set of tags for the event, or\n\n" +
-                    `## \`\`[back]\`\` to return to event edit page\n` +
-                    `## \`\`[exit]\`\` to exit the menu`;
+                    "Enter a new set of tags for the event.";
 
-                footer_content = `event ID# ${this.event._id}`;
+                footer_content = `## Options: (b)ack, (q)uit`;
 
-                return {embed: {color: msg_color, description: page_content, footer: {text: footer_content}}};
+                return {embed: {color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
                 break;
             default:
                 return false; // something is wrong!
@@ -267,14 +257,13 @@ Viewer.prototype.deleteEvent = function(event) {
         }
     });
 
-    let body = `Event #${event._id} is queued for removal.\n\n` +
-        `## \`\`[back]\`\` to return to event list\n` +
-        `## \`\`[exit]\`\` to exit event viewer`;
-    return {embed: {color: msg_color, description: body}};
+    let body = `Event #${event._id} is queued for removal.`;
+    let footer_content = `## Options: (b)ack, (q)uit`;
+    return {embed: {color: msg_color, description: body, footer: {text: footer_content}}};
 };
 
 Viewer.prototype.joinEvent = function(event, msgAuthor) {
-    this.mode = 5;
+    this.mode = 4;
     let alreadyMember = false;
 
     // check if msgAuthor is already an Attendee
@@ -284,23 +273,22 @@ Viewer.prototype.joinEvent = function(event, msgAuthor) {
         }
     }
     //check if msgAuthor alredy joined that event
+    let title_content, page_content, footer_content;
     if (alreadyMember) {
 
-        let title = `You __already__ joined the Event #${event._id}.`;
-        let body = `Title: \`\`${event.title}\`\`\n` +
-                    `Author: <@${event._author}>\n` +
-                    `Attendees: (${event.attendees.length}/${event.attendee_max})\n\n` +
-                    `## \`\`[back]\`\` to return to event list\n` +
-                    `## \`\`[exit]\`\` to exit event viewer`;
-
-            return {embed: {color: msg_color, title: title, description: body}};
+        title_content = `You __already__ joined the Event #${event._id}.`;
+        page_content =  `Title: \`\`${event.title}\`\`\n` +
+                        `Author: <@${event._author}>\n` +
+                        `Attendees: (${event.attendees.length}/${event.attendee_max})`;
+        footer_content = `## Options: (b)ack, (q)uit`;
+        return {embed: {color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
     
     //if user is not already an attendee of the event
     } else {
-        // check if attendee_max limit of eventDocument is reached
+        // Event attendee_max limit is not reached yet
         if (event.attendees.length < event.attendee_max) {
 
-            event.attendees.push({_id: msgAuthor, timestamp: Date()});
+            event.attendees.push({_id: msgAuthor, timestamp: Date.now()});
             this.server.save(err => {
                 if(err) {
                     // TODO if failure, give the user some indication
@@ -308,26 +296,69 @@ Viewer.prototype.joinEvent = function(event, msgAuthor) {
                     // TODO if success, do likewise
                 }  
             });
-            let title = `You just joined Event #${event._id}.`;
-            let body = `Title: \`\`${event.title}\`\`\n` +
-                        `Author: <@${event._author}>\n` +
-                        `Attendees: (${event.attendees.length}/${event.attendee_max})\n\n` +
-                        `## \`\`[back]\`\` to return to event list\n` +
-                        `## \`\`[exit]\`\` to exit event viewer`;
-            return {embed: {color: msg_color, title: title, description: body}};
-                
-        } else {
+            title_content = `You just joined Event #${event._id}.`;
+            page_content =  `Title: \`\`${event.title}\`\`\n` +
+                            `Author: <@${event._author}>\n` +
+                            `Attendees: (${event.attendees.length}/${event.attendee_max})`;
+            footer_content = `## Options: (b)ack, (q)uit`;
+            return {embed: {color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
 
-            let title = `You cannot join Event #${event._id} because there is no open slot left.`;
-            let body = `Title: \`\`${event.title}\`\`\n` +
-                        `Author: <@${event._author}>\n` +
-                        `Attendees: (${event.attendees.length}/${event.attendee_max})\n\n` +
-                        `## \`\`[back]\`\` to return to event list\n` +
-                        `## \`\`[exit]\`\` to exit event viewer`;
-            return {embed: {color: msg_color, title: title, description: body}};
+        // Event attendee_max limit is already reached   
+        } else {
+            
+            title_content = `You cannot join Event #${event._id} because there is no open slot left.`;
+            page_content =  `Title: \`\`${event.title}\`\`\n` +
+                            `Author: <@${event._author}>\n` +
+                            `Attendees: (${event.attendees.length}/${event.attendee_max})`;
+            footer_content = `## Options: (b)ack, (q)uit`;
+            return {embed: {color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
         }
 
         }
 };
+
+Viewer.prototype.leaveEvent = function(event, msgAuthor) {
+    this.mode = 4;
+    let wasMember = false;
+    let title_content, page_content, footer_content;
+
+    // check if msgAuthor is an Attendee and delete that entry
+    for (let i = 0; i < event.attendees.length; i++) {
+        if (event.attendees[i]._id == msgAuthor) {
+            wasMember = true;
+            event.attendees.splice(i,1);
+            
+            this.server.save(err => {
+                if(err) {
+                    // TODO if failure, give the user some indication
+                } else {
+                    // TODO if success, do likewise
+                }  
+            });
+            break;
+        }
+    }
+    // msgAuthor was an attendee of the event
+    if (wasMember) {
+            title_content = `You left the Event #${event._id}.`;
+            page_content =  `Title: \`\`${event.title}\`\`\n` +
+                            `Author: <@${event._author}>\n` +
+                            `Attendees: (${event.attendees.length}/${event.attendee_max})`;
+            footer_content = `## Options: (b)ack, (q)uit`;
+            return {embed: {color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
+    
+    // msgAuthor was no attendee of the event
+    } else {
+        
+            title_content = `You are not an attendee of the Event #${event._id}.`;
+            page_content =  `Title: \`\`${event.title}\`\`\n` +
+                            `Author: <@${event._author}>\n` +
+                            `Attendees: (${event.attendees.length}/${event.attendee_max})`;
+            footer_content = `## Options: (b)ack, (q)uit`;
+            return {embed: {color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
+
+    }       
+};
+
 
 module.exports = Viewer;

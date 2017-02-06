@@ -26,13 +26,13 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
 
                     let usr_input = usr_message.content.trim();
 
-                    // exit interactive
-                    if(usr_input.toLowerCase() == "exit") {
+                    // quit interactive
+                    if(usr_input.toLowerCase() == "quit" || usr_input == "q") {
                         cancel = true;
                     }
                     else if(error) {
                         // return to eventDocument list page
-                        if(usr_input == "back") {
+                        if(usr_input == "back" || usr_input == "b") {
                             error = false;
                             embed = viewer.getPageView(current_page_no);
                         }
@@ -43,8 +43,8 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                             viewer.event = viewer.getEvent(usr_input);
                             if(!viewer.event) {
                                 let body = `Event #${usr_input} does not exists!\n\n` +
-                                    `## \`\`[back]\`\` to return to event list\n` +
-                                    `## \`\`[exit]\`\` to quit view`;
+                                    `## \`\`[(b)ack]\`\` to return to event list\n` +
+                                    `## \`\`[(q)uit]\`\` to quit view`;
                                 embed = {embed: {description: body, footer: {text: `error!`}}};
                                 error = true;
                             } else {
@@ -64,22 +64,25 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                     }
                     else if(viewer.mode==2) {       // event view mode
                         // return to eventDocument list page
-                        if(usr_input == "back") {
+                        if(usr_input == "back" || usr_input == "b") {
                             embed = viewer.getPageView(current_page_no);
                         }
-                        else if(usr_input == "edit") {
+                        else if(usr_input == "edit" || usr_input == "e") {
                             embed = viewer.getEventEditView();
                         }
-                        else if(usr_input == "delete") {
+                        else if(usr_input == "delete" || usr_input == "d") {
                             embed = viewer.deleteEvent(viewer.event);
                         }
-                        else if(usr_input == "join") {
+                        else if(usr_input == "join" || usr_input == "j") {
                             embed = viewer.joinEvent(viewer.event, msg.author.id);
+                        }
+                        else if(usr_input == "leave" || usr_input == "l") {
+                            embed = viewer.leaveEvent(viewer.event, msg.author.id);
                         }
                     }
                     else if(viewer.mode==3) {       // editor mode
                         if(viewer.edit_mode===0) {
-                            if(usr_input == "back") {
+                            if(usr_input == "back" || usr_input == "b") {
                                 serverDocument.save((err)=>{
                                     if(err) {
                                         winston.error(`Failed to save event changes`, {srvid: serverDocument._id}, err);
@@ -94,15 +97,15 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                                     embed = viewer.getEditorView();
                                 } else {
                                     let body = `Your input ${usr_input} is not a valid option!\n\n` +
-                                        `## \`\`[back]\`\` to return to event list\n` +
-                                        `## \`\`[exit]\`\` to quit view`;
+                                        `## \`\`[(b)ack]\`\` to return to event list\n` +
+                                        `## \`\`[(q)uit]\`\` to quit view`;
                                     embed = {embed: {description: body, footer: `error!`}};
                                     error = true;
                                     viewer.edits_made = {};
                                 }
                             }
                         } else {
-                            if(usr_input == "back"){
+                            if(usr_input == "back" || usr_input == "b"){
                                 embed = viewer.getEventEditView();
                                 viewer.edit_mode = 0;
                             } else {
@@ -119,8 +122,8 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                                             viewer.edits_made.start = time;
                                         } else {
                                             body = `Your input ${usr_input} is not a valid start time!\n\n` +
-                                                `## \`\`[back]\`\` to return to event list\n` +
-                                                `## \`\`[exit]\`\` to quit view`;
+                                                `## \`\`[(b)ack]\`\` to return to event list\n` +
+                                                `## \`\`[(q)uit]\`\` to quit view`;
                                             embed = {embed: {description: body, footer: `error!`}};
                                             error = true;
                                         }
@@ -132,8 +135,8 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                                             viewer.edits_made.end = time;
                                         } else {
                                             body = `Your input ${usr_input} is not a valid end time!\n\n` +
-                                                `## \`\`[back]\`\` to return to event list\n` +
-                                                `## \`\`[exit]\`\` to quit view`;
+                                                `## \`\`[(b)ack]\`\` to return to event list\n` +
+                                                `## \`\`[(q)uit]\`\` to quit view`;
                                             embed = {embed: {description: body, footer: `error!`}};
                                             error = true;
                                         }
@@ -148,8 +151,8 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                                             viewer.edits_made.attendee_max = usr_input;
                                         } else {
                                             body = `Your input ${usr_input} is not valid amount!\n\n` +
-                                                `## \`\`[back]\`\` to return to event list\n` +
-                                                `## \`\`[exit]\`\` to quit view`;
+                                                `## \`\`[(b)ack]\`\` to return to event list\n` +
+                                                `## \`\`[(q)uit]\`\` to quit view`;
                                             embed = {embed: {description: body, footer: `error!`}};
                                             error = true;
                                         }
@@ -167,12 +170,7 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                         }
                     }
                     else if(viewer.mode==4) {       // delete queued mode
-                        if(usr_input == "back") {
-                            embed = viewer.getPageView(current_page_no);
-                        }
-                    }
-                    else if(viewer.mode==5) {       // join queued mode
-                        if(usr_input == "back") {
+                        if(usr_input == "back" || usr_input == "b") {
                             embed = viewer.getPageView(current_page_no);
                         }
                     }

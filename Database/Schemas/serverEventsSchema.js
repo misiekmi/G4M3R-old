@@ -24,10 +24,10 @@ module.exports = new mongoose.Schema({
 		pre_announce: {type: Boolean, default: false},	// if bot should announce before start/end
 		pre_interval: {type: Number, default: 15},		// time interval, in minutes
 		pre_frequency: {type: Number, default: 1},		// number of times to send pre-announces
-		announce_targets: {type: [new mongoose.Schema({
+		announce_targets: [new mongoose.Schema({
 			_type: {type: String, required: true},		// is a channel or user?
 			_id: {type: String, required: true}			// id of channel or user
-		})], default: []},
+		})],
 
 		// privacy settings
 		isPublic: {type: Boolean, default: true},		// if true, all can see; if false, only clan/server can see
