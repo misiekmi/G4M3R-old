@@ -1,4 +1,5 @@
 const moment = require("moment");
+
 const config = require("../../Configuration/config.json");
 let msg_color = 0xff8c00; //start with orange embed color
 let default_color = 0xff8c00; // default color = orange
@@ -67,7 +68,7 @@ Viewer.prototype.getPageView = function(page_no) {
             //let actualAttendees = this.events.attendees.length;
 
             for (let i = start_index; i < end_index; i++) {
-                page_content += `\`#⃣\`**${this.events[i]._id}** | \`${this.events[i].title}\`\n` +
+                page_content += `\`\`**[${this.events[i]._id}]** | \`${this.events[i].title}\`\n` +
                     `-by <@${this.events[i]._author}> | \`(${this.events[i].attendees.length}/${this.events[i].attendee_max})\`` +
                     (moment(this.events[i].start).isAfter(moment.now()) ?
                         ` | starts ${moment(this.events[i].start).fromNow()}` : ` | ends ${moment(this.events[i].end).fromNow()}\n`) +
