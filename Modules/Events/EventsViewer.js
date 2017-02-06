@@ -38,10 +38,10 @@ function Viewer(serverDocument, page_size, filter) {
             }
         }
         if(filter._author) {
-            this.filter_disp += " | a: <@" + filter._author + ">";
+            this.filter_disp += " | author: <@" + filter._author + ">";
         }
         if(filter.tags) {
-            this.filter_disp += " | t: " + filter.tags;
+            this.filter_disp += " | tags: " + filter.tags;
         }
     }
     else {
