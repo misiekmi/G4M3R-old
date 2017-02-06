@@ -2,7 +2,7 @@ const moment = require("moment");
 const config = require("../../Configuration/config.json");
 let msg_color = 0xff8c00;
 
-function Viewer(serverDocument, page_size, filter, msg) {
+function Viewer(serverDocument, page_size, filter) {
     this.server = serverDocument;
     this.events = [];
     this.page_size = page_size ? page_size : 3;
@@ -57,17 +57,17 @@ Viewer.prototype.getPageView = function(page_no) {
 
         let page_content = "";
         let footer_content = "";
+        let title_content = "";
         if((page_no-1)*page_size < events_length) {
             let start_index = (page_no - 1) * page_size;
             let end_index = (start_index + page_size) > events_length ? events_length : start_index + 3;
             //let actualAttendees = this.events.attendees.length;
 
             for (let i = start_index; i < end_index; i++) {
-                page_content += `\`\`[${this.events[i]._id}]\`\` **${this.events[i].title}**\n` +
-                    `-by: <@${this.events[i]._author}> - \`(${this.events[i].attendees.length}/${this.events[i].attendee_max})\`\n` +
+                page_content += `\`\`#⃣${this.events[i]._id} ||\`\` **${this.events[i].title}**\n` +
+                    `-by [<@${this.events[i]._author}>] || \`(${this.events[i].attendees.length}/${this.events[i].attendee_max})\`` +
                     (moment(this.events[i].start).isAfter(moment.now()) ?
-                        `-starts ${moment(this.events[i].start).fromNow()}\n` :
-                        `-ends ${moment(this.events[i].end).fromNow()}\n`) +
+                        ` || starts ${moment(this.events[i].start).fromNow()}` : ` || ends ${moment(this.events[i].end).fromNow()}\n`) +
                     "\n";
             }
 
@@ -78,21 +78,24 @@ Viewer.prototype.getPageView = function(page_no) {
                 page_content += `## \`\`[-]\`\` previous page\n`;
             }
             footer_content = `page ${page_no}/${Math.ceil(events_length/page_size)}`;
+            title_content = `🔢 Type the Event 🆔 to show details`;
         }
         else {
-            page_content = "There are no events scheduled on this server.\n\n";  // no entries
+            title_content = `There are no events scheduled on this server.`;
+            page_content = "";  // no entries
             footer_content = "page 1/1";
         }
 
-        page_content += `## Type the Event ID to show details\n` +
-                        `## \`\`[(q)uit]\`\` to quit the menu\n`;
         if(this.filter_disp){
-            footer_content += this.filter_disp;
+
+            page_content += `\n## filter: ${this.filter_disp} \n` +
+                        `## \`\`[q]uit\`\` to quit the menu\n`;
         } else {
-            footer_content += " | unfiltered";
+            page_content += `## unfiltered \n` +
+                `## \`\`[q]uit\`\` to quit the menu\n`;
         }
 
-        return {embed: {color: msg_color, description: page_content, footer: {text: footer_content}}};
+        return {embed: {color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
     }
     catch(err) {
         console.log(err.stack);
@@ -126,7 +129,7 @@ Viewer.prototype.getEventView = function() {
             `Description: \n\`\`\`md\n${this.event.description}\n\`\`\`\n` +
             `Spots Open: \`(${this.event.attendees.length}/${this.event.attendee_max})\``;
 
-        footer_content = `## Options: (j)oin, (l)eave, (e)dit, (d)elete, (b)ack, (q)uit`;
+        footer_content = `## Options: [J]oin, [L]eave, [E]dit, [D]elete, [B]ack, [Q]uit`;
 
         return {embed: {color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
     }
@@ -154,7 +157,7 @@ Viewer.prototype.getEventEditView = function() {
             `\`\`[6]\`\` Tags ` +
             (this.edits_made.tags?": **"+this.edits_made.tags+"**\n":"\n");
 
-        footer_content = `## Options: (b)ack, (q)uit`;
+        footer_content = `## Options: [B]ack, [Q]uit`;
 
         return {embed: {color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
     }
@@ -177,7 +180,7 @@ Viewer.prototype.getEditorView = function() {
                     `Current title: \n\`\`${this.event.title}\`\`\n\n` +
                     `Enter the new title for the event`;
 
-                footer_content = `## Options: (b)ack, (q)uit`;
+                footer_content = `## Options: [B]ack, [Q]uit`;
 
                 return {embed: {color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
                 break;
@@ -187,7 +190,7 @@ Viewer.prototype.getEditorView = function() {
                     `Current start: \n\`\`${moment(this.event.start).format(`${config.moment_date_format}`)}\`\`\n\n` +
                     "Enter the new start time for the event.";
 
-                footer_content = `## Options: (b)ack, (q)uit`;
+                footer_content = `## Options: [B]ack, [Q]uit`;
 
                 return {embed: {color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
                 break;
@@ -197,7 +200,7 @@ Viewer.prototype.getEditorView = function() {
                     `Current end: \n\`\`${moment(this.event.end).format(`${config.moment_date_format}`)}\`\`\n\n` +
                     "Enter the new end time for the event.";
 
-                footer_content = `## Options: (b)ack, (q)uit`;
+                footer_content = `## Options: [B]ack, [Q]uit`;
 
                 return {embed: {color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
                break;
@@ -207,7 +210,7 @@ Viewer.prototype.getEditorView = function() {
                     `Current Description: \n\`\`\`md\n${this.event.description}\n\`\`\`\n` +
                     "Enter a new description for the event.";
 
-                footer_content = `## Options: (b)ack, (q)uit`;
+                footer_content = `## Options: [B]ack, [Q]uit`;
 
                 return {embed: {color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
                 break;
@@ -217,7 +220,7 @@ Viewer.prototype.getEditorView = function() {
                     `Current maximum member count: \n\`\`${this.event.attendee_max}\`\`\n\n` +
                     "Enter a new maximum member count for the event.";
 
-                footer_content = `## Options: (b)ack, (q)uit`;
+                footer_content = `## Options: [B]ack, [Q]uit`;
 
                 return {embed: {color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
                 break;
@@ -227,7 +230,7 @@ Viewer.prototype.getEditorView = function() {
                     `Current set tags: \n\`\`${this.event.tags}\`\`\n\n` +
                     "Enter a new set of tags for the event.";
 
-                footer_content = `## Options: (b)ack, (q)uit`;
+                footer_content = `## Options: [B]ack, [Q]uit`;
 
                 return {embed: {color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
                 break;
@@ -258,7 +261,7 @@ Viewer.prototype.deleteEvent = function(event) {
     });
 
     let body = `Event #${event._id} is queued for removal.`;
-    let footer_content = `## Options: (b)ack, (q)uit`;
+    let footer_content = `## Options: [B]ack, [Q]uit`;
     return {embed: {color: msg_color, description: body, footer: {text: footer_content}}};
 };
 
@@ -280,7 +283,7 @@ Viewer.prototype.joinEvent = function(event, msgAuthor) {
         page_content =  `Title: \`\`${event.title}\`\`\n` +
                         `Author: <@${event._author}>\n` +
                         `Attendees: (${event.attendees.length}/${event.attendee_max})`;
-        footer_content = `## Options: (b)ack, (q)uit`;
+        footer_content = `## Options: [B]ack, [Q]uit`;
         return {embed: {color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
     
     //if user is not already an attendee of the event
@@ -300,7 +303,7 @@ Viewer.prototype.joinEvent = function(event, msgAuthor) {
             page_content =  `Title: \`\`${event.title}\`\`\n` +
                             `Author: <@${event._author}>\n` +
                             `Attendees: (${event.attendees.length}/${event.attendee_max})`;
-            footer_content = `## Options: (b)ack, (q)uit`;
+            footer_content = `## Options: [B]ack, [Q]uit`;
             return {embed: {color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
 
         // Event attendee_max limit is already reached   
@@ -310,7 +313,7 @@ Viewer.prototype.joinEvent = function(event, msgAuthor) {
             page_content =  `Title: \`\`${event.title}\`\`\n` +
                             `Author: <@${event._author}>\n` +
                             `Attendees: (${event.attendees.length}/${event.attendee_max})`;
-            footer_content = `## Options: (b)ack, (q)uit`;
+            footer_content = `## Options: [B]ack, [Q]uit`;
             return {embed: {color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
         }
 
@@ -344,7 +347,7 @@ Viewer.prototype.leaveEvent = function(event, msgAuthor) {
             page_content =  `Title: \`\`${event.title}\`\`\n` +
                             `Author: <@${event._author}>\n` +
                             `Attendees: (${event.attendees.length}/${event.attendee_max})`;
-            footer_content = `## Options: (b)ack, (q)uit`;
+            footer_content = `## Options: [B]ack, [Q]uit`;
             return {embed: {color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
     
     // msgAuthor was no attendee of the event
@@ -354,7 +357,7 @@ Viewer.prototype.leaveEvent = function(event, msgAuthor) {
             page_content =  `Title: \`\`${event.title}\`\`\n` +
                             `Author: <@${event._author}>\n` +
                             `Attendees: (${event.attendees.length}/${event.attendee_max})`;
-            footer_content = `## Options: (b)ack, (q)uit`;
+            footer_content = `## Options: [B]ack, [Q]uit`;
             return {embed: {color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
 
     }       
