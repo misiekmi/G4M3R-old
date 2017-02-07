@@ -60,21 +60,18 @@ Viewer.prototype.getPageView = function(page_no) {
         let page_content = "";
         let footer_content = "";
         let title_content = "";
-        let embed_fields = [];
         msg_color = default_color;
 
         if((page_no-1)*page_size < events_length) {
             let start_index = (page_no - 1) * page_size;
             let end_index = (start_index + page_size) > events_length ? events_length : start_index + 3;
 
-
             for (let i = start_index; i < end_index; i++) {
-                embed_fields.push({name: `\`[${this.events[i]._id}]\` | \`${this.events[i].title}\`\n`, 
-                                value: `by <@${this.events[i]._author}> | [${this.events[i].attendees.length}/${this.events[i].attendee_max}]` +
-                            (moment(this.events[i].start).isAfter(moment.now()) ?
-                            ` | starts ${moment(this.events[i].start).fromNow()}` : ` | ends ${moment(this.events[i].end).fromNow()}\n`),
-                                inline: false});
-                    
+                page_content += `\`[${this.events[i]._id}]\` | \`${this.events[i].title}\`\n` +
+                    `by <@${this.events[i]._author}> | [${this.events[i].attendees.length}/${this.events[i].attendee_max}]` +
+                    (moment(this.events[i].start).isAfter(moment.now()) ?
+                        ` | starts ${moment(this.events[i].start).fromNow()}` : ` | ends ${moment(this.events[i].end).fromNow()}\n`) +
+                    "\n";
             }
 
             if(events_length > end_index) {
@@ -101,7 +98,7 @@ Viewer.prototype.getPageView = function(page_no) {
            footer_content += ` | unfiltered`;
         }
 
-        return {embed: {color: msg_color, title: title_content, description: page_content, fields: embed_fields, footer: {text: footer_content}}};
+        return {embed: {color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
     }
     catch(err) {
         console.log(err.stack);
