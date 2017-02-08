@@ -242,13 +242,7 @@ module.exports = (bot, db, config, winston) => {
 	// Print startup ASCII art in console
 	const showStartupMessage = () => {
 		bot.isReady = true;
-		winston.info(`Started the best Discord bot, version ${config.version}\n\
-     _										 ____		_   \n\
-	/ \\__	  _____  ___  ___  _ __ ___   ___| __ )  ___ | |_ \n\
-   / _ \\ \\ /\\ / / _ \\/ __|/ _ \\| '_ \` _ \\ / _ \\  _ \\ / _ \\| __|\n\
-  / ___ \\ V  V /  __/\\__ \\ (_) | | | | | |  __/ |_) | (_) | |_ \n\
- /_/   \\_\\_/\\_/ \\___||___/\\___/|_| |_| |_|\\___|____/ \\___/ \\__|\n`);
-	};
+		winston.info(`Started the best Discord bot, version ${config.version}`};
 
 	// Set messages_today to 0 for all servers
 	const startMessageCount = () => {
