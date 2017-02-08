@@ -82,11 +82,11 @@ Viewer.prototype.getPageView = function(page_no) {
 
             if(events_length > end_index) {
                 //embed_fields.push({name: `----------`, value: `## \`\`[+]\`\` next page\n`});
-                footer_content += ` || [+] for next page`;
+                footer_content += ` | [+] for next page`;
             }
             if(page_no>1){
                 //embed_fields.push({value: `## \`\`[-]\`\` previous page\n`});
-                footer_content += ` || [-] for previous page`;
+                footer_content += ` | [-] for previous page`;
             }
             
             
@@ -103,7 +103,6 @@ Viewer.prototype.getPageView = function(page_no) {
             embed_fields.push({name: `Filter`, value: `${this.filter_disp}`, inline: true});
             //page_content += `\n## filter: ${this.filter_disp}`;
         } else {
-            embed_fields.push({name: `Filter`, value: ` | unfiltered`, inline: true});
             //footer_content += ` | unfiltered`;
         }
 
