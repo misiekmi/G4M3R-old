@@ -72,8 +72,8 @@ Viewer.prototype.getPageView = function(page_no) {
                 embed_fields.push({name: `[${this.events[i]._id}] || ${this.events[i].title}`, 
                                 value: `by <@${this.events[i]._author}> || [${this.events[i].attendees.length}/${this.events[i].attendee_max}]` +
                             (moment(this.events[i].start).isAfter(moment.now()) ?
-                            ` | starts ${moment(this.events[i].start).fromNow()}` : ` | ends ${moment(this.events[i].end).fromNow()}\n`),
-                                inline: false});
+                            ` || starts ${moment(this.events[i].start).fromNow()}` : ` | ends ${moment(this.events[i].end).fromNow()}\n`),
+                                inline: true});
                     
             }
 
