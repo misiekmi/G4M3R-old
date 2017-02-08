@@ -242,7 +242,8 @@ module.exports = (bot, db, config, winston) => {
 	// Print startup ASCII art in console
 	const showStartupMessage = () => {
 		bot.isReady = true;
-		winston.info(`Started the best Discord bot, version ${config.version}`};
+		winston.info(`Started the best Discord bot, version ${config.version}`);
+	};
 
 	// Set messages_today to 0 for all servers
 	const startMessageCount = () => {
