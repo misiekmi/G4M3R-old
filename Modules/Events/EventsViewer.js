@@ -12,21 +12,20 @@ function Viewer(serverDocument, page_size, filter) {
     this.edit_mode = 0;
     this.edits_made = {};
 
-    if(filter) {
+    if (filter) {
         this.filter_disp = "";
         let allEvents = serverDocument.gameEvents;
-        for(let i=0; i<allEvents.length; i++) {
+        for (let i = 0; i < allEvents.length; i++) {
             let event = allEvents[i];
             let pass = true;
 
-            if(filter._author && event._author!=filter._author) {
+            if (filter._author && event._author != filter._author) {
                 pass = false;
-            }
-            else if(filter.tags) {
-                for(let i=0; i<filter.tags.length; i++) {
+            } else if (filter.tags) {
+                for (let i = 0; i < filter.tags.length; i++) {
                     let found = false;
-                    for(let j=0; j<event.tags.length; j++) {
-                        if(filter.tags[i].toLowerCase() == event.tags[j].toLowerCase()) {
+                    for (let j = 0; j < event.tags.length; j++) {
+                        if (filter.tags[i].toLowerCase() == event.tags[j].toLowerCase()) {
                             found = true;
                             break;
                         }
@@ -35,18 +34,17 @@ function Viewer(serverDocument, page_size, filter) {
                 }
             }
 
-            if(pass) {
+            if (pass) {
                 this.events.push(event);
             }
         }
-        if(filter._author) {
+        if (filter._author) {
             this.filter_disp += " | author: <@" + filter._author + ">";
         }
-        if(filter.tags) {
+        if (filter.tags) {
             this.filter_disp += " | tags: " + filter.tags;
         }
-    }
-    else {
+    } else {
         this.events = serverDocument.gameEvents;
     }
 }
@@ -62,11 +60,12 @@ Viewer.prototype.getPageView = function(page_no) {
         let title_content = "";
         msg_color = default_color;
 
-        if((page_no-1)*page_size < events_length) {
+        if ((page_no - 1) * page_size < events_length) {
             let start_index = (page_no - 1) * page_size;
             let end_index = (start_index + page_size) > events_length ? events_length : start_index + page_size;
 
             for (let i = start_index; i < end_index; i++) {
+
                 page_content += `**[${this.events[i]._id}]** | **${this.events[i].title}**\n` +
                     `by <@${this.events[i]._author}> | [${this.events[i].attendees.length}/${this.events[i].attendee_max}]` +
                     (moment(this.events[i].start).isAfter(moment.now()) ?
@@ -74,33 +73,31 @@ Viewer.prototype.getPageView = function(page_no) {
                     "\n";
             }
 
-            if(events_length > end_index) {
+            if (events_length > end_index) {
                 page_content += `\n## \`\`[+]\`\` next page`;
             }
-            if(page_no>1){
+            if (page_no > 1) {
                 page_content += ` | \`\`[-]\`\` previous page\n`;
             }
             footer_content = `page (${page_no}/${Math.ceil(events_length/page_size)})`;
             title_content = `Type the Event 🆔 to show details`;
-        }
-        else {
+        } else {
             title_content = `There are no events scheduled on this server.`;
-            page_content = "";  // no entries
+            page_content = ""; // no entries
             footer_content = "page (1/1)";
         }
 
         footer_content += ` | type [Q]uit to leave`;
 
-        if(this.filter_disp){
+        if (this.filter_disp) {
 
             page_content += `\n## filter: ${this.filter_disp}`;
         } else {
-           footer_content += ` | unfiltered`;
+            footer_content += ` | unfiltered`;
         }
 
-        return {embed: {color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
-    }
-    catch(err) {
+        return { embed: { color: msg_color, title: title_content, description: page_content, footer: { text: footer_content } } };
+    } catch (err) {
         console.log(err.stack);
     }
 };
@@ -119,16 +116,16 @@ Viewer.prototype.getEvent = function(event_id) {
 };
 
 Viewer.prototype.getEventView = function() {
-    try {
-        this.mode = 2;
-        
-        let title_content, page_content, footer_content;
-        msg_color = default_color;
-        title_content = `Event #⃣ ${this.event._id}`;
-        page_content = "" +
-            `Title: **${this.event.title}**\n` +
-            `Author: <@${this.event._author}>\n\n` +
-            `Start: **${moment(this.event.start).format(`${config.moment_date_format}`)}**\n` +
+        try {
+            this.mode = 2;
+
+            let title_content, page_content, footer_content;
+            msg_color = default_color;
+            title_content = `Event #⃣ ${this.event._id}`;
+            page_content = "" +
+                `Title: **${this.event.title}**\n` +
+                `Author: <@${this.event._author}>\n\n` +
+                `Start: **${moment(this.event.start).format(`${config.moment_date_format}`)}**\n` +
             `End: **${moment(this.event.end).format(`${config.moment_date_format}`)}**\n\n` +
             `Tags: **${this.event.tags}**\n` +
             `Description: \n\`\`\`md\n${this.event.description}\n\`\`\`\n` +
