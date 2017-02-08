@@ -78,10 +78,12 @@ Viewer.prototype.getPageView = function(page_no) {
             }
 
             if(events_length > end_index) {
-                embed_fields.push({name: `----------`, value: `## \`\`[+]\`\` next page\n`});
+                //embed_fields.push({name: `----------`, value: `## \`\`[+]\`\` next page\n`});
+                page_content += `## \`\`[+]\`\` next page `;
             }
             if(page_no>1){
-                embed_fields.push({value: `## \`\`[-]\`\` previous page\n`});
+                //embed_fields.push({value: `## \`\`[-]\`\` previous page\n`});
+                page_content += `|| \`\`[-]\`\` previous page\n`;
             }
             footer_content = `page (${page_no}/${Math.ceil(events_length/page_size)})`;
             title_content = `Type the Event 🆔 to show details`;
@@ -101,7 +103,7 @@ Viewer.prototype.getPageView = function(page_no) {
            footer_content += ` | unfiltered`;
         }
 
-        return {embed: {color: msg_color, title: title_content, description: page_content, fields: embed_fields, footer: {text: footer_content}}};
+        return {embed: {color: msg_color, title: title_content, fields: embed_fields, description: page_content,  footer: {text: footer_content}}};
     }
     catch(err) {
         console.log(err.stack);
