@@ -40,7 +40,7 @@ function Viewer(serverDocument, page_size, filter) {
             }
         }
         if(filter._author) {
-            this.filter_disp += " | author: <@" + filter._author + ">";
+            this.filter_disp += "author: <@" + filter._author + ">";
         }
         if(filter.tags) {
             this.filter_disp += " | tags: " + filter.tags;
