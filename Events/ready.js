@@ -35,7 +35,8 @@ module.exports = (bot, db, config, winston) => {
 							if(member.id!=bot.user.id && !member.user.bot) {
 								// If member is playing game, add 1 (equal to five minutes) to game tally
 								const game = bot.getGame(member);
-								if(game && member.status=="online") {
+								if(game && memb
+								er.status=="online") {
 									let gameDocument = serverDocument.games.id(game);
 									if(!gameDocument) {
 										serverDocument.games.push({_id: game});
@@ -242,7 +243,7 @@ module.exports = (bot, db, config, winston) => {
 	// Print startup ASCII art in console
 	const showStartupMessage = () => {
 		bot.isReady = true;
-		winston.info(`Started the best Discord bot, version ${config.version}`);
+		winston.info(`Started G4M3R by pedall and notem, version ${config.version}`);
 	};
 
 	// Set messages_today to 0 for all servers
