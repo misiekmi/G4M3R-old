@@ -5,7 +5,7 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
 
     let viewer;
 
-    const page_size = 3;
+    const page_size = 5;
 
     if( suffix ) {
         if(suffix.toLowerCase()=="add") {
@@ -118,6 +118,7 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
             } else {
                 // TODO error, event does not exist
             }
+
         }
     }    
     else {
