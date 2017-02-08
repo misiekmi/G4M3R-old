@@ -7,7 +7,7 @@ let default_color = 0xff8c00; // default color = orange
 function Viewer(serverDocument, page_size, filter) {
     this.server = serverDocument;
     this.events = [];
-    this.page_size = page_size ? page_size : 3;
+    this.page_size = page_size ? page_size : 5;
     this.mode = 0;
     this.edit_mode = 0;
     this.edits_made = {};
@@ -75,10 +75,10 @@ Viewer.prototype.getPageView = function(page_no) {
             }
 
             if(events_length > end_index) {
-                page_content += `## \`\`[+]\`\` next page\n`;
+                page_content += `## \`\`[+]\`\` next page`;
             }
             if(page_no>1){
-                page_content += `## \`\`[-]\`\` previous page\n`;
+                page_content += ` | \`\`[-]\`\` previous page\n`;
             }
             footer_content = `page (${page_no}/${Math.ceil(events_length/page_size)})`;
             title_content = `Type the Event 🆔 to show details`;
@@ -89,7 +89,7 @@ Viewer.prototype.getPageView = function(page_no) {
             footer_content = "page (1/1)";
         }
 
-        footer_content += ` | type [Q]uit to leave menu`;
+        footer_content += ` | type [Q]uit to leave`;
 
         if(this.filter_disp){
 
