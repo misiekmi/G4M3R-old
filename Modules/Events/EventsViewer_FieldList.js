@@ -3,7 +3,7 @@ const moment = require("moment");
 const config = require("../../Configuration/config.json");
 let msg_color = 0xff8c00; //start with orange embed color
 let default_color = 0xff8c00; // default color = orange
-
+/*jshint -W027*/
 function Viewer(serverDocument, page_size, filter) {
     this.server = serverDocument;
     this.events = [];
@@ -40,7 +40,7 @@ function Viewer(serverDocument, page_size, filter) {
             }
         }
         if(filter._author) {
-            this.filter_disp += " | author: <@" + filter._author + ">";
+            this.filter_disp += "author: <@" + filter._author + ">";
         }
         if(filter.tags) {
             this.filter_disp += " | tags: " + filter.tags;
@@ -60,45 +60,63 @@ Viewer.prototype.getPageView = function(page_no) {
         let page_content = "";
         let footer_content = "";
         let title_content = "";
+        let embed_fields = [];
         msg_color = default_color;
 
         if((page_no-1)*page_size < events_length) {
             let start_index = (page_no - 1) * page_size;
             let end_index = (start_index + page_size) > events_length ? events_length : start_index + 3;
 
+
             for (let i = start_index; i < end_index; i++) {
-                page_content += `\`[${this.events[i]._id}]\` | \`${this.events[i].title}\`\n` +
-                    `by <@${this.events[i]._author}> | [${this.events[i].attendees.length}/${this.events[i].attendee_max}]` +
-                    (moment(this.events[i].start).isAfter(moment.now()) ?
-                        ` | starts ${moment(this.events[i].start).fromNow()}` : ` | ends ${moment(this.events[i].end).fromNow()}\n`) +
-                    "\n";
+                embed_fields.push({name: `[${this.events[i]._id}] || ${this.events[i].title}`, 
+                                value: `by <@${this.events[i]._author}> || [${this.events[i].attendees.length}/${this.events[i].attendee_max}]` +
+                            (moment(this.events[i].start).isAfter(moment.now()) ?
+                            ` || starts ${moment(this.events[i].start).fromNow()}` : ` || ends ${moment(this.events[i].end).fromNow()}\n`),
+                                inline: false});
+                    
             }
 
+            title_content = `Type the Event 🆔 to show details`;
+            footer_content = `page (${page_no}/${Math.ceil(events_length/page_size)})`;
+
             if(events_length > end_index) {
-                page_content += `## \`\`[+]\`\` next page\n`;
+                //embed_fields.push({name: `----------`, value: `## \`\`[+]\`\` next page\n`});
+                footer_content += ` | [+] for next page`;
             }
             if(page_no>1){
-                page_content += `## \`\`[-]\`\` previous page\n`;
+                //embed_fields.push({value: `## \`\`[-]\`\` previous page\n`});
+                footer_content += ` | [-] for previous page`;
             }
-            footer_content = `page (${page_no}/${Math.ceil(events_length/page_size)})`;
-            title_content = `Type the Event 🆔 to show details`;
+
+            //Filter when events are found by search or existing for list
+            if(this.filter_disp){
+                embed_fields.push({name: `Filter`, value: `${this.filter_disp}`, inline: true});
+                //page_content += `\n## filter: ${this.filter_disp}`;
+            } else {
+                footer_content += ` | unfiltered`;
+            }
+            
         }
         else {
             title_content = `There are no events scheduled on this server.`;
             page_content = "";  // no entries
             footer_content = "page (1/1)";
+
+            //Filter is different if there are no events found by search or existing
+            if(this.filter_disp){
+                footer_content += ` | filter: ${this.filter_disp}`;
+            } else {
+                footer_content += ` | unfiltered`;
+            }
+
         }
 
-        footer_content += ` | type [Q]uit to leave menu`;
+        //Show options at last place in embed message
+        embed_fields.push({name: `Options`, value: `[Q]uit to exit`, inline: true});
 
-        if(this.filter_disp){
-
-            page_content += `\n## filter: ${this.filter_disp}`;
-        } else {
-           footer_content += ` | unfiltered`;
-        }
-
-        return {embed: {color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
+        //Display the embed
+        return {embed: {color: msg_color, title: title_content, fields: embed_fields, description: page_content,  footer: {text: footer_content}}};
     }
     catch(err) {
         console.log(err.stack);
@@ -125,7 +143,7 @@ Viewer.prototype.getEventView = function() {
         let title_content, page_content, footer_content;
         msg_color = default_color;
         title_content = `Event #⃣ ${this.event._id}`;
-        page_content = "" +
+        page_content = ""  +
             `Title: **${this.event.title}**\n` +
             `Author: <@${this.event._author}>\n\n` +
             `Start: **${moment(this.event.start).format(`${config.moment_date_format}`)}**\n` +
@@ -189,7 +207,7 @@ Viewer.prototype.getEditorView = function() {
                 footer_content = `## Options: [B]ack, [Q]uit`;
 
                 return {embed: {color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
-                break;
+                break; // eslint-disable-line no-unreachable
             case 2:
                 title_content = `Event #⃣ ${this.event._id}`;
                 page_content = "" +
@@ -199,7 +217,7 @@ Viewer.prototype.getEditorView = function() {
                 footer_content = `## Options: [B]ack, [Q]uit`;
 
                 return {embed: {color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
-                break;
+                break; // eslint-disable-line no-unreachable
             case 3:
                 title_content = `Event #⃣ ${this.event._id}`;
                 page_content = "" +
@@ -209,7 +227,7 @@ Viewer.prototype.getEditorView = function() {
                 footer_content = `## Options: [B]ack, [Q]uit`;
 
                 return {embed: {color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
-               break;
+               break; // eslint-disable-line no-unreachable
             case 4:
                 title_content = `Event #⃣ ${this.event._id}`;
                 page_content = "" +
@@ -219,7 +237,7 @@ Viewer.prototype.getEditorView = function() {
                 footer_content = `## Options: [B]ack, [Q]uit`;
 
                 return {embed: {color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
-                break;
+                break; // eslint-disable-line no-unreachable
             case 5:
                 title_content = `Event #⃣ ${this.event._id}`;
                 page_content = "" +
@@ -229,7 +247,7 @@ Viewer.prototype.getEditorView = function() {
                 footer_content = `## Options: [B]ack, [Q]uit`;
 
                 return {embed: {color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
-                break;
+                break; // eslint-disable-line no-unreachable
             case 6:
                 title_content = `Event #⃣ ${this.event._id}`;
                 page_content = "" +
@@ -239,7 +257,7 @@ Viewer.prototype.getEditorView = function() {
                 footer_content = `## Options: [B]ack, [Q]uit`;
 
                 return {embed: {color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
-                break;
+                break; // eslint-disable-line no-unreachable
             default:
                 return false; // something is wrong!
                 //break; unreachable break
