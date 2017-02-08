@@ -72,7 +72,7 @@ Viewer.prototype.getPageView = function(page_no) {
                 embed_fields.push({name: `[${this.events[i]._id}] || ${this.events[i].title}`, 
                                 value: `by <@${this.events[i]._author}> || [${this.events[i].attendees.length}/${this.events[i].attendee_max}]` +
                             (moment(this.events[i].start).isAfter(moment.now()) ?
-                            ` || starts ${moment(this.events[i].start).fromNow()}` : ` | ends ${moment(this.events[i].end).fromNow()}\n`),
+                            ` || starts ${moment(this.events[i].start).fromNow()}` : ` || ends ${moment(this.events[i].end).fromNow()}\n`),
                                 inline: false});
                     
             }
@@ -81,7 +81,7 @@ Viewer.prototype.getPageView = function(page_no) {
                 embed_fields.push({name: `----------`, value: `## \`\`[+]\`\` next page\n`});
             }
             if(page_no>1){
-                embed_fields.push({name: "", value: `## \`\`[-]\`\` previous page\n`});
+                embed_fields.push({value: `## \`\`[-]\`\` previous page\n`});
             }
             footer_content = `page (${page_no}/${Math.ceil(events_length/page_size)})`;
             title_content = `Type the Event 🆔 to show details`;
