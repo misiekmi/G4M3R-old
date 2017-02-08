@@ -67,7 +67,7 @@ Viewer.prototype.getPageView = function(page_no) {
             let end_index = (start_index + page_size) > events_length ? events_length : start_index + 3;
 
             for (let i = start_index; i < end_index; i++) {
-                page_content += `\`[${this.events[i]._id}]\` | \`${this.events[i].title}\`\n` +
+                page_content += `**[${this.events[i]._id}]** | **${this.events[i].title}**\n` +
                     `by <@${this.events[i]._author}> | [${this.events[i].attendees.length}/${this.events[i].attendee_max}]` +
                     (moment(this.events[i].start).isAfter(moment.now()) ?
                         ` | starts ${moment(this.events[i].start).fromNow()}` : ` | ends ${moment(this.events[i].end).fromNow()}\n`) +
@@ -75,7 +75,7 @@ Viewer.prototype.getPageView = function(page_no) {
             }
 
             if(events_length > end_index) {
-                page_content += `## \`\`[+]\`\` next page`;
+                page_content += `\n## \`\`[+]\`\` next page`;
             }
             if(page_no>1){
                 page_content += ` | \`\`[-]\`\` previous page\n`;
