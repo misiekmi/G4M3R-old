@@ -73,7 +73,7 @@ Viewer.prototype.getPageView = function(page_no) {
                                 value: `by <@${this.events[i]._author}> || [${this.events[i].attendees.length}/${this.events[i].attendee_max}]` +
                             (moment(this.events[i].start).isAfter(moment.now()) ?
                             ` || starts ${moment(this.events[i].start).fromNow()}` : ` | ends ${moment(this.events[i].end).fromNow()}\n`),
-                                inline: true});
+                                inline: false});
                     
             }
 
