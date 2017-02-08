@@ -64,7 +64,7 @@ Viewer.prototype.getPageView = function(page_no) {
 
         if((page_no-1)*page_size < events_length) {
             let start_index = (page_no - 1) * page_size;
-            let end_index = (start_index + page_size) > events_length ? events_length : start_index + 3;
+            let end_index = (start_index + page_size) > events_length ? events_length : start_index + page_size;
 
             for (let i = start_index; i < end_index; i++) {
                 page_content += `**[${this.events[i]._id}]** | **${this.events[i].title}**\n` +
