@@ -77,16 +77,19 @@ Viewer.prototype.getPageView = function(page_no) {
                     
             }
 
+            title_content = `Type the Event 🆔 to show details`;
+            footer_content = `page (${page_no}/${Math.ceil(events_length/page_size)})`;
+
             if(events_length > end_index) {
                 //embed_fields.push({name: `----------`, value: `## \`\`[+]\`\` next page\n`});
-                page_content += `## \`\`[+]\`\` next page `;
+                footer_content += `## \`\`[+]\`\` next page`;
             }
             if(page_no>1){
                 //embed_fields.push({value: `## \`\`[-]\`\` previous page\n`});
-                page_content += `|| \`\`[-]\`\` previous page\n`;
+                footer_content += ` || \`\`[-]\`\` previous page\n`;
             }
-            footer_content = `page (${page_no}/${Math.ceil(events_length/page_size)})`;
-            title_content = `Type the Event 🆔 to show details`;
+            
+            
         }
         else {
             title_content = `There are no events scheduled on this server.`;
@@ -94,13 +97,14 @@ Viewer.prototype.getPageView = function(page_no) {
             footer_content = "page (1/1)";
         }
 
-        footer_content += ` | type [Q]uit to leave menu`;
+        embed_fields.push({name: `Options`, value: `Type [Q]uit to leave menu`, inline: false});
 
         if(this.filter_disp){
-
-            page_content += `\n## filter: ${this.filter_disp}`;
+            embed_fields.push({name: `Filter`, value: `${this.filter_disp}`, inline: false});
+            //page_content += `\n## filter: ${this.filter_disp}`;
         } else {
-           footer_content += ` | unfiltered`;
+            embed_fields.push({name: `Filter`, value: ` | unfiltered`, inline: false});
+            //footer_content += ` | unfiltered`;
         }
 
         return {embed: {color: msg_color, title: title_content, fields: embed_fields, description: page_content,  footer: {text: footer_content}}};
