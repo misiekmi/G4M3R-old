@@ -3,7 +3,7 @@ const moment = require("moment");
 const config = require("../../Configuration/config.json");
 let msg_color = 0xff8c00; //start with orange embed color
 let default_color = 0xff8c00; // default color = orange
-
+/*jshint -W027*/
 function Viewer(serverDocument, page_size, filter) {
     this.server = serverDocument;
     this.events = [];
@@ -69,8 +69,8 @@ Viewer.prototype.getPageView = function(page_no) {
 
 
             for (let i = start_index; i < end_index; i++) {
-                embed_fields.push({name: `\`[${this.events[i]._id}]\` | \`${this.events[i].title}\`\n`, 
-                                value: `by <@${this.events[i]._author}> | [${this.events[i].attendees.length}/${this.events[i].attendee_max}]` +
+                embed_fields.push({name: `[${this.events[i]._id}] || ${this.events[i].title}`, 
+                                value: `by <@${this.events[i]._author}> || [${this.events[i].attendees.length}/${this.events[i].attendee_max}]` +
                             (moment(this.events[i].start).isAfter(moment.now()) ?
                             ` | starts ${moment(this.events[i].start).fromNow()}` : ` | ends ${moment(this.events[i].end).fromNow()}\n`),
                                 inline: false});
@@ -78,10 +78,10 @@ Viewer.prototype.getPageView = function(page_no) {
             }
 
             if(events_length > end_index) {
-                page_content += `## \`\`[+]\`\` next page\n`;
+                embed_fields.push({name: `----------`, value: `## \`\`[+]\`\` next page\n`});
             }
             if(page_no>1){
-                page_content += `## \`\`[-]\`\` previous page\n`;
+                embed_fields.push({name: "", value: `## \`\`[-]\`\` previous page\n`});
             }
             footer_content = `page (${page_no}/${Math.ceil(events_length/page_size)})`;
             title_content = `Type the Event 🆔 to show details`;
@@ -192,7 +192,7 @@ Viewer.prototype.getEditorView = function() {
                 footer_content = `## Options: [B]ack, [Q]uit`;
 
                 return {embed: {color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
-                break;
+                break; // eslint-disable-line no-unreachable
             case 2:
                 title_content = `Event #⃣ ${this.event._id}`;
                 page_content = "" +
@@ -202,7 +202,7 @@ Viewer.prototype.getEditorView = function() {
                 footer_content = `## Options: [B]ack, [Q]uit`;
 
                 return {embed: {color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
-                break;
+                break; // eslint-disable-line no-unreachable
             case 3:
                 title_content = `Event #⃣ ${this.event._id}`;
                 page_content = "" +
@@ -212,7 +212,7 @@ Viewer.prototype.getEditorView = function() {
                 footer_content = `## Options: [B]ack, [Q]uit`;
 
                 return {embed: {color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
-               break;
+               break; // eslint-disable-line no-unreachable
             case 4:
                 title_content = `Event #⃣ ${this.event._id}`;
                 page_content = "" +
@@ -222,7 +222,7 @@ Viewer.prototype.getEditorView = function() {
                 footer_content = `## Options: [B]ack, [Q]uit`;
 
                 return {embed: {color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
-                break;
+                break; // eslint-disable-line no-unreachable
             case 5:
                 title_content = `Event #⃣ ${this.event._id}`;
                 page_content = "" +
@@ -232,7 +232,7 @@ Viewer.prototype.getEditorView = function() {
                 footer_content = `## Options: [B]ack, [Q]uit`;
 
                 return {embed: {color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
-                break;
+                break; // eslint-disable-line no-unreachable
             case 6:
                 title_content = `Event #⃣ ${this.event._id}`;
                 page_content = "" +
@@ -242,7 +242,7 @@ Viewer.prototype.getEditorView = function() {
                 footer_content = `## Options: [B]ack, [Q]uit`;
 
                 return {embed: {color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
-                break;
+                break; // eslint-disable-line no-unreachable
             default:
                 return false; // something is wrong!
                 //break; unreachable break
