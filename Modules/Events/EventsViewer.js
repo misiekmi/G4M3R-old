@@ -88,24 +88,34 @@ Viewer.prototype.getPageView = function(page_no) {
                 //embed_fields.push({value: `## \`\`[-]\`\` previous page\n`});
                 footer_content += ` | [-] for previous page`;
             }
-            
+
+            //Filter when events are found by search or existing for list
+            if(this.filter_disp){
+                embed_fields.push({name: `Filter`, value: `${this.filter_disp}`, inline: true});
+                //page_content += `\n## filter: ${this.filter_disp}`;
+            } else {
+                footer_content += ` | unfiltered`;
+            }
             
         }
         else {
             title_content = `There are no events scheduled on this server.`;
             page_content = "";  // no entries
             footer_content = "page (1/1)";
+
+            //Filter is different if there are no events found by search or existing
+            if(this.filter_disp){
+                footer_content += ` | filter: ${this.filter_disp}`;
+            } else {
+                footer_content += ` | unfiltered`;
+            }
+
         }
 
+        //Show options at last place in embed message
         embed_fields.push({name: `Options`, value: `[Q]uit to exit`, inline: true});
 
-        if(this.filter_disp){
-            embed_fields.push({name: `Filter`, value: `${this.filter_disp}`, inline: true});
-            //page_content += `\n## filter: ${this.filter_disp}`;
-        } else {
-            //footer_content += ` | unfiltered`;
-        }
-
+        //Display the embed
         return {embed: {color: msg_color, title: title_content, fields: embed_fields, description: page_content,  footer: {text: footer_content}}};
     }
     catch(err) {
