@@ -8,6 +8,7 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
     let viewer;
     const page_size = 5;
 
+
     if( suffix ) {
         if(suffix.toLowerCase()=="add") {
             // chained promise statements to generate a new event id number for the server
@@ -17,7 +18,7 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
                         _no: no, _author: msg.author.id, _server: serverDocument._id, _clan: null
                     },(err)=>{
                         if(err) {
-                            winston.info(err.stack)
+                            winston.info(err.stack);
                         } else {
                             QueryHelper.findServerEvents(db, serverDocument._id).then((eventDocuments)=>{
                                 let viewer = new EventViewer(db, serverDocument, eventDocuments, page_size);
