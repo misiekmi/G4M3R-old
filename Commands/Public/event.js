@@ -6,7 +6,8 @@ const QueryHelper = require('../../Modules/Events/EventsQueryHelper');
 module.exports = (bot, db, config, winston, userDocument, serverDocument, channelDocument, memberDocument, msg, suffix) => {
 
     let viewer;
-    const page_size = 3;
+
+    const page_size = 5;
 
     if( suffix ) {
         if(suffix.toLowerCase()=="add") {

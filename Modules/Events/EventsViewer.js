@@ -41,38 +41,37 @@ Viewer.prototype.getPageView = function(page_no) {
         let start_index = (page_no - 1) * this.page_size;
         let end_index = (start_index + this.page_size) > events_length ? events_length : start_index + this.page_size;
 
-        for (let i = start_index; i < end_index; i++) {
-            embed_fields.push({name: `\`[${this.events[i]._no}]\` | \`${this.events[i].title}\`\n`,
-                value: `by <@${this.events[i]._author}> | [${this.events[i].attendees.length}/${this.events[i].attendee_max}]` +
-                (moment(this.events[i].start).isAfter(moment.now()) ?
-                    ` | starts ${moment(this.events[i].start).fromNow()}` : ` | ends ${moment(this.events[i].end).fromNow()}\n`),
-                inline: false});
+            for (let i = start_index; i < end_index; i++) {
 
+                page_content += `**[${this.events[i]._id}]** | **${this.events[i].title}**\n` +
+                    `by <@${this.events[i]._author}> | [${this.events[i].attendees.length}/${this.events[i].attendee_max}]` +
+                    (moment(this.events[i].start).isAfter(moment.now()) ?
+                        ` | starts ${moment(this.events[i].start).fromNow()}` : ` | ends ${moment(this.events[i].end).fromNow()}\n`) +
+                    "\n";
+            }
+
+            if (events_length > end_index) {
+                page_content += `\n## \`\`[+]\`\` next page`;
+            }
+            if (page_no > 1) {
+                page_content += ` | \`\`[-]\`\` previous page\n`;
+            }
+            footer_content = `page (${page_no}/${Math.ceil(events_length/page_size)})`;
+            title_content = `Type the Event 🆔 to show details`;
+        } else {
+            title_content = `There are no events scheduled on this server.`;
+            page_content = ""; // no entries
+            footer_content = "page (1/1)";
         }
 
-        if(events_length > end_index) {
-            page_content += `## \`\`[+]\`\` next page\n`;
+        footer_content += ` | type [Q]uit to leave`;
+
+        if (this.filter_disp) {
+
+            page_content += `\n## filter: ${this.filter_disp}`;
+        } else {
+            footer_content += ` | unfiltered`;
         }
-        if(page_no>1){
-            page_content += `## \`\`[-]\`\` previous page\n`;
-        }
-        footer_content = `page (${page_no}/${Math.ceil(events_length/this.page_size)})`;
-        title_content = `Type the Event 🆔 to show details`;
-    }
-    else {
-        title_content = `There are no events scheduled on this server.`;
-        page_content = "";  // no entries
-        footer_content = "page (1/1)";
-    }
-
-    footer_content += ` | type [Q]uit to leave menu`;
-
-    if(this.filter_disp){
-
-        page_content += `\n## filter: ${this.filter_disp}`;
-    } else {
-        footer_content += ` | unfiltered`;
-    }
 
     return {embed: {color: msg_color, title: title_content, description: page_content, fields: embed_fields, footer: {text: footer_content}}};
 };
@@ -91,23 +90,28 @@ Viewer.prototype.getEvent = function(event_no) {
 };
 
 Viewer.prototype.getEventView = function() {
-    this.mode = 2;
+        try {
+            this.mode = 2;
 
-    let title_content, page_content, footer_content;
-    msg_color = default_color;
-    title_content = `Event #⃣ ${this.event._no}`;
-    page_content = "" +
-        `Title: **${this.event.title}**\n` +
-        `Author: <@${this.event._author}>\n\n` +
-        `Start: **${moment(this.event.start).format(`${config.moment_date_format}`)}**\n` +
-        `End: **${moment(this.event.end).format(`${config.moment_date_format}`)}**\n\n` +
-        `Tags: **${this.event.tags}**\n` +
-        `Description: \n\`\`\`md\n${this.event.description}\n\`\`\`\n` +
-        `Attendees: \`[${this.event.attendees.length}/${this.event.attendee_max}]\``;
+            let title_content, page_content, footer_content;
+            msg_color = default_color;
+            title_content = `Event #⃣ ${this.event._id}`;
+            page_content = "" +
+                `Title: **${this.event.title}**\n` +
+                `Author: <@${this.event._author}>\n\n` +
+                `Start: **${moment(this.event.start).format(`${config.moment_date_format}`)}**\n` +
+            `End: **${moment(this.event.end).format(`${config.moment_date_format}`)}**\n\n` +
+            `Tags: **${this.event.tags}**\n` +
+            `Description: \n\`\`\`md\n${this.event.description}\n\`\`\`\n` +
+            `Attendees: \`[${this.event.attendees.length}/${this.event.attendee_max}]\``;
 
-    footer_content = `## Options: [J]oin, [L]eave, [E]dit, [D]elete, [B]ack, [Q]uit`;
+        footer_content = `## Options: [J]oin, [L]eave, [E]dit, [D]elete, [B]ack, [Q]uit`;
 
-    return {embed: {color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
+        return {embed: {color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
+    }
+    catch(err) {
+        console.log(err.stack);
+    }
 };
 
 Viewer.prototype.getEventEditView = function() {
