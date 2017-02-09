@@ -10,17 +10,15 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
 
     let cancel = false;
     let error = false;
-    let time, body, title,embedColor;
+    let time, body, title, embedColor;
     async.whilst(() => {
             return !cancel;
         },
         (callback) => {
             msg.channel.createMessage(embed).then(bot_message => {
-                let timeout = setTimeout(()=>{bot_message.delete();}, 30000); //delete message in 1 minute
+                let timeout = setTimeout(()=>{bot_message.delete();}, 30000); //delete message in 1/2 minute
 
-                winston.info(`waiting for user message`);
                 bot.awaitMessage(msg.channel.id, msg.author.id, usr_message => {
-                    winston.info(`read user message ${usr_message.content}`);
                     bot.removeMessageListener(msg.channel.id, msg.author.id);
                     clearTimeout(timeout);  //clear the active timeout
 
@@ -28,17 +26,17 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                     let usr_input_str = usr_message.content.trim().toLowerCase();
 
                     // quit interactive
-                    if(usr_input_str == "quit" || usr_input_str == "q") {
+                    if(usr_input_str === "quit" || usr_input_str === "q") {
                         cancel = true;
                     }
                     else if(error) {
                         // return to eventDocument list page
-                        if(usr_input_str == "back" || usr_input_str == "b") {
+                        if(usr_input_str === "back" || usr_input_str === "b") {
                             error = false;
                             embed = viewer.getPageView(current_page_no);
                         }
                     }
-                    else if(viewer.mode==1) {      // list view mode
+                    else if(viewer.mode === 1) {      // list view mode
                         // get eventDocument
                         if (!isNaN(usr_input_no) && usr_input_no > 0) {
                             viewer.event = viewer.getEvent(usr_input_no);
@@ -53,7 +51,7 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                             }
                         }
                         // go to next page
-                        else if (usr_input_str == `+` && page_size*current_page_no<serverDocument.gameEvents.length) {
+                        else if (usr_input_str === `+` && page_size*current_page_no<viewer.events.length) {
                             current_page_no++;
                             embed = viewer.getPageView(current_page_no);
                         }
@@ -63,7 +61,7 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                             embed = viewer.getPageView(current_page_no);
                         }
                     }
-                    else if(viewer.mode==2) {       // event view mode
+                    else if(viewer.mode === 2) {       // event view mode
                         // return to eventDocument list page
                         if(usr_input_str == "back" || usr_input_str == "b") {
                             embed = viewer.getPageView(current_page_no);
@@ -81,12 +79,12 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                             embed = viewer.leaveEvent(viewer.event, msg.author.id);
                         }
                     }
-                    else if(viewer.mode==3) {       // editor mode
-                        if(viewer.edit_mode===0) {
+                    else if(viewer.mode === 3) {       // editor mode
+                        if(viewer.edit_mode === 0) {
                             if(usr_input_str == "back" || usr_input_str == "b") {
-                                serverDocument.save((err)=>{
+                                viewer.event.save((err)=>{
                                     if(err) {
-                                        winston.error(`Failed to save event changes`, {srvid: serverDocument._id}, err);
+                                        winston.error(`Failed to save event changes`, {_id: viewer.event._id}, err);
                                     }
                                 });
                                 embed = viewer.getEventView();
@@ -106,7 +104,7 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                                 }
                             }
                         } else {
-                            if(usr_input_str == "back" || usr_input_str == "b"){
+                            if(usr_input_str === "back" || usr_input_str === "b"){
                                 embed = viewer.getEventEditView();
                                 viewer.edit_mode = 0;
                             } else {
@@ -171,8 +169,8 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                             }
                         }
                     }
-                    else if(viewer.mode==4) {       // delete queued mode
-                        if(usr_input_str == "back" || usr_input_str == "b") {
+                    else if(viewer.mode === 4) {       // delete queued mode
+                        if(usr_input_str === "back" || usr_input_str === "b") {
                             embed = viewer.getPageView(current_page_no);
                         }
                     }

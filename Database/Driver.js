@@ -10,6 +10,7 @@ modulesSchema.index({
 });
 const blogSchema = require("./Schemas/blogSchema.js");
 const wikiSchema = require("./Schemas/wikiSchema");
+const eventSchema = require("./Schemas/eventSchema.js");
 
 // Connect to and setup database
 module.exports = {
@@ -27,6 +28,7 @@ module.exports = {
 		mongoose.model("gallery", modulesSchema);
 		mongoose.model("blog", blogSchema);
 		mongoose.model("wiki", wikiSchema);
+		mongoose.model("events", eventSchema);
 
 		mongoose.connection.on("error", callback);
 		mongoose.connection.once("open", callback);

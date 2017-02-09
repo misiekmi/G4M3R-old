@@ -250,6 +250,11 @@ module.exports = (bot, db, config, winston) => {
  /_/   \\_\\_/\\_/ \\___||___/\\___/|_| |_| |_|\\___|____/ \\___/ \\__|\n`);
 	};
 
+	// Start the 60 second repeating timer that handles the start/end of events
+	const startEventTimeChecker = () => {
+		require("./../Modules/Events/EventTimeChecker")(winston,db);
+	};
+
 	// Set messages_today to 0 for all servers
 	const startMessageCount = () => {
 		db.servers.update({}, {messages_today: 0}, {multi: true}, err => {
@@ -271,6 +276,7 @@ module.exports = (bot, db, config, winston) => {
 			startMessageOfTheDay();
 			runTimerExtensions();
 			postData(winston, auth, bot.guilds.size, bot.user.id);
+			startEventTimeChecker();
 			startWebServer(bot, db, auth, config, winston);
 			showStartupMessage();
 		});
@@ -283,8 +289,8 @@ module.exports = (bot, db, config, winston) => {
 		};
 		if(config.game=="default") {
 			game = {
-				name: "awesomebot.xyz",
-				url: "http://awesomebot.xyz"
+				name: "g4m3r.xyz",
+				url: "https://g4m3r.xyz"
 			};
 		}
 		bot.editStatus(config.status, game);

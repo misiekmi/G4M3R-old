@@ -1,33 +1,37 @@
-
 const mongoose = require("mongoose");
+const moment = require('moment');
 
 // schema for storing event information
 module.exports = new mongoose.Schema({
-		_id: {type: Number, required: true }, // integer event id 
-    	_author: {type: String, required: true }, // user that created the event
+    	_id: {type: String, required: true}, 		// event ID as computed from _no, _author, _server, and _clan concatenated together
+		_no: {type: Number, required: true},		// the displayed id number
+    	_author: {type: String, required: true },	// user that created the event
+		_server: {type: String, required: false},	// id of server the event belongs too
+		_clan: {type: String, required: false},		// id of clan event belongs too
 
-		title: {type: String, default: "(no title)"}, // title of the event
+		title: {type: String, default: "(no title)"},             // title of the event
     	description: {type: String, default: "(no description)"}, // short description of the event
-    	tags: {type: [String], default: []}, // event tags relevant for search
+    	tags: {type: [String], default: []},					  // event tags relevant for search
 
-		start: {type: Date, default: Date.now()}, // start date of the event in YYYY/MM/DD h:mm
-		end: {type: Date, default: this.start }, // end date of the event in YYYY/MM/DD h:mm
+		start: {type: Date, default: moment(Date.now()).add(1,"hour")}, // start date of the event
+		end: {type: Date, default: moment(Date.now()).add(2,"hour")},   // end date of the event
+		hasStarted: {type: Boolean, default: false},
 
 		attendee_max: {type: Number, default: 3}, // maximum number of people that can join the event
-		attendees: [new mongoose.Schema({ // people that joined the event
-			_id: {type: String},
+		attendees: {type: [new mongoose.Schema({  // people that joined the event
+			_id: {type: String, required: true},
 			_timestamp: {type: Date}
-		})],
+		})], default: []},
 
 		// notification settings
 		announce: {type: Boolean, default: false},		// if bot should announce when start/end
 		pre_announce: {type: Boolean, default: false},	// if bot should announce before start/end
 		pre_interval: {type: Number, default: 15},		// time interval, in minutes
 		pre_frequency: {type: Number, default: 1},		// number of times to send pre-announces
-		announce_targets: [new mongoose.Schema({
+		announce_targets: {type :[new mongoose.Schema({
 			_type: {type: String, required: true},		// is a channel or user?
 			_id: {type: String, required: true}			// id of channel or user
-		})],
+		})], default: []},
 
 		// privacy settings
 		isPublic: {type: Boolean, default: true},		// if true, all can see; if false, only clan/server can see

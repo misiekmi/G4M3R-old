@@ -1,67 +1,76 @@
 const list = require("./../../Modules/Events/InteractiveLoop.js");
 const EventViewer = require("./../../Modules/Events/EventsViewer");
+const idHelper = require('../../Modules/Events/IDHelper');
+const QueryHelper = require('../../Modules/Events/EventsQueryHelper');
 
 module.exports = (bot, db, config, winston, userDocument, serverDocument, channelDocument, memberDocument, msg, suffix) => {
 
     let viewer;
-
     const page_size = 3;
 
     if( suffix ) {
         if(suffix.toLowerCase()=="add") {
-            let newEventID, maxEventID;
-            if (serverDocument.gameEvents.length === 0) {
-                maxEventID = 0;
-            } else {
-                maxEventID = Math.max.apply(Math, serverDocument.gameEvents.map(a => a._id));
-            }
-            newEventID = maxEventID + 1;
-            serverDocument.gameEvents.push({_id: newEventID, _author: msg.author.id});
-            let viewer = new EventViewer(serverDocument, page_size);
-
-            let event = viewer.getEvent(newEventID);
-            if(event){
-                viewer.event = event;
-                list(bot, db, winston, serverDocument, msg, viewer, viewer.getEventEditView());
-            } else {
-                // TODO error, event does not exist
-            }
+            // chained promise statements to generate a new event id number for the server
+            idHelper.newServerEventNumber(db,serverDocument._id).then((no) => {
+                db.events.create({
+                        _id: idHelper.computeID(no,msg.author.id,serverDocument._id,null),
+                        _no: no, _author: msg.author.id, _server: serverDocument._id, _clan: null
+                    },(err, event)=>{
+                        if(err) {
+                            winston.info(err.stack)
+                        } else {
+                            QueryHelper.findServerEvents(db, serverDocument._id).then((eventDocuments)=>{
+                                let viewer = new EventViewer(db, serverDocument, eventDocuments, page_size);
+                                viewer.event = event;
+                                list(bot, db, winston, serverDocument, msg, viewer, viewer.getEventEditView());
+                            });
+                        }
+                    });
+            });
         }
-        if(suffix.toLowerCase()=="list") {
-            let viewer = new EventViewer(serverDocument, page_size);
-            list(bot, db, winston, serverDocument, msg, viewer, viewer.getPageView(1));
+        else if(suffix.toLowerCase()=="list") {
+            QueryHelper.findServerEvents(db, serverDocument._id).then((eventDocuments)=>{
+                let viewer = new EventViewer(db, serverDocument, eventDocuments, page_size);
+                list(bot, db, winston, serverDocument, msg, viewer, viewer.getPageView(1));
+            });
         }
         else if(suffix.toLowerCase().startsWith("show")) {
-            let tmp = suffix.toLowerCase().split("show")[1].trim();
-            viewer = new EventViewer(serverDocument, page_size);
-            let event = viewer.getEvent(tmp);
-            if(event){
-                viewer.event = event;
-                list(bot, db, winston, serverDocument, msg, viewer, viewer.getEventView());
-            } else {
-                // TODO error, event does not exist
-            }
+            QueryHelper.findServerEvents(db, serverDocument._id).then((eventDocuments)=> {
+                let tmp = suffix.toLowerCase().split("show")[1].trim();
+                viewer = new EventViewer(db, serverDocument, eventDocuments, page_size);
+                let event = viewer.getEvent(tmp);
+                if (event) {
+                    viewer.event = event;
+                    list(bot, db, winston, serverDocument, msg, viewer, viewer.getEventView());
+                } else {
+                    // TODO error, event does not exist
+                }
+            });
         }
         else if(suffix.toLowerCase().startsWith("remove")) {
-            let tmp = suffix.toLowerCase().split("remove")[1].trim();
-            viewer = new EventViewer(serverDocument, page_size);
-            viewer.event = viewer.getEvent(tmp);
-            if(viewer.event) {
-                list(bot, db, winston, serverDocument, msg, viewer, viewer.deleteEvent(viewer.event));
-            } else {
-                // TODO error, event does not exist
-            }
+            QueryHelper.findServerEvents(db, serverDocument._id).then((eventDocuments)=> {
+                let tmp = suffix.toLowerCase().split("remove")[1].trim();
+                viewer = new EventViewer(db, serverDocument, eventDocuments, page_size);
+                viewer.event = viewer.getEvent(tmp);
+                if (viewer.event) {
+                    list(bot, db, winston, serverDocument, msg, viewer, viewer.deleteEvent(viewer.event));
+                } else {
+                    // TODO error, event does not exist
+                }
+            });
         }
         else if(suffix.toLowerCase().startsWith("edit")) {
             let tmp = suffix.toLowerCase().split("edit")[1].trim();
-            viewer = new EventViewer(serverDocument, page_size);
-            let event = viewer.getEvent(tmp);
-            if(event){
-                viewer.event = event;
-                list(bot, db, winston, serverDocument, msg, viewer, viewer.getEventEditView());
-            } else {
-                // TODO error, event does not exist
-            }
+            QueryHelper.findServerEvents(db, serverDocument._id).then((eventDocuments)=> {
+                viewer = new EventViewer(db, serverDocument, eventDocuments, page_size);
+                let event = viewer.getEvent(tmp);
+                if (event) {
+                    viewer.event = event;
+                    list(bot, db, winston, serverDocument, msg, viewer, viewer.getEventEditView());
+                } else {
+                    // TODO error, event does not exist
+                }
+            });
         }
         else if(suffix.toLowerCase().startsWith("search")) {
             let filter = {};
@@ -89,35 +98,38 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
                         break;
                 }
             }
-
-            viewer = new EventViewer(serverDocument, page_size, filter);
-            list(bot, db, winston, serverDocument, msg, viewer, viewer.getPageView(1));
+            QueryHelper.findFilteredServerEvents(db, serverDocument._id, filter).then((eventDocuments)=> {
+                viewer = new EventViewer(db, serverDocument, eventDocuments, page_size, filter);
+                list(bot, db, winston, serverDocument, msg, viewer, viewer.getPageView(1));
+            });
         }
-    
         else if(suffix.toLowerCase().startsWith("join")) {
+            let author = msg.author.id;
             let tmp = suffix.toLowerCase().split("join")[1].trim();
-            viewer = new EventViewer(serverDocument, page_size);
-            let event = viewer.getEvent(tmp);
-            let author = msg.author.id;
-            if(event){
-                viewer.event = event;
-                list(bot, db, winston, serverDocument, msg, viewer, viewer.joinEvent(viewer.event, author));
-            } else {
-                // TODO error, event does not exist
-            }
+            QueryHelper.findServerEvents(db, serverDocument._id).then((eventDocuments)=> {
+                viewer = new EventViewer(db, serverDocument, eventDocuments, page_size);
+                let event = viewer.getEvent(tmp);
+                if (event) {
+                    viewer.event = event;
+                    list(bot, db, winston, serverDocument, msg, viewer, viewer.joinEvent(viewer.event, author));
+                } else {
+                    // TODO error, event does not exist
+                }
+            });
         }
-
         else if(suffix.toLowerCase().startsWith("leave")) {
-            let tmp = suffix.toLowerCase().split("leave")[1].trim();
-            viewer = new EventViewer(serverDocument, page_size);
-            let event = viewer.getEvent(tmp);
             let author = msg.author.id;
-            if(event){
-                viewer.event = event;
-                list(bot, db, winston, serverDocument, msg, viewer, viewer.leaveEvent(viewer.event, author));
-            } else {
-                // TODO error, event does not exist
-            }
+            let tmp = suffix.toLowerCase().split("leave")[1].trim();
+            QueryHelper.findServerEvents(db, serverDocument._id).then((eventDocuments)=> {
+                viewer = new EventViewer(db, serverDocument, eventDocuments, page_size);
+                let event = viewer.getEvent(tmp);
+                if (event) {
+                    viewer.event = event;
+                    list(bot, db, winston, serverDocument, msg, viewer, viewer.leaveEvent(viewer.event, author));
+                } else {
+                    // TODO error, event does not exist
+                }
+            });
         }
     }    
     else {
