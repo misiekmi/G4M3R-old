@@ -17,7 +17,7 @@ module.exports = {
     },
 
     findFilteredServerEvents: (db, _server, filter) => {
-        return this.findServerEvents(db, _server).then((events)=>{
+        return db.events.find({_server: _server}).then((events)=>{
             if(filter) {
                 let tmp = [];
                 for(let i=0; i<events.length; i++) {
@@ -48,5 +48,5 @@ module.exports = {
                 return events;
             }
         });
-    }
+    },
 };

@@ -3,11 +3,12 @@ const config = require("../../Configuration/config.json");
 let msg_color = 0xff8c00;       //start with orange embed color
 let default_color = 0xff8c00;   // default color = orange
 
+/// events viewer constructor
 function Viewer(db, serverDocument, eventDocuments, page_size, filter) {
     this.db = db;
     this.server = serverDocument;
     this.events = eventDocuments;
-    this.page_size = page_size ? page_size : 3;
+    this.page_size = page_size ? page_size : 5;
 
     this.mode = 0;
     this.edit_mode = 0;
@@ -22,11 +23,25 @@ function Viewer(db, serverDocument, eventDocuments, page_size, filter) {
         if(filter.tags) {
             this.filter_disp += " | tags: " + filter.tags;
         }
-    } else {
-        this.filter_disp += " | unfiltered";
     }
 }
 
+/// set the viewer's current event
+Viewer.prototype.setEvent = function(event_no) {
+    let event;
+    for (let i = 0; i < this.events.length; i++) {
+        if (this.events[i]._no == event_no) {
+            event = this.events[i];
+        }
+    }
+
+    if (event) {
+        this.event=event;
+        return true;
+    }
+};
+
+/// generate a list view embed
 Viewer.prototype.getPageView = function(page_no) {
     let events_length = this.events.length;
     this.mode = 1;
@@ -42,12 +57,11 @@ Viewer.prototype.getPageView = function(page_no) {
         let end_index = (start_index + this.page_size) > events_length ? events_length : start_index + this.page_size;
 
             for (let i = start_index; i < end_index; i++) {
-
-                page_content += `**[${this.events[i]._id}]** | **${this.events[i].title}**\n` +
+                page_content += `**[${this.events[i]._no}]** | **${this.events[i].title}**\n` +
                     `by <@${this.events[i]._author}> | [${this.events[i].attendees.length}/${this.events[i].attendee_max}]` +
                     (moment(this.events[i].start).isAfter(moment.now()) ?
                         ` | starts ${moment(this.events[i].start).fromNow()}` : ` | ends ${moment(this.events[i].end).fromNow()}\n`) +
-                    "\n";
+                    "\n\n";
             }
 
             if (events_length > end_index) {
@@ -56,7 +70,7 @@ Viewer.prototype.getPageView = function(page_no) {
             if (page_no > 1) {
                 page_content += ` | \`\`[-]\`\` previous page\n`;
             }
-            footer_content = `page (${page_no}/${Math.ceil(events_length/page_size)})`;
+            footer_content = `page (${page_no}/${Math.ceil(events_length/this.page_size)})`;
             title_content = `Type the Event 🆔 to show details`;
         } else {
             title_content = `There are no events scheduled on this server.`;
@@ -64,85 +78,58 @@ Viewer.prototype.getPageView = function(page_no) {
             footer_content = "page (1/1)";
         }
 
-        footer_content += ` | type [Q]uit to leave`;
-
-        if (this.filter_disp) {
-
-            page_content += `\n## filter: ${this.filter_disp}`;
-        } else {
-            footer_content += ` | unfiltered`;
-        }
+        footer_content += ` | type [Q]uit to leave` + this.filter_disp;
 
     return {embed: {color: msg_color, title: title_content, description: page_content, fields: embed_fields, footer: {text: footer_content}}};
 };
 
-Viewer.prototype.getEvent = function(event_no) {
-    let event;
-    for (let i = 0; i < this.events.length; i++) {
-        if (this.events[i]._no == event_no) {
-            return this.events[i];
-        }
-    }
-
-    if (!event) {
-        return false;
-    }
-};
-
+/// generate a view of a single event
 Viewer.prototype.getEventView = function() {
-        try {
-            this.mode = 2;
+    this.mode = 2;
 
-            let title_content, page_content, footer_content;
-            msg_color = default_color;
-            title_content = `Event #⃣ ${this.event._id}`;
-            page_content = "" +
-                `Title: **${this.event.title}**\n` +
-                `Author: <@${this.event._author}>\n\n` +
-                `Start: **${moment(this.event.start).format(`${config.moment_date_format}`)}**\n` +
-            `End: **${moment(this.event.end).format(`${config.moment_date_format}`)}**\n\n` +
-            `Tags: **${this.event.tags}**\n` +
-            `Description: \n\`\`\`md\n${this.event.description}\n\`\`\`\n` +
-            `Attendees: \`[${this.event.attendees.length}/${this.event.attendee_max}]\``;
+    let title_content, page_content, footer_content;
+    msg_color = default_color;
+    title_content = `Event #⃣ ${this.event._no}`;
+    page_content = "" +
+        `Title: **${this.event.title}**\n` +
+        `Author: <@${this.event._author}>\n\n` +
+        `Start: **${moment(this.event.start).format(`${config.moment_date_format}`)}**\n` +
+        `End: **${moment(this.event.end).format(`${config.moment_date_format}`)}**\n\n` +
+        `Tags: **${this.event.tags} **\n` +
+        `Description: \n\`\`\`md\n${this.event.description}\n\`\`\`\n` +
+        `Attendees: \`[${this.event.attendees.length}/${this.event.attendee_max}]\``;
 
-        footer_content = `## Options: [J]oin, [L]eave, [E]dit, [D]elete, [B]ack, [Q]uit`;
+    footer_content = `## Options: [J]oin, [L]eave, [E]dit, [D]elete, [B]ack, [Q]uit`;
 
-        return {embed: {color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
-    }
-    catch(err) {
-        console.log(err.stack);
-    }
+    return {embed: {color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
 };
 
+/// generate the main editor view for the currently set event
 Viewer.prototype.getEventEditView = function() {
-    try {
-        this.mode = 3;
-        let title_content, page_content, footer_content;
-        msg_color = default_color;
-        title_content = `Event #⃣ ${this.event._no}`;
-        page_content = "" +
-            `\`\`[1]\`\` Event Title ` +
-            (this.edits_made.title?": **"+this.edits_made.title+"**\n":"\n") +
-            `\`\`[2]\`\` Start Time ` +
-            (this.edits_made.start?": **"+moment(this.edits_made.start).format(`${config.moment_date_format}`)+"**\n":"\n") +
-            `\`\`[3]\`\` End Time ` +
-            (this.edits_made.end?": **"+moment(this.edits_made.end).format(`${config.moment_date_format}`)+"**\n":"\n") +
-            `\`\`[4]\`\` Description ` +
-            (this.edits_made.description?"```md\n"+this.edits_made.description+"```\n":"\n")  +
-            `\`\`[5]\`\` Max Attendees ` +
-            (this.edits_made.attendee_max?": **"+this.edits_made.attendee_max+"**\n":"\n") +
-            `\`\`[6]\`\` Tags ` +
-            (this.edits_made.tags?": **"+this.edits_made.tags+"**\n":"\n");
+    this.mode = 3;
+    let title_content, page_content, footer_content;
+    msg_color = default_color;
+    title_content = `Event #⃣ ${this.event._no}`;
+    page_content = "" +
+        `\`\`[1]\`\` Event Title ` +
+        (this.edits_made.title?": **"+this.edits_made.title+"**\n":"\n") +
+        `\`\`[2]\`\` Start Time ` +
+        (this.edits_made.start?": **"+moment(this.edits_made.start).format(`${config.moment_date_format}`)+"**\n":"\n") +
+        `\`\`[3]\`\` End Time ` +
+        (this.edits_made.end?": **"+moment(this.edits_made.end).format(`${config.moment_date_format}`)+"**\n":"\n") +
+        `\`\`[4]\`\` Description ` +
+        (this.edits_made.description?"```md\n"+this.edits_made.description+"```\n":"\n")  +
+        `\`\`[5]\`\` Max Attendees ` +
+        (this.edits_made.attendee_max?": **"+this.edits_made.attendee_max+"**\n":"\n") +
+        `\`\`[6]\`\` Tags ` +
+        (this.edits_made.tags?": **"+this.edits_made.tags+"**\n":"\n");
 
-        footer_content = `## Options: [B]ack, [Q]uit`;
+    footer_content = `## Options: [B]ack, [Q]uit`;
 
-        return {embed: {color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
-    }
-    catch( err ) {
-        console.log(err.stack);
-    }
+    return {embed: {color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
 };
 
+/// generate the edit [attribute] prompt
 Viewer.prototype.getEditorView = function() {
     if(this.mode!=3) {
         return false; // something is wrong!
@@ -216,6 +203,7 @@ Viewer.prototype.getEditorView = function() {
     }
 };
 
+/// remove an event and return an event removed prompt
 Viewer.prototype.deleteEvent = function(event) {
     this.mode = 4;
 
@@ -237,6 +225,7 @@ Viewer.prototype.deleteEvent = function(event) {
     return {embed: {color: msg_color, description: body, footer: {text: footer_content}}};
 };
 
+/// add a user to an event and generate a prompt
 Viewer.prototype.joinEvent = function(event, msgAuthor) {
     this.mode = 4;
     let alreadyMember = false;
@@ -291,6 +280,7 @@ Viewer.prototype.joinEvent = function(event, msgAuthor) {
     }
 };
 
+/// remove a user from an event and generate a prompt
 Viewer.prototype.leaveEvent = function(event, msgAuthor) {
     this.mode = 4;
     let wasMember = false;
@@ -312,26 +302,24 @@ Viewer.prototype.leaveEvent = function(event, msgAuthor) {
     }
     // msgAuthor was an attendee of the event
     if (wasMember) {
-            
-            msg_color = 0x17f926; //green color
-            title_content = `ℹ You left the Event #${event._no}.`;
-            page_content =  `Title: \`\`${event.title}\`\`\n` +
-                            `Author: <@${event._author}>\n` +
-                            `Attendees: [${event.attendees.length}/${event.attendee_max}]`;
-            footer_content = `## Options: [B]ack, [Q]uit`;
-            return {embed: {color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
+        msg_color = 0x17f926; //green color
+        title_content = `ℹ You left the Event #${event._no}.`;
+        page_content =  `Title: \`\`${event.title}\`\`\n` +
+            `Author: <@${event._author}>\n` +
+            `Attendees: [${event.attendees.length}/${event.attendee_max}]`;
+        footer_content = `## Options: [B]ack, [Q]uit`;
+        return {embed: {color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
     
-    // msgAuthor was no attendee of the event
+    // msgAuthor was not an attendee of the event
     } else {
-            msg_color = 0xecf925; //yellow color
-            title_content = `⚠ You are not an attendee of the Event #${event._no}.`;
-            page_content =  `Title: \`\`${event.title}\`\`\n` +
-                            `Author: <@${event._author}>\n` +
-                            `Attendees: [${event.attendees.length}/${event.attendee_max}]`;
-            footer_content = `## Options: [B]ack, [Q]uit`;
-            return {embed: {color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
-
-    }       
+        msg_color = 0xecf925; //yellow color
+        title_content = `⚠ You are not an attendee of the Event #${event._no}.`;
+        page_content =  `Title: \`\`${event.title}\`\`\n` +
+            `Author: <@${event._author}>\n` +
+            `Attendees: [${event.attendees.length}/${event.attendee_max}]`;
+        footer_content = `## Options: [B]ack, [Q]uit`;
+        return {embed: {color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
+    }
 };
 
 

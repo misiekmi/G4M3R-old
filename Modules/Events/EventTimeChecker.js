@@ -12,9 +12,8 @@ function eventStart(winston, db, eventDocument) {
 
 /// how to handle the end of an event
 function eventEnd(winston, db, eventDocument) {
-    let id = eventDocument._id;
     winston.info(`Event #${eventDocument._id} has ended!`);
-    db.events.remove({_id:id}, (err)=> {
+    db.events.remove({_id:eventDocument._id}, (err)=> {
         if(err) {
             winston.info(err.stack);
         }

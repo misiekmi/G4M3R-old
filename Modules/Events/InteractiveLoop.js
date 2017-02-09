@@ -17,7 +17,6 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
         (callback) => {
             msg.channel.createMessage(embed).then(bot_message => {
                 let timeout = setTimeout(()=>{bot_message.delete();}, 30000); //delete message in 1/2 minute
-
                 bot.awaitMessage(msg.channel.id, msg.author.id, usr_message => {
                     bot.removeMessageListener(msg.channel.id, msg.author.id);
                     clearTimeout(timeout);  //clear the active timeout
@@ -28,26 +27,23 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                     // quit interactive
                     if(usr_input_str === "quit" || usr_input_str === "q") {
                         cancel = true;
-                    }
-                    else if(error) {
+                    } else if(error) {
                         // return to eventDocument list page
                         if(usr_input_str === "back" || usr_input_str === "b") {
                             error = false;
                             embed = viewer.getPageView(current_page_no);
                         }
-                    }
-                    else if(viewer.mode === 1) {      // list view mode
+                    } else if(viewer.mode === 1) {      // list view mode
                         // get eventDocument
                         if (!isNaN(usr_input_no) && usr_input_no > 0) {
-                            viewer.event = viewer.getEvent(usr_input_no);
-                            if(!viewer.event) {
+                            if(viewer.setEvent(usr_input_no)) {
+                                embed = viewer.getEventView();
+                            } else {
                                 embedColor = 0xecf925; //yellow color
                                 title = `⚠ Event #${usr_input_no} does not exists!`;
                                 body =  `\n## \`\`[B]ack\`\` or \`\`[Q]uit\`\``;
                                 embed = {embed: {color: embedColor, title: title, description: body, footer: `error!`}};
                                 error = true;
-                            } else {
-                                embed = viewer.getEventView();
                             }
                         }
                         // go to next page
@@ -60,26 +56,20 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                             current_page_no--;
                             embed = viewer.getPageView(current_page_no);
                         }
-                    }
-                    else if(viewer.mode === 2) {       // event view mode
+                    } else if(viewer.mode === 2) {       // event view mode
                         // return to eventDocument list page
                         if(usr_input_str == "back" || usr_input_str == "b") {
                             embed = viewer.getPageView(current_page_no);
-                        }
-                        else if(usr_input_str == "edit" || usr_input_str == "e") {
+                        } else if(usr_input_str == "edit" || usr_input_str == "e") {
                             embed = viewer.getEventEditView();
-                        }
-                        else if(usr_input_str == "delete" || usr_input_str == "d") {
+                        } else if(usr_input_str == "delete" || usr_input_str == "d") {
                             embed = viewer.deleteEvent(viewer.event);
-                        }
-                        else if(usr_input_str == "join" || usr_input_str == "j") {
+                        } else if(usr_input_str == "join" || usr_input_str == "j") {
                             embed = viewer.joinEvent(viewer.event, msg.author.id);
-                        }
-                        else if(usr_input_str == "leave" || usr_input_str == "l") {
+                        } else if(usr_input_str == "leave" || usr_input_str == "l") {
                             embed = viewer.leaveEvent(viewer.event, msg.author.id);
                         }
-                    }
-                    else if(viewer.mode === 3) {       // editor mode
+                    } else if(viewer.mode === 3) {       // editor mode
                         if(viewer.edit_mode === 0) {
                             if(usr_input_str == "back" || usr_input_str == "b") {
                                 viewer.event.save((err)=>{
@@ -89,8 +79,7 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                                 });
                                 embed = viewer.getEventView();
                                 viewer.edits_made = {};
-                            }
-                            else {
+                            } else {
                                 if(!isNaN(usr_input_no) && usr_input_no>0 && usr_input_no<=6){
                                     viewer.edit_mode = Number(usr_input_no);
                                     embed = viewer.getEditorView();
@@ -108,7 +97,6 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                                 embed = viewer.getEventEditView();
                                 viewer.edit_mode = 0;
                             } else {
-
                                 let embedColor = 0xf4f142;
                                 switch(viewer.edit_mode) {
                                     case 1:
@@ -162,14 +150,14 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                                         viewer.event.tags = tags;
                                         viewer.edits_made.tags = tags;
                                 }
+
                                 if(!error) {
                                     embed = viewer.getEventEditView();
                                     viewer.edit_mode = 0;
                                 }
                             }
                         }
-                    }
-                    else if(viewer.mode === 4) {       // delete queued mode
+                    } else if(viewer.mode === 4) {       // back to list or quit
                         if(usr_input_str === "back" || usr_input_str === "b") {
                             embed = viewer.getPageView(current_page_no);
                         }
