@@ -63,7 +63,7 @@ Viewer.prototype.getPageView = function(page_no) {
             page_content += `**[${this.events[i]._no}]** | **${this.events[i].title}**\n` +
                 `by <@${this.events[i]._author}> | [${this.events[i].attendees.length}/${this.events[i].attendee_max}]` +
                 (moment(this.events[i].start).isAfter(moment.now()) ?
-                    ` | starts ${moment(this.events[i].start).fromNow()}` : ` | ends ${moment(this.events[i].end).fromNow()}\n`) +
+                    ` | starts ${moment(this.events[i].start).fromNow()}` : ` | ends ${moment(this.events[i].end).fromNow()}`) +
                 "\n\n";
         }
 
@@ -89,22 +89,22 @@ Viewer.prototype.getPageView = function(page_no) {
 
 /// generate a view of a single event
 Viewer.prototype.getEventView = function() {
-        this.mode = 2;
+    this.mode = 2;
 
-        let title_content, page_content, footer_content, embed_author;
-        msg_color = default_color;
-        title_content = `Event #⃣ ${this.event._no}`;
-        page_content = "" +
-            `Title: **${this.event.title}**\n` +
-            `Author: <@${this.event._author}>\n\n` +
-            `Start: **${moment(this.event.start).format(`${config.moment_date_format}`)}**\n` +
+    let title_content, page_content, footer_content, embed_author;
+    msg_color = default_color;
+    embed_author = {name: `EVENT OVERVIEW PROCESS`};
+    title_content = `Event #⃣ ${this.event._no}`;
+    page_content = "" +
+        `Title: **${this.event.title}**\n` +
+        `Author: <@${this.event._author}>\n\n` +
+        `Start: **${moment(this.event.start).format(`${config.moment_date_format}`)}**\n` +
         `End: **${moment(this.event.end).format(`${config.moment_date_format}`)}**\n\n` +
-        `Tags: **${this.event.tags} **\n` +
+        `Tags: **${this.event.tags.join(", ")} **\n` +
         `Description: \n\`\`\`md\n${this.event.description}\n\`\`\`\n` +
         `Attendees: \`[${this.event.attendees.length}/${this.event.attendee_max}]\``;
 
     footer_content = `## Options: [J]oin, [L]eave, [E]dit, [D]elete, [B]ack, [Q]uit`;
-    embed_author = {name: `EVENT OVERVIEW PROCESS`};
     return {embed: {author: embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
 };
 
@@ -126,7 +126,7 @@ Viewer.prototype.getEventEditView = function() {
         `\`\`[5]\`\` Max Attendees ` +
         (this.edits_made.attendee_max?": **"+this.edits_made.attendee_max+"**\n":"\n") +
         `\`\`[6]\`\` Tags ` +
-        (this.edits_made.tags?": **"+this.edits_made.tags+"**\n":"\n");
+        (this.edits_made.tags?": **"+this.edits_made.tags.join(", ")+"**\n":"\n");
 
     footer_content = `## Options: [B]ack, [Q]uit`;
     embed_author = {name: `EVENT CREATION / EDIT PROCESS`};
@@ -140,77 +140,48 @@ Viewer.prototype.getEditorView = function() {
     }
     msg_color = default_color;
     let title_content, page_content, footer_content, embed_author;
+
+    title_content = `Event #⃣ ${this.event._no}`;
+    embed_author = {name: `EVENT CREATION / EDIT PROCESS`};
+    footer_content = `## Options: [B]ack, [Q]uit`;
+
     switch(this.edit_mode) {
         case 1:
-            title_content = `Event #⃣ ${this.event._no}`;
             page_content = "" +
                 `Current title: \n\`\`${this.event.title}\`\`\n\n` +
                 `Enter the new title for the event`;
-
-            footer_content = `## Options: [B]ack, [Q]uit`;
-            
-            embed_author = {name: `EVENT CREATION / EDIT PROCESS`};
-
-            return {embed: {author: embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
-            break; 
+            break;
         case 2:
-            title_content = `Event #⃣ ${this.event._no}`;
             page_content = "" +
                 `Current start: \n\`\`${moment(this.event.start).format(`${config.moment_date_format}`)}\`\`\n\n` +
                 "Enter the new start time for the event.";
-
-            footer_content = `## Options: [B]ack, [Q]uit`;
-
-            embed_author = {name: `EVENT CREATION / EDIT PROCESS`};
-            return {embed: {author: embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
             break;
         case 3:
-            title_content = `Event #⃣ ${this.event._no}`;
             page_content = "" +
                 `Current end: \n\`\`${moment(this.event.end).format(`${config.moment_date_format}`)}\`\`\n\n` +
                 "Enter the new end time for the event.";
-
-            footer_content = `## Options: [B]ack, [Q]uit`;
-            embed_author = {name: `EVENT CREATION / EDIT PROCESS`};
-
-            return {embed: {author: embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
             break;
         case 4:
-            title_content = `Event #⃣ ${this.event._no}`;
             page_content = "" +
                 `Current Description: \n\`\`\`md\n${this.event.description}\n\`\`\`\n` +
                 "Enter a new description for the event.";
-
-            footer_content = `## Options: [B]ack, [Q]uit`;
-
-            embed_author = {name: `EVENT CREATION / EDIT PROCESS`};
-            return {embed: {author: embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
             break;
         case 5:
-            title_content = `Event #⃣ ${this.event._no}`;
             page_content = "" +
                 `Current maximum member count: \n\`\`${this.event.attendee_max}\`\`\n\n` +
                 "Enter a new maximum member count for the event.";
-
-            footer_content = `## Options: [B]ack, [Q]uit`;
-
-            embed_author = {name: `EVENT CREATION / EDIT PROCESS`};
-            return {embed: {author: embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
             break;
         case 6:
-            title_content = `Event #⃣ ${this.event._no}`;
             page_content = "" +
-                `Current set tags: \n\`\`${this.event.tags}\`\`\n\n` +
+                `Current set tags: \n${(this.event.tags.length?"``"+this.event.tags.join(", ")+"``":"")}\n\n` +
                 "Enter a new set of tags for the event.";
-
-            footer_content = `## Options: [B]ack, [Q]uit`;
-            embed_author = {name: `EVENT CREATION / EDIT PROCESS`};
-            return {embed: {author: embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
             break;
         default:
-            return false; // something is wrong!
-        //break; unreachable break
+            page_content = `Something went wrong if this is being read!`;
+            break;
     }
+
+    return {embed: {author: embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
 };
 
 /// remove an event and return an event removed prompt
