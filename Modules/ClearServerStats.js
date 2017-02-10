@@ -32,13 +32,6 @@ module.exports = (bot, db, winston, svr, serverDocument, callback) => {
 		});
 
 	};
-	if(serverDocument.config.commands.points.isEnabled && svr.members.size>2) {
-		for(let i=topMembers.length-1; i>topMembers.length-4; i--) {
-			if(i>=0) {
-				awardPoints(topMembers[i][0], topMembers[i][1]);
-			}
-		}
-	}
 
 	// Reset game and command data
 	serverDocument.games = [];

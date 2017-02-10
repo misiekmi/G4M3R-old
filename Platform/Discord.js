@@ -339,22 +339,6 @@ module.exports = (db, auth, config) => {
 								}
 							}
 
-							// Add 100 AwesomePoints as reward
-							if(serverDocument.config.commands.points.isEnabled && svr.members.size>2) {
-								db.users.findOrCreate({_id: member.id}, (err, userDocument) => {
-									if(!err && userDocument) {
-										userDocument.points += 100;
-										userDocument.save(err => {
-											if(err) {
-												winston.error("Failed to save user data for points", {usrid: member.id}, err);
-											}
-										});
-									} else {
-										winston.error("Failed to find or create user data for points", {usrid: member.id}, err);
-									}
-								});
-							}
-
 							// Assign new rank role if necessary
 							if(serverDocument.config.ranks_list[i].role_id) {
 								const role = svr.roles.get(serverDocument.config.ranks_list[i].role_id);
@@ -379,14 +363,6 @@ module.exports = (db, auth, config) => {
 	// Handle a spam or filter violation on a server
 	bot.handleViolation = (winston, svr, serverDocument, ch, member, userDocument, memberDocument, userMessage, adminMessage, strikeMessage, action, roleid) => {
 		// Deduct 50 AwesomePoints if necessary
-		if(serverDocument.config.commands.points.isEnabled) {
-			userDocument.points -= 50;
-			userDocument.save(err => {
-				if(err) {
-					winston.error("Failed to save user data for points", {usrid: member.id}, err);
-				}
-			});
-		}
 
 		// Add a strike for the user
 		memberDocument.strikes.push({

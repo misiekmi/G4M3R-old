@@ -21,7 +21,7 @@ module.exports = {
 			channelDocument.trivia.past_questions = [];
 			channelDocument.trivia.score = 0;
 			channelDocument.trivia.responders = [];
-			ch.createMessage(`Trivia game started by ${usr.mention} ${set ? (`(set: ${set}) `) : ""}🎮`).then(() => {
+			ch.createMessage(`Trivia game started by ${usr.mention} ${set ? (`(set: ${set}) `) : ""}🎮`).then(() => { // TODO FIXME
 				module.exports.next(bot, db, svr, serverDocument, ch, channelDocument);
 			});
 		}
@@ -80,14 +80,6 @@ module.exports = {
 				if(channelDocument.trivia.current_question.attempts<=2) {
 					channelDocument.trivia.score++;
 					triviaResponderDocument.score++;
-					if(serverDocument.config.commands.points.isEnabled && svr.members.size>2 && !serverDocument.config.commands.points.disabled_channel_ids.includes(ch.id)) {
-						db.users.findOrCreate({_id: usr.id}, (err, userDocument) => {
-							if(!err && userDocument) {
-								userDocument.points += 5;
-								userDocument.save(() => {});
-							}
-						});
-					}
 				}
 				ch.createMessage(`${usr.mention} got it right! 🎉 The answer is \`${channelDocument.trivia.current_question.answer}\`.`).then(() => {
 					channelDocument.trivia.current_question.answer = null;

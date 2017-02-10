@@ -2496,7 +2496,7 @@ module.exports = (bot, db, auth, config, winston) => {
 				currentPage: req.path,
 				configData: {
 					commands: {
-						points: serverDocument.config.commands.points,
+						//points: serverDocument.config.commands.points, TODO delete points
 						lottery: serverDocument.config.commands.lottery
 					}
 				},

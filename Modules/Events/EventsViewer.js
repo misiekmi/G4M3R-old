@@ -2,9 +2,11 @@ const moment = require("moment");
 const config = require("../../Configuration/config.json");
 let msg_color = 0xff8c00; //start with orange embed color
 let default_color = 0xff8c00; // default color = orange
+
+
 /*jshint -W027*/
 /// events viewer constructor
-function Viewer(db, serverDocument, eventDocuments, page_size, filter) {
+function Viewer(db, serverDocument, eventDocuments, page_size, filter, bot) {
     this.db = db;
     this.server = serverDocument;
     this.events = eventDocuments;
@@ -13,6 +15,12 @@ function Viewer(db, serverDocument, eventDocuments, page_size, filter) {
     this.mode = 0;
     this.edit_mode = 0;
     this.edits_made = {};
+
+    this.embed_author = { //default embed author
+            name: bot.user.username,
+            icon_url: bot.user.avatarURL,
+            url: "https://github.com/pedall/G4M3R"
+        };
 
     // set the filter display
     this.filter_disp = "";
@@ -80,7 +88,7 @@ Viewer.prototype.getPageView = function(page_no) {
 
     footer_content += ` | type [Q]uit to leave` + this.filter_disp;
 
-    return { embed: { color: msg_color, title: title_content, description: page_content, fields: embed_fields, footer: { text: footer_content } } };
+    return { embed: { author: this.embed_author, color: msg_color, title: title_content, description: page_content, fields: embed_fields, footer: { text: footer_content } } };
 };
 
 /// generate a view of a single event
@@ -101,7 +109,7 @@ Viewer.prototype.getEventView = function() {
 
     footer_content = `## Options: [J]oin, [L]eave, [E]dit, [D]elete, [B]ack, [Q]uit`;
 
-    return {embed: {color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
+    return {embed: {author: this.embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
 };
 
 /// generate the main editor view for the currently set event
@@ -126,7 +134,7 @@ Viewer.prototype.getEventEditView = function() {
 
     footer_content = `## Options: [B]ack, [Q]uit`;
 
-    return {embed: {color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
+    return {embed: {author: this.embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
 };
 
 /// generate the edit [attribute] prompt
@@ -145,7 +153,7 @@ Viewer.prototype.getEditorView = function() {
 
             footer_content = `## Options: [B]ack, [Q]uit`;
 
-            return {embed: {color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
+            return {embed: {author: this.embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
             break; 
         case 2:
             title_content = `Event #⃣ ${this.event._no}`;
@@ -155,7 +163,7 @@ Viewer.prototype.getEditorView = function() {
 
             footer_content = `## Options: [B]ack, [Q]uit`;
 
-            return {embed: {color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
+            return {embed: {author: this.embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
             break;
         case 3:
             title_content = `Event #⃣ ${this.event._no}`;
@@ -165,7 +173,7 @@ Viewer.prototype.getEditorView = function() {
 
             footer_content = `## Options: [B]ack, [Q]uit`;
 
-            return {embed: {color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
+            return {embed: {author: this.embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
             break;
         case 4:
             title_content = `Event #⃣ ${this.event._no}`;
@@ -175,7 +183,7 @@ Viewer.prototype.getEditorView = function() {
 
             footer_content = `## Options: [B]ack, [Q]uit`;
 
-            return {embed: {color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
+            return {embed: {author: this.embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
             break;
         case 5:
             title_content = `Event #⃣ ${this.event._no}`;
@@ -185,7 +193,7 @@ Viewer.prototype.getEditorView = function() {
 
             footer_content = `## Options: [B]ack, [Q]uit`;
 
-            return {embed: {color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
+            return {embed: {author: this.embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
             break;
         case 6:
             title_content = `Event #⃣ ${this.event._no}`;
@@ -195,7 +203,7 @@ Viewer.prototype.getEditorView = function() {
 
             footer_content = `## Options: [B]ack, [Q]uit`;
 
-            return {embed: {color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
+            return {embed: {author: this.embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
             break;
         default:
             return false; // something is wrong!
@@ -222,7 +230,7 @@ Viewer.prototype.deleteEvent = function(event) {
     msg_color = 0x17f926; //green color
     let body = `ℹ Event #${event._id} is queued for removal.`;
     let footer_content = `## Options: [B]ack, [Q]uit`;
-    return {embed: {color: msg_color, description: body, footer: {text: footer_content}}};
+    return {embed: {author: this.embed_author, color: msg_color, description: body, footer: {text: footer_content}}};
 };
 
 /// add a user to an event and generate a prompt
@@ -245,7 +253,7 @@ Viewer.prototype.joinEvent = function(event, msgAuthor) {
                         `Author: <@${event._author}>\n` +
                         `Attendees: [${event.attendees.length}/${event.attendee_max}]`;
         footer_content = `## Options: [B]ack, [Q]uit`;
-        return {embed: {color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
+        return {embed: {author: this.embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
 
 
     //if user is not already an attendee of the event
@@ -265,7 +273,7 @@ Viewer.prototype.joinEvent = function(event, msgAuthor) {
                             `Author: <@${event._author}>\n` +
                             `Attendees: [${event.attendees.length}/${event.attendee_max}]`;
             footer_content = `## Options: [B]ack, [Q]uit`;
-            return {embed: {color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
+            return {embed: {author: this.embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
 
         // Event attendee_max limit is already reached   
         } else {
@@ -275,7 +283,7 @@ Viewer.prototype.joinEvent = function(event, msgAuthor) {
                             `Author: <@${event._author}>\n` +
                             `Attendees: [${event.attendees.length}/${event.attendee_max}]`;
             footer_content = `## Options: [B]ack, [Q]uit`;
-            return {embed: {color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
+            return {embed: {author: this.embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
         }
     }
 };
@@ -309,7 +317,7 @@ Viewer.prototype.leaveEvent = function(event, msgAuthor) {
             `Author: <@${event._author}>\n` +
             `Attendees: [${event.attendees.length}/${event.attendee_max}]`;
         footer_content = `## Options: [B]ack, [Q]uit`;
-        return {embed: {color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
+        return {embed: {author: this.embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
     
     // msgAuthor was not an attendee of the event
     } else {
@@ -319,7 +327,7 @@ Viewer.prototype.leaveEvent = function(event, msgAuthor) {
             `Author: <@${event._author}>\n` +
             `Attendees: [${event.attendees.length}/${event.attendee_max}]`;
         footer_content = `## Options: [B]ack, [Q]uit`;
-        return {embed: {color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
+        return {embed: {author: this.embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
     }
 };
 
