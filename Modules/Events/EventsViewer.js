@@ -111,7 +111,7 @@ Viewer.prototype.getEventView = function() {
 /// generate the main editor view for the currently set event
 Viewer.prototype.getEventEditView = function() {
     this.mode = 3;
-        let title_content, page_content, footer_content, embed_author;
+    let title_content, page_content, footer_content, embed_author;
     msg_color = default_color;
     title_content = `Event #⃣ ${this.event._no}`;
     page_content = "" +
@@ -346,6 +346,38 @@ Viewer.prototype.leaveEvent = function(event, msgAuthor) {
 
         return {embed: {author: embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
     }
+};
+
+Viewer.prototype.getErrorView = (error,bad_input) => {
+    this.mode = 4;
+
+    let title;
+    switch(error) {
+        case 1:
+            title = `⚠ Your input ${bad_input} is not a number from the list!`;
+            break;
+        case 2:
+            title = `⚠ Event #${bad_input} does not exists!`;
+            break;
+        case 3:
+            title = `⚠ \"${bad_input}\" is not a valid start time!`;
+            break;
+        case 4:
+            title = `⚠ \"${bad_input}\" is not a valid end time!`;
+            break;
+        case 5:
+            title = `⚠ \"${bad_input}\" is not valid amount!`;
+            break;
+        case 6:
+            break;
+        default:
+            title = `⚠ There was an error! `;
+            break;
+    }
+    let body = `You can return to the editor menu, or quit`;
+    let footer_content = `## Options: [B]ack, [Q]uit`;
+
+    return {embed: {color: 0xecf925, title: title, description: body, footer: {text: footer_content}}};
 };
 
 

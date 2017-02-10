@@ -25,6 +25,8 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
                                 let viewer = new EventViewer(db, serverDocument, eventDocuments, page_size);
                                 if(viewer.setEvent(no)) {
                                     list(bot, db, winston, serverDocument, msg, viewer, viewer.getEventEditView());
+                                } else {
+                                    list(bot, db, winston, serverDocument, msg, viewer, viewer.getErrorView());
                                 }
                             });
                         }
@@ -45,7 +47,7 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
                 if (viewer.setEvent(tmp)) {
                     list(bot, db, winston, serverDocument, msg, viewer, viewer.getEventView());
                 } else {
-                    // TODO error, event does not exist
+                    list(bot, db, winston, serverDocument, msg, viewer, viewer.getErrorView(2,tmp));
                 }
             });
         } else if(suffix.toLowerCase().startsWith("remove")) {
@@ -56,7 +58,7 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
                 if (viewer.setEvent(tmp)) {
                     list(bot, db, winston, serverDocument, msg, viewer, viewer.deleteEvent(viewer.event));
                 } else {
-                    // TODO error, event does not exist
+                    list(bot, db, winston, serverDocument, msg, viewer, viewer.getErrorView(2,tmp));
                 }
             });
         } else if(suffix.toLowerCase().startsWith("edit")) {
@@ -67,7 +69,7 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
                 if (viewer.setEvent(tmp)) {
                     list(bot, db, winston, serverDocument, msg, viewer, viewer.getEventEditView());
                 } else {
-                    // TODO error, event does not exist
+                    list(bot, db, winston, serverDocument, msg, viewer, viewer.getErrorView(2,tmp));
                 }
             });
         } else if(suffix.toLowerCase().startsWith("search")) {
@@ -111,7 +113,7 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
                 if (viewer.setEvent(tmp)) {
                     list(bot, db, winston, serverDocument, msg, viewer, viewer.joinEvent(viewer.event, author));
                 } else {
-                    // TODO error, event does not exist
+                    list(bot, db, winston, serverDocument, msg, viewer, viewer.getErrorView(2,tmp));
                 }
             });
         } else if(suffix.toLowerCase().startsWith("leave")) {
@@ -123,7 +125,7 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
                 if (viewer.setEvent(tmp)) {
                     list(bot, db, winston, serverDocument, msg, viewer, viewer.leaveEvent(viewer.event, author));
                 } else {
-                    // TODO error, event does not exist
+                    list(bot, db, winston, serverDocument, msg, viewer, viewer.getErrorView(2,tmp));
                 }
             });
         }

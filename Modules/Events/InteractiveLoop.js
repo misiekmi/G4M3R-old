@@ -9,8 +9,6 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
     let current_page_no = 1;
 
     let cancel = false;
-    let error = false;
-    let time, body, title, embedColor;
     async.whilst(() => {
             return !cancel;
         },
@@ -27,23 +25,13 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                     // quit interactive
                     if(usr_input_str === "quit" || usr_input_str === "q") {
                         cancel = true;
-                    } else if(error) {
-                        // return to eventDocument list page
-                        if(usr_input_str === "back" || usr_input_str === "b") {
-                            error = false;
-                            embed = viewer.getPageView(current_page_no);
-                        }
                     } else if(viewer.mode === 1) {      // list view mode
                         // get eventDocument
                         if (!isNaN(usr_input_no) && usr_input_no > 0) {
                             if(viewer.setEvent(usr_input_no)) {
                                 embed = viewer.getEventView();
                             } else {
-                                embedColor = 0xecf925; //yellow color
-                                title = `⚠ Event #${usr_input_no} does not exists!`;
-                                body =  `\n## \`\`[B]ack\`\` or \`\`[Q]uit\`\``;
-                                embed = {embed: {color: embedColor, title: title, description: body, footer: `error!`}};
-                                error = true;
+                                embed = viewer.getErrorView(2,usr_input_no);
                             }
                         }
                         // go to next page
@@ -83,13 +71,6 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                                 if(!isNaN(usr_input_no) && usr_input_no>0 && usr_input_no<=6){
                                     viewer.edit_mode = Number(usr_input_no);
                                     embed = viewer.getEditorView();
-                                } else {
-                                    embedColor = 0xecf925; //yellow color
-                                    title = `⚠ Your input ${usr_message} is not a valid end time!`;
-                                    body =  `\n## \`\`[B]ack\`\` or \`\`[Q]uit\`\``;
-                                    embed = {embed: {color: embedColor, title: title, description: body, footer: `error!`}};
-                                    error = true;
-                                    viewer.edits_made = {};
                                 }
                             }
                         } else {
@@ -97,7 +78,7 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                                 embed = viewer.getEventEditView();
                                 viewer.edit_mode = 0;
                             } else {
-                                let embedColor = 0xf4f142;
+                                let time, error;
                                 switch(viewer.edit_mode) {
                                     case 1:
                                         viewer.event.title = usr_input_str;
@@ -109,10 +90,7 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                                             viewer.event.start = time;
                                             viewer.edits_made.start = time;
                                         } else {
-                                            embedColor = 0xecf925; //yellow color
-                                            title = `⚠ Your input ${usr_message} is not a valid start time!`;
-                                            body =  `\n## \`\`[B]ack\`\` or \`\`[Q]uit\`\``;
-                                            embed = {embed: {color: embedColor, title: title, description: body, footer: `error!`}};
+                                            embed = viewer.getErrorView(3,usr_input_no);
                                             error = true;
                                         }
                                         break;
@@ -122,10 +100,7 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                                             viewer.event.end = time;
                                             viewer.edits_made.end = time;
                                         } else {
-                                            embedColor = 0xecf925; //yellow color
-                                            title = `⚠ Your input ${usr_message} is not a valid end time!`;
-                                            body =  `\n## \`\`[B]ack\`\` or \`\`[Q]uit\`\``;
-                                            embed = {embed: {color: embedColor, title: title, description: body, footer: `error!`}};
+                                            embed = viewer.getErrorView(4,usr_input_no);
                                             error = true;
                                         }
                                         break;
@@ -134,14 +109,11 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                                         viewer.edits_made.description = usr_input_str;
                                         break;
                                     case 5:
-                                        if(!isNaN(usr_input_no) && usr_input_no>=0) {
+                                        if(usr_input_no>=0) {
                                             viewer.event.attendee_max = usr_input_no;
                                             viewer.edits_made.attendee_max = usr_input_no;
                                         } else {
-                                            embedColor = 0xecf925; //yellow color
-                                            title = `⚠ Your input ${usr_message} is not valid amount!`;
-                                            body =  `\n## \`\`[B]ack\`\` or \`\`[Q]uit\`\``;
-                                            embed = {embed: {color: embedColor, title: title, description: body, footer: `error!`}};
+                                            embed = viewer.getErrorView(5,usr_input_no);
                                             error = true;
                                         }
                                         break;
