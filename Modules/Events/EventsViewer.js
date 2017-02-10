@@ -6,7 +6,7 @@ let default_color = 0xff8c00; // default color = orange
 
 /*jshint -W027*/
 /// events viewer constructor
-function Viewer(db, serverDocument, eventDocuments, page_size, filter, bot) {
+function Viewer(db, serverDocument, eventDocuments, page_size, filter) {
     this.db = db;
     this.server = serverDocument;
     this.events = eventDocuments;
@@ -15,12 +15,6 @@ function Viewer(db, serverDocument, eventDocuments, page_size, filter, bot) {
     this.mode = 0;
     this.edit_mode = 0;
     this.edits_made = {};
-
-    this.embed_author = { //default embed author
-            name: bot.user.username,
-            icon_url: bot.user.avatarURL,
-            url: "https://github.com/pedall/G4M3R"
-        };
 
     // set the filter display
     this.filter_disp = "";
@@ -54,10 +48,11 @@ Viewer.prototype.getPageView = function(page_no) {
     let events_length = this.events.length;
     this.mode = 1;
 
-    let page_content = "";
-    let footer_content = "";
-    let title_content = "";
+    let page_content = "",
+        footer_content = "",
+        title_content = "";
     let embed_fields = [];
+    let embed_author;
     msg_color = default_color;
 
     if ((page_no - 1) * this.page_size < events_length) {
@@ -87,15 +82,16 @@ Viewer.prototype.getPageView = function(page_no) {
     }
 
     footer_content += ` | type [Q]uit to leave` + this.filter_disp;
+    embed_author = {name: `EVENT CREATION PROCESS`};
 
-    return { embed: { author: this.embed_author, color: msg_color, title: title_content, description: page_content, fields: embed_fields, footer: { text: footer_content } } };
+    return { embed: { author: embed_author, color: msg_color, title: title_content, description: page_content, fields: embed_fields, footer: { text: footer_content } } };
 };
 
 /// generate a view of a single event
 Viewer.prototype.getEventView = function() {
         this.mode = 2;
 
-        let title_content, page_content, footer_content;
+        let title_content, page_content, footer_content, embed_author;
         msg_color = default_color;
         title_content = `Event #⃣ ${this.event._no}`;
         page_content = "" +
@@ -108,14 +104,14 @@ Viewer.prototype.getEventView = function() {
         `Attendees: \`[${this.event.attendees.length}/${this.event.attendee_max}]\``;
 
     footer_content = `## Options: [J]oin, [L]eave, [E]dit, [D]elete, [B]ack, [Q]uit`;
-
-    return {embed: {author: this.embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
+    embed_author = {name: `EVENT OVERVIEW PROCESS`};
+    return {embed: {author: embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
 };
 
 /// generate the main editor view for the currently set event
 Viewer.prototype.getEventEditView = function() {
     this.mode = 3;
-    let title_content, page_content, footer_content;
+        let title_content, page_content, footer_content, embed_author;
     msg_color = default_color;
     title_content = `Event #⃣ ${this.event._no}`;
     page_content = "" +
@@ -133,8 +129,8 @@ Viewer.prototype.getEventEditView = function() {
         (this.edits_made.tags?": **"+this.edits_made.tags+"**\n":"\n");
 
     footer_content = `## Options: [B]ack, [Q]uit`;
-
-    return {embed: {author: this.embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
+    embed_author = {name: `EVENT CREATION / EDIT PROCESS`};
+    return {embed: {author: embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
 };
 
 /// generate the edit [attribute] prompt
@@ -143,7 +139,7 @@ Viewer.prototype.getEditorView = function() {
         return false; // something is wrong!
     }
     msg_color = default_color;
-    let title_content, page_content, footer_content;
+    let title_content, page_content, footer_content, embed_author;
     switch(this.edit_mode) {
         case 1:
             title_content = `Event #⃣ ${this.event._no}`;
@@ -152,8 +148,10 @@ Viewer.prototype.getEditorView = function() {
                 `Enter the new title for the event`;
 
             footer_content = `## Options: [B]ack, [Q]uit`;
+            
+            embed_author = {name: `EVENT CREATION / EDIT PROCESS`};
 
-            return {embed: {author: this.embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
+            return {embed: {author: embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
             break; 
         case 2:
             title_content = `Event #⃣ ${this.event._no}`;
@@ -163,7 +161,8 @@ Viewer.prototype.getEditorView = function() {
 
             footer_content = `## Options: [B]ack, [Q]uit`;
 
-            return {embed: {author: this.embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
+            embed_author = {name: `EVENT CREATION / EDIT PROCESS`};
+            return {embed: {author: embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
             break;
         case 3:
             title_content = `Event #⃣ ${this.event._no}`;
@@ -172,8 +171,9 @@ Viewer.prototype.getEditorView = function() {
                 "Enter the new end time for the event.";
 
             footer_content = `## Options: [B]ack, [Q]uit`;
+            embed_author = {name: `EVENT CREATION / EDIT PROCESS`};
 
-            return {embed: {author: this.embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
+            return {embed: {author: embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
             break;
         case 4:
             title_content = `Event #⃣ ${this.event._no}`;
@@ -183,7 +183,8 @@ Viewer.prototype.getEditorView = function() {
 
             footer_content = `## Options: [B]ack, [Q]uit`;
 
-            return {embed: {author: this.embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
+            embed_author = {name: `EVENT CREATION / EDIT PROCESS`};
+            return {embed: {author: embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
             break;
         case 5:
             title_content = `Event #⃣ ${this.event._no}`;
@@ -193,7 +194,8 @@ Viewer.prototype.getEditorView = function() {
 
             footer_content = `## Options: [B]ack, [Q]uit`;
 
-            return {embed: {author: this.embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
+            embed_author = {name: `EVENT CREATION / EDIT PROCESS`};
+            return {embed: {author: embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
             break;
         case 6:
             title_content = `Event #⃣ ${this.event._no}`;
@@ -202,8 +204,8 @@ Viewer.prototype.getEditorView = function() {
                 "Enter a new set of tags for the event.";
 
             footer_content = `## Options: [B]ack, [Q]uit`;
-
-            return {embed: {author: this.embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
+            embed_author = {name: `EVENT CREATION / EDIT PROCESS`};
+            return {embed: {author: embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
             break;
         default:
             return false; // something is wrong!
@@ -230,7 +232,10 @@ Viewer.prototype.deleteEvent = function(event) {
     msg_color = 0x17f926; //green color
     let body = `ℹ Event #${event._id} is queued for removal.`;
     let footer_content = `## Options: [B]ack, [Q]uit`;
-    return {embed: {author: this.embed_author, color: msg_color, description: body, footer: {text: footer_content}}};
+    
+    let embed_author = {name: `EVENT DELETION PROCESS`};
+
+    return {embed: {author: embed_author, color: msg_color, description: body, footer: {text: footer_content}}};
 };
 
 /// add a user to an event and generate a prompt
@@ -245,7 +250,7 @@ Viewer.prototype.joinEvent = function(event, msgAuthor) {
         }
     }
     //check if msgAuthor already joined that event
-    let title_content, page_content, footer_content;
+    let title_content, page_content, footer_content, embed_author;
     if (alreadyMember) {
         msg_color = 0xecf925; //yellow color
         title_content = `⚠ You __already__ joined the Event #${event._no}.`;
@@ -253,7 +258,10 @@ Viewer.prototype.joinEvent = function(event, msgAuthor) {
                         `Author: <@${event._author}>\n` +
                         `Attendees: [${event.attendees.length}/${event.attendee_max}]`;
         footer_content = `## Options: [B]ack, [Q]uit`;
-        return {embed: {author: this.embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
+        
+        embed_author = {name: `EVENT ATTENDEES PROCESS`};
+
+        return {embed: {author: embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
 
 
     //if user is not already an attendee of the event
@@ -273,7 +281,9 @@ Viewer.prototype.joinEvent = function(event, msgAuthor) {
                             `Author: <@${event._author}>\n` +
                             `Attendees: [${event.attendees.length}/${event.attendee_max}]`;
             footer_content = `## Options: [B]ack, [Q]uit`;
-            return {embed: {author: this.embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
+
+            embed_author = {name: `EVENT ATTENDEES PROCESS`};
+            return {embed: {author: embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
 
         // Event attendee_max limit is already reached   
         } else {
@@ -283,7 +293,10 @@ Viewer.prototype.joinEvent = function(event, msgAuthor) {
                             `Author: <@${event._author}>\n` +
                             `Attendees: [${event.attendees.length}/${event.attendee_max}]`;
             footer_content = `## Options: [B]ack, [Q]uit`;
-            return {embed: {author: this.embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
+            
+            embed_author = {name: `EVENT ATTENDEES PROCESS`};
+            
+            return {embed: {author: embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
         }
     }
 };
@@ -292,7 +305,7 @@ Viewer.prototype.joinEvent = function(event, msgAuthor) {
 Viewer.prototype.leaveEvent = function(event, msgAuthor) {
     this.mode = 4;
     let wasMember = false;
-    let title_content, page_content, footer_content;
+    let title_content, page_content, footer_content, embed_author;
 
     // check if msgAuthor is an Attendee and delete that entry
     for (let i = 0; i < event.attendees.length; i++) {
@@ -317,7 +330,9 @@ Viewer.prototype.leaveEvent = function(event, msgAuthor) {
             `Author: <@${event._author}>\n` +
             `Attendees: [${event.attendees.length}/${event.attendee_max}]`;
         footer_content = `## Options: [B]ack, [Q]uit`;
-        return {embed: {author: this.embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
+        embed_author = {name: `EVENT ATTENDEES PROCESS`};
+
+        return {embed: {author: embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
     
     // msgAuthor was not an attendee of the event
     } else {
@@ -327,7 +342,9 @@ Viewer.prototype.leaveEvent = function(event, msgAuthor) {
             `Author: <@${event._author}>\n` +
             `Attendees: [${event.attendees.length}/${event.attendee_max}]`;
         footer_content = `## Options: [B]ack, [Q]uit`;
-        return {embed: {author: this.embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
+        embed_author = {name: `EVENT ATTENDEES PROCESS`};
+
+        return {embed: {author: embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
     }
 };
 
