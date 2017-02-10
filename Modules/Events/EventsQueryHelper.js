@@ -1,6 +1,7 @@
 module.exports = {
+    // sorted by start time
     findServerEvents: (db, _server) => {
-        return db.events.find({_server: _server});
+        return db.events.find({_server: _server}).sort({start: 1});
     },
 
     findPersonalEvents: (db, _author) => {
@@ -17,7 +18,7 @@ module.exports = {
     },
 
     findFilteredServerEvents: (db, _server, filter) => {
-        return db.events.find({_server: _server}).then((events)=>{
+        return db.events.find({_server: _server}).sort({start: 1}).then((events)=>{
             if(filter) {
                 let tmp = [];
                 for(let i=0; i<events.length; i++) {

@@ -1,5 +1,4 @@
 const crypto = require('crypto');
-const QueryHelper = require('./EventsQueryHelper');
 
 module.exports = {
     // computes the unique ID of an event from it's event number, author, server, and clan information
@@ -11,7 +10,7 @@ module.exports = {
 
     // returns a promise returning a new event ID unique to the server
     newServerEventNumber: (db, _server) => {
-        return QueryHelper.findServerEvents(db, _server).then((events) => {
+        return db.events.find({_server:_server}).sort({_no: 1}).then((events) => {
             let id = 1;
             for (let i = 0; i < events.length; i++) {
                 if (events[i]._no !== id) {
