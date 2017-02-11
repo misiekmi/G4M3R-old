@@ -276,9 +276,9 @@ module.exports = (bot, db, config, winston) => {
 			startMessageOfTheDay();
 			runTimerExtensions();
 			postData(winston, auth, bot.guilds.size, bot.user.id);
-			startEventTimeChecker();
 			startWebServer(bot, db, auth, config, winston);
 			showStartupMessage();
+            startEventTimeChecker();
 		});
 	};
 
