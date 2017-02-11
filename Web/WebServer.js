@@ -306,7 +306,6 @@ module.exports = (bot, db, auth, config, winston) => {
                 roundedAccountAge: moment(usr.createdAt).fromNow(),
                 rawAccountAge: moment(usr.createdAt).format(config.moment_date_format),
                 backgroundImage: userDocument.profile_background_image || "http://i.imgur.com/8UIlbtg.jpg",
-                points: userDocument.points || 1,
                 lastSeen: userDocument.last_seen ? moment(userDocument.last_seen).fromNow() : null,
                 rawLastSeen: userDocument.last_seen ? moment(userDocument.last_seen).format(config.moment_date_format) : null,
                 mutualServerCount: mutualServers.length,
@@ -633,11 +632,6 @@ module.exports = (bot, db, auth, config, winston) => {
                         db.users.aggregate({
                             $group: {
                                 _id: null,
-                                totalPoints: {
-                                    $sum: {
-                                        $add: "$points"
-                                    }
-                                },
                                 publicProfilesCount: {
                                     $sum: {
                                         $cond: [
@@ -654,18 +648,15 @@ module.exports = (bot, db, auth, config, winston) => {
                                 }
                             }
                         }, (err, result) => {
-                            let totalPoints = 0;
                             let publicProfilesCount = 0;
                             let reminderCount = 0;
                             if (!err && result) {
-                                totalPoints = result[0].totalPoints;
                                 publicProfilesCount = result[0].publicProfilesCount;
                                 reminderCount = result[0].reminderCount;
                             }
 
                             renderPage({
                                 pageTitle: "Users",
-                                totalPoints,
                                 publicProfilesCount,
                                 reminderCount
                             });
@@ -794,7 +785,7 @@ module.exports = (bot, db, auth, config, winston) => {
                                         userDocument.save(() => {
                                             db.users.findOrCreate({ _id: galleryDocument.owner_id }, (err, ownerUserDocument) => {
                                                 if (!err && ownerUserDocument) {
-                                                    ownerUserDocument.points += vote * 10;
+                                                    ownerUserDocument.points += vote * 10; //TODO possibly related to AwesomePoints
                                                     ownerUserDocument.save(() => {});
                                                 }
                                                 res.sendStatus(200);
@@ -848,7 +839,7 @@ module.exports = (bot, db, auth, config, winston) => {
                                 messageOwner(galleryDocument.owner_id, `Your extension ${galleryDocument.name} has been ${req.body.action}${req.body.action=="reject" ? "e" : ""}d from the AwesomeBot extension gallery for the following reason:\`\`\`${req.body.reason}\`\`\``);
                                 db.users.findOrCreate({ _id: galleryDocument.owner_id }, (err, ownerUserDocument) => {
                                     if (!err && ownerUserDocument) {
-                                        ownerUserDocument.points -= galleryDocument.points * 10;
+                                        ownerUserDocument.points -= galleryDocument.points * 10; //TODO possibly related to AwesomePoints
                                         ownerUserDocument.save(() => {});
                                     }
                                     galleryDocument.state = "saved";
@@ -1797,8 +1788,6 @@ module.exports = (bot, db, auth, config, winston) => {
 					_id: {
 						"$in": memberIDs
 					}
-				}).sort({
-					points: -1
 				}).limit(1).exec((err, userDocuments) => {
 					let richestMember;
 					if(!err && userDocuments && userDocuments.length>0) {

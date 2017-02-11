@@ -3,7 +3,7 @@
         "afk": {
             "usage": "\".\" or <message>"
         },
-        "config": { 
+        "config": {
             "usage": "<server>"
         },
         "giveaway": {
@@ -35,36 +35,36 @@
         }
     },
     "public": {
-      "event": {
-          "usage": "event add\nevent list\nevent show [ID]\nevent edit [ID]\nevent join [ID]\nevent leave [ID]",
-          "description": "Create events people can RSVP to",
-          "defaults": {
-              "is_enabled": true,
-              "is_nsfw_filtered": false,
-              "admin_level": 0
-          },
-          "category": "Utility 🔦"
-      },
-      "myevents": {
-          "usage": "myevents",
-          "description": "Show the events you created",
-          "defaults": {
-              "is_enabled": true,
-              "is_nsfw_filtered": false,
-              "admin_level": 0
-          },
-          "category": "Utility 🔦"
-      },
-      "trello": {
-          "usage": "",
-          "description": "Shows the Trello Link for G4M3R",
-          "defaults": {
-              "is_enabled": true,
-              "is_nsfw_filtered": false,
-              "admin_level": 0
-          },
-          "category": "G4M3R 🤖"
-      },
+        "event": {
+            "usage": "event add\nevent list\nevent show [ID]\nevent edit [ID]\nevent join [ID]\nevent leave [ID]",
+            "description": "Create events people can RSVP to",
+            "defaults": {
+                "is_enabled": true,
+                "is_nsfw_filtered": false,
+                "admin_level": 0
+            },
+            "category": "Utility 🔦"
+        },
+        "myevents": {
+            "usage": "myevents",
+            "description": "Show the events you created",
+            "defaults": {
+                "is_enabled": true,
+                "is_nsfw_filtered": false,
+                "admin_level": 0
+            },
+            "category": "Utility 🔦"
+        },
+        "trello": {
+            "usage": "",
+            "description": "Shows the Trello Link for G4M3R",
+            "defaults": {
+                "is_enabled": true,
+                "is_nsfw_filtered": false,
+                "admin_level": 0
+            },
+            "category": "G4M3R 🤖"
+        },
         "about": {
             "usage": "",
             "description": "Information about AwesomeBot",
@@ -85,7 +85,7 @@
             },
             "category": "Utility 🔦"
         },
-        "alert": { 
+        "alert": {
             "usage": "[<message to admins>]",
             "description": "Allows members to message the admins",
             "defaults": {
@@ -145,7 +145,7 @@
             },
             "category": "Fun 🎪"
         },
-        "choose": { 
+        "choose": {
             "usage": "<option 1>|<option 2>[|...]",
             "description": "Randomly chooses from a set of options",
             "defaults": {
@@ -155,7 +155,7 @@
             },
             "category": "Utility 🔦"
         },
-        "convert": { 
+        "convert": {
             "usage": "<number> <unit> to <unit>",
             "description": "Converts between units of measurement and currencies",
             "defaults": {
@@ -205,7 +205,7 @@
             },
             "category": "G4M3R 🤖"
         },
-        "disable": { 
+        "disable": {
             "usage": "[<command>]",
             "description": "Turns off a command in the channel",
             "defaults": {
@@ -235,7 +235,7 @@
             },
             "category": "Utility 🔦"
         },
-        "enable": { 
+        "enable": {
             "usage": "[<command>]",
             "description": "Turns on a command in the channel",
             "defaults": {
@@ -253,7 +253,7 @@
                 "is_nsfw_filtered": false,
                 "admin_level": 0
             },
-            "category": "Stats & Points ⭐️"
+            "category": "Stats ⭐️"
         },
         "gif": {
             "usage": "<query>",
@@ -306,7 +306,7 @@
             },
             "category": "Search & Media 🎬"
         },
-        "imdb": { 
+        "imdb": {
             "usage": "[<type>] <query>",
             "description": "Provides movie and TV show data",
             "defaults": {
@@ -356,7 +356,7 @@
             },
             "category": "Moderation ⚒"
         },
-        "list": { 
+        "list": {
             "usage": "[<content> or <item no.>][|\".\" or \"done\" or <content>]",
             "description": "In-chat to-do list",
             "defaults": {
@@ -384,9 +384,9 @@
                 "is_nsfw_filtered": false,
                 "admin_level": 0
             },
-            "category": "Stats & Points ⭐️"
+            "category": "Stats ⭐️"
         },
-        "modlog": { 
+        "modlog": {
             "usage": "\"enable\" <channel> or \"disable\" or \"remove\" <case ID>",
             "description": "Moderation logging utility command",
             "defaults": {
@@ -416,7 +416,7 @@
             },
             "category": "Moderation ⚒"
         },
-        "nuke": { 
+        "nuke": {
             "usage": "<search limit> [<content> or \":\"<query> or \">\"<after ID> or \"<\"<before ID> or <user>]",
             "description": "Deletes messages in a channel, all or from a user",
             "defaults": {
@@ -426,7 +426,17 @@
             },
             "category": "Moderation ⚒"
         },
-        "ping": { 
+        "perms": {
+            "usage": "[<user or role>][|<permission name>]",
+            "description": "Modifies permissions for a role or user in a channel",
+            "defaults": {
+                "is_enabled": true,
+                "is_nsfw_filtered": false,
+                "admin_level": 3
+            },
+            "category": "Moderation ⚒"
+        },
+        "ping": {
             "usage": "",
             "description": "",
             "defaults": {
@@ -436,7 +446,7 @@
             },
             "category": "G4M3R 🤖"
         },
-        "poll": { 
+        "poll": {
             "usage": "[<no. of option>]",
             "description": "Allows users to create live, in-chat polls",
             "defaults": {
@@ -447,7 +457,7 @@
             "category": "Utility 🔦",
             "admin_exempt": true
         },
-        "prefix": { 
+        "prefix": {
             "usage": "[<new command prefix>]",
             "description": "",
             "defaults": {
@@ -485,9 +495,9 @@
                 "is_nsfw_filtered": false,
                 "admin_level": 0
             },
-            "category": "Stats & Points ⭐️"
+            "category": "Stats ⭐️"
         },
-        "reason": { 
+        "reason": {
             "usage": "<case ID> <reason>",
             "description": "Sets the reason for modlog entries",
             "defaults": {
@@ -507,7 +517,7 @@
             },
             "category": "Search & Media 🎬"
         },
-        "remindme": { 
+        "remindme": {
             "usage": "<time from now>|<reminder>",
             "description": "",
             "defaults": {
@@ -595,7 +605,7 @@
                 "is_nsfw_filtered": false,
                 "admin_level": 0
             },
-            "category": "Stats & Points ⭐️"
+            "category": "Stats ⭐️"
         },
         "streamers": {
             "usage": "",
@@ -737,7 +747,7 @@
             },
             "category": "Search & Media 🎬"
         },
-        "xkcd": { 
+        "xkcd": {
             "usage": "[<comic ID>]",
             "description": "Fetches today's XKCD comic or by ID",
             "defaults": {

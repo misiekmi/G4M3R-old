@@ -229,54 +229,6 @@
 								</div>
 							</article>
 						<% } %>
-						<h4 class="subtitle is-4">
-							Lotteries
-						</h4>
-						<% if(lotteries.length>0) { %>
-							<div class="columns">
-							<% for(var i=0; i<lotteries.length; i++) { %>
-								<div class="column is-one-third">
-									<div class="card is-fullwidth">
-										<header class="card-header">
-											<p class="card-header-title">
-												<%= lotteries[i].channel.name %>
-											</p>
-											<span class="card-header-icon">
-												<i class="fa fa-hashtag"></i>
-											</span>
-										</header>
-										<div class="card-content">
-											<h4 class="title is-4 has-text-centered">
-												<strong><%= lotteries[i].participants %></strong> participants so far
-											</h4>
-										</div>
-										<footer class="card-footer">
-											<a onclick="endSession('<%= lotteries[i].channel.id %>', 'lottery');" class="card-footer-item" title="AwesomePoints will still be given away">
-												End Lottery
-											</a>
-										</footer>
-									</div>
-								</div>
-
-								<% if(i % 3==2 && i!=lotteries.length-1 && i!=0) { %>
-									</div>
-									<div class="columns">
-								<% } %>
-							<% } %>
-							</div>
-						<% } else { %>
-							<article class="message">
-								<div class="message-header">
-									<span class="icon">
-										<i class="fa fa-meh-o"></i>
-									</span>
-									<span>Nothing to see here</span>
-								</div>
-								<div class="message-body">
-									There aren't any open lotteries on this server. Start an AwesomePoints lottery with <code><%= commandPrefix %>points lottery</code>.
-								</div>
-							</article>
-						<% } %>
 					</div>
 				</div>
 			</div>

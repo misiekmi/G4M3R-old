@@ -108,10 +108,6 @@ $.getJSON("/userlist", function(data) {
 										<% } %>
 										<br>
 									<% } %>
-									<span class="icon is-medium">
-										<i class="fa fa-star"></i>
-									</span>
-									<span>Has <strong><%= data.userProfile.points %></strong> point<%= data.userProfile.points==1 ? "" : "s" %></span>
 									<br>
 									<% if(data.userProfile.pastNames && data.userProfile.pastNames.length>0) { %>
 										<span class="modal-button" data-target="#past-names-modal">
@@ -188,12 +184,6 @@ $.getJSON("/userlist", function(data) {
 				<div class="box hero">
 					<article class="media">
 			    		<div class="media-content">
-							<h2 class="title">
-								<span class="icon is-medium">
-									<i class="fa fa-star"></i>
-								</span>
-								<span><strong><%= data.totalPoints %></strong> point<%= data.totalPoints==1 ? "" : "s" %> total</span>
-							</h2>
 							<h2 class="title">
 								<span class="icon is-medium">
 									<i class="fa fa-user"></i>
