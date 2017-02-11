@@ -22,12 +22,12 @@ const diff = new textDiff();
 
 const showdown = require("showdown");
 const md = new showdown.Converter({
-	tables: true,
-	simplifiedAutoLink: true,
-	strikethrough: true,
-	tasklists: true,
-	smoothLivePreview: true,
-	smartIndentationFix: true
+    tables: true,
+    simplifiedAutoLink: true,
+    strikethrough: true,
+    tasklists: true,
+    smoothLivePreview: true,
+    smartIndentationFix: true
 });
 const xssFilters = require("xss-filters");
 const removeMd = require("remove-markdown");
@@ -43,13 +43,13 @@ const app = express();
 app.use(compression());
 app.enable("trust proxy");
 app.use(bodyParser.urlencoded({
-	extended: true,
-	parameterLimit: 10000,
-	limit: "5mb"
+    extended: true,
+    parameterLimit: 10000,
+    limit: "5mb"
 }));
 app.use(bodyParser.json({
-	parameterLimit: 10000,
-	limit: "5mb"
+    parameterLimit: 10000,
+    limit: "5mb"
 }));
 app.set("json spaces", 2);
 
@@ -58,992 +58,991 @@ app.set("views", `${__dirname}/views`);
 app.set("view engine", "ejs");
 
 const findQueryUser = (query, list) => {
-	let usr = list.get(query);
-	if(!usr) {
-		const usernameQuery = query.substring(0, query.lastIndexOf("#")>-1 ? query.lastIndexOf("#") : query.length);
-		const discriminatorQuery = query.indexOf("#")>-1 ? query.substring(query.lastIndexOf("#")+1) : "";
-		const usrs = list.filter(a => {
-			return (a.user || a).username==usernameQuery;
-		});
-		if(discriminatorQuery) {
-			usr = usrs.find(a => {
-				return (a.user || a).discriminator==discriminatorQuery;
-			});
-		} else if(usrs.length>0) {
-			usr = usrs[0];
-		}
-	}
-	return usr;
+    let usr = list.get(query);
+    if (!usr) {
+        const usernameQuery = query.substring(0, query.lastIndexOf("#") > -1 ? query.lastIndexOf("#") : query.length);
+        const discriminatorQuery = query.indexOf("#") > -1 ? query.substring(query.lastIndexOf("#") + 1) : "";
+        const usrs = list.filter(a => {
+            return (a.user || a).username == usernameQuery;
+        });
+        if (discriminatorQuery) {
+            usr = usrs.find(a => {
+                return (a.user || a).discriminator == discriminatorQuery;
+            });
+        } else if (usrs.length > 0) {
+            usr = usrs[0];
+        }
+    }
+    return usr;
 };
 
 const getUserList = list => {
-	return list.filter(usr => {
-		return usr.bot!=true;
-	}).map(usr => {
-		return `${usr.username}#${usr.discriminator}`;
-	}).sort();
+    return list.filter(usr => {
+        return usr.bot != true;
+    }).map(usr => {
+        return `${usr.username}#${usr.discriminator}`;
+    }).sort();
 };
 
 const getChannelData = (svr, type) => {
-	return svr.channels.filter(ch => {
-		return ch.type==(type || 0);
-	}).map(ch => {
-		return {
-			name: ch.name,
-			id: ch.id,
-			position: ch.position
-		};
-	}).sort((a, b) => {
-		return a.position - b.position;
-	});
+    return svr.channels.filter(ch => {
+        return ch.type == (type || 0);
+    }).map(ch => {
+        return {
+            name: ch.name,
+            id: ch.id,
+            position: ch.position
+        };
+    }).sort((a, b) => {
+        return a.position - b.position;
+    });
 };
 
 const getRoleData = svr => {
-	return svr.roles.filter(role => {
-		return role.name!="@everyone" && role.name.indexOf("color-")!=0;
-	}).map(role => {
-		const color = role.color.toString(16);
-		return {
-			name: role.name,
-			id: role.id,
-			color: "000000".substring(0, 6 - color.length) + color,
-			position: role.position
-		};
-	}).sort((a, b) => {
-		return b.position - a.position;
-	});
+    return svr.roles.filter(role => {
+        return role.name != "@everyone" && role.name.indexOf("color-") != 0;
+    }).map(role => {
+        const color = role.color.toString(16);
+        return {
+            name: role.name,
+            id: role.id,
+            color: "000000".substring(0, 6 - color.length) + color,
+            position: role.position
+        };
+    }).sort((a, b) => {
+        return b.position - a.position;
+    });
 };
 
 const getAuthUser = user => {
-	return {
-		username: user.username,
-		id: user.id,
-		avatar: user.avatar ? (`https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.jpg`) : "/static/img/discord-icon.png"
-	};
+    return {
+        username: user.username,
+        id: user.id,
+        avatar: user.avatar ? (`https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.jpg`) : "/static/img/discord-icon.png"
+    };
 };
 
 const getRoundedUptime = uptime => {
-	return uptime>86400 ? (`${Math.floor(uptime/86400)}d`) : (`${Math.floor(uptime/3600)}h`);
+    return uptime > 86400 ? (`${Math.floor(uptime/86400)}d`) : (`${Math.floor(uptime/3600)}h`);
 };
 
 // Setup the web server
 module.exports = (bot, db, auth, config, winston) => {
-	// Setup passport and express-session
-	passport.use(new discordStrategy({
-		clientID: auth.platform.client_id,
-		clientSecret: auth.platform.client_secret,
-		callbackURL: `${config.hosting_url}login/callback`,
-		scope: discordOAuthScopes
-	}, (accessToken, refreshToken, profile, done) => {
-		process.nextTick(() => {
-			return done(null, profile);
-		});
-	}));
-	passport.serializeUser((user, done) => {
-		done(null, user);
-	});
-	passport.deserializeUser((id, done) => {
-		done(null, id);
-	});
-	const sessionStore = new mongooseSessionStore({
-		mongooseConnection: database.getConnection()
-	});
-	app.use(session({
-		secret: "vFEvmrQl811q2E8CZelg4438l9YFwAYd",
-		resave: false,
-		saveUninitialized: false,
-		store: sessionStore
-	}));
-	app.use(passport.initialize());
-	app.use(passport.session());
+        // Setup passport and express-session
+        passport.use(new discordStrategy({
+            clientID: auth.platform.client_id,
+            clientSecret: auth.platform.client_secret,
+            callbackURL: `${config.hosting_url}login/callback`,
+            scope: discordOAuthScopes
+        }, (accessToken, refreshToken, profile, done) => {
+            process.nextTick(() => {
+                return done(null, profile);
+            });
+        }));
+        passport.serializeUser((user, done) => {
+            done(null, user);
+        });
+        passport.deserializeUser((id, done) => {
+            done(null, id);
+        });
+        const sessionStore = new mongooseSessionStore({
+            mongooseConnection: database.getConnection()
+        });
+        app.use(session({
+            secret: "vFEvmrQl811q2E8CZelg4438l9YFwAYd",
+            resave: false,
+            saveUninitialized: false,
+            store: sessionStore
+        }));
+        app.use(passport.initialize());
+        app.use(passport.session());
 
-	app.use((req, res, next) => {
-		res.header("Access-Control-Allow-Origin", "*");
-		res.header("Access-Control-Allow-Credentials", true);
-		res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-		next();
-	});
+        app.use((req, res, next) => {
+            res.header("Access-Control-Allow-Origin", "*");
+            res.header("Access-Control-Allow-Credentials", true);
+            res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+            next();
+        });
 
-	// Server public dir if necessary
-	if(config.serve_static) {
-		app.use("/static", express.static(`${__dirname}/public`));
-	}
+        // Server public dir if necessary
+        if (config.serve_static) {
+            app.use("/static", express.static(`${__dirname}/public`));
+        }
 
-	// Handle errors (redirect to error page)
-	app.use((error, req, res, next) => { // eslint-disable-line no-unused-vars
-		winston.error(error);
-		res.sendStatus(500);
-		res.render("pages/error.ejs", {error});
-	});
+        // Handle errors (redirect to error page)
+        app.use((error, req, res, next) => { // eslint-disable-line no-unused-vars
+            winston.error(error);
+            res.sendStatus(500);
+            res.render("pages/error.ejs", { error });
+        });
 
-	// Open web interface
+        // Open web interface
 
-	function requireHTTPS(req, res, next) {
-  	if (!req.secure) {
-    	return res.redirect('https://'+ req.hostname + ":" + config.httpsPort + req.url);
-    }
-    next();
-	}
-	if (config.cert && config.privKey && config.httpsPort) {
-		if (config.httpsRedirect) {
-			app.use(requireHTTPS);
-		}
-		const privKey = fs.readFileSync(config.privKey, "utf8", function(err) {if (err) winston.error(err)})
-		const cert = fs.readFileSync(config.cert, "utf8", function(err) {if (err) winston.error(err)})
-		const credentials = {
-			key: privKey,
-			cert: cert
-		}
-		var httpsServer = https.createServer(credentials, app)
-		httpsServer.listen(config.httpsPort, () => {
-			winston.info(`Opened https web interface on ${config.server_ip}:${config.httpsPort}`);
-		});
-	}
-	const server = app.listen(config.httpPort, config.server_ip, () => {
-		winston.info(`Opened http web interface on ${config.server_ip}:${config.httpPort}`);
-		process.setMaxListeners(0);
-	});
+        function requireHTTPS(req, res, next) {
+            if (!req.secure) {
+                return res.redirect('https://' + req.hostname + ":" + config.httpsPort + req.url);
+            }
+            next();
+        }
+        if (config.cert && config.privKey && config.httpsPort) {
+            if (config.httpsRedirect) {
+                app.use(requireHTTPS);
+            }
+            const privKey = fs.readFileSync(config.privKey, "utf8", function(err) { if (err) winston.error(err) })
+            const cert = fs.readFileSync(config.cert, "utf8", function(err) { if (err) winston.error(err) })
+            const credentials = {
+                key: privKey,
+                cert: cert
+            }
+            var httpsServer = https.createServer(credentials, app)
+            httpsServer.listen(config.httpsPort, () => {
+                winston.info(`Opened https web interface on ${config.server_ip}:${config.httpsPort}`);
+            });
+        }
+        const server = app.listen(config.httpPort, config.server_ip, () => {
+            winston.info(`Opened http web interface on ${config.server_ip}:${config.httpPort}`);
+            process.setMaxListeners(0);
+        });
 
-	// Setup socket.io for dashboard
-	const io = sio(server);
-	io.use(passportSocketIo.authorize({
-		key: "connect.sid",
-		secret: "vFEvmrQl811q2E8CZelg4438l9YFwAYd",
-		store: sessionStore,
-		passport
-	}));
+        // Setup socket.io for dashboard
+        const io = sio(server);
+        io.use(passportSocketIo.authorize({
+            key: "connect.sid",
+            secret: "vFEvmrQl811q2E8CZelg4438l9YFwAYd",
+            store: sessionStore,
+            passport
+        }));
 
-	// Landing page
-	app.get("/", (req, res) => {
-		const uptime = process.uptime();
-		res.render("pages/landing.ejs", {
-			authUser: req.isAuthenticated() ? getAuthUser(req.user) : null,
-			bannerMessage: config.homepage_message_html,
-			rawServerCount: bot.guilds.size,
-			roundedServerCount: Math.floor(bot.guilds.size/100)*100,
-			rawUserCount: `${Math.floor(bot.users.size/1000)}K`,
-			rawUptime: moment.duration(uptime, "seconds").humanize(),
-			roundedUptime: getRoundedUptime(uptime)
-		});
-	});
+        // Landing page
+        app.get("/", (req, res) => {
+            const uptime = process.uptime();
+            res.render("pages/landing.ejs", {
+                authUser: req.isAuthenticated() ? getAuthUser(req.user) : null,
+                bannerMessage: config.homepage_message_html,
+                rawServerCount: bot.guilds.size,
+                roundedServerCount: Math.floor(bot.guilds.size / 100) * 100,
+                rawUserCount: `${Math.floor(bot.users.size/1000)}K`,
+                rawUptime: moment.duration(uptime, "seconds").humanize(),
+                roundedUptime: getRoundedUptime(uptime)
+            });
+        });
 
-	// Add to server link
-	app.get("/add", (req, res) => {
-		res.redirect(config.oauth_link);
-	});
+        // Add to server link
+        app.get("/add", (req, res) => {
+            res.redirect(config.oauth_link);
+        });
 
-	// AwesomeBot data API
-	app.use("/api/", new RateLimit({
-		windowMs: 3600000,	// 150 requests/per hr
-		max: 150,
-		delayMs: 0
-	}));
-	app.get("/api", (req, res) => {
-		res.json({
-			server_count: bot.guilds.size,
-			user_count: bot.users.size
-		});
-	});
-	const getServerData = serverDocument => {
-		let data;
-		const svr = bot.guilds.get(serverDocument._id);
-		if(svr) {
-			const owner = svr.members.get(svr.ownerID);
-			data = {
-				name: svr.name,
-				id: svr.id,
-				icon: svr.iconURL || "/static/img/discord-icon.png",
-				owner: {
-					username: owner.user.username,
-					id: owner.id,
-					avatar: owner.user.avatarURL || "/static/img/discord-icon.png",
-					name: owner.nick || owner.user.username
-				},
-				members: svr.members.size,
-				messages: serverDocument.messages_today,
-				rawCreated: moment(svr.createdAt).format(config.moment_date_format),
-				relativeCreated: Math.ceil((Date.now() - svr.createdAt)/86400000),
-				command_prefix: bot.getCommandPrefix(svr, serverDocument),
-				category: serverDocument.config.public_data.server_listing.category,
-				description: serverDocument.config.public_data.server_listing.isEnabled ? (xssFilters.inHTMLData(md.makeHtml(serverDocument.config.public_data.server_listing.description || "No description provided."))) : null,
-				invite_link: serverDocument.config.public_data.server_listing.isEnabled ? (serverDocument.config.public_data.server_listing.invite_link || "javascript:alert('Invite link not available');") : null
-			};
-		}
-		return data;
-	};
-	app.get("/api/servers", (req, res) => {
-		const params = {
-			"config.public_data.isShown": true
-		};
-		if(req.query.id) {
-			params._id = req.query.id;
-		}
-		db.servers.find(params).skip(req.query.start ? parseInt(req.query.start) : 0).limit(req.query.count ? parseInt(req.query.count) : bot.guilds.size).exec((err, serverDocuments) => {
-			if(!err && serverDocuments) {
-				const data = serverDocuments.map(serverDocument => {
-					return getServerData(serverDocument) || serverDocument._id;
-				});
-				res.json(data);
-			} else {
-				res.sendStatus(400);
-			}
-		});
-	});
-	const getUserData = (usr, userDocument) => {
-		const sampleMember = bot.getFirstMember(usr);
-		const mutualServers = bot.guilds.filter(svr => {
-			return svr.members.has(usr.id);
-		}).sort((a, b) => {
-			return a.name.localeCompare(b.name);
-		});
-		const userProfile = {
-			username: usr.username,
-			discriminator: usr.discriminator,
-			avatar: usr.avatarURL || "/static/img/discord-icon.png",
-			id: usr.id,
-			status: sampleMember.status,
-			game: bot.getGame(sampleMember),
-			roundedAccountAge: moment(usr.createdAt).fromNow(),
-			rawAccountAge: moment(usr.createdAt).format(config.moment_date_format),
-			backgroundImage: userDocument.profile_background_image || "http://i.imgur.com/8UIlbtg.jpg",
-			points: userDocument.points || 1,
-			lastSeen: userDocument.last_seen ? moment(userDocument.last_seen).fromNow() : null,
-			rawLastSeen: userDocument.last_seen ? moment(userDocument.last_seen).format(config.moment_date_format) : null,
-			mutualServerCount: mutualServers.length,
-			pastNameCount: (userDocument.past_names || {}).length || 0,
-			isAfk: userDocument.afk_message!=null && userDocument.afk_message!="",
-			mutualServers: []
-		};
-		switch(userProfile.status) {
-			case "online":
-				userProfile.statusColor = "is-success";
-				break;
-			case "idle":
-			case "away":
-				userProfile.statusColor = "is-warning";
-				break;
-			case "offline":
-			default:
-				userProfile.statusColor = "is-dark";
-				break;
-		}
-		if(userDocument.isProfilePublic) {
-			let profileFields;
-			if(userDocument.profile_fields) {
-				profileFields = {};
-				for(const key in userDocument.profile_fields) {
-					profileFields[key] = md.makeHtml(userDocument.profile_fields[key]);
-					profileFields[key] = profileFields[key].substring(3, profileFields[key].length-4);
-				}
-			}
-			userProfile.profileFields = profileFields;
-			userProfile.pastNames = userDocument.past_names;
-			userProfile.afkMessage = userDocument.afk_message;
-			mutualServers.forEach(svr => {
-				userProfile.mutualServers.push({
-					name: svr.name,
-					id: svr.id,
-					icon: svr.iconURL || "/static/img/discord-icon.png",
-					owner: svr.members.get(svr.ownerID).user.username
-				});
-			});
-		}
-		return userProfile;
-	};
-	app.get("/api/users", (req, res) => {
-		const usr = bot.users.get(req.query.id);
-		if(usr) {
-			db.users.findOrCreate({_id: usr.id}, (err, userDocument) => {
-				if(err || !userDocument) {
-					userDocument = {};
-				}
-				res.json(getUserData(usr, userDocument));
-			});
-		} else {
-			res.sendStatus(400);
-		}
-	});
-	const getExtensionData = galleryDocument => {
-		const owner = bot.users.get(galleryDocument.owner_id) || {};
-		let typeIcon, typeDescription;
-		switch(galleryDocument.type) {
-			case "command":
-				typeIcon = "magic";
-				typeDescription = galleryDocument.key;
-				break;
-			case "keyword":
-				typeIcon = "key";
-				typeDescription = galleryDocument.keywords.join(", ");
-				break;
-			case "timer":
-				typeIcon = "clock-o";
-				if(moment(galleryDocument.interval)) {
-					let interval = moment.duration(galleryDocument.interval)
-					typeDescription = `Interval: ${interval.hours()} hour(s) and ${interval.minutes()} minute(s)`;
-				} else {
-					typeDescription = `Interval: ${galleryDocument.interval}`
-				}
-				break;
-		}
-		return {
-			_id: galleryDocument._id,
-			name: galleryDocument.name,
-			type: galleryDocument.type,
-			typeIcon,
-			typeDescription,
-			description: md.makeHtml(xssFilters.inHTMLData(galleryDocument.description)),
-			featured: galleryDocument.featured,
-			owner: {
-				name: owner.username || "invalid-user",
-				id: owner.id || "invalid-user",
-				discriminator: owner.discriminator || "0000",
-				avatar: owner.avatarURL || "/static/img/discord-icon.png"
-			},
-			status: galleryDocument.state,
-			points: galleryDocument.points,
-			relativeLastUpdated: moment(galleryDocument.last_updated).fromNow(),
-			rawLastUpdated: moment(galleryDocument.last_updated).format(config.moment_date_format)
-		};
-	};
-	app.get("/api/extensions", (req, res) => {
-		const params = {};
-		if(req.query.id) {
-			params._id = req.query.id;
-		}
-		if(req.query.name) {
-			params.name = req.query.name;
-		}
-		if(req.query.type) {
-			params.type = req.query.type;
-		}
-		if(req.query.status) {
-			params.state = req.query.status;
-		}
-		if(req.query.owner) {
-			params.owner_id = req.query.owner;
-		}
-		db.gallery.count(params, (err, rawCount) => {
-			if(!err || rawCount==null) {
-				rawCount = 0;
-			}
-			db.gallery.find(params).skip(req.query.start ? parseInt(req.query.start) : 0).limit(req.query.count ? parseInt(req.query.count) : rawCount).exec((err, galleryDocuments) => {
-				if(!err && galleryDocuments) {
-					const data = galleryDocuments.map(galleryDocument => {
-						return getExtensionData(galleryDocument);
-					});
-					res.json(data);
-				} else {
-					res.sendStatus(400);
-				}
-			});
-		});
-	});
+        // AwesomeBot data API
+        app.use("/api/", new RateLimit({
+            windowMs: 3600000, // 150 requests/per hr
+            max: 150,
+            delayMs: 0
+        }));
+        app.get("/api", (req, res) => {
+            res.json({
+                server_count: bot.guilds.size,
+                user_count: bot.users.size
+            });
+        });
+        const getServerData = serverDocument => {
+            let data;
+            const svr = bot.guilds.get(serverDocument._id);
+            if (svr) {
+                const owner = svr.members.get(svr.ownerID);
+                data = {
+                    name: svr.name,
+                    id: svr.id,
+                    icon: svr.iconURL || "/static/img/discord-icon.png",
+                    owner: {
+                        username: owner.user.username,
+                        id: owner.id,
+                        avatar: owner.user.avatarURL || "/static/img/discord-icon.png",
+                        name: owner.nick || owner.user.username
+                    },
+                    members: svr.members.size,
+                    messages: serverDocument.messages_today,
+                    rawCreated: moment(svr.createdAt).format(config.moment_date_format),
+                    relativeCreated: Math.ceil((Date.now() - svr.createdAt) / 86400000),
+                    command_prefix: bot.getCommandPrefix(svr, serverDocument),
+                    category: serverDocument.config.public_data.server_listing.category,
+                    description: serverDocument.config.public_data.server_listing.isEnabled ? (xssFilters.inHTMLData(md.makeHtml(serverDocument.config.public_data.server_listing.description || "No description provided."))) : null,
+                    invite_link: serverDocument.config.public_data.server_listing.isEnabled ? (serverDocument.config.public_data.server_listing.invite_link || "javascript:alert('Invite link not available');") : null
+                };
+            }
+            return data;
+        };
+        app.get("/api/servers", (req, res) => {
+            const params = {
+                "config.public_data.isShown": true
+            };
+            if (req.query.id) {
+                params._id = req.query.id;
+            }
+            db.servers.find(params).skip(req.query.start ? parseInt(req.query.start) : 0).limit(req.query.count ? parseInt(req.query.count) : bot.guilds.size).exec((err, serverDocuments) => {
+                if (!err && serverDocuments) {
+                    const data = serverDocuments.map(serverDocument => {
+                        return getServerData(serverDocument) || serverDocument._id;
+                    });
+                    res.json(data);
+                } else {
+                    res.sendStatus(400);
+                }
+            });
+        });
+        const getUserData = (usr, userDocument) => {
+            const sampleMember = bot.getFirstMember(usr);
+            const mutualServers = bot.guilds.filter(svr => {
+                return svr.members.has(usr.id);
+            }).sort((a, b) => {
+                return a.name.localeCompare(b.name);
+            });
+            const userProfile = {
+                username: usr.username,
+                discriminator: usr.discriminator,
+                avatar: usr.avatarURL || "/static/img/discord-icon.png",
+                id: usr.id,
+                status: sampleMember.status,
+                game: bot.getGame(sampleMember),
+                roundedAccountAge: moment(usr.createdAt).fromNow(),
+                rawAccountAge: moment(usr.createdAt).format(config.moment_date_format),
+                backgroundImage: userDocument.profile_background_image || "http://i.imgur.com/8UIlbtg.jpg",
+                points: userDocument.points || 1,
+                lastSeen: userDocument.last_seen ? moment(userDocument.last_seen).fromNow() : null,
+                rawLastSeen: userDocument.last_seen ? moment(userDocument.last_seen).format(config.moment_date_format) : null,
+                mutualServerCount: mutualServers.length,
+                pastNameCount: (userDocument.past_names || {}).length || 0,
+                isAfk: userDocument.afk_message != null && userDocument.afk_message != "",
+                mutualServers: []
+            };
+            switch (userProfile.status) {
+                case "online":
+                    userProfile.statusColor = "is-success";
+                    break;
+                case "idle":
+                case "away":
+                    userProfile.statusColor = "is-warning";
+                    break;
+                case "offline":
+                default:
+                    userProfile.statusColor = "is-dark";
+                    break;
+            }
+            if (userDocument.isProfilePublic) {
+                let profileFields;
+                if (userDocument.profile_fields) {
+                    profileFields = {};
+                    for (const key in userDocument.profile_fields) {
+                        profileFields[key] = md.makeHtml(userDocument.profile_fields[key]);
+                        profileFields[key] = profileFields[key].substring(3, profileFields[key].length - 4);
+                    }
+                }
+                userProfile.profileFields = profileFields;
+                userProfile.pastNames = userDocument.past_names;
+                userProfile.afkMessage = userDocument.afk_message;
+                mutualServers.forEach(svr => {
+                    userProfile.mutualServers.push({
+                        name: svr.name,
+                        id: svr.id,
+                        icon: svr.iconURL || "/static/img/discord-icon.png",
+                        owner: svr.members.get(svr.ownerID).user.username
+                    });
+                });
+            }
+            return userProfile;
+        };
+        app.get("/api/users", (req, res) => {
+            const usr = bot.users.get(req.query.id);
+            if (usr) {
+                db.users.findOrCreate({ _id: usr.id }, (err, userDocument) => {
+                    if (err || !userDocument) {
+                        userDocument = {};
+                    }
+                    res.json(getUserData(usr, userDocument));
+                });
+            } else {
+                res.sendStatus(400);
+            }
+        });
+        const getExtensionData = galleryDocument => {
+            const owner = bot.users.get(galleryDocument.owner_id) || {};
+            let typeIcon, typeDescription;
+            switch (galleryDocument.type) {
+                case "command":
+                    typeIcon = "magic";
+                    typeDescription = galleryDocument.key;
+                    break;
+                case "keyword":
+                    typeIcon = "key";
+                    typeDescription = galleryDocument.keywords.join(", ");
+                    break;
+                case "timer":
+                    typeIcon = "clock-o";
+                    if (moment(galleryDocument.interval)) {
+                        let interval = moment.duration(galleryDocument.interval)
+                        typeDescription = `Interval: ${interval.hours()} hour(s) and ${interval.minutes()} minute(s)`;
+                    } else {
+                        typeDescription = `Interval: ${galleryDocument.interval}`
+                    }
+                    break;
+            }
+            return {
+                _id: galleryDocument._id,
+                name: galleryDocument.name,
+                type: galleryDocument.type,
+                typeIcon,
+                typeDescription,
+                description: md.makeHtml(xssFilters.inHTMLData(galleryDocument.description)),
+                featured: galleryDocument.featured,
+                owner: {
+                    name: owner.username || "invalid-user",
+                    id: owner.id || "invalid-user",
+                    discriminator: owner.discriminator || "0000",
+                    avatar: owner.avatarURL || "/static/img/discord-icon.png"
+                },
+                status: galleryDocument.state,
+                points: galleryDocument.points,
+                relativeLastUpdated: moment(galleryDocument.last_updated).fromNow(),
+                rawLastUpdated: moment(galleryDocument.last_updated).format(config.moment_date_format)
+            };
+        };
+        app.get("/api/extensions", (req, res) => {
+            const params = {};
+            if (req.query.id) {
+                params._id = req.query.id;
+            }
+            if (req.query.name) {
+                params.name = req.query.name;
+            }
+            if (req.query.type) {
+                params.type = req.query.type;
+            }
+            if (req.query.status) {
+                params.state = req.query.status;
+            }
+            if (req.query.owner) {
+                params.owner_id = req.query.owner;
+            }
+            db.gallery.count(params, (err, rawCount) => {
+                if (!err || rawCount == null) {
+                    rawCount = 0;
+                }
+                db.gallery.find(params).skip(req.query.start ? parseInt(req.query.start) : 0).limit(req.query.count ? parseInt(req.query.count) : rawCount).exec((err, galleryDocuments) => {
+                    if (!err && galleryDocuments) {
+                        const data = galleryDocuments.map(galleryDocument => {
+                            return getExtensionData(galleryDocument);
+                        });
+                        res.json(data);
+                    } else {
+                        res.sendStatus(400);
+                    }
+                });
+            });
+        });
 
-	// Activity page (servers, profiles, etc.)
-	app.get("/activity", (req, res) => {
-		res.redirect("/activity/servers");
-	});
-	app.get("/activity/(|servers|users)", (req, res) => {
-		db.servers.aggregate({
-			$group: {
-				_id: null,
-				total: {
-					$sum: {
-						$add: ["$messages_today"]
-					}
-				},
-				active: {
-					$sum: {
-						$cond: [
-							{$gt: ["$messages_today", 0]},
-							1,
-							0
-						]
-					}
-				}
-			}
-		}, (err, result) => {
-			let messageCount = 0;
-			let activeServers = bot.guilds.size;
-			if(!err && result) {
-				messageCount = result[0].total;
-				activeServers = result[0].active;
-			}
+        // Activity page (servers, profiles, etc.)
+        app.get("/activity", (req, res) => {
+            res.redirect("/activity/servers");
+        });
+        app.get("/activity/(|servers|users)", (req, res) => {
+            db.servers.aggregate({
+                $group: {
+                    _id: null,
+                    total: {
+                        $sum: {
+                            $add: ["$messages_today"]
+                        }
+                    },
+                    active: {
+                        $sum: {
+                            $cond: [
+                                { $gt: ["$messages_today", 0] },
+                                1,
+                                0
+                            ]
+                        }
+                    }
+                }
+            }, (err, result) => {
+                let messageCount = 0;
+                let activeServers = bot.guilds.size;
+                if (!err && result) {
+                    messageCount = result[0].total;
+                    activeServers = result[0].active;
+                }
 
-			const renderPage = data => {
-				res.render("pages/activity.ejs", {
-					authUser: req.isAuthenticated() ? getAuthUser(req.user) : null,
-					rawServerCount: bot.guilds.size,
-					rawUserCount: bot.users.size,
-					totalMessageCount: messageCount,
-					numActiveServers: activeServers,
-					activeSearchQuery: req.query.q,
-					mode: req.path.substring(req.path.lastIndexOf("/")+1),
-					data
-				});
-			};
+                const renderPage = data => {
+                    res.render("pages/activity.ejs", {
+                        authUser: req.isAuthenticated() ? getAuthUser(req.user) : null,
+                        rawServerCount: bot.guilds.size,
+                        rawUserCount: bot.users.size,
+                        totalMessageCount: messageCount,
+                        numActiveServers: activeServers,
+                        activeSearchQuery: req.query.q,
+                        mode: req.path.substring(req.path.lastIndexOf("/") + 1),
+                        data
+                    });
+                };
 
-			if(req.path=="/activity/servers") {
-				if(!req.query.q) {
-					req.query.q = "";
-				}
-				let count;
-				if(!req.query.count || isNaN(req.query.count)) {
-					count = 16;
-				} else {
-					count = parseInt(req.query.count) || bot.guilds.size;
-				}
-				let page;
-				if(!req.query.page || isNaN(req.query.page)) {
-					page = 1;
-				} else {
-					page = parseInt(req.query.page);
-				}
-				if(!req.query.sort) {
-					req.query.sort = "messages-des";
-				}
-				if(!req.query.category) {
-					req.query.category = "All";
-				}
-				if(!req.query.publiconly) {
-					req.query.publiconly = false;
-				}
+                if (req.path == "/activity/servers") {
+                    if (!req.query.q) {
+                        req.query.q = "";
+                    }
+                    let count;
+                    if (!req.query.count || isNaN(req.query.count)) {
+                        count = 16;
+                    } else {
+                        count = parseInt(req.query.count) || bot.guilds.size;
+                    }
+                    let page;
+                    if (!req.query.page || isNaN(req.query.page)) {
+                        page = 1;
+                    } else {
+                        page = parseInt(req.query.page);
+                    }
+                    if (!req.query.sort) {
+                        req.query.sort = "messages-des";
+                    }
+                    if (!req.query.category) {
+                        req.query.category = "All";
+                    }
+                    if (!req.query.publiconly) {
+                        req.query.publiconly = false;
+                    }
 
-				const matchCriteria = {
-					"config.public_data.isShown": true
-				};
-				if(req.query.q) {
-					const query = req.query.q.toLowerCase();
-					matchCriteria._id = {
-						$in: bot.guilds.filter(svr => {
-							return svr.name.toLowerCase().indexOf(query)>-1 || svr.id==query;
-						}).map(svr => {
-							return svr.id;
-						})
-					};
-				} else {
-					matchCriteria._id = {
-						$in: Array.from(bot.guilds.keys())
-					};
-				}
-				if(req.query.category!="All") {
-					matchCriteria["config.public_data.server_listing.category"] = req.query.category;
-				}
-				if(req.query.publiconly=="true") {
-					matchCriteria["config.public_data.server_listing.isEnabled"] = true;
-				}
+                    const matchCriteria = {
+                        "config.public_data.isShown": true
+                    };
+                    if (req.query.q) {
+                        const query = req.query.q.toLowerCase();
+                        matchCriteria._id = {
+                            $in: bot.guilds.filter(svr => {
+                                return svr.name.toLowerCase().indexOf(query) > -1 || svr.id == query;
+                            }).map(svr => {
+                                return svr.id;
+                            })
+                        };
+                    } else {
+                        matchCriteria._id = {
+                            $in: Array.from(bot.guilds.keys())
+                        };
+                    }
+                    if (req.query.category != "All") {
+                        matchCriteria["config.public_data.server_listing.category"] = req.query.category;
+                    }
+                    if (req.query.publiconly == "true") {
+                        matchCriteria["config.public_data.server_listing.isEnabled"] = true;
+                    }
 
-				let sortParams;
-				switch(req.query.sort) {
-					case "members-asc":
-						sortParams = {
-							"member_count": 1
-						};
-						break;
-					case "members-des":
-						sortParams = {
-							"member_count": -1
-						};
-						break;
-					case "messages-asc":
-						sortParams = {
-							"messages_today": 1
-						};
-						break;
-					case "messages-des":
-					default:
-						sortParams = {
-							"messages_today": -1
-						};
-						break;
-				}
+                    let sortParams;
+                    switch (req.query.sort) {
+                        case "members-asc":
+                            sortParams = {
+                                "member_count": 1
+                            };
+                            break;
+                        case "members-des":
+                            sortParams = {
+                                "member_count": -1
+                            };
+                            break;
+                        case "messages-asc":
+                            sortParams = {
+                                "messages_today": 1
+                            };
+                            break;
+                        case "messages-des":
+                        default:
+                            sortParams = {
+                                "messages_today": -1
+                            };
+                            break;
+                    }
 
-				db.servers.count(matchCriteria, (err, rawCount) => {
-					if(err || rawCount==null) {
-						rawCount = bot.guilds.size;
-					}
-					db.servers.aggregate([
-						{
-							$match: matchCriteria
-						},
-						{
-							$project: {
-								"messages_today": 1,
-								"config.public_data": 1,
-								"config.command_prefix": 1,
-								"member_count": {
-									$size: "$members"
-								}
-							}
-						},
-						{
-							$sort: sortParams
-						},
-						{
-							$skip: count * (page - 1)
-						},
-						{
-							$limit: count
-						}
-					], (err, serverDocuments) => {
-						let serverData = [];
-						if(!err && serverDocuments) {
-							serverData = serverDocuments.map(serverDocument => {
-								return getServerData(serverDocument);
-							});
-						}
+                    db.servers.count(matchCriteria, (err, rawCount) => {
+                        if (err || rawCount == null) {
+                            rawCount = bot.guilds.size;
+                        }
+                        db.servers.aggregate([{
+                                $match: matchCriteria
+                            },
+                            {
+                                $project: {
+                                    "messages_today": 1,
+                                    "config.public_data": 1,
+                                    "config.command_prefix": 1,
+                                    "member_count": {
+                                        $size: "$members"
+                                    }
+                                }
+                            },
+                            {
+                                $sort: sortParams
+                            },
+                            {
+                                $skip: count * (page - 1)
+                            },
+                            {
+                                $limit: count
+                            }
+                        ], (err, serverDocuments) => {
+                            let serverData = [];
+                            if (!err && serverDocuments) {
+                                serverData = serverDocuments.map(serverDocument => {
+                                    return getServerData(serverDocument);
+                                });
+                            }
 
-						let pageTitle = "Servers";
-						if(req.query.q) {
-							pageTitle = `Search for server "${req.query.q}"`;
-						}
-						renderPage({
-							pageTitle,
-							itemsPerPage: req.query.count==0 ? "0" : count.toString(),
-							currentPage: page,
-							numPages: Math.ceil(rawCount/(count==0 ? rawCount : count)),
-							serverData,
-							selectedCategory: req.query.category,
-							isPublicOnly: req.query.publiconly,
-							sortOrder: req.query.sort
-						});
-					});
-				});
-			} else if(req.path=="/activity/users") {
-				if(!req.query.q) {
-					req.query.q = "";
-				}
+                            let pageTitle = "Servers";
+                            if (req.query.q) {
+                                pageTitle = `Search for server "${req.query.q}"`;
+                            }
+                            renderPage({
+                                pageTitle,
+                                itemsPerPage: req.query.count == 0 ? "0" : count.toString(),
+                                currentPage: page,
+                                numPages: Math.ceil(rawCount / (count == 0 ? rawCount : count)),
+                                serverData,
+                                selectedCategory: req.query.category,
+                                isPublicOnly: req.query.publiconly,
+                                sortOrder: req.query.sort
+                            });
+                        });
+                    });
+                } else if (req.path == "/activity/users") {
+                    if (!req.query.q) {
+                        req.query.q = "";
+                    }
 
-				if(req.query.q) {
-					const usr = findQueryUser(req.query.q, bot.users);
-					if(usr) {
-						db.users.findOrCreate({_id: usr.id}, (err, userDocument) => {
-							if(err || !userDocument) {
-								userDocument = {};
-							}
-							const userProfile = getUserData(usr, userDocument);
-							renderPage({
-								pageTitle: `${userProfile.username}'s Profile`,
-								userProfile
-							});
-						});
-					} else {
-						renderPage({pageTitle: `Search for user "${req.query.q}"`});
-					}
-				} else {
-					db.users.aggregate({
-						$group: {
-							_id: null,
-							totalPoints: {
-								$sum: {
-									$add: "$points"
-								}
-							},
-							publicProfilesCount: {
-								$sum: {
-									$cond: [
-										{$ne: ["$isProfilePublic", false]},
-										1,
-										0
-									]
-								}
-							},
-							reminderCount: {
-								$sum: {
-									$size: "$reminders"
-								}
-							}
-						}
-					}, (err, result) => {
-						let totalPoints = 0;
-						let publicProfilesCount = 0;
-						let reminderCount = 0;
-						if(!err && result) {
-							totalPoints = result[0].totalPoints;
-							publicProfilesCount = result[0].publicProfilesCount;
-							reminderCount = result[0].reminderCount;
-						}
+                    if (req.query.q) {
+                        const usr = findQueryUser(req.query.q, bot.users);
+                        if (usr) {
+                            db.users.findOrCreate({ _id: usr.id }, (err, userDocument) => {
+                                if (err || !userDocument) {
+                                    userDocument = {};
+                                }
+                                const userProfile = getUserData(usr, userDocument);
+                                renderPage({
+                                    pageTitle: `${userProfile.username}'s Profile`,
+                                    userProfile
+                                });
+                            });
+                        } else {
+                            renderPage({ pageTitle: `Search for user "${req.query.q}"` });
+                        }
+                    } else {
+                        db.users.aggregate({
+                            $group: {
+                                _id: null,
+                                totalPoints: {
+                                    $sum: {
+                                        $add: "$points"
+                                    }
+                                },
+                                publicProfilesCount: {
+                                    $sum: {
+                                        $cond: [
+                                            { $ne: ["$isProfilePublic", false] },
+                                            1,
+                                            0
+                                        ]
+                                    }
+                                },
+                                reminderCount: {
+                                    $sum: {
+                                        $size: "$reminders"
+                                    }
+                                }
+                            }
+                        }, (err, result) => {
+                            let totalPoints = 0;
+                            let publicProfilesCount = 0;
+                            let reminderCount = 0;
+                            if (!err && result) {
+                                totalPoints = result[0].totalPoints;
+                                publicProfilesCount = result[0].publicProfilesCount;
+                                reminderCount = result[0].reminderCount;
+                            }
 
-						renderPage({
-							pageTitle: "Users",
-							totalPoints,
-							publicProfilesCount,
-							reminderCount
-						});
-					});
-				}
-			}
-		});
-	});
+                            renderPage({
+                                pageTitle: "Users",
+                                totalPoints,
+                                publicProfilesCount,
+                                reminderCount
+                            });
+                        });
+                    }
+                }
+            });
+        });
 
-	// Header image provider
-	app.get("/header-image", (req, res) => {
-		res.sendFile(`${__dirname}/public/img/${config.header_image}`);
-	});
+        // Header image provider
+        app.get("/header-image", (req, res) => {
+            res.sendFile(`${__dirname}/public/img/${config.header_image}`);
+        });
 
-	// Server list provider for typeahead
-	app.get("/serverlist", (req, res) => {
-		const servers = bot.guilds.map(svr => {
-			return svr.name;
-		});
-		servers.sort();
-		res.json(servers);
-	});
+        // Server list provider for typeahead
+        app.get("/serverlist", (req, res) => {
+            const servers = bot.guilds.map(svr => {
+                return svr.name;
+            });
+            servers.sort();
+            res.json(servers);
+        });
 
-	// Check authentication for console
-	const checkAuth = (req, res, next) => {
-		if(req.isAuthenticated()) {
-			const usr = bot.users.get(req.user.id);
-			if(usr) {
-				if(req.query.svrid=="maintainer") {
-					if(config.maintainers.indexOf(req.user.id)>-1) {
-						next(usr);
-					} else {
-						res.redirect("/dashboard");
-					}
-				} else {
-					const svr = bot.guilds.get(req.query.svrid);
-					if(svr && usr) {
-						db.servers.findOne({_id: svr.id}, (err, serverDocument) => {
-							if(!err && serverDocument) {
-								const member = svr.members.get(usr.id);
-								if(bot.getUserBotAdmin(svr, serverDocument, member)>=3) {
-									next(member, svr, serverDocument);
-								} else {
-									res.redirect("/dashboard");
-								}
-							} else {
-								res.redirect("/error");
-							}
-						});
-					} else {
-						res.redirect("/error");
-					}
-				}
-			} else {
-				res.redirect("/error");
-			}
-		} else {
-			res.redirect("/login");
-		}
-	};
+        // Check authentication for console
+        const checkAuth = (req, res, next) => {
+            if (req.isAuthenticated()) {
+                const usr = bot.users.get(req.user.id);
+                if (usr) {
+                    if (req.query.svrid == "maintainer") {
+                        if (config.maintainers.indexOf(req.user.id) > -1) {
+                            next(usr);
+                        } else {
+                            res.redirect("/dashboard");
+                        }
+                    } else {
+                        const svr = bot.guilds.get(req.query.svrid);
+                        if (svr && usr) {
+                            db.servers.findOne({ _id: svr.id }, (err, serverDocument) => {
+                                if (!err && serverDocument) {
+                                    const member = svr.members.get(usr.id);
+                                    if (bot.getUserBotAdmin(svr, serverDocument, member) >= 3) {
+                                        next(member, svr, serverDocument);
+                                    } else {
+                                        res.redirect("/dashboard");
+                                    }
+                                } else {
+                                    res.redirect("/error");
+                                }
+                            });
+                        } else {
+                            res.redirect("/error");
+                        }
+                    }
+                } else {
+                    res.redirect("/error");
+                }
+            } else {
+                res.redirect("/login");
+            }
+        };
 
-	// User list provider for typeahead
-	app.get("/userlist", (req, res) => {
-		if(req.query.svrid) {
-			checkAuth(req, res, (usr, svr) => {
-				res.json(getUserList(svr.members.map(member => {
-					return member.user;
-				})));
-			});
-		} else {
-			res.json(getUserList(bot.users));
-		}
-	});
+        // User list provider for typeahead
+        app.get("/userlist", (req, res) => {
+            if (req.query.svrid) {
+                checkAuth(req, res, (usr, svr) => {
+                    res.json(getUserList(svr.members.map(member => {
+                        return member.user;
+                    })));
+                });
+            } else {
+                res.json(getUserList(bot.users));
+            }
+        });
 
-	// Extension gallery
-	app.get("/extensions", (req, res) => {
-		res.redirect("/extensions/gallery");
-	});
-	app.post("/extensions", (req, res) => {
-		if(req.isAuthenticated()) {
-			if(req.query.extid && req.body.action) {
-				if(["accept", "feature", "reject", "remove"].indexOf(req.body.action)>-1 && config.maintainers.indexOf(req.user.id)==-1) {
-					res.sendStatus(403);
-					return;
-				}
+        // Extension gallery
+        app.get("/extensions", (req, res) => {
+            res.redirect("/extensions/gallery");
+        });
+        app.post("/extensions", (req, res) => {
+            if (req.isAuthenticated()) {
+                if (req.query.extid && req.body.action) {
+                    if (["accept", "feature", "reject", "remove"].indexOf(req.body.action) > -1 && config.maintainers.indexOf(req.user.id) == -1) {
+                        res.sendStatus(403);
+                        return;
+                    }
 
-				const getGalleryDocument = callback => {
-					db.gallery.findOne({_id: req.query.extid}, (err, galleryDocument) => {
-						if(!err && galleryDocument) {
-							callback(galleryDocument);
-						} else {
-							res.sendStatus(500);
-						}
-					});
-				};
-				const getUserDocument = callback => {
-					db.users.findOrCreate({_id: req.user.id}, (err, userDocument) => {
-						if(!err && userDocument) {
-							callback(userDocument);
-						} else {
-							res.sendStatus(500);
-						}
-					});
-				};
-				const messageOwner = (usrid, message) => {
-					const usr = bot.users.get(usrid);
-					if(usr) {
-						usr.getDMChannel().then(ch => {
-							ch.createMessage(message);
-						}).catch();
-					}
-				};
+                    const getGalleryDocument = callback => {
+                        db.gallery.findOne({ _id: req.query.extid }, (err, galleryDocument) => {
+                            if (!err && galleryDocument) {
+                                callback(galleryDocument);
+                            } else {
+                                res.sendStatus(500);
+                            }
+                        });
+                    };
+                    const getUserDocument = callback => {
+                        db.users.findOrCreate({ _id: req.user.id }, (err, userDocument) => {
+                            if (!err && userDocument) {
+                                callback(userDocument);
+                            } else {
+                                res.sendStatus(500);
+                            }
+                        });
+                    };
+                    const messageOwner = (usrid, message) => {
+                        const usr = bot.users.get(usrid);
+                        if (usr) {
+                            usr.getDMChannel().then(ch => {
+                                ch.createMessage(message);
+                            }).catch();
+                        }
+                    };
 
-				switch(req.body.action) {
-					case "upvote":
-						getGalleryDocument(galleryDocument => {
-							getUserDocument(userDocument => {
-								const vote = userDocument.upvoted_gallery_extensions.indexOf(galleryDocument._id)==-1 ? 1 : -1;
-								if(vote==1) {
-									userDocument.upvoted_gallery_extensions.push(galleryDocument._id);
-								} else {
-									userDocument.upvoted_gallery_extensions.splice(userDocument.upvoted_gallery_extensions.indexOf(galleryDocument._id), 1);
-								}
-								galleryDocument.points += vote;
-								galleryDocument.save(() => {
-									userDocument.save(() => {
-										db.users.findOrCreate({_id: galleryDocument.owner_id}, (err, ownerUserDocument) => {
-											if(!err && ownerUserDocument) {
-												ownerUserDocument.points += vote * 10;
-												ownerUserDocument.save(() => {});
-											}
-											res.sendStatus(200);
-										});
-									});
-								});
-							});
-						});
-						break;
-					case "accept":
-						getGalleryDocument(galleryDocument => {
-							messageOwner(galleryDocument.owner_id, `Your extension ${galleryDocument.name} has been accepted to the AwesomeBot extension gallery! 🎉 ${config.hosting_url}extensions/gallery?id=${galleryDocument._id}`);
-							galleryDocument.state = "gallery";
-							galleryDocument.save(err => {
-								res.sendStatus(err ? 500 : 200);
-								db.servers.find({
-									extensions: {
-										$elemMatch: {
-											_id: galleryDocument._id
-										}
-									}
-								}, (err, serverDocuments) => {
-									if(!err && serverDocuments) {
-										serverDocuments.forEach(serverDocument => {
-											serverDocument.extensions.id(galleryDocument._id).updates_available++;
-											serverDocument.save(err => {
-												if(err) {
-													winston.error("Failed to save server data for extension update", {svrid: serverDocument._id}, err);
-												}
-											});
-										});
-									}
-								});
-							});
-						});
-						break;
-					case "feature":
-						getGalleryDocument(galleryDocument => {
-							if(!galleryDocument.featured) {
-								messageOwner(galleryDocument.owner_id, `Your extension ${galleryDocument.name} has been featured on the AwesomeBot extension gallery! 🌟 ${config.hosting_url}extensions/gallery?id=${galleryDocument._id}`);
-							}
-							galleryDocument.featured = galleryDocument.featured!=true;
-							galleryDocument.save(err => {
-								res.sendStatus(err ? 500 : 200);
-							});
-						});
-						break;
-					case "reject":
-					case "remove":
-						getGalleryDocument(galleryDocument => {
-							messageOwner(galleryDocument.owner_id, `Your extension ${galleryDocument.name} has been ${req.body.action}${req.body.action=="reject" ? "e" : ""}d from the AwesomeBot extension gallery for the following reason:\`\`\`${req.body.reason}\`\`\``);
-							db.users.findOrCreate({_id: galleryDocument.owner_id}, (err, ownerUserDocument) => {
-								if(!err && ownerUserDocument) {
-									ownerUserDocument.points -= galleryDocument.points * 10;
-									ownerUserDocument.save(() => {});
-								}
-								galleryDocument.state = "saved";
-								galleryDocument.save(err => {
-									res.sendStatus(err ? 500 : 200);
-								});
-							});
-						});
-						break;
-				}
-			} else {
-				res.sendStatus(400);
-			}
-		} else {
-			res.sendStatus(403);
-		}
-	});
-	app.get("/extension.abext", (req, res) => {
-		if(req.query.extid) {
-			try {
-				res.set({
-					"Content-Disposition": `${"attachment; filename='" + "gallery-"}${req.query.extid}.abext` + "'",
-					"Content-Type": "text/javascript"
-				});
-				res.sendFile(path.resolve(`${__dirname}/../Extensions/gallery-${req.query.extid}.abext`));
-			} catch(err) {
-				res.sendStatus(500);
-			}
-		} else {
-			res.sendStatus(400);
-		}
-	});
-	app.get("/extensions/(|gallery|queue)", (req, res) => {
-		let count;
-		if(!req.query.count) {
-			count = 18;
-		} else {
-			count = parseInt(req.query.count);
-		}
-		let page;
-		if(!req.query.page) {
-			page = 1;
-		} else {
-			page = parseInt(req.query.page);
-		}
+                    switch (req.body.action) {
+                        case "upvote":
+                            getGalleryDocument(galleryDocument => {
+                                getUserDocument(userDocument => {
+                                    const vote = userDocument.upvoted_gallery_extensions.indexOf(galleryDocument._id) == -1 ? 1 : -1;
+                                    if (vote == 1) {
+                                        userDocument.upvoted_gallery_extensions.push(galleryDocument._id);
+                                    } else {
+                                        userDocument.upvoted_gallery_extensions.splice(userDocument.upvoted_gallery_extensions.indexOf(galleryDocument._id), 1);
+                                    }
+                                    galleryDocument.points += vote;
+                                    galleryDocument.save(() => {
+                                        userDocument.save(() => {
+                                            db.users.findOrCreate({ _id: galleryDocument.owner_id }, (err, ownerUserDocument) => {
+                                                if (!err && ownerUserDocument) {
+                                                    ownerUserDocument.points += vote * 10;
+                                                    ownerUserDocument.save(() => {});
+                                                }
+                                                res.sendStatus(200);
+                                            });
+                                        });
+                                    });
+                                });
+                            });
+                            break;
+                        case "accept":
+                            getGalleryDocument(galleryDocument => {
+                                messageOwner(galleryDocument.owner_id, `Your extension ${galleryDocument.name} has been accepted to the AwesomeBot extension gallery! 🎉 ${config.hosting_url}extensions/gallery?id=${galleryDocument._id}`);
+                                galleryDocument.state = "gallery";
+                                galleryDocument.save(err => {
+                                    res.sendStatus(err ? 500 : 200);
+                                    db.servers.find({
+                                        extensions: {
+                                            $elemMatch: {
+                                                _id: galleryDocument._id
+                                            }
+                                        }
+                                    }, (err, serverDocuments) => {
+                                        if (!err && serverDocuments) {
+                                            serverDocuments.forEach(serverDocument => {
+                                                serverDocument.extensions.id(galleryDocument._id).updates_available++;
+                                                serverDocument.save(err => {
+                                                    if (err) {
+                                                        winston.error("Failed to save server data for extension update", { svrid: serverDocument._id }, err);
+                                                    }
+                                                });
+                                            });
+                                        }
+                                    });
+                                });
+                            });
+                            break;
+                        case "feature":
+                            getGalleryDocument(galleryDocument => {
+                                if (!galleryDocument.featured) {
+                                    messageOwner(galleryDocument.owner_id, `Your extension ${galleryDocument.name} has been featured on the AwesomeBot extension gallery! 🌟 ${config.hosting_url}extensions/gallery?id=${galleryDocument._id}`);
+                                }
+                                galleryDocument.featured = galleryDocument.featured != true;
+                                galleryDocument.save(err => {
+                                    res.sendStatus(err ? 500 : 200);
+                                });
+                            });
+                            break;
+                        case "reject":
+                        case "remove":
+                            getGalleryDocument(galleryDocument => {
+                                messageOwner(galleryDocument.owner_id, `Your extension ${galleryDocument.name} has been ${req.body.action}${req.body.action=="reject" ? "e" : ""}d from the AwesomeBot extension gallery for the following reason:\`\`\`${req.body.reason}\`\`\``);
+                                db.users.findOrCreate({ _id: galleryDocument.owner_id }, (err, ownerUserDocument) => {
+                                    if (!err && ownerUserDocument) {
+                                        ownerUserDocument.points -= galleryDocument.points * 10;
+                                        ownerUserDocument.save(() => {});
+                                    }
+                                    galleryDocument.state = "saved";
+                                    galleryDocument.save(err => {
+                                        res.sendStatus(err ? 500 : 200);
+                                    });
+                                });
+                            });
+                            break;
+                    }
+                } else {
+                    res.sendStatus(400);
+                }
+            } else {
+                res.sendStatus(403);
+            }
+        });
+        app.get("/extension.abext", (req, res) => {
+            if (req.query.extid) {
+                try {
+                    res.set({
+                        "Content-Disposition": `${"attachment; filename='" + "gallery-"}${req.query.extid}.abext` + "'",
+                        "Content-Type": "text/javascript"
+                    });
+                    res.sendFile(path.resolve(`${__dirname}/../Extensions/gallery-${req.query.extid}.abext`));
+                } catch (err) {
+                    res.sendStatus(500);
+                }
+            } else {
+                res.sendStatus(400);
+            }
+        });
+        app.get("/extensions/(|gallery|queue)", (req, res) => {
+            let count;
+            if (!req.query.count) {
+                count = 18;
+            } else {
+                count = parseInt(req.query.count);
+            }
+            let page;
+            if (!req.query.page) {
+                page = 1;
+            } else {
+                page = parseInt(req.query.page);
+            }
 
-		const renderPage = (upvoted_gallery_extensions, serverData) => {
-			const extensionState = req.path.substring(req.path.lastIndexOf("/")+1);
-			db.gallery.count({
-				state: extensionState
-			}, (err, rawCount) => {
-				if(err || rawCount==null) {
-					rawCount = 0;
-				}
+            const renderPage = (upvoted_gallery_extensions, serverData) => {
+                const extensionState = req.path.substring(req.path.lastIndexOf("/") + 1);
+                db.gallery.count({
+                    state: extensionState
+                }, (err, rawCount) => {
+                    if (err || rawCount == null) {
+                        rawCount = 0;
+                    }
 
-				const matchCriteria = {
-					"state": extensionState
-				};
-				if(req.query.id) {
-					matchCriteria._id = req.query.id;
-				} else if(req.query.q) {
-					matchCriteria.$text = {
-						$search: req.query.q
-					};
-				}
+                    const matchCriteria = {
+                        "state": extensionState
+                    };
+                    if (req.query.id) {
+                        matchCriteria._id = req.query.id;
+                    } else if (req.query.q) {
+                        matchCriteria.$text = {
+                            $search: req.query.q
+                        };
+                    }
 
-				db.gallery.find(matchCriteria).sort("-featured -points -last_updated").skip(count * (page - 1)).limit(count).exec((err, galleryDocuments) => {
-					const pageTitle = `${extensionState.charAt(0).toUpperCase() + extensionState.slice(1)} - AwesomeBot Extensions`;
-					const extensionData = galleryDocuments.map(getExtensionData);
+                    db.gallery.find(matchCriteria).sort("-featured -points -last_updated").skip(count * (page - 1)).limit(count).exec((err, galleryDocuments) => {
+                        const pageTitle = `${extensionState.charAt(0).toUpperCase() + extensionState.slice(1)} - AwesomeBot Extensions`;
+                        const extensionData = galleryDocuments.map(getExtensionData);
 
-					res.render("pages/extensions.ejs", {
-						authUser: req.isAuthenticated() ? getAuthUser(req.user) : null,
-						isMaintainer: req.isAuthenticated() ? config.maintainers.indexOf(req.user.id)>-1 : false,
-						pageTitle,
-						serverData,
-						activeSearchQuery: req.query.id || req.query.q,
-						mode: extensionState,
-						rawCount,
-						itemsPerPage: req.query.count,
-						currentPage: page,
-						numPages: Math.ceil(rawCount/(count==0 ? rawCount : count)),
-						extensions: extensionData,
-						upvotedData: upvoted_gallery_extensions
-					});
-				});
-			});
-		};
+                        res.render("pages/extensions.ejs", {
+                            authUser: req.isAuthenticated() ? getAuthUser(req.user) : null,
+                            isMaintainer: req.isAuthenticated() ? config.maintainers.indexOf(req.user.id) > -1 : false,
+                            pageTitle,
+                            serverData,
+                            activeSearchQuery: req.query.id || req.query.q,
+                            mode: extensionState,
+                            rawCount,
+                            itemsPerPage: req.query.count,
+                            currentPage: page,
+                            numPages: Math.ceil(rawCount / (count == 0 ? rawCount : count)),
+                            extensions: extensionData,
+                            upvotedData: upvoted_gallery_extensions
+                        });
+                    });
+                });
+            };
 
-		if(req.isAuthenticated()) {
-			const serverData = [];
-			const usr = bot.users.get(req.user.id);
-			const addServerData = (i, callback) => {
-				if(req.user.guilds && i<req.user.guilds.length) {
-					const svr = bot.guilds.get(req.user.guilds[i].id);
-					if(svr && usr) {
-						db.servers.findOne({_id: svr.id}, (err, serverDocument) => {
-							if(!err && serverDocument) {
-								const member = svr.members.get(usr.id);
-								if(bot.getUserBotAdmin(svr, serverDocument, member)>=3) {
-									serverData.push({
-										name: req.user.guilds[i].name,
-										id: req.user.guilds[i].id,
-										icon: req.user.guilds[i].icon ? (`https://cdn.discordapp.com/icons/${req.user.guilds[i].id}/${req.user.guilds[i].icon}.jpg`) : "/static/img/discord-icon.png"
-									});
-								}
-							}
-							addServerData(++i, callback);
-						});
-					} else {
-						addServerData(++i, callback);
-					}
-				} else {
-					callback();
-				}
-			};
-			addServerData(0, () => {
-				serverData.sort((a, b) => {
-					return a.name.localeCompare(b.name);
-				});
-				db.users.findOne({_id: req.user.id}, (err, userDocument) => {
-					if(!err && userDocument) {
-						renderPage(userDocument.upvoted_gallery_extensions, serverData);
-					} else {
-						renderPage([], serverData);
-					}
-				});
-			});
-		} else {
-			renderPage();
-		}
-	});
+            if (req.isAuthenticated()) {
+                const serverData = [];
+                const usr = bot.users.get(req.user.id);
+                const addServerData = (i, callback) => {
+                    if (req.user.guilds && i < req.user.guilds.length) {
+                        const svr = bot.guilds.get(req.user.guilds[i].id);
+                        if (svr && usr) {
+                            db.servers.findOne({ _id: svr.id }, (err, serverDocument) => {
+                                if (!err && serverDocument) {
+                                    const member = svr.members.get(usr.id);
+                                    if (bot.getUserBotAdmin(svr, serverDocument, member) >= 3) {
+                                        serverData.push({
+                                            name: req.user.guilds[i].name,
+                                            id: req.user.guilds[i].id,
+                                            icon: req.user.guilds[i].icon ? (`https://cdn.discordapp.com/icons/${req.user.guilds[i].id}/${req.user.guilds[i].icon}.jpg`) : "/static/img/discord-icon.png"
+                                        });
+                                    }
+                                }
+                                addServerData(++i, callback);
+                            });
+                        } else {
+                            addServerData(++i, callback);
+                        }
+                    } else {
+                        callback();
+                    }
+                };
+                addServerData(0, () => {
+                    serverData.sort((a, b) => {
+                        return a.name.localeCompare(b.name);
+                    });
+                    db.users.findOne({ _id: req.user.id }, (err, userDocument) => {
+                        if (!err && userDocument) {
+                            renderPage(userDocument.upvoted_gallery_extensions, serverData);
+                        } else {
+                            renderPage([], serverData);
+                        }
+                    });
+                });
+            } else {
+                renderPage();
+            }
+        });
 
-	// My extensions
-	app.get("/extensions/my", (req, res) => {
-		if(req.isAuthenticated()) {
-			db.gallery.find({
-				owner_id: req.user.id
-			}, (err, galleryDocuments) => {
-				res.render("pages/extensions.ejs", {
-					authUser: req.isAuthenticated() ? getAuthUser(req.user) : null,
-					currentPage: req.path,
-					pageTitle: "My AwesomeBot Extensions",
-					serverData: {
-						id: req.user.id
-					},
-					activeSearchQuery: req.query.q,
-					mode: "my",
-					rawCount: (galleryDocuments || []).length,
-					extensions: galleryDocuments || []
-				});
-			});
-		} else {
-			res.redirect("/login");
-		}
-	});
-	io.of("/extensions/my").on("connection", socket => {
-		socket.on("disconnect", () => {});
-	});
-	app.post("/extensions/my", (req, res) => {
-		if(req.isAuthenticated()) {
-			db.gallery.find({
-				owner_id: req.user.id
-			}, (err, galleryDocuments) => {
-				if(!err && galleryDocuments) {
-					for(let i=0; i<galleryDocuments.length; i++) {
-						if(req.body[`extension-${i}-removed`]!=null) {
-							db.gallery.findByIdAndRemove(galleryDocuments[i]._id).exec();
-							try {
-								fs.unlinkSync(`${__dirname}/../Extensions/gallery-${galleryDocuments[i]._id}.abext`);
-								break;
-							} catch(err) {
-								break;
-							}
-						}
-					}
-					io.of(req.path).emit("update", req.user.id);
-					res.redirect(req.originalUrl);
-				} else {
-					res.redirect("/error");
-				}
-			});
-		} else {
-			res.redirect("/login");
-		}
-	});
+        // My extensions
+        app.get("/extensions/my", (req, res) => {
+            if (req.isAuthenticated()) {
+                db.gallery.find({
+                    owner_id: req.user.id
+                }, (err, galleryDocuments) => {
+                    res.render("pages/extensions.ejs", {
+                        authUser: req.isAuthenticated() ? getAuthUser(req.user) : null,
+                        currentPage: req.path,
+                        pageTitle: "My AwesomeBot Extensions",
+                        serverData: {
+                            id: req.user.id
+                        },
+                        activeSearchQuery: req.query.q,
+                        mode: "my",
+                        rawCount: (galleryDocuments || []).length,
+                        extensions: galleryDocuments || []
+                    });
+                });
+            } else {
+                res.redirect("/login");
+            }
+        });
+        io.of("/extensions/my").on("connection", socket => {
+            socket.on("disconnect", () => {});
+        });
+        app.post("/extensions/my", (req, res) => {
+            if (req.isAuthenticated()) {
+                db.gallery.find({
+                    owner_id: req.user.id
+                }, (err, galleryDocuments) => {
+                    if (!err && galleryDocuments) {
+                        for (let i = 0; i < galleryDocuments.length; i++) {
+                            if (req.body[`extension-${i}-removed`] != null) {
+                                db.gallery.findByIdAndRemove(galleryDocuments[i]._id).exec();
+                                try {
+                                    fs.unlinkSync(`${__dirname}/../Extensions/gallery-${galleryDocuments[i]._id}.abext`);
+                                    break;
+                                } catch (err) {
+                                    break;
+                                }
+                            }
+                        }
+                        io.of(req.path).emit("update", req.user.id);
+                        res.redirect(req.originalUrl);
+                    } else {
+                        res.redirect("/error");
+                    }
+                });
+            } else {
+                res.redirect("/login");
+            }
+        });
 
-	// Extension builder
-	app.get("/extensions/builder", (req, res) => {
-		if(req.isAuthenticated()) {
-			const renderPage = extensionData => {
-				res.render("pages/extensions.ejs", {
-					authUser: req.isAuthenticated() ? getAuthUser(req.user) : null,
-					currentPage: req.path,
-					pageTitle: `${extensionData.name ? (`${extensionData.name} - `) : ""}AwesomeBot Extension Builder`,
+        // Extension builder
+        app.get("/extensions/builder", (req, res) => {
+                    if (req.isAuthenticated()) {
+                        const renderPage = extensionData => {
+                                res.render("pages/extensions.ejs", {
+                                            authUser: req.isAuthenticated() ? getAuthUser(req.user) : null,
+                                            currentPage: req.path,
+                                            pageTitle: `${extensionData.name ? (`${extensionData.name} - `) : ""}AwesomeBot Extension Builder`,
 					serverData: {
 						id: req.user.id
 					},
@@ -2477,47 +2476,6 @@ module.exports = (bot, db, auth, config, winston) => {
 			serverDocument.config.ranks_list = serverDocument.config.ranks_list.sort((a, b) => {
 				return a.max_score - b.max_score;
 			});
-
-			saveAdminConsoleOptions(consolemember, svr, serverDocument, req, res);
-		});
-	});
-
-	// Admin console AwesomePoints
-	app.get("/dashboard/stats-points/awesome-points", (req, res) => {
-		checkAuth(req, res, (consolemember, svr, serverDocument) => {
-			res.render("pages/admin-awesome-points.ejs", {
-				authUser: req.isAuthenticated() ? getAuthUser(req.user) : null,
-				serverData: {
-					name: svr.name,
-					id: svr.id,
-					icon: svr.iconURL || "/static/img/discord-icon.png"
-				},
-				channelData: getChannelData(svr),
-				currentPage: req.path,
-				configData: {
-					commands: {
-						//points: serverDocument.config.commands.points, TODO delete points
-						lottery: serverDocument.config.commands.lottery
-					}
-				},
-				commandDescriptions: {
-					points: bot.getPublicCommandMetadata("points").description,
-					lottery: bot.getPublicCommandMetadata("lottery").description
-				},
-				commandCategories: {
-					points: bot.getPublicCommandMetadata("points").category,
-					lottery: bot.getPublicCommandMetadata("lottery").category
-				}
-			});
-		});
-	});
-	io.of("/dashboard/stats-points/awesome-points").on("connection", socket => {
-		socket.on("disconnect", () => {});
-	});
-	app.post("/dashboard/stats-points/awesome-points", (req, res) => {
-		checkAuth(req, res, (consolemember, svr, serverDocument) => {
-			parseCommandOptions(svr, serverDocument, "points", req.body);
-			parseCommandOptions(svr, serverDocument, "lottery", req.body);
 
 			saveAdminConsoleOptions(consolemember, svr, serverDocument, req, res);
 		});
