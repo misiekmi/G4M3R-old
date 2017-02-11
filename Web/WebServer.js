@@ -35,7 +35,6 @@ const removeMd = require("remove-markdown");
 const database = require("./../Database/Driver.js");
 const createMessageOfTheDay = require("./../Modules/MessageOfTheDay.js");
 const Giveaways = require("./../Modules/Giveaways.js");
-const Lotteries = require("./../Modules/Lotteries.js");
 const Polls = require("./../Modules/Polls.js");
 const Trivia = require("./../Modules/Trivia.js");
 

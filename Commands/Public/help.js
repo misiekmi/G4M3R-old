@@ -1,4 +1,3 @@
-
 module.exports = (bot, db, config, winston, userDocument, serverDocument, channelDocument, memberDocument, msg, suffix) => {
         if (suffix) {
             const getCommandHelp = (name, type, usage, description) => {
@@ -24,9 +23,9 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
 	} else {
 		//msg.channel.createMessage(`${msg.author.mention} Check your PMs.`);
 
-		const preInfo = `## **PUBLIC COMMANDS** to use with prefix \`${bot.getCommandPrefix(msg.guild, serverDocument)}\`.` +
-		 `\n*## Only showing commands you have permission to use.*\n`;
-		const afterInfo =  `*## For a list of private commands, pm me the text \`help\`.*`;
+		//const preInfo = `## **PUBLIC COMMANDS** to use with prefix \`${bot.getCommandPrefix(msg.guild, serverDocument)}\`.` +
+		// `\n*## Only showing commands you have permission to use.*\n`;
+		//const afterInfo =  `*## For a list of private commands, pm me the text \`help\`.*`;
 		
 		const commands = {};
 		let embed_name = "";
@@ -62,22 +61,23 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
 		//TODO Change Wiki URL
 		let embed_footer = `For detailed information about each command and all of G4M3R's other features, head over to our wiki: <${config.hosting_url}wiki/Commands>. If you need support using G4M3R, please join our Discord server: <${config.discord_link}>. 🎮`;
 		
-		msg.channel.createMessage(preInfo);
+		//msg.channel.createMessage(preInfo);
 		msg.channel.createMessage({			
 			embed : {
 				author: {
-					name: bot.user.username + ` | PUBLIC COMMANDS`,
+					name: bot.user.username + ` | PUBLIC COMMANDS (use with prefix '${bot.getCommandPrefix(msg.guild, serverDocument)}')`,
 					icon_url: bot.user.avatarURL,
 					url: "https://github.com/pedall/G4M3R"
 				},
 				color: 0xffffff,
 				fields: embed_fields,
 				footer: {
-					text: `type '${bot.getCommandPrefix(msg.guild, serverDocument)}help <commandName>' to get more details`
+					text: `type '${bot.getCommandPrefix(msg.guild, serverDocument)}help <commandName>' to get more details` +
+					` | For a list of private commands, DM me 'help'`
 				}
 			}
 		});
-		msg.channel.createMessage(afterInfo);
+		//msg.channel.createMessage(afterInfo);
 		
 		 
 		/* backup for help message
