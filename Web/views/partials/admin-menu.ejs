@@ -79,15 +79,15 @@
 	</p>
 	<ul class="menu-list">
 		<li>
-			<% if(currentPage=="/dashboard/stats-points/stats-collection") { %>
+			<% if(currentPage=="/dashboard/stats/stats-collection") { %>
 				<a class="is-active" href="#">Stats Collection</a>
 			<% } else { %>
-				<a href="/dashboard/stats-points/stats-collection?svrid=<%= serverData.id %>">Stats Collection</a>
+				<a href="/dashboard/stats/stats-collection?svrid=<%= serverData.id %>">Stats Collection</a>
 			<% } %>
-			<% if(currentPage=="/dashboard/stats-points/ranks") { %>
+			<% if(currentPage=="/dashboard/stats/ranks") { %>
 				<a class="is-active" href="#">Ranks</a>
 			<% } else { %>
-				<a href="/dashboard/stats-points/ranks?svrid=<%= serverData.id %>">Ranks</a>
+				<a href="/dashboard/stats/ranks?svrid=<%= serverData.id %>">Ranks</a>
 			<% } %>
 		</li>
 	</ul>

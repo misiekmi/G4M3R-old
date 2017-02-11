@@ -67,7 +67,7 @@
         },
         "about": {
             "usage": "",
-            "description": "Information about AwesomeBot",
+            "description": "Information about G4M3R",
             "defaults": {
                 "is_enabled": true,
                 "is_nsfw_filtered": false,
