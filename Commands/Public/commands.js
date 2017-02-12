@@ -36,12 +36,11 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
     if (suffix) {
 
         Object.keys(commands).sort().forEach(category => {
-
-            if (commands[category]
-                .toString()
+            let stupidCategory = category;
+            if (stupidCategory
                 .trim()
                 .toLowerCase()
-                .prototype.includes(suffix.trim().toLowerCase())) {
+                .includes(suffix.trim().toLowerCase())) {
 
                 //if (suffix.indexOf(commands[category].toString()) > -1) {
                 desc = `${commands[category].sort().join(" ")}`;
