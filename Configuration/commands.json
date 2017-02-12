@@ -226,18 +226,6 @@
             "category": "Moderation ⚒",
             "category_desc": "Powerful tools to manage you server"
         },
-        "countdown": {
-            "examples": "",
-            "usage": "[<event>][|<time from now>]",
-            "description": "Set a timer for an event",
-            "defaults": {
-                "is_enabled": true,
-                "is_nsfw_filtered": false,
-                "admin_level": 0
-            },
-            "category": "Utility 🔦",
-            "category_desc": "Focus on productivity and function"
-        },
         "ddg": {
             "examples": "",
             "usage": "<query>",

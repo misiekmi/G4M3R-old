@@ -11,7 +11,9 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
     let distinctCategories = [];
     var desc = "",
         categorySearch = "",
-        categoryFound = "";
+        title = "",
+        categoryFound = false,
+        categoryNew = "";
     let embed_author = {
         name: bot.user.username,
         icon_url: bot.user.avatarURL,
@@ -46,21 +48,29 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
 
                 //if (suffix.indexOf(commands[category].toString()) > -1) {
                 desc = `${commands[category].join(" ")}`;
-                categoryFound = categorySearch;
+                categoryFound = true;
+                categoryNew = categorySearch;
             }
         });
+
+        if (categoryFound) {
+            title = ` | Commands of category [${categoryNew}]`;
+        } else {
+            title = ` | no category found`;
+            desc = `\`${suffix}\` is no valid part of any category!!`;
+        }
 
         msg.channel.createMessage({
             embed: {
                 author: {
-                    name: bot.user.username + ` | Commands of category [${categoryFound}]`,
+                    name: bot.user.username + title,
                     icon_url: bot.user.avatarURL,
                     url: "https://github.com/pedall/G4M3R"
                 },
                 color: 0xffffff,
                 description: desc,
                 footer: {
-                    text: `type &[${bot.getCommandPrefix(msg.guild, serverDocument)}` +
+                    text: `type [${bot.getCommandPrefix(msg.guild, serverDocument)}` +
                         `help <commandName> ] to get the respective commands `
                 }
             }
