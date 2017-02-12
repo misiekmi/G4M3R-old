@@ -68,9 +68,9 @@
             "category": "G4M3R 🤖",
             "category_desc": "Core infos about the bot"
         },
-        "categories": {
+        "commands": {
             "usage": "",
-            "description": "Shows all categories of G4M3R's commands",
+            "description": "Shows all categories and respsective commands of G4M3R bot",
             "defaults": {
                 "is_enabled": true,
                 "is_nsfw_filtered": false,

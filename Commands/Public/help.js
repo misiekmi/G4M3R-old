@@ -78,6 +78,7 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
 				}
 			}
 		});
+		
 		//msg.channel.createMessage(afterInfo);
 		
 		 

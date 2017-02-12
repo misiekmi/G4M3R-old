@@ -16,7 +16,8 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
             IDHelper.newServerEventNumber(db,serverDocument._id).then((no) => {
                 db.events.create({
                         _id: IDHelper.computeID(no,msg.author.id,serverDocument._id,null),
-                        _no: no, _author: msg.author.id, _server: serverDocument._id, _clan: null
+                        _no: n
+                        o, _author: msg.author.id, _server: serverDocument._id, _clan: null
                     },(err)=>{
                         if(err) {
                             winston.info(err.stack);
