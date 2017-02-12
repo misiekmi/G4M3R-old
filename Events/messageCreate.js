@@ -386,7 +386,9 @@ module.exports = (bot, db, config, winston, msg) => {
                                             bot.getPublicCommand(command.command)(bot, db, config, winston, userDocument, serverDocument, channelDocument, memberDocument, msg, command.suffix, {
                                                 name: command.command,
                                                 usage: bot.getPublicCommandMetadata(command.command).usage,
-                                                description: bot.getPublicCommandMetadata(command.command).description
+                                                description: bot.getPublicCommandMetadata(command.command).description,
+                                                category: bot.getPublicCommandMetadata(command.command).category,
+                                                examples: bot.getPublicCommandMetadata(command.command).examples
                                             });
                                         } catch (err) {
                                             winston.error(`Failed to process command '${command.command}'`, { svrid: msg.guild.id, chid: msg.channel.id, usrid: msg.author.id }, err);

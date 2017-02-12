@@ -9,7 +9,9 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
     const commands = {};
     let category_text = {};
     let distinctCategories = [];
-    let desc = "";
+    var desc = "",
+        categorySearch = "",
+        categoryFound = "";
     let embed_author = {
         name: bot.user.username,
         icon_url: bot.user.avatarURL,
@@ -36,29 +38,30 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
     if (suffix) {
 
         Object.keys(commands).sort().forEach(category => {
-            let stupidCategory = category;
-            if (stupidCategory
+            categorySearch = category;
+            if (categorySearch
                 .trim()
                 .toLowerCase()
                 .includes(suffix.trim().toLowerCase())) {
 
                 //if (suffix.indexOf(commands[category].toString()) > -1) {
-                desc = `${commands[category].sort().join(" ")}`;
+                desc = `${commands[category].join(" ")}`;
+                categoryFound = categorySearch;
             }
         });
 
         msg.channel.createMessage({
             embed: {
                 author: {
-                    name: bot.user.username + ` | Commands of category ${ category }`,
+                    name: bot.user.username + ` | Commands of category [${categoryFound}]`,
                     icon_url: bot.user.avatarURL,
                     url: "https://github.com/pedall/G4M3R"
                 },
                 color: 0xffffff,
                 description: desc,
                 footer: {
-                    text: `type[${bot.getCommandPrefix(msg.guild, serverDocument)}` +
-                        `commands < category > ] to get the respective commands `
+                    text: `type &[${bot.getCommandPrefix(msg.guild, serverDocument)}` +
+                        `help <commandName> ] to get the respective commands `
                 }
             }
         });
@@ -80,8 +83,8 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
                 color: 0xffffff,
                 description: desc,
                 footer: {
-                    text: `type[${bot.getCommandPrefix(msg.guild, serverDocument)}` +
-                        `commands < category > ] to get the respective commands `
+                    text: `type [${bot.getCommandPrefix(msg.guild, serverDocument)}` +
+                        `commands <category> ] to get the respective commands `
                 }
             }
         });

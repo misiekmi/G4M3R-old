@@ -11,15 +11,26 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
 
                     msg_color = 0xffffff; //white color
                     title_content = ``;
-                    page_content = `${description ? (`**Description:** *${description}*`) : "*no description*"}`;
-					page_content += `\n\n${usage ? (`**Usage:** ${bot.getCommandPrefix(msg.guild, serverDocument)}${usage}`) : "*no usage*"}`;
-					page_content += `\n${examples ? (`**Examples:** ${examples}`) : "*no example*"}`;
-					page_content += `\n**WIKI Link:** <${config.hosting_url}wiki/Commands#${name}>`;
-
+                    let embed_fields = [{
+                                name: "Usage",
+                                value: `${usage ? (`${bot.getCommandPrefix(msg.guild, serverDocument)}${usage}`) : "no usage"}`,
+							inline: false
+						},
+						{
+							name: "Examples",
+							value: `${examples ? (`${examples}`) : "no example"}`,
+							inline: false
+						},
+						{
+							name: "WIKI Link",
+							value: `<${config.hosting_url}wiki/Commands#${name}>`,
+							inline: false
+						}];
                     
+					page_content = `*${description ? (`${description}`) : "no description"}*`;
 					footer_content = `Please go to the Wiki for more details`;
 
-                    return { embed: { author: embed_author, color: msg_color, description: page_content, footer: { text: footer_content } } };
+                    return { embed: { author: embed_author, color: msg_color, description: page_content, fields: embed_fields, footer: { text: footer_content } } };
 
 
 /*                    return `__Help for ${type} command **${name}**__\n${description ? (`Description: ${description}\n`) : ""}

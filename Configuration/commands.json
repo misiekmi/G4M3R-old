@@ -1,42 +1,54 @@
 {
     "pm": {
         "afk": {
+            "examples": "",
             "usage": "\".\" or <message>"
         },
         "config": {
+            "examples": "",
             "usage": "<server>"
         },
         "giveaway": {
+            "examples": "",
             "usage": "<server>|#<channel>"
         },
         "help": {
+            "examples": "",
             "usage": "[<command>]"
         },
         "join": {
+            "examples": "",
             "usage": ""
         },
         "poll": {
+            "examples": "",
             "usage": "<server>|#<channel>"
         },
         "profile": {
+            "examples": "",
             "usage": "[\"setup\" or <field>][|\".\" or <value>]"
         },
         "reload": {
+            "examples": "",
             "usage": "\"pm\" or \"public\"/<command>"
         },
         "remindme": {
+            "examples": "",
             "usage": "<time from now>|<reminder>"
         },
         "say": {
+            "examples": "",
             "usage": "<server>|#<channel>"
         },
         "servernick": {
+            "examples": "",
             "usage": "[<nick>][|<server>]"
         }
     },
     "public": {
         "event": {
-            "usage": "event add\nevent list\nevent show [ID]\nevent edit [ID]\nevent join [ID]\nevent leave [ID]",
+            "examples": "event show 1, event list, event add",
+            "usage": "event + add, list, show [ID], edit [ID], join [ID], leave [ID]",
             "description": "Create events people can RSVP to",
             "defaults": {
                 "is_enabled": true,
@@ -47,6 +59,7 @@
             "category_desc": "Focus on productivity and function"
         },
         "myevents": {
+            "examples": "just type the freakin command",
             "usage": "myevents",
             "description": "Show the events you created",
             "defaults": {
@@ -58,7 +71,8 @@
             "category_desc": "Focus on productivity and function"
         },
         "trello": {
-            "usage": "",
+            "examples": "just type the freakin command",
+            "usage": "trello",
             "description": "Shows the Trello Link for G4M3R",
             "defaults": {
                 "is_enabled": true,
@@ -69,7 +83,8 @@
             "category_desc": "Core infos about the bot"
         },
         "commands": {
-            "usage": "",
+            "examples": "commands util\ncommands fun",
+            "usage": "commands, commands <category>",
             "description": "Shows all categories and respsective commands of G4M3R bot",
             "defaults": {
                 "is_enabled": true,
@@ -80,6 +95,7 @@
             "category_desc": "Core infos about the bot"
         },
         "about": {
+            "examples": "",
             "usage": "",
             "description": "Information about G4M3R",
             "defaults": {
@@ -91,6 +107,7 @@
             "category_desc": "Core infos about the bot"
         },
         "afk": {
+            "examples": "",
             "usage": "\".\" or <message>",
             "description": "Display AFK message for users when tagged",
             "defaults": {
@@ -102,6 +119,7 @@
             "category_desc": "Focus on productivity and function"
         },
         "alert": {
+            "examples": "",
             "usage": "[<message to admins>]",
             "description": "Allows members to message the admins",
             "defaults": {
@@ -113,6 +131,7 @@
             "category_desc": "Powerful tools to manage you server"
         },
         "archive": {
+            "examples": "",
             "usage": "<amount of lines>",
             "description": "Provides a JSON file with the last <i>n</i> messages in chat",
             "defaults": {
@@ -124,6 +143,7 @@
             "category_desc": "Focus on productivity and function"
         },
         "avatar": {
+            "examples": "",
             "usage": "[<user>]",
             "description": "Posts a user's profile picture",
             "defaults": {
@@ -135,6 +155,7 @@
             "category_desc": "Focus on productivity and function"
         },
         "ban": {
+            "examples": "",
             "usage": "<user>[|<reason>]",
             "description": "Bans the user(s) from this server and delete 1 day's worth of messages",
             "defaults": {
@@ -146,6 +167,7 @@
             "category_desc": "Powerful tools to manage you server"
         },
         "cat": {
+            "examples": "",
             "usage": "",
             "description": "Random picture of a cat!",
             "defaults": {
@@ -157,6 +179,7 @@
             "category_desc": "Everybody needs SOME fun... :-)"
         },
         "catfact": {
+            "examples": "",
             "usage": "",
             "description": "Random fact about cats",
             "defaults": {
@@ -168,6 +191,7 @@
             "category_desc": "Everybody needs SOME fun... :-)"
         },
         "choose": {
+            "examples": "",
             "usage": "<option 1>|<option 2>[|...]",
             "description": "Randomly chooses from a set of options",
             "defaults": {
@@ -179,6 +203,7 @@
             "category_desc": "Focus on productivity and function"
         },
         "convert": {
+            "examples": "",
             "usage": "<number> <unit> to <unit>",
             "description": "Converts between units of measurement and currencies",
             "defaults": {
@@ -190,6 +215,7 @@
             "category_desc": "Focus on productivity and function"
         },
         "cool": {
+            "examples": "",
             "usage": "[<\".\" or cooldown length>][|<cooldown duration>]",
             "description": "Sets a command cooldown for the channel",
             "defaults": {
@@ -201,6 +227,7 @@
             "category_desc": "Powerful tools to manage you server"
         },
         "countdown": {
+            "examples": "",
             "usage": "[<event>][|<time from now>]",
             "description": "Set a timer for an event",
             "defaults": {
@@ -212,6 +239,7 @@
             "category_desc": "Focus on productivity and function"
         },
         "ddg": {
+            "examples": "",
             "usage": "<query>",
             "description": "DuckDuckGo Instant Answers",
             "defaults": {
@@ -223,6 +251,7 @@
             "category_desc": "Pics, Movies, GIFs, want anything?"
         },
         "debug": {
+            "examples": "",
             "usage": "",
             "description": "Provides system architecture information",
             "defaults": {
@@ -234,6 +263,7 @@
             "category_desc": "Core infos about the bot"
         },
         "disable": {
+            "examples": "",
             "usage": "[<command>]",
             "description": "Turns off a command in the channel",
             "defaults": {
@@ -245,6 +275,7 @@
             "category_desc": "Powerful tools to manage you server"
         },
         "dog": {
+            "examples": "",
             "usage": "",
             "description": "Random picture of a puppy!",
             "defaults": {
@@ -256,6 +287,7 @@
             "category_desc": "Everybody needs SOME fun... :-)"
         },
         "emotes": {
+            "examples": "",
             "usage": "",
             "description": "Shows the custom emojis on the server",
             "defaults": {
@@ -267,6 +299,7 @@
             "category_desc": "Focus on productivity and function"
         },
         "enable": {
+            "examples": "",
             "usage": "[<command>]",
             "description": "Turns on a command in the channel",
             "defaults": {
@@ -278,6 +311,7 @@
             "category_desc": "Powerful tools to manage you server"
         },
         "games": {
+            "examples": "",
             "usage": "",
             "description": "Command that shows the most-played games by members on the server",
             "defaults": {
@@ -289,6 +323,7 @@
             "category_desc": "Some people just need numb3rs..r0fl..n00bs.."
         },
         "gif": {
+            "examples": "",
             "usage": "<query>",
             "description": "Gets a GIF from Giphy with the given tags",
             "defaults": {
@@ -300,6 +335,7 @@
             "category_desc": "Pics, Movies, GIFs, want anything?"
         },
         "giveaway": {
+            "examples": "",
             "usage": "[\"enroll\"]",
             "description": "Easy way to randomly give away a secret of some sort",
             "defaults": {
@@ -312,6 +348,7 @@
             "admin_exempt": true
         },
         "google": {
+            "examples": "",
             "usage": "<query> [<limit>]",
             "description": "Displays Google search and Knowledge Graph results",
             "defaults": {
@@ -323,6 +360,7 @@
             "category_desc": "Pics, Movies, GIFs, want anything?"
         },
         "help": {
+            "examples": "",
             "usage": "[<command>]",
             "description": "",
             "defaults": {
@@ -334,6 +372,7 @@
             "category_desc": "Core infos about the bot"
         },
         "image": {
+            "examples": "",
             "usage": "<query> [\"random\"]",
             "description": "Searches Google Images with the given query and returns the first or a random result",
             "defaults": {
@@ -345,6 +384,7 @@
             "category_desc": "Pics, Movies, GIFs, want anything?"
         },
         "imdb": {
+            "examples": "",
             "usage": "[<type>] <query>",
             "description": "Provides movie and TV show data",
             "defaults": {
@@ -356,6 +396,7 @@
             "category_desc": "Pics, Movies, GIFs, want anything?"
         },
         "imgur": {
+            "examples": "",
             "usage": "<image URL>",
             "description": "Uploads an image to Imgur",
             "defaults": {
@@ -367,6 +408,7 @@
             "category_desc": "Focus on productivity and function"
         },
         "info": {
+            "examples": "",
             "usage": "",
             "description": "Lists basic stats about this server",
             "defaults": {
@@ -378,6 +420,7 @@
             "category_desc": "Focus on productivity and function"
         },
         "join": {
+            "examples": "",
             "usage": "",
             "description": "Provdes the OAuth link to add the bot to another server",
             "defaults": {
@@ -389,6 +432,7 @@
             "category_desc": "Core infos about the bot"
         },
         "kick": {
+            "examples": "",
             "usage": "<user>[|<reason>]",
             "description": "Removes a member from the server",
             "defaults": {
@@ -400,6 +444,7 @@
             "category_desc": "Powerful tools to manage you server"
         },
         "list": {
+            "examples": "",
             "usage": "[<content> or <item no.>][|\".\" or \"done\" or <content>]",
             "description": "In-chat to-do list",
             "defaults": {
@@ -411,6 +456,7 @@
             "category_desc": "Focus on productivity and function"
         },
         "meme": {
+            "examples": "",
             "usage": "\"search\" <query> or [<meme key>|]<top>[|<bottom>]",
             "description": "Generates a dank new meme",
             "defaults": {
@@ -422,6 +468,7 @@
             "category_desc": "Everybody needs SOME fun... :-)"
         },
         "messages": {
+            "examples": "",
             "usage": "[<user or \"me\">]",
             "description": "Command that shows the top members on the server by activity",
             "defaults": {
@@ -433,6 +480,7 @@
             "category_desc": "Some people just need numb3rs..r0fl..n00bs.."
         },
         "modlog": {
+            "examples": "",
             "usage": "\"enable\" <channel> or \"disable\" or \"remove\" <case ID>",
             "description": "Moderation logging utility command",
             "defaults": {
@@ -444,6 +492,7 @@
             "category_desc": "Powerful tools to manage you server"
         },
         "mute": {
+            "examples": "",
             "usage": "<user>[|<reason>]",
             "description": "Prevents users from sending messages in a channel",
             "defaults": {
@@ -455,6 +504,7 @@
             "category_desc": "Powerful tools to manage you server"
         },
         "nick": {
+            "examples": "",
             "usage": "[<user>|<name> or <name>]",
             "description": "Changes a member nicknames on the server",
             "defaults": {
@@ -466,6 +516,7 @@
             "category_desc": "Powerful tools to manage you server"
         },
         "nuke": {
+            "examples": "",
             "usage": "<search limit> [<content> or \":\"<query> or \">\"<after ID> or \"<\"<before ID> or <user>]",
             "description": "Deletes messages in a channel, all or from a user",
             "defaults": {
@@ -477,6 +528,7 @@
             "category_desc": "Powerful tools to manage you server"
         },
         "perms": {
+            "examples": "",
             "usage": "[<user or role>][|<permission name>]",
             "description": "Modifies permissions for a role or user in a channel",
             "defaults": {
@@ -488,6 +540,7 @@
             "category_desc": "Powerful tools to manage you server"
         },
         "ping": {
+            "examples": "",
             "usage": "",
             "description": "",
             "defaults": {
@@ -499,6 +552,7 @@
             "category_desc": "Core infos about the bot"
         },
         "poll": {
+            "examples": "",
             "usage": "[<no. of option>]",
             "description": "Allows users to create live, in-chat polls",
             "defaults": {
@@ -511,6 +565,7 @@
             "admin_exempt": true
         },
         "prefix": {
+            "examples": "",
             "usage": "[<new command prefix>]",
             "description": "",
             "defaults": {
@@ -522,6 +577,7 @@
             "category_desc": "Powerful tools to manage you server"
         },
         "profile": {
+            "examples": "",
             "usage": "[<user>]",
             "description": "An all-in-one command to view information about users",
             "defaults": {
@@ -533,6 +589,7 @@
             "category_desc": "Focus on productivity and function"
         },
         "quiet": {
+            "examples": "",
             "usage": "[\"all\" or <time>]",
             "description": "Turns off the bot in one or all channels",
             "defaults": {
@@ -544,6 +601,7 @@
             "category_desc": "Powerful tools to manage you server"
         },
         "ranks": {
+            "examples": "",
             "usage": "[<user or rank>]",
             "description": "Lists the ranks of all members of the server",
             "defaults": {
@@ -555,6 +613,7 @@
             "category_desc": "Some people just need numb3rs..r0fl..n00bs.."
         },
         "reason": {
+            "examples": "",
             "usage": "<case ID> <reason>",
             "description": "Sets the reason for modlog entries",
             "defaults": {
@@ -566,6 +625,7 @@
             "category_desc": "Powerful tools to manage you server"
         },
         "reddit": {
+            "examples": "",
             "usage": "[<subreddit>] [<limit>]",
             "description": "Gets the hot posts from a given subreddit",
             "defaults": {
@@ -577,6 +637,7 @@
             "category_desc": "Pics, Movies, GIFs, want anything?"
         },
         "remindme": {
+            "examples": "",
             "usage": "<time from now>|<reminder>",
             "description": "",
             "defaults": {
@@ -588,6 +649,7 @@
             "category_desc": "Focus on productivity and function"
         },
         "role": {
+            "examples": "",
             "usage": "[<name>][|\".\" or <hex color> or \"hoist\" or <user> or <name>]",
             "description": "Adds members to roles, modifies roles, and sets colors",
             "defaults": {
@@ -599,6 +661,7 @@
             "category_desc": "Powerful tools to manage you server"
         },
         "roleinfo": {
+            "examples": "",
             "usage": "[<role>]",
             "description": "Gets information about roles",
             "defaults": {
@@ -610,6 +673,7 @@
             "category_desc": "Focus on productivity and function"
         },
         "room": {
+            "examples": "",
             "usage": "\"text\" or \"voice\" [<user 1>][|<user 2>][|...]",
             "description": "Creates a temporary text or voice channel with a few members",
             "defaults": {
@@ -621,6 +685,7 @@
             "category_desc": "Focus on productivity and function"
         },
         "rss": {
+            "examples": "",
             "usage": "<feed name or URL> [<limit>]",
             "description": "Fetches articles from an RSS feed",
             "defaults": {
@@ -633,6 +698,7 @@
         },
         "say": {
 
+            "examples": "",
             "usage": "<something>",
             "description": "Says something in the chat",
             "defaults": {
@@ -644,6 +710,7 @@
             "category_desc": "Focus on productivity and function"
         },
         "shorten": {
+            "examples": "",
             "usage": "<URL>",
             "description": "Uses goo.gl to shorten or decode a URL",
             "defaults": {
@@ -655,6 +722,7 @@
             "category_desc": "Focus on productivity and function"
         },
         "softban": {
+            "examples": "",
             "usage": "<user>[|<reason>]",
             "description": "Bans the user(s) from this server without deleting messages.",
             "defaults": {
@@ -666,6 +734,7 @@
             "category_desc": "Powerful tools to manage you server"
         },
         "stats": {
+            "examples": "",
             "usage": "[\"clear\"]",
             "description": "Collect data about the most active members and most popular games and commands on the server for each week",
             "defaults": {
@@ -677,6 +746,7 @@
             "category_desc": "Some people just need numb3rs..r0fl..n00bs.."
         },
         "streamers": {
+            "examples": "",
             "usage": "",
             "description": "Shows live Twitch and YouTube Gaming streams",
             "defaults": {
@@ -688,6 +758,7 @@
             "category_desc": "Pics, Movies, GIFs, want anything?"
         },
         "strikes": {
+            "examples": "",
             "usage": "[<user>]",
             "description": "Shows strikes for a user",
             "defaults": {
@@ -699,6 +770,7 @@
             "category_desc": "Powerful tools to manage you server"
         },
         "tag": {
+            "examples": "",
             "usage": "[<tag name>][|\".\" or <content>]",
             "description": "Quick snippet response system",
             "defaults": {
@@ -710,6 +782,7 @@
             "category_desc": "Focus on productivity and function"
         },
         "time": {
+            "examples": "",
             "usage": "<location>",
             "description": "Gets the time in a city or country",
             "defaults": {
@@ -721,6 +794,7 @@
             "category_desc": "Focus on productivity and function"
         },
         "translate": {
+            "examples": "",
             "usage": "<text> <source lang> to <target lang>",
             "description": "Uses Microsoft Translate to translate a word/phrase into another language",
             "defaults": {
@@ -732,6 +806,7 @@
             "category_desc": "Focus on productivity and function"
         },
         "trivia": {
+            "examples": "",
             "usage": "",
             "description": "A fun question-and-answer group quiz game",
             "defaults": {
@@ -743,6 +818,7 @@
             "category_desc": "Everybody needs SOME fun... :-)"
         },
         "twitter": {
+            "examples": "",
             "usage": "<user>",
             "description": "Fetches the Twitter timeline for a given user",
             "defaults": {
@@ -754,6 +830,7 @@
             "category_desc": "Pics, Movies, GIFs, want anything?"
         },
         "unban": {
+            "examples": "",
             "usage": "<user>[|<reason>]",
             "description": "Unbans the user",
             "defaults": {
@@ -765,6 +842,7 @@
             "category_desc": "Powerful tools to manage you server"
         },
         "unmute": {
+            "examples": "",
             "usage": "<user>[|<reason>]",
             "description": "Allows the muted user(s) to speak in the channel",
             "defaults": {
@@ -776,6 +854,7 @@
             "category_desc": "Powerful tools to manage you server"
         },
         "urban": {
+            "examples": "",
             "usage": "[<query>]",
             "description": "Defines the given word from Urban Dictionary",
             "defaults": {
@@ -787,6 +866,7 @@
             "category_desc": "Pics, Movies, GIFs, want anything?"
         },
         "warn": {
+            "examples": "",
             "usage": "<user>[|<reason>]",
             "description": "Add a modlog entry (if enabled)",
             "defaults": {
@@ -798,6 +878,7 @@
             "category_desc": "Powerful tools to manage you server"
         },
         "weather": {
+            "examples": "",
             "usage": "<location> [<unit>]",
             "description": "Gets th current weather and forecast for the given location from MSN Weather",
             "defaults": {
@@ -809,6 +890,7 @@
             "category_desc": "Pics, Movies, GIFs, want anything?"
         },
         "wiki": {
+            "examples": "",
             "usage": "[<query>]",
             "description": "Shows the first three paragraphs of the Wikipedia article matching the given search query",
             "defaults": {
@@ -820,6 +902,7 @@
             "category_desc": "Pics, Movies, GIFs, want anything?"
         },
         "wolfram": {
+            "examples": "",
             "usage": "<query>",
             "description": "Displays an entire Wolfram|Alpha knowledge page about a given topic or person",
             "defaults": {
@@ -831,6 +914,7 @@
             "category_desc": "Pics, Movies, GIFs, want anything?"
         },
         "xkcd": {
+            "examples": "",
             "usage": "[<comic ID>]",
             "description": "Fetches today's XKCD comic or by ID",
             "defaults": {
@@ -842,6 +926,7 @@
             "category_desc": "Everybody needs SOME fun... :-)"
         },
         "youtube": {
+            "examples": "",
             "usage": "<query> [<limit>]",
             "description": "Gets a YouTube link with the given query, including channels, videos, and playlists",
             "defaults": {

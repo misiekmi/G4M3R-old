@@ -293,6 +293,7 @@ Viewer.prototype.leaveEvent = function(event, msgAuthor) {
         }
     }
     
+    
     // msgAuthor was an attendee of the event
     if (wasMember) {
         msg_color = 0x17f926; //green color
