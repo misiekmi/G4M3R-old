@@ -1,11 +1,11 @@
 {
     "name": "G4M3R",
-    "description": "(formerly) The best Discord bot!",
+    "description": "Ready to game?",
     "version": "0.1.1",
-    "author": "BitQuote",
+    "author": "pedall & notem",
     "repository": {
         "type": "git",
-        "url": "https://github.com/BitQuote/G4M3R.git"
+        "url": "https://github.com/pedall/G4M3R.git"
     },
     "license": "GPL v2",
     "dependencies": {

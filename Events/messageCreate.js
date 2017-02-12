@@ -33,7 +33,7 @@ module.exports = (bot, db, config, winston, msg) => {
             "User-Agent": "Unirest Node.js"
         }).end(res => {
             if (res.status == 200 && res.body) {
-                res = JSON.parse(res.body).botsay.replaceAll("Program-O", botname).replaceAll("<br/>", "\n").replaceAll("Elizabeth", "BitQuote");
+                res = JSON.parse(res.body).botsay.replaceAll("Program-O", botname).replaceAll("<br/>", "\n").replaceAll("Elizabeth", "pedall & notem");
             } else {
                 res = "I don't feel like talking rn 😠";
             }

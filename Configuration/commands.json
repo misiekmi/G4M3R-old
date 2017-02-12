@@ -43,7 +43,8 @@
                 "is_nsfw_filtered": false,
                 "admin_level": 0
             },
-            "category": "Utility 🔦"
+            "category": "Utility 🔦",
+            "category_desc": "Focus on productivity and function"
         },
         "myevents": {
             "usage": "myevents",
@@ -53,7 +54,8 @@
                 "is_nsfw_filtered": false,
                 "admin_level": 0
             },
-            "category": "Utility 🔦"
+            "category": "Utility 🔦",
+            "category_desc": "Focus on productivity and function"
         },
         "trello": {
             "usage": "",
@@ -63,7 +65,19 @@
                 "is_nsfw_filtered": false,
                 "admin_level": 0
             },
-            "category": "G4M3R 🤖"
+            "category": "G4M3R 🤖",
+            "category_desc": "Core infos about the bot"
+        },
+        "categories": {
+            "usage": "",
+            "description": "Shows all categories of G4M3R's commands",
+            "defaults": {
+                "is_enabled": true,
+                "is_nsfw_filtered": false,
+                "admin_level": 0
+            },
+            "category": "G4M3R 🤖",
+            "category_desc": "Core infos about the bot"
         },
         "about": {
             "usage": "",
@@ -73,7 +87,8 @@
                 "is_nsfw_filtered": false,
                 "admin_level": 0
             },
-            "category": "G4M3R 🤖"
+            "category": "G4M3R 🤖",
+            "category_desc": "Core infos about the bot"
         },
         "afk": {
             "usage": "\".\" or <message>",
@@ -83,7 +98,8 @@
                 "is_nsfw_filtered": false,
                 "admin_level": 0
             },
-            "category": "Utility 🔦"
+            "category": "Utility 🔦",
+            "category_desc": "Focus on productivity and function"
         },
         "alert": {
             "usage": "[<message to admins>]",
@@ -93,7 +109,8 @@
                 "is_nsfw_filtered": false,
                 "admin_level": 0
             },
-            "category": "Moderation ⚒"
+            "category": "Moderation ⚒",
+            "category_desc": "Powerful tools to manage you server"
         },
         "archive": {
             "usage": "<amount of lines>",
@@ -103,7 +120,8 @@
                 "is_nsfw_filtered": false,
                 "admin_level": 0
             },
-            "category": "Utility 🔦"
+            "category": "Utility 🔦",
+            "category_desc": "Focus on productivity and function"
         },
         "avatar": {
             "usage": "[<user>]",
@@ -113,7 +131,8 @@
                 "is_nsfw_filtered": false,
                 "admin_level": 0
             },
-            "category": "Utility 🔦"
+            "category": "Utility 🔦",
+            "category_desc": "Focus on productivity and function"
         },
         "ban": {
             "usage": "<user>[|<reason>]",
@@ -123,7 +142,8 @@
                 "is_nsfw_filtered": false,
                 "admin_level": 3
             },
-            "category": "Moderation ⚒"
+            "category": "Moderation ⚒",
+            "category_desc": "Powerful tools to manage you server"
         },
         "cat": {
             "usage": "",
@@ -133,7 +153,8 @@
                 "is_nsfw_filtered": false,
                 "admin_level": 0
             },
-            "category": "Fun 🎪"
+            "category": "Fun 🎪",
+            "category_desc": "Everybody needs SOME fun... :-)"
         },
         "catfact": {
             "usage": "",
@@ -143,7 +164,8 @@
                 "is_nsfw_filtered": false,
                 "admin_level": 0
             },
-            "category": "Fun 🎪"
+            "category": "Fun 🎪",
+            "category_desc": "Everybody needs SOME fun... :-)"
         },
         "choose": {
             "usage": "<option 1>|<option 2>[|...]",
@@ -153,7 +175,8 @@
                 "is_nsfw_filtered": false,
                 "admin_level": 0
             },
-            "category": "Utility 🔦"
+            "category": "Utility 🔦",
+            "category_desc": "Focus on productivity and function"
         },
         "convert": {
             "usage": "<number> <unit> to <unit>",
@@ -163,7 +186,8 @@
                 "is_nsfw_filtered": false,
                 "admin_level": 0
             },
-            "category": "Utility 🔦"
+            "category": "Utility 🔦",
+            "category_desc": "Focus on productivity and function"
         },
         "cool": {
             "usage": "[<\".\" or cooldown length>][|<cooldown duration>]",
@@ -173,7 +197,8 @@
                 "is_nsfw_filtered": false,
                 "admin_level": 1
             },
-            "category": "Moderation ⚒"
+            "category": "Moderation ⚒",
+            "category_desc": "Powerful tools to manage you server"
         },
         "countdown": {
             "usage": "[<event>][|<time from now>]",
@@ -183,7 +208,8 @@
                 "is_nsfw_filtered": false,
                 "admin_level": 0
             },
-            "category": "Utility 🔦"
+            "category": "Utility 🔦",
+            "category_desc": "Focus on productivity and function"
         },
         "ddg": {
             "usage": "<query>",
@@ -193,7 +219,8 @@
                 "is_nsfw_filtered": false,
                 "admin_level": 0
             },
-            "category": "Search & Media 🎬"
+            "category": "Search & Media 🎬",
+            "category_desc": "Pics, Movies, GIFs, want anything?"
         },
         "debug": {
             "usage": "",
@@ -203,7 +230,8 @@
                 "is_nsfw_filtered": false,
                 "admin_level": 0
             },
-            "category": "G4M3R 🤖"
+            "category": "G4M3R 🤖",
+            "category_desc": "Core infos about the bot"
         },
         "disable": {
             "usage": "[<command>]",
@@ -213,7 +241,8 @@
                 "is_nsfw_filtered": false,
                 "admin_level": 3
             },
-            "category": "Moderation ⚒"
+            "category": "Moderation ⚒",
+            "category_desc": "Powerful tools to manage you server"
         },
         "dog": {
             "usage": "",
@@ -223,7 +252,8 @@
                 "is_nsfw_filtered": false,
                 "admin_level": 0
             },
-            "category": "Fun 🎪"
+            "category": "Fun 🎪",
+            "category_desc": "Everybody needs SOME fun... :-)"
         },
         "emotes": {
             "usage": "",
@@ -233,7 +263,8 @@
                 "is_nsfw_filtered": false,
                 "admin_level": 0
             },
-            "category": "Utility 🔦"
+            "category": "Utility 🔦",
+            "category_desc": "Focus on productivity and function"
         },
         "enable": {
             "usage": "[<command>]",
@@ -243,7 +274,8 @@
                 "is_nsfw_filtered": false,
                 "admin_level": 3
             },
-            "category": "Moderation ⚒"
+            "category": "Moderation ⚒",
+            "category_desc": "Powerful tools to manage you server"
         },
         "games": {
             "usage": "",
@@ -253,7 +285,8 @@
                 "is_nsfw_filtered": false,
                 "admin_level": 0
             },
-            "category": "Stats ⭐️"
+            "category": "Stats ⭐️",
+            "category_desc": "Some people just need numb3rs..r0fl..n00bs.."
         },
         "gif": {
             "usage": "<query>",
@@ -263,7 +296,8 @@
                 "is_nsfw_filtered": true,
                 "admin_level": 0
             },
-            "category": "Search & Media 🎬"
+            "category": "Search & Media 🎬",
+            "category_desc": "Pics, Movies, GIFs, want anything?"
         },
         "giveaway": {
             "usage": "[\"enroll\"]",
@@ -274,6 +308,7 @@
                 "admin_level": 0
             },
             "category": "Utility 🔦",
+            "category_desc": "Focus on productivity and function",
             "admin_exempt": true
         },
         "google": {
@@ -284,7 +319,8 @@
                 "is_nsfw_filtered": true,
                 "admin_level": 0
             },
-            "category": "Search & Media 🎬"
+            "category": "Search & Media 🎬",
+            "category_desc": "Pics, Movies, GIFs, want anything?"
         },
         "help": {
             "usage": "[<command>]",
@@ -294,7 +330,8 @@
                 "is_nsfw_filtered": false,
                 "admin_level": 0
             },
-            "category": "G4M3R 🤖"
+            "category": "G4M3R 🤖",
+            "category_desc": "Core infos about the bot"
         },
         "image": {
             "usage": "<query> [\"random\"]",
@@ -304,7 +341,8 @@
                 "is_nsfw_filtered": true,
                 "admin_level": 0
             },
-            "category": "Search & Media 🎬"
+            "category": "Search & Media 🎬",
+            "category_desc": "Pics, Movies, GIFs, want anything?"
         },
         "imdb": {
             "usage": "[<type>] <query>",
@@ -314,7 +352,8 @@
                 "is_nsfw_filtered": false,
                 "admin_level": 0
             },
-            "category": "Search & Media 🎬"
+            "category": "Search & Media 🎬",
+            "category_desc": "Pics, Movies, GIFs, want anything?"
         },
         "imgur": {
             "usage": "<image URL>",
@@ -324,7 +363,8 @@
                 "is_nsfw_filtered": false,
                 "admin_level": 0
             },
-            "category": "Utility 🔦"
+            "category": "Utility 🔦",
+            "category_desc": "Focus on productivity and function"
         },
         "info": {
             "usage": "",
@@ -334,7 +374,8 @@
                 "is_nsfw_filtered": false,
                 "admin_level": 0
             },
-            "category": "Utility 🔦"
+            "category": "Utility 🔦",
+            "category_desc": "Focus on productivity and function"
         },
         "join": {
             "usage": "",
@@ -344,7 +385,8 @@
                 "is_nsfw_filtered": false,
                 "admin_level": 0
             },
-            "category": "G4M3R 🤖"
+            "category": "G4M3R 🤖",
+            "category_desc": "Core infos about the bot"
         },
         "kick": {
             "usage": "<user>[|<reason>]",
@@ -354,7 +396,8 @@
                 "is_nsfw_filtered": false,
                 "admin_level": 1
             },
-            "category": "Moderation ⚒"
+            "category": "Moderation ⚒",
+            "category_desc": "Powerful tools to manage you server"
         },
         "list": {
             "usage": "[<content> or <item no.>][|\".\" or \"done\" or <content>]",
@@ -364,7 +407,8 @@
                 "is_nsfw_filtered": false,
                 "admin_level": 1
             },
-            "category": "Utility 🔦"
+            "category": "Utility 🔦",
+            "category_desc": "Focus on productivity and function"
         },
         "meme": {
             "usage": "\"search\" <query> or [<meme key>|]<top>[|<bottom>]",
@@ -374,7 +418,8 @@
                 "is_nsfw_filtered": false,
                 "admin_level": 0
             },
-            "category": "Fun 🎪"
+            "category": "Fun 🎪",
+            "category_desc": "Everybody needs SOME fun... :-)"
         },
         "messages": {
             "usage": "[<user or \"me\">]",
@@ -384,7 +429,8 @@
                 "is_nsfw_filtered": false,
                 "admin_level": 0
             },
-            "category": "Stats ⭐️"
+            "category": "Stats ⭐️",
+            "category_desc": "Some people just need numb3rs..r0fl..n00bs.."
         },
         "modlog": {
             "usage": "\"enable\" <channel> or \"disable\" or \"remove\" <case ID>",
@@ -394,7 +440,8 @@
                 "is_nsfw_filtered": false,
                 "admin_level": 3
             },
-            "category": "Moderation ⚒"
+            "category": "Moderation ⚒",
+            "category_desc": "Powerful tools to manage you server"
         },
         "mute": {
             "usage": "<user>[|<reason>]",
@@ -404,7 +451,8 @@
                 "is_nsfw_filtered": false,
                 "admin_level": 1
             },
-            "category": "Moderation ⚒"
+            "category": "Moderation ⚒",
+            "category_desc": "Powerful tools to manage you server"
         },
         "nick": {
             "usage": "[<user>|<name> or <name>]",
@@ -414,7 +462,8 @@
                 "is_nsfw_filtered": false,
                 "admin_level": 3
             },
-            "category": "Moderation ⚒"
+            "category": "Moderation ⚒",
+            "category_desc": "Powerful tools to manage you server"
         },
         "nuke": {
             "usage": "<search limit> [<content> or \":\"<query> or \">\"<after ID> or \"<\"<before ID> or <user>]",
@@ -424,7 +473,8 @@
                 "is_nsfw_filtered": false,
                 "admin_level": 1
             },
-            "category": "Moderation ⚒"
+            "category": "Moderation ⚒",
+            "category_desc": "Powerful tools to manage you server"
         },
         "perms": {
             "usage": "[<user or role>][|<permission name>]",
@@ -434,7 +484,8 @@
                 "is_nsfw_filtered": false,
                 "admin_level": 3
             },
-            "category": "Moderation ⚒"
+            "category": "Moderation ⚒",
+            "category_desc": "Powerful tools to manage you server"
         },
         "ping": {
             "usage": "",
@@ -444,7 +495,8 @@
                 "is_nsfw_filtered": false,
                 "admin_level": 0
             },
-            "category": "G4M3R 🤖"
+            "category": "G4M3R 🤖",
+            "category_desc": "Core infos about the bot"
         },
         "poll": {
             "usage": "[<no. of option>]",
@@ -455,6 +507,7 @@
                 "admin_level": 0
             },
             "category": "Utility 🔦",
+            "category_desc": "Focus on productivity and function",
             "admin_exempt": true
         },
         "prefix": {
@@ -465,7 +518,8 @@
                 "is_nsfw_filtered": false,
                 "admin_level": 3
             },
-            "category": "Moderation ⚒"
+            "category": "Moderation ⚒",
+            "category_desc": "Powerful tools to manage you server"
         },
         "profile": {
             "usage": "[<user>]",
@@ -475,7 +529,8 @@
                 "is_nsfw_filtered": false,
                 "admin_level": 0
             },
-            "category": "Utility 🔦"
+            "category": "Utility 🔦",
+            "category_desc": "Focus on productivity and function"
         },
         "quiet": {
             "usage": "[\"all\" or <time>]",
@@ -485,7 +540,8 @@
                 "is_nsfw_filtered": false,
                 "admin_level": 3
             },
-            "category": "Moderation ⚒"
+            "category": "Moderation ⚒",
+            "category_desc": "Powerful tools to manage you server"
         },
         "ranks": {
             "usage": "[<user or rank>]",
@@ -495,7 +551,8 @@
                 "is_nsfw_filtered": false,
                 "admin_level": 0
             },
-            "category": "Stats ⭐️"
+            "category": "Stats ⭐️",
+            "category_desc": "Some people just need numb3rs..r0fl..n00bs.."
         },
         "reason": {
             "usage": "<case ID> <reason>",
@@ -505,7 +562,8 @@
                 "is_nsfw_filtered": false,
                 "admin_level": 1
             },
-            "category": "Moderation ⚒"
+            "category": "Moderation ⚒",
+            "category_desc": "Powerful tools to manage you server"
         },
         "reddit": {
             "usage": "[<subreddit>] [<limit>]",
@@ -515,7 +573,8 @@
                 "is_nsfw_filtered": false,
                 "admin_level": 0
             },
-            "category": "Search & Media 🎬"
+            "category": "Search & Media 🎬",
+            "category_desc": "Pics, Movies, GIFs, want anything?"
         },
         "remindme": {
             "usage": "<time from now>|<reminder>",
@@ -525,7 +584,8 @@
                 "is_nsfw_filtered": false,
                 "admin_level": 0
             },
-            "category": "Utility 🔦"
+            "category": "Utility 🔦",
+            "category_desc": "Focus on productivity and function"
         },
         "role": {
             "usage": "[<name>][|\".\" or <hex color> or \"hoist\" or <user> or <name>]",
@@ -535,7 +595,8 @@
                 "is_nsfw_filtered": false,
                 "admin_level": 0
             },
-            "category": "Moderation ⚒"
+            "category": "Moderation ⚒",
+            "category_desc": "Powerful tools to manage you server"
         },
         "roleinfo": {
             "usage": "[<role>]",
@@ -545,7 +606,8 @@
                 "is_nsfw_filtered": false,
                 "admin_level": 0
             },
-            "category": "Utility 🔦"
+            "category": "Utility 🔦",
+            "category_desc": "Focus on productivity and function"
         },
         "room": {
             "usage": "\"text\" or \"voice\" [<user 1>][|<user 2>][|...]",
@@ -555,7 +617,8 @@
                 "is_nsfw_filtered": false,
                 "admin_level": 0
             },
-            "category": "Utility 🔦"
+            "category": "Utility 🔦",
+            "category_desc": "Focus on productivity and function"
         },
         "rss": {
             "usage": "<feed name or URL> [<limit>]",
@@ -565,9 +628,11 @@
                 "is_nsfw_filtered": false,
                 "admin_level": 0
             },
-            "category": "Search & Media 🎬"
+            "category": "Search & Media 🎬",
+            "category_desc": "Pics, Movies, GIFs, want anything?"
         },
         "say": {
+
             "usage": "<something>",
             "description": "Says something in the chat",
             "defaults": {
@@ -575,7 +640,8 @@
                 "is_nsfw_filtered": false,
                 "admin_level": 1
             },
-            "category": "Utility 🔦"
+            "category": "Utility 🔦",
+            "category_desc": "Focus on productivity and function"
         },
         "shorten": {
             "usage": "<URL>",
@@ -585,7 +651,8 @@
                 "is_nsfw_filtered": false,
                 "admin_level": 0
             },
-            "category": "Utility 🔦"
+            "category": "Utility 🔦",
+            "category_desc": "Focus on productivity and function"
         },
         "softban": {
             "usage": "<user>[|<reason>]",
@@ -595,7 +662,8 @@
                 "is_nsfw_filtered": false,
                 "admin_level": 3
             },
-            "category": "Moderation ⚒"
+            "category": "Moderation ⚒",
+            "category_desc": "Powerful tools to manage you server"
         },
         "stats": {
             "usage": "[\"clear\"]",
@@ -605,7 +673,8 @@
                 "is_nsfw_filtered": false,
                 "admin_level": 0
             },
-            "category": "Stats ⭐️"
+            "category": "Stats ⭐️",
+            "category_desc": "Some people just need numb3rs..r0fl..n00bs.."
         },
         "streamers": {
             "usage": "",
@@ -615,7 +684,8 @@
                 "is_nsfw_filtered": false,
                 "admin_level": 0
             },
-            "category": "Search & Media 🎬"
+            "category": "Search & Media 🎬",
+            "category_desc": "Pics, Movies, GIFs, want anything?"
         },
         "strikes": {
             "usage": "[<user>]",
@@ -625,7 +695,8 @@
                 "is_nsfw_filtered": false,
                 "admin_level": 3
             },
-            "category": "Moderation ⚒"
+            "category": "Moderation ⚒",
+            "category_desc": "Powerful tools to manage you server"
         },
         "tag": {
             "usage": "[<tag name>][|\".\" or <content>]",
@@ -635,7 +706,8 @@
                 "is_nsfw_filtered": false,
                 "admin_level": 0
             },
-            "category": "Utility 🔦"
+            "category": "Utility 🔦",
+            "category_desc": "Focus on productivity and function"
         },
         "time": {
             "usage": "<location>",
@@ -645,7 +717,8 @@
                 "is_nsfw_filtered": false,
                 "admin_level": 0
             },
-            "category": "Utility 🔦"
+            "category": "Utility 🔦",
+            "category_desc": "Focus on productivity and function"
         },
         "translate": {
             "usage": "<text> <source lang> to <target lang>",
@@ -655,7 +728,8 @@
                 "is_nsfw_filtered": false,
                 "admin_level": 0
             },
-            "category": "Utility 🔦"
+            "category": "Utility 🔦",
+            "category_desc": "Focus on productivity and function"
         },
         "trivia": {
             "usage": "",
@@ -665,7 +739,8 @@
                 "is_nsfw_filtered": false,
                 "admin_level": 0
             },
-            "category": "Fun 🎪"
+            "category": "Fun 🎪",
+            "category_desc": "Everybody needs SOME fun... :-)"
         },
         "twitter": {
             "usage": "<user>",
@@ -675,7 +750,8 @@
                 "is_nsfw_filtered": false,
                 "admin_level": 0
             },
-            "category": "Search & Media 🎬"
+            "category": "Search & Media 🎬",
+            "category_desc": "Pics, Movies, GIFs, want anything?"
         },
         "unban": {
             "usage": "<user>[|<reason>]",
@@ -685,7 +761,8 @@
                 "is_nsfw_filtered": false,
                 "admin_level": 3
             },
-            "category": "Moderation ⚒"
+            "category": "Moderation ⚒",
+            "category_desc": "Powerful tools to manage you server"
         },
         "unmute": {
             "usage": "<user>[|<reason>]",
@@ -695,7 +772,8 @@
                 "is_nsfw_filtered": false,
                 "admin_level": 1
             },
-            "category": "Moderation ⚒"
+            "category": "Moderation ⚒",
+            "category_desc": "Powerful tools to manage you server"
         },
         "urban": {
             "usage": "[<query>]",
@@ -705,7 +783,8 @@
                 "is_nsfw_filtered": false,
                 "admin_level": 0
             },
-            "category": "Search & Media 🎬"
+            "category": "Search & Media 🎬",
+            "category_desc": "Pics, Movies, GIFs, want anything?"
         },
         "warn": {
             "usage": "<user>[|<reason>]",
@@ -715,7 +794,8 @@
                 "is_nsfw_filtered": false,
                 "admin_level": 1
             },
-            "category": "Moderation ⚒"
+            "category": "Moderation ⚒",
+            "category_desc": "Powerful tools to manage you server"
         },
         "weather": {
             "usage": "<location> [<unit>]",
@@ -725,7 +805,8 @@
                 "is_nsfw_filtered": false,
                 "admin_level": 0
             },
-            "category": "Search & Media 🎬"
+            "category": "Search & Media 🎬",
+            "category_desc": "Pics, Movies, GIFs, want anything?"
         },
         "wiki": {
             "usage": "[<query>]",
@@ -735,7 +816,8 @@
                 "is_nsfw_filtered": false,
                 "admin_level": 0
             },
-            "category": "Search & Media 🎬"
+            "category": "Search & Media 🎬",
+            "category_desc": "Pics, Movies, GIFs, want anything?"
         },
         "wolfram": {
             "usage": "<query>",
@@ -745,7 +827,8 @@
                 "is_nsfw_filtered": false,
                 "admin_level": 0
             },
-            "category": "Search & Media 🎬"
+            "category": "Search & Media 🎬",
+            "category_desc": "Pics, Movies, GIFs, want anything?"
         },
         "xkcd": {
             "usage": "[<comic ID>]",
@@ -755,7 +838,8 @@
                 "is_nsfw_filtered": false,
                 "admin_level": 0
             },
-            "category": "Fun 🎪"
+            "category": "Fun 🎪",
+            "category_desc": "Everybody needs SOME fun... :-)"
         },
         "youtube": {
             "usage": "<query> [<limit>]",
@@ -765,7 +849,8 @@
                 "is_nsfw_filtered": true,
                 "admin_level": 0
             },
-            "category": "Search & Media 🎬"
+            "category": "Search & Media 🎬",
+            "category_desc": "Pics, Movies, GIFs, want anything?"
         }
     }
 }
