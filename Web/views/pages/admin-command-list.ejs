@@ -95,13 +95,10 @@
 								<a class="modal-close"></a>
 							</div>
 							<br><br>
-							<% for(var category in commandCategories) { %>
-							<% var commandData = configData.commands[command];commandData.category = commandCategories[category]; %>
-								<% for(var command in commandCategories) { %>
-									<% if(command!="stats") { %>
-										<% var commandData = configData.commands[command];commandData.name = command;commandData.description = commandDescriptions[command];commandData.category = commandCategories[command]; %>
-										<% include ../partials/admin-command-item %>
-									<% } %>
+							<% for(var command in commandCategories) { %>
+								<% if(command!="stats") { %>
+									<% var commandData = configData.commands[command];commandData.name = command;commandData.description = commandDescriptions[command];commandData.category = commandCategories[command]; %>
+									<% include ../partials/admin-command-item %>
 								<% } %>
 							<% } %>
 							<br>
