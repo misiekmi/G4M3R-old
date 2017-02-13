@@ -516,7 +516,7 @@
             "category_desc": "Powerful tools to manage you server"
         },
         "perms": {
-            "examples": "",
+            "examples": "test",
             "usage": "[<user or role>][|<permission name>]",
             "description": "Modifies permissions for a role or user in a channel",
             "defaults": {
