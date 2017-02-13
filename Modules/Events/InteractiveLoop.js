@@ -81,8 +81,8 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                                 let time, error;
                                 switch(viewer.edit_mode) {
                                     case 1:
-                                        viewer.event.title = usr_input_str;
-                                        viewer.edits_made.title = usr_input_str;
+                                        viewer.event.title = usr_input_no;
+                                        viewer.edits_made.title = usr_input_no;
                                         break;
                                     case 2:
                                         time = moment(usr_message.content.trim(), formats, true); // parse start time
@@ -105,8 +105,8 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                                         }
                                         break;
                                     case 4:
-                                        viewer.event.description = usr_input_str;
-                                        viewer.edits_made.description = usr_input_str;
+                                        viewer.event.description = usr_input_no;
+                                        viewer.edits_made.description = usr_input_no;
                                         break;
                                     case 5:
                                         if(usr_input_no>=0) {
