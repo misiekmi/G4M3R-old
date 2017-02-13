@@ -1,15 +1,18 @@
 const moment = require("moment");
 const config = require("../../Configuration/config.json");
+const auth = require("./AdminOrAuthor");
+
 let msg_color = 0xff8c00; //start with orange embed color
 let default_color = 0xff8c00; // default color = orange
 
 
 /*jshint -W027*/
 /// events viewer constructor
-function Viewer(db, serverDocument, eventDocuments, page_size, filter) {
+function Viewer(db, serverDocument, eventDocuments, userDocument, page_size, filter) {
     this.db = db;
     this.server = serverDocument;
     this.events = eventDocuments;
+    this.user = userDocument;
     this.page_size = page_size ? page_size : 5;
 
     this.mode = 0;
@@ -104,7 +107,9 @@ Viewer.prototype.getEventView = function() {
         `Description: \n\`\`\`md\n${this.event.description}\n\`\`\`\n` +
         `Attendees: \`[${this.event.attendees.length}/${this.event.attendee_max}]\``;
 
-    footer_content = `## Options: [J]oin, [L]eave, [E]dit, [D]elete, [B]ack, [Q]uit`;
+    footer_content = `## Options: [J]oin, [L]eave, ` +
+        (auth(this.server, this.event, this.user)?`[E]dit, [D]elete, `:"") +
+        `[B]ack, [Q]uit`;
     return {embed: {author: embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
 };
 

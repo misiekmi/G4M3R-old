@@ -22,7 +22,7 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
                             winston.info(err.stack);
                         } else {
                             QueryHelper.findServerEvents(db, serverDocument._id).then((eventDocuments)=>{
-                                let viewer = new EventViewer(db, serverDocument, eventDocuments, page_size);
+                                let viewer = new EventViewer(db, serverDocument, eventDocuments, userDocument, page_size);
                                 if(viewer.setEvent(no)) {
                                     list(bot, db, winston, serverDocument, msg, viewer, viewer.getEventEditView());
                                 } else {
@@ -35,14 +35,14 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
         } else if(suffix.toLowerCase()=="list") {
          
             QueryHelper.findServerEvents(db, serverDocument._id).then((eventDocuments)=>{
-                let viewer = new EventViewer(db, serverDocument, eventDocuments, page_size);
+                let viewer = new EventViewer(db, serverDocument, eventDocuments, userDocument, page_size);
 
                 list(bot, db, winston, serverDocument, msg, viewer, viewer.getPageView(1));
             });
         } else if(suffix.toLowerCase().startsWith("show")) {
             QueryHelper.findServerEvents(db, serverDocument._id).then((eventDocuments)=> {
                 let tmp = suffix.toLowerCase().split("show")[1].trim();
-                viewer = new EventViewer(db, serverDocument, eventDocuments, page_size);
+                viewer = new EventViewer(db, serverDocument, eventDocuments, userDocument, page_size);
 
                 if (viewer.setEvent(tmp)) {
                     list(bot, db, winston, serverDocument, msg, viewer, viewer.getEventView());
@@ -53,7 +53,7 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
         } else if(suffix.toLowerCase().startsWith("remove")) {
             QueryHelper.findServerEvents(db, serverDocument._id).then((eventDocuments)=> {
                 let tmp = suffix.toLowerCase().split("remove")[1].trim();
-                viewer = new EventViewer(db, serverDocument, eventDocuments, page_size);
+                viewer = new EventViewer(db, serverDocument, eventDocuments, userDocument, page_size);
 
                 if (viewer.setEvent(tmp)) {
                     list(bot, db, winston, serverDocument, msg, viewer, viewer.deleteEvent(viewer.event));
@@ -64,7 +64,7 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
         } else if(suffix.toLowerCase().startsWith("edit")) {
             let tmp = suffix.toLowerCase().split("edit")[1].trim();
             QueryHelper.findServerEvents(db, serverDocument._id).then((eventDocuments)=> {
-                viewer = new EventViewer(db, serverDocument, eventDocuments, page_size);
+                viewer = new EventViewer(db, serverDocument, eventDocuments, userDocument, page_size);
 
                 if (viewer.setEvent(tmp)) {
                     list(bot, db, winston, serverDocument, msg, viewer, viewer.getEventEditView());
@@ -101,14 +101,14 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
             }
             // setup the menu
             QueryHelper.findFilteredServerEvents(db, serverDocument._id, filter).then((eventDocuments)=> {
-                viewer = new EventViewer(db, serverDocument, eventDocuments, page_size, filter);
+                viewer = new EventViewer(db, serverDocument, eventDocuments, userDocument, page_size, filter);
                 list(bot, db, winston, serverDocument, msg, viewer, viewer.getPageView(1));
             });
         } else if(suffix.toLowerCase().startsWith("join")) {
             let author = msg.author.id;
             let tmp = suffix.toLowerCase().split("join")[1].trim();
             QueryHelper.findServerEvents(db, serverDocument._id).then((eventDocuments)=> {
-                viewer = new EventViewer(db, serverDocument, eventDocuments, page_size);
+                viewer = new EventViewer(db, serverDocument, eventDocuments, userDocument, page_size);
 
                 if (viewer.setEvent(tmp)) {
                     list(bot, db, winston, serverDocument, msg, viewer, viewer.joinEvent(viewer.event, author));
@@ -120,7 +120,7 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
             let author = msg.author.id;
             let tmp = suffix.toLowerCase().split("leave")[1].trim();
             QueryHelper.findServerEvents(db, serverDocument._id).then((eventDocuments)=> {
-                viewer = new EventViewer(db, serverDocument, eventDocuments, page_size);
+                viewer = new EventViewer(db, serverDocument, eventDocuments, userDocument, page_size);
 
                 if (viewer.setEvent(tmp)) {
                     list(bot, db, winston, serverDocument, msg, viewer, viewer.leaveEvent(viewer.event, author));
