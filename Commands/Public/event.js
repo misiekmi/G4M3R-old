@@ -2,6 +2,7 @@ const list = require("./../../Modules/Events/InteractiveLoop.js");
 const EventViewer = require("./../../Modules/Events/EventsViewer");
 const IDHelper = require('../../Modules/Events/IDHelper');
 const QueryHelper = require('../../Modules/Events/EventsQueryHelper');
+const auth = require('../../Modules/Events/AdminOrAuthor');
 
 module.exports = (bot, db, config, winston, userDocument, serverDocument, channelDocument, memberDocument, msg, suffix) => {
 
@@ -56,7 +57,9 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
                 viewer = new EventViewer(db, serverDocument, eventDocuments, userDocument, page_size);
 
                 if (viewer.setEvent(tmp)) {
-                    list(bot, db, winston, serverDocument, msg, viewer, viewer.deleteEvent(viewer.event));
+                    if(auth(viewer.server, viewer.event, viewer.user)) {
+                        list(bot, db, winston, serverDocument, msg, viewer, viewer.deleteEvent(viewer.event));
+                    } // else exit silently
                 } else {
                     list(bot, db, winston, serverDocument, msg, viewer, viewer.getErrorView(2,tmp));
                 }
@@ -67,7 +70,9 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
                 viewer = new EventViewer(db, serverDocument, eventDocuments, userDocument, page_size);
 
                 if (viewer.setEvent(tmp)) {
-                    list(bot, db, winston, serverDocument, msg, viewer, viewer.getEventEditView());
+                    if(auth(viewer.server, viewer.event, viewer.user)) {
+                        list(bot, db, winston, serverDocument, msg, viewer, viewer.getEventEditView());
+                    } // else exit silently
                 } else {
                     list(bot, db, winston, serverDocument, msg, viewer, viewer.getErrorView(2,tmp));
                 }
