@@ -1,3 +1,6 @@
+/*jshint -W041*/
+/*jshint -W083*/
+/*jshint -W002*/
 const express = require("express");
 const https = require("https");
 const compression = require("compression");
@@ -77,7 +80,7 @@ const findQueryUser = (query, list) => {
 
 const getUserList = list => {
     return list.filter(usr => {
-        return usr.bot != true;
+        return usr.bot !== true;
     }).map(usr => {
         return `${usr.username}#${usr.discriminator}`;
     }).sort();
@@ -99,7 +102,7 @@ const getChannelData = (svr, type) => {
 
 const getRoleData = svr => {
     return svr.roles.filter(role => {
-        return role.name != "@everyone" && role.name.indexOf("color-") != 0;
+        return role.name !== "@everyone" && role.name.indexOf("color-") !== 0;
     }).map(role => {
         const color = role.color.toString(16);
         return {
@@ -187,13 +190,13 @@ module.exports = (bot, db, auth, config, winston) => {
             if (config.httpsRedirect) {
                 app.use(requireHTTPS);
             }
-            const privKey = fs.readFileSync(config.privKey, "utf8", function(err) { if (err) winston.error(err) })
-            const cert = fs.readFileSync(config.cert, "utf8", function(err) { if (err) winston.error(err) })
+            const privKey = fs.readFileSync(config.privKey, "utf8", function(err) { if (err) winston.error(err); });
+            const cert = fs.readFileSync(config.cert, "utf8", function(err) { if (err) winston.error(err); });
             const credentials = {
                 key: privKey,
                 cert: cert
-            }
-            var httpsServer = https.createServer(credentials, app)
+            };
+            var httpsServer = https.createServer(credentials, app);
             httpsServer.listen(config.httpsPort, () => {
                 winston.info(`Opened https web interface on ${config.server_ip}:${config.httpsPort}`);
             });
@@ -309,7 +312,7 @@ module.exports = (bot, db, auth, config, winston) => {
                 rawLastSeen: userDocument.last_seen ? moment(userDocument.last_seen).format(config.moment_date_format) : null,
                 mutualServerCount: mutualServers.length,
                 pastNameCount: (userDocument.past_names || {}).length || 0,
-                isAfk: userDocument.afk_message != null && userDocument.afk_message != "",
+                isAfk: userDocument.afk_message !== null && userDocument.afk_message !== "",
                 mutualServers: []
             };
             switch (userProfile.status) {
@@ -321,6 +324,7 @@ module.exports = (bot, db, auth, config, winston) => {
                     userProfile.statusColor = "is-warning";
                     break;
                 case "offline":
+					break;
                 default:
                     userProfile.statusColor = "is-dark";
                     break;
@@ -376,10 +380,10 @@ module.exports = (bot, db, auth, config, winston) => {
                 case "timer":
                     typeIcon = "clock-o";
                     if (moment(galleryDocument.interval)) {
-                        let interval = moment.duration(galleryDocument.interval)
+                        let interval = moment.duration(galleryDocument.interval);
                         typeDescription = `Interval: ${interval.hours()} hour(s) and ${interval.minutes()} minute(s)`;
                     } else {
-                        typeDescription = `Interval: ${galleryDocument.interval}`
+                        typeDescription = `Interval: ${galleryDocument.interval}`;
                     }
                     break;
             }
@@ -2508,7 +2512,7 @@ module.exports = (bot, db, auth, config, winston) => {
 				});
 			} else {
 				for(let i=0; i<serverDocument.config.admins.length; i++) {
-					if(req.body[`admin-${i}-removed`]!=null) {
+					if(req.body[`admin-${i}-removed`]!==null) {
 						serverDocument.config.admins[i] = null;
 					}
 				}
@@ -3083,8 +3087,8 @@ module.exports = (bot, db, auth, config, winston) => {
 	app.get("/dashboard/management/logs", (req, res) => {
 		checkAuth(req, res, (consolemember, svr) => {
 			winston.query({
-				from: new Date - 48 * 60 * 60 * 1000,
-				until: new Date,
+				from: new Date() - 48 * 60 * 60 * 1000,
+				until: new Date(),
 				limit: 500,
 				order: "desc"
 			}, (err, results) => {
@@ -3628,7 +3632,7 @@ module.exports = (bot, db, auth, config, winston) => {
 			if(req.body.message) {
 				bot.guilds.forEach(svr => {
 					svr.defaultChannel.createMessage(req.body.message).then(() => {}, (err) => {
-						winston.error(err)
+						winston.error(err);
 					});
 				});
 			}
@@ -3731,7 +3735,7 @@ module.exports = (bot, db, auth, config, winston) => {
 					saveMaintainerConsoleOptions(consolemember, req, res);
 
 				}, (err) => {
-					winston.error(err)
+					winston.error(err);
 				});
 			};
 
