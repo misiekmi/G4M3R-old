@@ -3177,7 +3177,6 @@ module.exports = (bot, db, auth, config, winston) => {
 			const ongoingTrivia = [];
 			const ongoingPolls = [];
 			const ongoingGiveaways = [];
-			const ongoingLotteries = [];
 			serverDocument.channels.forEach(channelDocument => {
 				const ch = svr.channels.get(channelDocument._id);
 				if(ch) {
@@ -3222,15 +3221,6 @@ module.exports = (bot, db, auth, config, winston) => {
 							participants: channelDocument.giveaway.participant_ids.length
 						});
 					}
-					if(channelDocument.lottery.isOngoing) {
-						ongoingLotteries.push({
-							channel: {
-								name: ch.name,
-								id: ch.id
-							},
-							participants: channelDocument.giveaway.participant_ids.length
-						});
-					}
 				}
 			});
 			res.render("pages/admin-ongoing-activities.ejs", {
@@ -3245,7 +3235,6 @@ module.exports = (bot, db, auth, config, winston) => {
 				trivia: ongoingTrivia,
 				polls: ongoingPolls,
 				giveaways: ongoingGiveaways,
-				lotteries: ongoingLotteries,
 				commandPrefix: bot.getCommandPrefix(svr, serverDocument)
 			});
 		});
@@ -3273,9 +3262,6 @@ module.exports = (bot, db, auth, config, winston) => {
 							break;
 						case "giveaway":
 							Giveaways.end(bot, svr, serverDocument, ch, channelDocument);
-							break;
-						case "lottery":
-							Lotteries.end(db, svr, serverDocument, ch, channelDocument);
 							break;
 					}
 				}
