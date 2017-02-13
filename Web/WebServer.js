@@ -784,8 +784,8 @@ module.exports = (bot, db, auth, config, winston) => {
                                         userDocument.save(() => {
                                             db.users.findOrCreate({ _id: galleryDocument.owner_id }, (err, ownerUserDocument) => {
                                                 if (!err && ownerUserDocument) {
-                                                    ownerUserDocument.points += vote * 10; //TODO possibly related to AwesomePoints
-                                                    ownerUserDocument.save(() => {});
+                                                    //ownerUserDocument.points += vote * 10; //TODO possibly related to AwesomePoints maybe the error for webserver!
+                                                    //ownerUserDocument.save(() => {});
                                                 }
                                                 res.sendStatus(200);
                                             });
@@ -838,8 +838,8 @@ module.exports = (bot, db, auth, config, winston) => {
                                 messageOwner(galleryDocument.owner_id, `Your extension ${galleryDocument.name} has been ${req.body.action}${req.body.action=="reject" ? "e" : ""}d from the G4M3R extension gallery for the following reason:\`\`\`${req.body.reason}\`\`\``);
                                 db.users.findOrCreate({ _id: galleryDocument.owner_id }, (err, ownerUserDocument) => {
                                     if (!err && ownerUserDocument) {
-                                        ownerUserDocument.points -= galleryDocument.points * 10; //TODO possibly related to AwesomePoints
-                                        ownerUserDocument.save(() => {});
+                                        //ownerUserDocument.points -= galleryDocument.points * 10; //TODO possibly related to AwesomePoints
+                                        //ownerUserDocument.save(() => {});
                                     }
                                     galleryDocument.state = "saved";
                                     galleryDocument.save(err => {
@@ -2362,7 +2362,7 @@ module.exports = (bot, db, auth, config, winston) => {
 	});
 
 	// Admin console stats collection
-	app.get("/dashboard/stats/stats-collection", (req, res) => {
+	app.get("/dashboard/stats-points/stats-collection", (req, res) => {
 		checkAuth(req, res, (consolemember, svr, serverDocument) => {
 			res.render("pages/admin-stats-collection.ejs", {
 				authUser: req.isAuthenticated() ? getAuthUser(req.user) : null,
@@ -2393,10 +2393,10 @@ module.exports = (bot, db, auth, config, winston) => {
 			});
 		});
 	});
-	io.of("/dashboard/stats/stats-collection").on("connection", socket => {
+	io.of("/dashboard/stats-points/stats-collection").on("connection", socket => {
 		socket.on("disconnect", () => {});
 	});
-	app.post("/dashboard/stats/stats-collection", (req, res) => {
+	app.post("/dashboard/stats-points/stats-collection", (req, res) => {
 		checkAuth(req, res, (consolemember, svr, serverDocument) => {
 			parseCommandOptions(svr, serverDocument, "stats", req.body);
 			parseCommandOptions(svr, serverDocument, "games", req.body);
@@ -2407,7 +2407,7 @@ module.exports = (bot, db, auth, config, winston) => {
 	});
 
 	// Admin console ranks
-	app.get("/dashboard/stats/ranks", (req, res) => {
+	app.get("/dashboard/stats-points/ranks", (req, res) => {
 		checkAuth(req, res, (consolemember, svr, serverDocument) => {
 			res.render("pages/admin-ranks.ejs", {
 				authUser: req.isAuthenticated() ? getAuthUser(req.user) : null,
@@ -2430,10 +2430,10 @@ module.exports = (bot, db, auth, config, winston) => {
 			});
 		});
 	});
-	io.of("/dashboard/stats/ranks").on("connection", socket => {
+	io.of("/dashboard/stats-points/ranks").on("connection", socket => {
 		socket.on("disconnect", () => {});
 	});
-	app.post("/dashboard/stats/ranks", (req, res) => {
+	app.post("/dashboard/stats-points/ranks", (req, res) => {
 		checkAuth(req, res, (consolemember, svr, serverDocument) => {
 			if(req.body["new-name"] && req.body["new-max_score"] && !serverDocument.config.ranks_list.id(req.body["new-name"])) {
 				serverDocument.config.ranks_list.push({
