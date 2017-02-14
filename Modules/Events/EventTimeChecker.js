@@ -3,12 +3,12 @@ function eventStart(bot, winston, db, eventDocument) {
     winston.info(`Event ${eventDocument._id} has started!`);
 
     if(eventDocument._server) { // loop through attendees and notify
-        db.events.findOne({_id: eventDocument._server}).then(serverDocument => {
+        db.servers.findOne({_id: eventDocument._server}).then(serverDocument => {
             let mentioned = [];         // list of users to mention on the server announcement
+            let promises = [];
 
             for(let i=0; i<eventDocument.attendees.length; i++) {
-                console.log(i);
-                db.users.findOne({_id: eventDocument.attendees[i]._id}).then(userDocument => {
+                promises.push(db.users.findOne({_id: eventDocument.attendees[i]._id}).then(userDocument => {
                     if(userDocument.event_notifications>0) {
                         if(userDocument.event_notifications>=2) {   // handles levels
                             mentioned.push(userDocument._id);       // 2 and 3
@@ -23,20 +23,23 @@ function eventStart(bot, winston, db, eventDocument) {
                             })
                         }
                     }
-                })
+                }));
             }
-
-            if(serverDocument.event_channels.announce) {
-                let msg_content = `Event \`\`${eventDocument.title}\`\` has begun!\n`;
-                for(let i=0; i<mentioned.length; i++) {
-                    if(msg_content.length>1900) {
-                        bot.createMessage(serverDocument.event_channels.announce, msg_content);
-                        msg_content = `\`\`continued. . .\`\` `
+            Promise.all(promises).then(()=> {
+                if(serverDocument.event_channels.announce) {
+                    let msg_content = `Event \`\`${eventDocument.title}\`\` has begun!\n`;
+                    for(let i=0; i<mentioned.length; i++) {
+                        if(msg_content.length>1900) {
+                            bot.createMessage(serverDocument.event_channels.announce, msg_content);
+                            msg_content = `\`\`continued. . .\`\` `
+                        }
+                        msg_content += `<@${mentioned[i]._id}> `
                     }
-                    msg_content += `<@${mentioned[i]._id}> `
+                    bot.createMessage(serverDocument.event_channels.announce, msg_content).then(()=> {
+                        console.log("Successfully announced the start of the event!");
+                    });
                 }
-                bot.createMessage(serverDocument.event_channels.announce, msg_content);
-            }
+            });
         });
     }
 
