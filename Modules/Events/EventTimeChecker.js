@@ -14,7 +14,7 @@ function eventStart(bot, winston, db, eventDocument) {
                             mentioned.push(userDocument._id);       // 2 and 3
                         }
                         if(userDocument.event_notifications!==2) {  // handles levels 1 and 3
-                            let msg_content = `**Event Notification:** Event \`\`${eventDocument.title}\`\` has started`;
+                            let msg_content = `**Event Notification:** Event \`\`${eventDocument.title}\`\` has begun`;
 
                             bot.getDMChannel(userDocument._id).then(privateChannel => {
                                 return privateChannel.createMessage(msg_content)
@@ -26,9 +26,17 @@ function eventStart(bot, winston, db, eventDocument) {
                 })
             }
 
-            // TODO mention all users in array
-            //if(serverDocument.notification_channel) {
-            //}
+            if(serverDocument.event_channels.announce) {
+                let msg_content = `Event \`\`${eventDocument.title}\`\` has begun!\n`;
+                for(let i=0; i<mentioned.length; i++) {
+                    if(msg_content.length>1900) {
+                        bot.createMessage(serverDocument.event_channels.announce, msg_content);
+                        msg_content = `\`\`continued. . .\`\` `
+                    }
+                    msg_content += `<@${mentioned[i]._id}> `
+                }
+                bot.createMessage(serverDocument.event_channels.announce, msg_content);
+            }
         });
     }
 
