@@ -80,7 +80,7 @@ const findQueryUser = (query, list) => {
 
 const getUserList = list => {
     return list.filter(usr => {
-        return usr.bot !== true;
+        return usr.bot != true;
     }).map(usr => {
         return `${usr.username}#${usr.discriminator}`;
     }).sort();
@@ -111,7 +111,7 @@ const getChannel = (svr, id) => {
 
 const getRoleData = svr => {
     return svr.roles.filter(role => {
-        return role.name !== "@everyone" && role.name.indexOf("color-") !== 0;
+        return role.name != "@everyone" && role.name.indexOf("color-") != 0;
     }).map(role => {
         const color = role.color.toString(16);
         return {
@@ -321,7 +321,7 @@ module.exports = (bot, db, auth, config, winston) => {
                 rawLastSeen: userDocument.last_seen ? moment(userDocument.last_seen).format(config.moment_date_format) : null,
                 mutualServerCount: mutualServers.length,
                 pastNameCount: (userDocument.past_names || {}).length || 0,
-                isAfk: userDocument.afk_message !== null && userDocument.afk_message !== "",
+                isAfk: userDocument.afk_message != null && userDocument.afk_message != "",
                 mutualServers: []
             };
             switch (userProfile.status) {
