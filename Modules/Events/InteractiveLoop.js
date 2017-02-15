@@ -1,5 +1,6 @@
 const async = require("async");
 const moment = require("moment");
+const auth = require("./AdminOrAuthor");
 
 module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
     const hasDeletePerm = msg.channel.permissionsOf(bot.user.id).has("manageMessages");
@@ -48,9 +49,11 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                         // return to eventDocument list page
                         if(usr_input_str == "back" || usr_input_str == "b") {
                             embed = viewer.getPageView(current_page_no);
-                        } else if(usr_input_str == "edit" || usr_input_str == "e") {
+                        } else if((usr_input_str == "edit" || usr_input_str == "e")
+                            &&(auth(viewer.server,viewer.event,viewer.user)) ) {
                             embed = viewer.getEventEditView();
-                        } else if(usr_input_str == "delete" || usr_input_str == "d") {
+                        } else if((usr_input_str == "delete" || usr_input_str == "d")
+                            &&(auth(viewer.server,viewer.event,viewer.user)) ) {
                             embed = viewer.deleteEvent(viewer.event);
                         } else if(usr_input_str == "join" || usr_input_str == "j") {
                             embed = viewer.joinEvent(viewer.event, msg.author.id);

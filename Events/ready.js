@@ -252,7 +252,7 @@ module.exports = (bot, db, config, winston) => {
 
 	// Start the 60 second repeating timer that handles the start/end of events
 	const startEventTimeChecker = () => {
-		require("./../Modules/Events/EventTimeChecker")(winston,db);
+		require("./../Modules/Events/EventTimeChecker")(bot,winston,db);
 	};
 
 	// Set messages_today to 0 for all servers
@@ -276,9 +276,9 @@ module.exports = (bot, db, config, winston) => {
 			startMessageOfTheDay();
 			runTimerExtensions();
 			postData(winston, auth, bot.guilds.size, bot.user.id);
-			startEventTimeChecker();
 			startWebServer(bot, db, auth, config, winston);
 			showStartupMessage();
+            startEventTimeChecker();
 		});
 	};
 

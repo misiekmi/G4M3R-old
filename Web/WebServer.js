@@ -100,6 +100,15 @@ const getChannelData = (svr, type) => {
     });
 };
 
+const getChannel = (svr, id) => {
+    for(let i=0; i<svr.channels.length; i++) {
+        console.log(svr.channels[i].name);
+        if(svr.channels[i].id==id) {
+            return svr.channels[i];
+        }
+    }
+};
+
 const getRoleData = svr => {
     return svr.roles.filter(role => {
         return role.name !== "@everyone" && role.name.indexOf("color-") !== 0;
@@ -3027,6 +3036,39 @@ module.exports = (bot, db, auth, config, winston) => {
 			saveAdminConsoleOptions(consolemember, svr, serverDocument, req, res);
 		});
 	});
+
+    // Admin console event channels
+    app.get("/dashboard/management/event-channels", (req, res) => {
+        checkAuth(req, res, (consolemember, svr, serverDocument) => {
+            res.render("pages/admin-event-channels.ejs", {
+                authUser: req.isAuthenticated() ? getAuthUser(req.user) : null,
+                serverData: {
+                    name: svr.name,
+                    id: svr.id,
+                    icon: svr.iconURL || "/static/img/discord-icon.png"
+                },
+                channelData: getChannelData(svr),
+                announceChannel: getChannel(svr, serverDocument.event_channels.announce),
+                advertsChannel: getChannel(svr, serverDocument.event_channels.adverts),
+                currentPage: req.path
+            });
+        });
+    });
+    io.of("/dashboard/management/event-channels").on("connection", socket => {
+        socket.on("disconnect", () => {});
+    });
+    app.post("/dashboard/management/event-channels", (req, res) => {
+        checkAuth(req, res, (consolemember, svr, serverDocument) => {
+            if(req.body.announce_channel) {
+                serverDocument.event_channels.announce = req.body.announce_channel;
+            }
+            if(req.body.adverts_channel) {
+                serverDocument.event_channels.adverts = req.body.adverts;
+            }
+
+            saveAdminConsoleOptions(consolemember, svr, serverDocument, req, res);
+        });
+    });
 
 	// Admin console roles
 	app.get("/dashboard/management/roles", (req, res) => {
