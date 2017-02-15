@@ -2521,7 +2521,7 @@ module.exports = (bot, db, auth, config, winston) => {
 				});
 			} else {
 				for(let i=0; i<serverDocument.config.admins.length; i++) {
-					if(req.body[`admin-${i}-removed`]!==null) {
+					if(req.body[`admin-${i}-removed`]!=null) {
 						serverDocument.config.admins[i] = null;
 					}
 				}
