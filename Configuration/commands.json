@@ -35,8 +35,8 @@
         }
     },
     "public": {
-        "event": {
-            "usage": "event add\nevent list\nevent show [ID]\nevent edit [ID]\nevent join [ID]\nevent leave [ID]",
+        "events": {
+            "usage": "events\nevents add\nevents show [ID]\nevents edit [ID]\nevents join [ID]\nevents leave [ID]",
             "description": "Create events people can RSVP to",
             "defaults": {
                 "is_enabled": true,

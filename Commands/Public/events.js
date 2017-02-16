@@ -35,13 +35,6 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
                         }
                     });
             });
-        } else if(suffix.toLowerCase()=="list") {
-         
-            QueryHelper.findServerEvents(db, serverDocument._id).then((eventDocuments)=>{
-                let viewer = new EventViewer(db, serverDocument, eventDocuments, userDocument, page_size);
-
-                list(bot, db, winston, serverDocument, msg, viewer, viewer.getPageView(1));
-            });
         } else if(suffix.toLowerCase().startsWith("show")) {
             QueryHelper.findServerEvents(db, serverDocument._id).then((eventDocuments)=> {
                 let tmp = suffix.toLowerCase().split("show")[1].trim();
@@ -136,7 +129,11 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
                 }
             });
         }
-    }    
-    else {
+    } else {
+        QueryHelper.findServerEvents(db, serverDocument._id).then((eventDocuments)=>{
+            let viewer = new EventViewer(db, serverDocument, eventDocuments, userDocument, page_size);
+
+            list(bot, db, winston, serverDocument, msg, viewer, viewer.getPageView(1));
+        });
     }
 };
