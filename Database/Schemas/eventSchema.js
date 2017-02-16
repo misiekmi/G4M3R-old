@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const moment = require('moment');
 
 // schema for storing event information
 module.exports = new mongoose.Schema({
@@ -13,8 +12,8 @@ module.exports = new mongoose.Schema({
     	description: {type: String, default: "(no description)"}, // short description of the event
     	tags: {type: [String], default: []},					  // event tags relevant for search
 
-		start: {type: Date, default: moment(Date.now()).add(1,"hour")}, // start date of the event
-		end: {type: Date, default: moment(Date.now()).add(2,"hour")},   // end date of the event
+		start: {type: Date, required: true}, // start date of the event
+		end: {type: Date, required: true},   // end date of the event
 		hasStarted: {type: Boolean, default: false},
 
 		attendee_max: {type: Number, default: 3}, // maximum number of people that can join the event

@@ -3,6 +3,7 @@ const EventViewer = require("./../../Modules/Events/EventsViewer");
 const IDHelper = require('../../Modules/Events/IDHelper');
 const QueryHelper = require('../../Modules/Events/EventsQueryHelper');
 const auth = require('../../Modules/Events/AdminOrAuthor');
+const moment = require('moment');
 
 module.exports = (bot, db, config, winston, userDocument, serverDocument, channelDocument, memberDocument, msg, suffix) => {
 
@@ -17,7 +18,8 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
             IDHelper.newServerEventNumber(db,serverDocument._id).then((no) => {
                 db.events.create({
                         _id: IDHelper.computeID(no,msg.author.id,serverDocument._id,null),
-                        _no: no, _author: msg.author.id, _server: serverDocument._id, _clan: null
+                        _no: no, _author: msg.author.id, _server: serverDocument._id, _clan: null,
+                        start: moment(Date.now()).add(1, "hour"), end: moment(Date.now()).add(2, "hour")
                     },(err)=>{
                         if(err) {
                             winston.info(err.stack);
