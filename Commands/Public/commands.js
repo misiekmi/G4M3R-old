@@ -43,6 +43,33 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
 
             getAllCommands();
 
+        } else if (suffix.trim().toLowerCase() == "pm") {
+
+            const info = bot.getPMCommandList().map(command => {
+                return `\`${command}\`    ${bot.getPMCommandMetadata(command).usage}`;
+            }).sort();
+
+            title = `You can use these commands in PM with me:`;
+            desc = `${info.join("\n")}`;
+
+            msg.channel.createMessage({
+                embed: {
+                    author: {
+                        name: bot.user.username + ` | Command categories `,
+                        icon_url: bot.user.avatarURL,
+                        url: "https://github.com/pedall/G4M3R"
+                    },
+                    title: title,
+                    color: 0xffffff,
+                    description: desc,
+                    footer: {
+                        text: `type 'help <command>' to get the respective details!`
+                    }
+                }
+            });
+
+            msg.channel.createMessage(`Learn more at <${config.hosting_url}wiki>`);
+
         } else {
             Object.keys(commands).sort().forEach(category => {
                 categorySearch = category;

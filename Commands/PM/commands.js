@@ -34,6 +34,33 @@ module.exports = (bot, db, config, winston, userDocument, msg, suffix) => {
 
             getAllCommands();
 
+        } else if (suffix.trim().toLowerCase() == "pm") {
+
+            const info = bot.getPMCommandList().map(command => {
+                return `\`${command}\`    ${bot.getPMCommandMetadata(command).usage}`;
+            }).sort();
+
+            title = `You can use these commands in PM with me:`;
+            desc = `${info.join("\n")}`;
+
+            msg.channel.createMessage({
+                embed: {
+                    author: {
+                        name: bot.user.username + ` | Command categories `,
+                        icon_url: bot.user.avatarURL,
+                        url: "https://github.com/pedall/G4M3R"
+                    },
+                    title: title,
+                    color: 0xffffff,
+                    description: desc,
+                    footer: {
+                        text: `type 'help <command>' to get the respective details!`
+                    }
+                }
+            });
+
+            msg.channel.createMessage(`Learn more at <${config.hosting_url}wiki>`);
+
         } else {
             Object.keys(commands).sort().forEach(category => {
                 categorySearch = category;
@@ -129,16 +156,15 @@ module.exports = (bot, db, config, winston, userDocument, msg, suffix) => {
         msg.channel.createMessage({
             embed: {
                 author: {
-                    name: bot.user.username + ` | PUBLIC COMMANDS (use with prefix \`${bot.getCommandPrefix(msg.guild, serverDocument)}\`)`,
+                    name: bot.user.username + ` | PUBLIC COMMANDS)`,
                     icon_url: bot.user.avatarURL,
                     url: "https://github.com/pedall/G4M3R"
                 },
                 color: 0xffffff,
                 fields: embed_fields,
                 footer: {
-                    text: `type [${bot.getCommandPrefix(msg.guild, serverDocument)}help <commandName>] to get more details` +
-                        ` | For a list of private commands, DM me 'help'
-                    `
+                    text: `type 'help <commandName>' to get more details` +
+                        ` | For a list of private commands, DM me 'help'`
                 }
             }
         });

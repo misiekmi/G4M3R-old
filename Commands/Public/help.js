@@ -12,9 +12,9 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
                     msg_color = 0xffffff; //white color
                     title_content = ``;
                     page_content = `${description ? (`**Description:** *${description}*`) : "*no description*"}`;
-					page_content += `\n\n${usage ? (`**Usage:** ${bot.getCommandPrefix(msg.guild, serverDocument)}${usage}`) : "*no usage*"}`;
+					page_content += `\n\n${usage ? (`**Usage:** ${usage}`) : "*no usage*"}`;
 					page_content += `\n${examples ? (`**Examples:** ${examples}`) : "*no example*"}`;
-					page_content += `\n**WIKI Link:** <${config.hosting_url}wiki/Commands#${name}>`;
+					//TODO Delete after Testing page_content += `\n**WIKI Link:** <${config.hosting_url}wiki/Commands#${name}>`;
 
                     
 					footer_content = `Please go to the Wiki for more details`;
@@ -29,43 +29,37 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
 
 		const info = [];
 		const pmcommand = bot.getPMCommandMetadata(suffix);
-		if(pmcommand) {
-			info.push(getCommandHelp(suffix, "PM", pmcommand.usage));
-		}
 		const publiccommand = bot.getPublicCommandMetadata(suffix);
-		if(publiccommand) {
+
+		if(pmcommand && publiccommand) {
+			info.push(getCommandHelp(suffix, "public & PM", publiccommand.usage, publiccommand.description, publiccommand.examples));
+			info.push(`**WIKI Link:** <${config.hosting_url}wiki/Commands#${suffix}>`);
+		} else if(pmcommand && !publiccommand) {
+			info.push(getCommandHelp(suffix, "PM", pmcommand.usage));
+			info.push(`**WIKI Link:** <${config.hosting_url}wiki/Commands#${suffix}>`);
+		} else if(!pmcommand && publiccommand) {
 			info.push(getCommandHelp(suffix, "public", publiccommand.usage, publiccommand.description, publiccommand.examples));
+			info.push(`**WIKI Link:** <${config.hosting_url}wiki/Commands#${suffix}>`);
 		}
 	
 		if(info.length==0) {
 			info.push(`No such command \`${suffix}\``);
 		}
 		bot.sendArray(msg.channel, info);
+		
 	} else {
-		let description = `**Hi <@${msg.author.id}>!** \n 
-		On your server \`${msg.guild.name}\` the bot's prefix is set to \`${bot.getCommandPrefix(msg.guild, serverDocument)}\`.\n 
-		**To get an overview over my public commands just type:**\n
-		\`commands\` *(to get all command categories)*\n
-		\`commands [category]\` *(don't type the whole name 😅)*\n
-		\`commands all\` *(to get all commands at once)*\n\n 
-
-		**##** I will only show commands you have permission to use.\n 
-		**##** For a list of commands you can use right here, just repsonse \`help\`.\n
-		**##** For detailed information visi our wiki [here](${config.hosting_url}wiki/Commands).\n
-		**##** To get some support, please join our Discord server [here](${config.discord_link}).`;
+		let description = `\`\`\`Markdown\n
+		To get an overview over my commands just type:\n
+		[commands] (to get all command categories)\n
+		[commands <category>] (do not type the whole name 😅)\n
+		[commands pm] (to get all commands in PM mode)\n
+		[commands all] (to get all commands at once)\n
+		\`\`\`\n\n
+		**##** For detailed information visi our wiki (${config.hosting_url}wiki/Commands)\n
+		**##** To get some support, please join our Discord server (${config.discord_link})`;
 
         msg.author.getDMChannel().then(ch => {
-            ch.createMessage({
-                embed: {
-                    author: {
-                        name: bot.user.username,
-                        icon_url: bot.user.avatarURL,
-                        url: "https://github.com/GilbertGobbels/GAwesomeBot"
-                    },
-                    color: 0x00FF00,
-                    description: description
-                }
-            });
+            ch.createMessage(description);
         });	
 	}
 };
