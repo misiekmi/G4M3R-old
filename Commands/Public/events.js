@@ -123,7 +123,7 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
                 if (viewer.setEvent(tmp)) {
                     list(bot, db, winston, serverDocument, msg, viewer, viewer.leaveEvent(viewer.event, author));
                 } else {
-                    list(bot, db, winston, serverDocument, msg, viewer, viewer.getErrorView(2,tmp));
+                    list(bot, db, winston, serverDocument, msg, viewer, viewer.getErrorView(2, tmp));
                 }
             });
         }

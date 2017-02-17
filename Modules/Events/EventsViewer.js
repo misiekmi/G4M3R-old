@@ -85,20 +85,20 @@ Viewer.prototype.getPageView = function(page_no) {
     }
 
     footer_content += ` | type [Q]uit to leave` + this.filter_disp;
-    embed_author = {name: `EVENT CREATION PROCESS`};
+    embed_author = { name: `EVENT CREATION PROCESS` };
 
     return { embed: { author: embed_author, color: msg_color, title: title_content, description: page_content, fields: embed_fields, footer: { text: footer_content } } };
 };
 
 /// generate a view of a single event
 Viewer.prototype.getEventView = function() {
-    this.mode = 2;
+        this.mode = 2;
 
-    let title_content, page_content, footer_content, embed_author;
-    msg_color = default_color;
-    embed_author = {name: `EVENT OVERVIEW PROCESS`};
-    title_content = `Event #⃣ ${this.event._no}`;
-    page_content = "" +
+        let title_content, page_content, footer_content, embed_author;
+        msg_color = default_color;
+        embed_author = { name: `EVENT OVERVIEW PROCESS` };
+        title_content = `Event #⃣ ${this.event._no}`;
+        page_content = "" +
         `Title: **${this.event.title}**\n` +
         `Author: <@${this.event._author}>\n\n` +
         `Start: **${moment(this.event.start).format(`${config.moment_date_format}`)}**\n` +
@@ -116,22 +116,29 @@ Viewer.prototype.getEventView = function() {
 /// generate the main editor view for the currently set event
 Viewer.prototype.getEventEditView = function() {
     this.mode = 3;
+    
     let title_content, page_content, footer_content, embed_author;
     msg_color = default_color;
     title_content = `Event #⃣ ${this.event._no}`;
     page_content = "" +
-        `\`\`[1]\`\` Event Title ` +
-        (this.edits_made.title?": **"+this.edits_made.title+"**\n":"\n") +
-        `\`\`[2]\`\` Start Time ` +
-        (this.edits_made.start?": **"+moment(this.edits_made.start).format(`${config.moment_date_format}`)+"**\n":"\n") +
-        `\`\`[3]\`\` End Time ` +
-        (this.edits_made.end?": **"+moment(this.edits_made.end).format(`${config.moment_date_format}`)+"**\n":"\n") +
-        `\`\`[4]\`\` Description ` +
-        (this.edits_made.description?"```md\n"+this.edits_made.description+"```\n":"\n")  +
-        `\`\`[5]\`\` Max Attendees ` +
-        (this.edits_made.attendee_max?": **"+this.edits_made.attendee_max+"**\n":"\n") +
-        `\`\`[6]\`\` Tags ` +
-        (this.edits_made.tags?": **"+this.edits_made.tags.join(", ")+"**\n":"\n");
+        `\`\`[1]\`\` **Event Title** ` +
+        (this.edits_made.title?": \`"+this.edits_made.title+"\`\n":
+        "\`"+this.event.title+"\`\n") +
+        `\`\`[2]\`\` **Start Time**` +
+        (this.edits_made.start?": \`"+moment(this.edits_made.start).format(`${config.moment_date_format}`)+"\`\n":
+        ": \`"+moment(this.event.start).format(`${config.moment_date_format}`)+"\`\n") +
+        `\`\`[3]\`\` **End Time** ` +
+        (this.edits_made.end?": \`"+moment(this.edits_made.end).format(`${config.moment_date_format}`)+"\`\n":
+         ": \`"+moment(this.event.end).format(`${config.moment_date_format}`)+"\`\n") +
+        `\`\`[4]\`\` **Description** ` +
+        (this.edits_made.description?"```md\n"+this.edits_made.description+"```\n":
+         ": \`"+this.event.description+"\`\n") +
+        `\`\`[5]\`\` **Max Attendees** ` +
+        (this.edits_made.attendee_max?": \`"+this.edits_made.attendee_max+"\`\n":
+         ": \`"+this.event.attendee_max+"\`\n") +
+        `\`\`[6]\`\` **Tags** ` +
+        (this.edits_made.tags?": \`"+this.edits_made.tags.join(", ")+"\`\n":
+         ": \`"+this.event.tags+"\`\n");
 
     footer_content = `## Options: [B]ack, [Q]uit`;
     embed_author = {name: `EVENT CREATION / EDIT PROCESS`};
@@ -173,12 +180,12 @@ Viewer.prototype.getEditorView = function() {
             break;
         case 5:
             page_content = "" +
-                `Current maximum member count: \n\`\`${this.event.attendee_max}\`\`\n\n` +
+                `Current maximum member count: \`\`${this.event.attendee_max}\`\`\n\n` +
                 "Enter a new maximum member count for the event.";
             break;
         case 6:
             page_content = "" +
-                `Current set tags: \n${(this.event.tags.length?"``"+this.event.tags.join(", ")+"``":"")}\n\n` +
+                `Current set tags: ${(this.event.tags.length?"``"+this.event.tags.join(", ")+"``":"")}\n\n` +
                 "Enter a new set of tags for the event.";
             break;
         default:
@@ -214,6 +221,31 @@ Viewer.prototype.deleteEvent = function(event) {
     return {embed: {author: embed_author, color: msg_color, description: body, footer: {text: footer_content}}};
 };
 
+/// remove an event and return NO event removed prompt (delete event whiling canceling event creation)
+Viewer.prototype.deleteEventSilent = function(event) {
+    this.mode = 5;
+
+    // delete the eventDocument and return to main page
+    this.db.events.remove({_id: event._id}, (err)=>{
+        if(err) {
+            console.log(err.stack);
+        }
+    });
+    for(let i=0; i<this.events.length; i++){
+        if(this.events[i]._id===event._id) {
+            this.events.splice(i,1);
+        }
+    }
+
+    msg_color = 0x17f926; //green color
+    let body = `ℹ Event #${event._id} creation canceled.`;
+    let footer_content = `## No options available`;
+    
+    let embed_author = {name: `EVENT CREATION PROCESS`};
+
+    return {embed: {author: embed_author, color: msg_color, description: body, footer: {text: footer_content}}};
+};
+
 /// add a user to an event and generate a prompt
 Viewer.prototype.joinEvent = function(event, msgAuthor) {
     this.mode = 4;
@@ -228,6 +260,7 @@ Viewer.prototype.joinEvent = function(event, msgAuthor) {
     //check if msgAuthor already joined that event
     let title_content, page_content, footer_content, embed_author;
     if (alreadyMember) {
+        
         msg_color = 0xecf925; //yellow color
         title_content = `⚠ You __already__ joined the Event #${event._no}.`;
         page_content =  `Title: \`\`${event.title}\`\`\n` +
@@ -297,6 +330,7 @@ Viewer.prototype.leaveEvent = function(event, msgAuthor) {
             break;
         }
     }
+    
     
     // msgAuthor was an attendee of the event
     if (wasMember) {

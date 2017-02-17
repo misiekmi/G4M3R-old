@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title><%= serverData.name %> Admins - AwesomeBot Admin Console</title>
+	<title><%= serverData.name %> Admins - G4M3R Admin Console</title>
 	<% include ../partials/head %>
 
 	<link rel="stylesheet" href="/static/css/auto-complete.css">
@@ -99,7 +99,7 @@
 														<%= configData.admins[i].level %>
 													</td>
 													<td>
-														<button class="button is-small is-danger" name="admin-<%= i %>-removed" onclick="hide_update_modal = true;">
+														<button class="button is-small is-danger" name="admin-<%=i %>-removed" onclick="hide_update_modal = true;">
 															<span>Remove</span>
 															<span class="icon is-small">
 																<i class="fa fa-times"></i>

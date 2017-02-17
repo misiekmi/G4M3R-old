@@ -1,3 +1,6 @@
+/*jshint -W041*/
+/*jshint -W083*/
+/*jshint -W002*/
 const express = require("express");
 const https = require("https");
 const compression = require("compression");
@@ -196,13 +199,13 @@ module.exports = (bot, db, auth, config, winston) => {
             if (config.httpsRedirect) {
                 app.use(requireHTTPS);
             }
-            const privKey = fs.readFileSync(config.privKey, "utf8", function(err) { if (err) winston.error(err) })
-            const cert = fs.readFileSync(config.cert, "utf8", function(err) { if (err) winston.error(err) })
+            const privKey = fs.readFileSync(config.privKey, "utf8", function(err) { if (err) winston.error(err); });
+            const cert = fs.readFileSync(config.cert, "utf8", function(err) { if (err) winston.error(err); });
             const credentials = {
                 key: privKey,
                 cert: cert
-            }
-            var httpsServer = https.createServer(credentials, app)
+            };
+            var httpsServer = https.createServer(credentials, app);
             httpsServer.listen(config.httpsPort, () => {
                 winston.info(`Opened https web interface on ${config.server_ip}:${config.httpsPort}`);
             });
@@ -240,7 +243,7 @@ module.exports = (bot, db, auth, config, winston) => {
             res.redirect(config.oauth_link);
         });
 
-        // AwesomeBot data API
+        // G4M3R data API
         app.use("/api/", new RateLimit({
             windowMs: 3600000, // 150 requests/per hr
             max: 150,
@@ -330,6 +333,7 @@ module.exports = (bot, db, auth, config, winston) => {
                     userProfile.statusColor = "is-warning";
                     break;
                 case "offline":
+					break;
                 default:
                     userProfile.statusColor = "is-dark";
                     break;
@@ -385,10 +389,10 @@ module.exports = (bot, db, auth, config, winston) => {
                 case "timer":
                     typeIcon = "clock-o";
                     if (moment(galleryDocument.interval)) {
-                        let interval = moment.duration(galleryDocument.interval)
+                        let interval = moment.duration(galleryDocument.interval);
                         typeDescription = `Interval: ${interval.hours()} hour(s) and ${interval.minutes()} minute(s)`;
                     } else {
-                        typeDescription = `Interval: ${galleryDocument.interval}`
+                        typeDescription = `Interval: ${galleryDocument.interval}`;
                     }
                     break;
             }
@@ -793,8 +797,8 @@ module.exports = (bot, db, auth, config, winston) => {
                                         userDocument.save(() => {
                                             db.users.findOrCreate({ _id: galleryDocument.owner_id }, (err, ownerUserDocument) => {
                                                 if (!err && ownerUserDocument) {
-                                                    ownerUserDocument.points += vote * 10; //TODO possibly related to AwesomePoints
-                                                    ownerUserDocument.save(() => {});
+                                                    //ownerUserDocument.points += vote * 10; //TODO possibly related to AwesomePoints maybe the error for webserver!
+                                                    //ownerUserDocument.save(() => {});
                                                 }
                                                 res.sendStatus(200);
                                             });
@@ -805,7 +809,7 @@ module.exports = (bot, db, auth, config, winston) => {
                             break;
                         case "accept":
                             getGalleryDocument(galleryDocument => {
-                                messageOwner(galleryDocument.owner_id, `Your extension ${galleryDocument.name} has been accepted to the AwesomeBot extension gallery! 🎉 ${config.hosting_url}extensions/gallery?id=${galleryDocument._id}`);
+                                messageOwner(galleryDocument.owner_id, `Your extension ${galleryDocument.name} has been accepted to the G4M3R extension gallery! 🎉 ${config.hosting_url}extensions/gallery?id=${galleryDocument._id}`);
                                 galleryDocument.state = "gallery";
                                 galleryDocument.save(err => {
                                     res.sendStatus(err ? 500 : 200);
@@ -833,7 +837,7 @@ module.exports = (bot, db, auth, config, winston) => {
                         case "feature":
                             getGalleryDocument(galleryDocument => {
                                 if (!galleryDocument.featured) {
-                                    messageOwner(galleryDocument.owner_id, `Your extension ${galleryDocument.name} has been featured on the AwesomeBot extension gallery! 🌟 ${config.hosting_url}extensions/gallery?id=${galleryDocument._id}`);
+                                    messageOwner(galleryDocument.owner_id, `Your extension ${galleryDocument.name} has been featured on the G4M3R extension gallery! 🌟 ${config.hosting_url}extensions/gallery?id=${galleryDocument._id}`);
                                 }
                                 galleryDocument.featured = galleryDocument.featured != true;
                                 galleryDocument.save(err => {
@@ -844,11 +848,11 @@ module.exports = (bot, db, auth, config, winston) => {
                         case "reject":
                         case "remove":
                             getGalleryDocument(galleryDocument => {
-                                messageOwner(galleryDocument.owner_id, `Your extension ${galleryDocument.name} has been ${req.body.action}${req.body.action=="reject" ? "e" : ""}d from the AwesomeBot extension gallery for the following reason:\`\`\`${req.body.reason}\`\`\``);
+                                messageOwner(galleryDocument.owner_id, `Your extension ${galleryDocument.name} has been ${req.body.action}${req.body.action=="reject" ? "e" : ""}d from the G4M3R extension gallery for the following reason:\`\`\`${req.body.reason}\`\`\``);
                                 db.users.findOrCreate({ _id: galleryDocument.owner_id }, (err, ownerUserDocument) => {
                                     if (!err && ownerUserDocument) {
-                                        ownerUserDocument.points -= galleryDocument.points * 10; //TODO possibly related to AwesomePoints
-                                        ownerUserDocument.save(() => {});
+                                        //ownerUserDocument.points -= galleryDocument.points * 10; //TODO possibly related to AwesomePoints
+                                        //ownerUserDocument.save(() => {});
                                     }
                                     galleryDocument.state = "saved";
                                     galleryDocument.save(err => {
@@ -915,7 +919,7 @@ module.exports = (bot, db, auth, config, winston) => {
                     }
 
                     db.gallery.find(matchCriteria).sort("-featured -points -last_updated").skip(count * (page - 1)).limit(count).exec((err, galleryDocuments) => {
-                        const pageTitle = `${extensionState.charAt(0).toUpperCase() + extensionState.slice(1)} - AwesomeBot Extensions`;
+                        const pageTitle = `${extensionState.charAt(0).toUpperCase() + extensionState.slice(1)} - G4M3R Extensions`;
                         const extensionData = galleryDocuments.map(getExtensionData);
 
                         res.render("pages/extensions.ejs", {
@@ -989,7 +993,7 @@ module.exports = (bot, db, auth, config, winston) => {
                     res.render("pages/extensions.ejs", {
                         authUser: req.isAuthenticated() ? getAuthUser(req.user) : null,
                         currentPage: req.path,
-                        pageTitle: "My AwesomeBot Extensions",
+                        pageTitle: "My G4M3R Extensions",
                         serverData: {
                             id: req.user.id
                         },
@@ -1041,7 +1045,7 @@ module.exports = (bot, db, auth, config, winston) => {
                                 res.render("pages/extensions.ejs", {
                                             authUser: req.isAuthenticated() ? getAuthUser(req.user) : null,
                                             currentPage: req.path,
-                                            pageTitle: `${extensionData.name ? (`${extensionData.name} - `) : ""}AwesomeBot Extension Builder`,
+                                            pageTitle: `${extensionData.name ? (`${extensionData.name} - `) : ""}G4M3R Extension Builder`,
 					serverData: {
 						id: req.user.id
 					},
@@ -1231,7 +1235,7 @@ module.exports = (bot, db, auth, config, winston) => {
 					mode: "list",
 					currentPage: page,
 					numPages: Math.ceil(rawCount/(count==0 ? rawCount : count)),
-					pageTitle: "AwesomeBot Blog",
+					pageTitle: "G4M3R Blog",
 					data: blogPosts
 				});
 			});
@@ -1244,7 +1248,7 @@ module.exports = (bot, db, auth, config, winston) => {
 					res.render("pages/blog.ejs", {
 						authUser: req.isAuthenticated() ? getAuthUser(req.user) : null,
 						isMaintainer: true,
-						pageTitle: `${data.title ? (`Edit ${data.title}`) : "New Post"} - AwesomeBot Blog`,
+						pageTitle: `${data.title ? (`Edit ${data.title}`) : "New Post"} - G4M3R Blog`,
 						mode: "compose",
 						data
 					});
@@ -1332,7 +1336,7 @@ module.exports = (bot, db, auth, config, winston) => {
 					authUser: req.isAuthenticated() ? getAuthUser(req.user) : null,
 					isMaintainer: req.isAuthenticated() ? config.maintainers.indexOf(req.user.id)>-1 : false,
 					mode: "article",
-					pageTitle: `${blogDocument.title} - AwesomeBot Blog`,
+					pageTitle: `${blogDocument.title} - G4M3R Blog`,
 					blogPost: data
 				});
 			}
@@ -1428,7 +1432,7 @@ module.exports = (bot, db, auth, config, winston) => {
 					res.render("pages/wiki.ejs", {
 						authUser: req.isAuthenticated() ? getAuthUser(req.user) : null,
 						isContributor: req.isAuthenticated() ? (config.wiki_contributors.indexOf(req.user.id)>-1 || config.maintainers.indexOf(req.user.id)>-1) : false,
-						pageTitle: `Search for "${req.query.q}" - AwesomeBot Wiki`,
+						pageTitle: `Search for "${req.query.q}" - G4M3R Wiki`,
 						pageList: wikiDocuments.map(wikiDocument => {
 							return wikiDocument._id;
 						}),
@@ -1451,7 +1455,7 @@ module.exports = (bot, db, auth, config, winston) => {
 				const renderPage = data => {
 					res.render("pages/wiki.ejs", {
 						authUser: req.isAuthenticated() ? getAuthUser(req.user) : null,
-						pageTitle: `${data.title ? (`Edit ${data.title}`) : "New Page"} - AwesomeBot Wiki`,
+						pageTitle: `${data.title ? (`Edit ${data.title}`) : "New Page"} - G4M3R Wiki`,
 						mode: "edit",
 						data
 					});
@@ -1551,7 +1555,7 @@ module.exports = (bot, db, auth, config, winston) => {
 				res.render("pages/wiki.ejs", {
 					authUser: req.isAuthenticated() ? getAuthUser(req.user) : null,
 					isContributor: req.isAuthenticated() ? (config.wiki_contributors.indexOf(req.user.id)>-1 || config.maintainers.indexOf(req.user.id)>-1) : false,
-					pageTitle: `${page._id} - AwesomeBot Wiki`,
+					pageTitle: `${page._id} - G4M3R Wiki`,
 					pageList: wikiDocuments.map(wikiDocument => {
 						return wikiDocument._id;
 					}),
@@ -1600,7 +1604,7 @@ module.exports = (bot, db, auth, config, winston) => {
 				res.render("pages/wiki.ejs", {
 					authUser: req.isAuthenticated() ? getAuthUser(req.user) : null,
 					isContributor: req.isAuthenticated() ? (config.wiki_contributors.indexOf(req.user.id)>-1 || config.maintainers.indexOf(req.user.id)>-1) : false,
-					pageTitle: `Edit history for ${page._id} - AwesomeBot Wiki`,
+					pageTitle: `Edit history for ${page._id} - G4M3R Wiki`,
 					pageList: wikiDocuments.map(wikiDocument => {
 						return wikiDocument._id;
 					}),
@@ -3125,8 +3129,8 @@ module.exports = (bot, db, auth, config, winston) => {
 	app.get("/dashboard/management/logs", (req, res) => {
 		checkAuth(req, res, (consolemember, svr) => {
 			winston.query({
-				from: new Date - 48 * 60 * 60 * 1000,
-				until: new Date,
+				from: new Date() - 48 * 60 * 60 * 1000,
+				until: new Date(),
 				limit: 500,
 				order: "desc"
 			}, (err, results) => {
@@ -3219,7 +3223,6 @@ module.exports = (bot, db, auth, config, winston) => {
 			const ongoingTrivia = [];
 			const ongoingPolls = [];
 			const ongoingGiveaways = [];
-			const ongoingLotteries = [];
 			serverDocument.channels.forEach(channelDocument => {
 				const ch = svr.channels.get(channelDocument._id);
 				if(ch) {
@@ -3264,15 +3267,6 @@ module.exports = (bot, db, auth, config, winston) => {
 							participants: channelDocument.giveaway.participant_ids.length
 						});
 					}
-					if(channelDocument.lottery.isOngoing) {
-						ongoingLotteries.push({
-							channel: {
-								name: ch.name,
-								id: ch.id
-							},
-							participants: channelDocument.giveaway.participant_ids.length
-						});
-					}
 				}
 			});
 			res.render("pages/admin-ongoing-activities.ejs", {
@@ -3287,7 +3281,6 @@ module.exports = (bot, db, auth, config, winston) => {
 				trivia: ongoingTrivia,
 				polls: ongoingPolls,
 				giveaways: ongoingGiveaways,
-				lotteries: ongoingLotteries,
 				commandPrefix: bot.getCommandPrefix(svr, serverDocument)
 			});
 		});
@@ -3315,9 +3308,6 @@ module.exports = (bot, db, auth, config, winston) => {
 							break;
 						case "giveaway":
 							Giveaways.end(bot, svr, serverDocument, ch, channelDocument);
-							break;
-						case "lottery":
-							Lotteries.end(db, svr, serverDocument, ch, channelDocument);
 							break;
 					}
 				}
@@ -3684,7 +3674,7 @@ module.exports = (bot, db, auth, config, winston) => {
 			if(req.body.message) {
 				bot.guilds.forEach(svr => {
 					svr.defaultChannel.createMessage(req.body.message).then(() => {}, (err) => {
-						winston.error(err)
+						winston.error(err);
 					});
 				});
 			}
@@ -3776,18 +3766,18 @@ module.exports = (bot, db, auth, config, winston) => {
 						name: req.body.game
 					};
 					config.game = req.body.game;
-					if(req.body.game=="awesomebot.xyz" || req.body["game-default"]!=null) {
+					if(req.body.game=="G4M3R.xyz" || req.body["game-default"]!=null) {
 						config.game = "default";
 						game = {
-							name: "awesomebot.xyz",
-							url: "http://awesomebot.xyz"
+							name: "G4M3R.xyz",
+							url: "http://G4M3R.xyz"
 						};
 					}
 					bot.editStatus(req.body.status, game);
 					saveMaintainerConsoleOptions(consolemember, req, res);
 
 				}, (err) => {
-					winston.error(err)
+					winston.error(err);
 				});
 			};
 

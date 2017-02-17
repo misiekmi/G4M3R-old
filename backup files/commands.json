@@ -1,9 +1,5 @@
 {
     "pm": {
-        "commands": {
-            "examples": "",
-            "usage": "<category> or <all> or without suffix"
-        },
         "afk": {
             "examples": "",
             "usage": "\".\" or <message>"

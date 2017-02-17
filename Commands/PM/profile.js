@@ -1,8 +1,8 @@
 const getUserProfile = require("./../../Modules/UserProfile.js");
 
 module.exports = (bot, db, config, winston, userDocument, msg, suffix, commandData) => {
-	if(suffix=="setup") {
-		msg.channel.createMessage(`Hey ${msg.author.mention}, let's talk about your public AwesomeBot profile, available at ${config.hosting_url}activity/users?q=${encodeURIComponent(`${msg.author.username}#${msg.author.discriminator}`)}. First of all, do you want to make data such as your mutual servers with ${bot.user.username} and profile fields public?${userDocument.isProfilePublic ? " It's already public right now, by answering yes you're keeping it that way." : ""}`).then(() => {
+        if (suffix == "setup") {
+            msg.channel.createMessage(`Hey ${msg.author.mention}, let's talk about your public G4M3R profile, available at ${config.hosting_url}activity/users?q=${encodeURIComponent(`${msg.author.username}#${msg.author.discriminator}`)}. First of all, do you want to make data such as your mutual servers with ${bot.user.username} and profile fields public?${userDocument.isProfilePublic ? " It's already public right now, by answering yes you're keeping it that way." : ""}`).then(() => {
 			bot.awaitMessage(msg.channel.id, msg.author.id, message => {
 				userDocument.isProfilePublic = config.yes_strings.indexOf(message.content.toLowerCase().trim())>-1;
 				userDocument.save(err => {

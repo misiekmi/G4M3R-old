@@ -15,95 +15,95 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
         },
         (callback) => {
             msg.channel.createMessage(embed).then(bot_message => {
-                let timeout = setTimeout(()=>{bot_message.delete();}, 30000); //delete message in 1/2 minute
+                let timeout = setTimeout(() => { bot_message.delete(); }, 30000); //delete message in 1/2 minute
                 bot.awaitMessage(msg.channel.id, msg.author.id, usr_message => {
                     bot.removeMessageListener(msg.channel.id, msg.author.id);
-                    clearTimeout(timeout);  //clear the active timeout
+                    clearTimeout(timeout); //clear the active timeout
 
                     let usr_input_no = usr_message.content.trim();
                     let usr_input_str = usr_message.content.trim().toLowerCase();
 
                     // quit interactive
-                    if(usr_input_str === "quit" || usr_input_str === "q") {
+                    if (usr_input_str === "quit" || usr_input_str === "q") {
                         cancel = true;
-                    } else if(viewer.mode === 1) {      // list view mode
+                    } else if (viewer.mode === 1) { // list view mode
                         // get eventDocument
                         if (!isNaN(usr_input_no) && usr_input_no > 0) {
-                            if(viewer.setEvent(usr_input_no)) {
+                            if (viewer.setEvent(usr_input_no)) {
                                 embed = viewer.getEventView();
                             } else {
-                                embed = viewer.getErrorView(2,usr_input_no);
+                                embed = viewer.getErrorView(2, usr_input_no);
                             }
                         }
                         // go to next page
-                        else if (usr_input_str === `+` && page_size*current_page_no<viewer.events.length) {
+                        else if (usr_input_str === `+` && page_size * current_page_no < viewer.events.length) {
                             current_page_no++;
                             embed = viewer.getPageView(current_page_no);
                         }
                         // go to previous page
-                        else if (usr_input_str == `-` && current_page_no>1) {
+                        else if (usr_input_str == `-` && current_page_no > 1) {
                             current_page_no--;
                             embed = viewer.getPageView(current_page_no);
                         }
-                    } else if(viewer.mode === 2) {       // event view mode
+                    } else if (viewer.mode === 2) { // event view mode
                         // return to eventDocument list page
-                        if(usr_input_str == "back" || usr_input_str == "b") {
+                        if (usr_input_str == "back" || usr_input_str == "b") {
                             embed = viewer.getPageView(current_page_no);
-                        } else if((usr_input_str == "edit" || usr_input_str == "e")
-                            &&(auth(viewer.server,viewer.event,viewer.user)) ) {
+                        } else if ((usr_input_str == "edit" || usr_input_str == "e") &&
+                            (auth(viewer.server, viewer.event, viewer.user))) {
                             embed = viewer.getEventEditView();
-                        } else if((usr_input_str == "delete" || usr_input_str == "d")
-                            &&(auth(viewer.server,viewer.event,viewer.user)) ) {
+                        } else if ((usr_input_str == "delete" || usr_input_str == "d") &&
+                            (auth(viewer.server, viewer.event, viewer.user))) {
                             embed = viewer.deleteEvent(viewer.event);
-                        } else if(usr_input_str == "join" || usr_input_str == "j") {
+                        } else if (usr_input_str == "join" || usr_input_str == "j") {
                             embed = viewer.joinEvent(viewer.event, msg.author.id);
-                        } else if(usr_input_str == "leave" || usr_input_str == "l") {
+                        } else if (usr_input_str == "leave" || usr_input_str == "l") {
                             embed = viewer.leaveEvent(viewer.event, msg.author.id);
                         }
-                    } else if(viewer.mode === 3) {       // editor mode
-                        if(viewer.edit_mode === 0) {
-                            if(usr_input_str == "back" || usr_input_str == "b") {
-                                viewer.event.save((err)=>{
-                                    if(err) {
-                                        winston.error(`Failed to save event changes`, {_id: viewer.event._id}, err);
+                    } else if (viewer.mode === 3) { // editor mode
+                        if (viewer.edit_mode === 0) {
+                            if (usr_input_str == "back" || usr_input_str == "b") {
+                                viewer.event.save((err) => {
+                                    if (err) {
+                                        winston.error(`Failed to save event changes`, { _id: viewer.event._id }, err);
                                     }
                                 });
                                 embed = viewer.getEventView();
                                 viewer.edits_made = {};
                             } else {
-                                if(!isNaN(usr_input_no) && usr_input_no>0 && usr_input_no<=6){
+                                if (!isNaN(usr_input_no) && usr_input_no > 0 && usr_input_no <= 6) {
                                     viewer.edit_mode = Number(usr_input_no);
                                     embed = viewer.getEditorView();
                                 }
                             }
                         } else {
-                            if(usr_input_str === "back" || usr_input_str === "b"){
+                            if (usr_input_str === "back" || usr_input_str === "b") {
                                 embed = viewer.getEventEditView();
                                 viewer.edit_mode = 0;
                             } else {
                                 let time, error;
-                                switch(viewer.edit_mode) {
+                                switch (viewer.edit_mode) {
                                     case 1:
                                         viewer.event.title = usr_input_no;
                                         viewer.edits_made.title = usr_input_no;
                                         break;
                                     case 2:
                                         time = moment(usr_message.content.trim(), formats, true); // parse start time
-                                        if(time.isValid()){
+                                        if (time.isValid()) {
                                             viewer.event.start = time;
                                             viewer.edits_made.start = time;
                                         } else {
-                                            embed = viewer.getErrorView(3,usr_input_no);
+                                            embed = viewer.getErrorView(3, usr_input_no);
                                             error = true;
                                         }
                                         break;
                                     case 3:
                                         time = moment(usr_message.content.trim(), formats, true); // parse start time
-                                        if(time.isValid()){
+                                        if (time.isValid()) {
                                             viewer.event.end = time;
                                             viewer.edits_made.end = time;
                                         } else {
-                                            embed = viewer.getErrorView(4,usr_input_no);
+                                            embed = viewer.getErrorView(4, usr_input_no);
                                             error = true;
                                         }
                                         break;
@@ -112,11 +112,11 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                                         viewer.edits_made.description = usr_input_no;
                                         break;
                                     case 5:
-                                        if(usr_input_no>=0) {
+                                        if (usr_input_no >= 0) {
                                             viewer.event.attendee_max = usr_input_no;
                                             viewer.edits_made.attendee_max = usr_input_no;
                                         } else {
-                                            embed = viewer.getErrorView(5,usr_input_no);
+                                            embed = viewer.getErrorView(5, usr_input_no);
                                             error = true;
                                         }
                                         break;
@@ -126,20 +126,22 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                                         viewer.edits_made.tags = tags;
                                 }
 
-                                if(!error) {
+                                if (!error) {
                                     embed = viewer.getEventEditView();
                                     viewer.edit_mode = 0;
                                 }
                             }
                         }
-                    } else if(viewer.mode === 4) {       // back to list or quit
-                        if(usr_input_str === "back" || usr_input_str === "b") {
+                    } else if (viewer.mode === 4) { // back to list or quit
+                        if (usr_input_str === "back" || usr_input_str === "b") {
                             embed = viewer.getPageView(current_page_no);
                         }
+                    } else if (viewer.mode === 5) { // cancel loop
+                        cancel = true;
                     }
 
                     bot_message.delete();
-                    if(hasDeletePerm){
+                    if (hasDeletePerm) {
                         usr_message.delete();
                     }
 
