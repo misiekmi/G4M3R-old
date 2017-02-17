@@ -99,9 +99,9 @@ Viewer.prototype.getEventView = function() {
         embed_author = { name: `EVENT OVERVIEW PROCESS` };
         title_content = `Event #⃣ ${this.event._no}`;
         page_content = "" +
-            `Title: **${this.event.title}**\n` +
-            `Author: <@${this.event._author}>\n\n` +
-            `Start: **${moment(this.event.start).format(`${config.moment_date_format}`)}**\n` +
+        `Title: **${this.event.title}**\n` +
+        `Author: <@${this.event._author}>\n\n` +
+        `Start: **${moment(this.event.start).format(`${config.moment_date_format}`)}**\n` +
         `End: **${moment(this.event.end).format(`${config.moment_date_format}`)}**\n\n` +
         `Tags: **${this.event.tags.join(", ")} **\n` +
         `Description: \n\`\`\`md\n${this.event.description}\n\`\`\`\n` +
