@@ -42,67 +42,30 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
 		}
 		bot.sendArray(msg.channel, info);
 	} else {
-		
-		const commands = {};
-		let embed_name = "";
-		let embed_value = "";
-		let embed_fields = [];
-		let embed_author = {
-			name: bot.user.username,
-			icon_url: bot.user.avatarURL,
-			url: "https://github.com/pedall/G4M3R"
-		};
+		let description = `**Hi <@${msg.author.id}>!** \n 
+		On your server \`${msg.guild.name}\` the bot's prefix is set to \`${bot.getCommandPrefix(msg.guild, serverDocument)}\`.\n 
+		**To get an overview over my public commands just type:**\n
+		\`commands\` *(to get all command categories)*\n
+		\`commands [category]\` *(don't type the whole name 😅)*\n
+		\`commands all\` *(to get all commands at once)*\n\n 
 
-		const memberBotAdmin = bot.getUserBotAdmin(msg.guild, serverDocument, msg.member);
-		bot.getPublicCommandList().forEach(command => {
-			if(serverDocument.config.commands[command] && serverDocument.config.commands[command].isEnabled && memberBotAdmin>=serverDocument.config.commands[command].admin_level) {
-				const commandData = bot.getPublicCommandMetadata(command);
-				if(!commands[commandData.category]) {
-					commands[commandData.category] = [];
-				}
-				commands[commandData.category].push(`\`${command}\``);
-			}
-		});
-		Object.keys(commands).sort().forEach(category => {
-			//info.push(`**${category}** ${commands[category].sort().join(" ")}`);
-			embed_name = `${category}`;
-			embed_value = `${commands[category].sort().join(" ")}`;
-			embed_fields.push({
-				name: embed_name,
-				value: embed_value,
-				inline: false
-			});
+		**##** I will only show commands you have permission to use.\n 
+		**##** For a list of commands you can use right here, just repsonse \`help\`.\n
+		**##** For detailed information visi our wiki [here](${config.hosting_url}wiki/Commands).\n
+		**##** To get some support, please join our Discord server [here](${config.discord_link}).`;
 
-		});
-		//TODO Change Wiki URL
-		let embed_footer = `For detailed information about each command and all of G4M3R's other features, head over to our wiki: <${config.hosting_url}wiki/Commands>. If you need support using G4M3R, please join our Discord server: <${config.discord_link}>. 🎮`;
-		
-		//msg.channel.createMessage(preInfo);
-		msg.channel.createMessage({			
-			embed : {
-				author: {
-					name: bot.user.username + ` | PUBLIC COMMANDS (use with prefix \`${bot.getCommandPrefix(msg.guild, serverDocument)}\`)`,
-					icon_url: bot.user.avatarURL,
-					url: "https://github.com/pedall/G4M3R"
-				},
-				color: 0xffffff,
-				fields: embed_fields,
-				footer: {
-					text: `type [${bot.getCommandPrefix(msg.guild, serverDocument)}help <commandName>] to get more details` +
-					` | For a list of private commands, DM me 'help'
-					`
-				}
-			}
-		});
-
-		//msg.channel.createMessage(afterInfo);
-		
-		 
-		/* backup for help message
-		msg.author.getDMChannel().then(ch => {
-				bot.sendArray(ch, info);
-			});
-		}
-		*/
+        msg.author.getDMChannel().then(ch => {
+            ch.createMessage({
+                embed: {
+                    author: {
+                        name: bot.user.username,
+                        icon_url: bot.user.avatarURL,
+                        url: "https://github.com/GilbertGobbels/GAwesomeBot"
+                    },
+                    color: 0x00FF00,
+                    description: description
+                }
+            });
+        });	
 	}
 };
