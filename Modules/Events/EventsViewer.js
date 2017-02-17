@@ -82,23 +82,23 @@ Viewer.prototype.getPageView = function(page_no) {
     }
 
     footer_content += ` | type [Q]uit to leave` + this.filter_disp;
-    embed_author = {name: `EVENT CREATION PROCESS`};
+    embed_author = { name: `EVENT CREATION PROCESS` };
 
     return { embed: { author: embed_author, color: msg_color, title: title_content, description: page_content, fields: embed_fields, footer: { text: footer_content } } };
 };
 
 /// generate a view of a single event
 Viewer.prototype.getEventView = function() {
-    this.mode = 2;
+        this.mode = 2;
 
-    let title_content, page_content, footer_content, embed_author;
-    msg_color = default_color;
-    embed_author = {name: `EVENT OVERVIEW PROCESS`};
-    title_content = `Event #⃣ ${this.event._no}`;
-    page_content = "" +
-        `Title: **${this.event.title}**\n` +
-        `Author: <@${this.event._author}>\n\n` +
-        `Start: **${moment(this.event.start).format(`${config.moment_date_format}`)}**\n` +
+        let title_content, page_content, footer_content, embed_author;
+        msg_color = default_color;
+        embed_author = { name: `EVENT OVERVIEW PROCESS` };
+        title_content = `Event #⃣ ${this.event._no}`;
+        page_content = "" +
+            `Title: **${this.event.title}**\n` +
+            `Author: <@${this.event._author}>\n\n` +
+            `Start: **${moment(this.event.start).format(`${config.moment_date_format}`)}**\n` +
         `End: **${moment(this.event.end).format(`${config.moment_date_format}`)}**\n\n` +
         `Tags: **${this.event.tags.join(", ")} **\n` +
         `Description: \n\`\`\`md\n${this.event.description}\n\`\`\`\n` +
@@ -111,6 +111,7 @@ Viewer.prototype.getEventView = function() {
 /// generate the main editor view for the currently set event
 Viewer.prototype.getEventEditView = function() {
     this.mode = 3;
+    
     let title_content, page_content, footer_content, embed_author;
     msg_color = default_color;
     title_content = `Event #⃣ ${this.event._no}`;
@@ -223,6 +224,7 @@ Viewer.prototype.joinEvent = function(event, msgAuthor) {
     //check if msgAuthor already joined that event
     let title_content, page_content, footer_content, embed_author;
     if (alreadyMember) {
+        
         msg_color = 0xecf925; //yellow color
         title_content = `⚠ You __already__ joined the Event #${event._no}.`;
         page_content =  `Title: \`\`${event.title}\`\`\n` +
