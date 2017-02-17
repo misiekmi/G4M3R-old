@@ -1,4 +1,4 @@
-module.exports = (bot, db, config, winston, userDocument, serverDocument, channelDocument, memberDocument, msg, suffix) => {
+module.exports = (bot, db, config, winston, userDocument, msg, suffix) => {
     //TODO NOT WORKING IN PM YET SINCE STILL FOCUSSED ON MSG IN A SERVER CHANNEL
     const commands = {};
     let category_text = {};
@@ -8,27 +8,24 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
         title = "",
         categoryFound = false,
         categoryNew = "";
+
     let embed_author = {
         name: bot.user.username,
         icon_url: bot.user.avatarURL,
         url: "https://github.com/pedall/G4M3R"
     };
 
-    const memberBotAdmin = bot.getUserBotAdmin(msg.guild, serverDocument, msg.member);
     bot.getPublicCommandList().forEach(command => {
-        if (serverDocument.config.commands[command] && serverDocument.config.commands[command].isEnabled && memberBotAdmin >= serverDocument.config.commands[command].admin_level) {
-            const commandData = bot.getPublicCommandMetadata(command);
-            if (!commands[commandData.category]) {
-                commands[commandData.category] = [];
-            }
-            commands[commandData.category].push(`\`${command}\``);
-
-            if (!category_text[commandData.category]) {
-                category_text[commandData.category] = [];
-            }
-            category_text[commandData.category].push(`\`${commandData.category_desc}\``);
-
+        const commandData = bot.getPublicCommandMetadata(command);
+        if (!commands[commandData.category]) {
+            commands[commandData.category] = [];
         }
+        commands[commandData.category].push(`\`${command}\``);
+
+        if (!category_text[commandData.category]) {
+            category_text[commandData.category] = [];
+        }
+        category_text[commandData.category].push(`\`${commandData.category_desc}\``);
     });
 
     if (suffix) {
@@ -45,7 +42,6 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
                     .toLowerCase()
                     .includes(suffix.trim().toLowerCase())) {
 
-                    //if (suffix.indexOf(commands[category].toString()) > -1) {
                     desc = `${commands[category].join(" ")}`;
                     categoryFound = true;
                     categoryNew = categorySearch;
@@ -69,8 +65,7 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
                     color: 0xffffff,
                     description: desc,
                     footer: {
-                        text: `type [${bot.getCommandPrefix(msg.guild, serverDocument)}` +
-                            `help <commandName> ] to get the respective commands `
+                        text: `type 'help <commandName>' in any channel on any server to get the respective commands!`
                     }
                 }
             });
@@ -93,8 +88,7 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
                 color: 0xffffff,
                 description: desc,
                 footer: {
-                    text: `type [${bot.getCommandPrefix(msg.guild, serverDocument)}` +
-                        `commands <category> ] to get the respective commands `
+                    text: `type 'commands <category>' to get the respective commands!`
                 }
             }
         });
@@ -112,18 +106,15 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
             url: "https://github.com/pedall/G4M3R"
         };
 
-        const memberBotAdmin = bot.getUserBotAdmin(msg.guild, serverDocument, msg.member);
         bot.getPublicCommandList().forEach(command => {
-            if (serverDocument.config.commands[command] && serverDocument.config.commands[command].isEnabled && memberBotAdmin >= serverDocument.config.commands[command].admin_level) {
-                const commandData = bot.getPublicCommandMetadata(command);
-                if (!commands[commandData.category]) {
-                    commands[commandData.category] = [];
-                }
-                commands[commandData.category].push(`\`${command}\``);
+            const commandData = bot.getPublicCommandMetadata(command);
+            if (!commands[commandData.category]) {
+                commands[commandData.category] = [];
             }
+            commands[commandData.category].push(`\`${command}\``);
         });
+
         Object.keys(commands).sort().forEach(category => {
-            //info.push(`**${category}** ${commands[category].sort().join(" ")}`);
             embed_name = `${category}`;
             embed_value = `${commands[category].sort().join(" ")}`;
             embed_fields.push({
@@ -133,10 +124,8 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
             });
 
         });
-        //TODO Change Wiki URL
         let embed_footer = `For detailed information about each command and all of G4M3R's other features, head over to our wiki: <${config.hosting_url}wiki/Commands>. If you need support using G4M3R, please join our Discord server: <${config.discord_link}>. 🎮`;
 
-        //msg.channel.createMessage(preInfo);
         msg.channel.createMessage({
             embed: {
                 author: {
