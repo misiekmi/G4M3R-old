@@ -8,6 +8,10 @@ module.exports = new mongoose.Schema({
 	members: [require("./serverMembersSchema.js")],
 	games: [require("./serverGamesSchema.js")],
 	channels: [require("./serverChannelsSchema.js")],
+	event_channels: {
+		announce: String,
+		adverts: String
+	},
 	command_usage: mongoose.Schema.Types.Mixed,
 	messages_today: {type: Number, default: 0},
 	stats_timestamp: {type: Date, default: Date.now},

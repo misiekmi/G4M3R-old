@@ -1,3 +1,6 @@
+/*jshint -W041*/
+/*jshint -W083*/
+/*jshint -W002*/
 const express = require("express");
 const https = require("https");
 const compression = require("compression");
@@ -97,6 +100,15 @@ const getChannelData = (svr, type) => {
     });
 };
 
+const getChannel = (svr, id) => {
+    for(let i=0; i<svr.channels.length; i++) {
+        console.log(svr.channels[i].name);
+        if(svr.channels[i].id==id) {
+            return svr.channels[i];
+        }
+    }
+};
+
 const getRoleData = svr => {
     return svr.roles.filter(role => {
         return role.name != "@everyone" && role.name.indexOf("color-") != 0;
@@ -187,13 +199,13 @@ module.exports = (bot, db, auth, config, winston) => {
             if (config.httpsRedirect) {
                 app.use(requireHTTPS);
             }
-            const privKey = fs.readFileSync(config.privKey, "utf8", function(err) { if (err) winston.error(err) })
-            const cert = fs.readFileSync(config.cert, "utf8", function(err) { if (err) winston.error(err) })
+            const privKey = fs.readFileSync(config.privKey, "utf8", function(err) { if (err) winston.error(err); });
+            const cert = fs.readFileSync(config.cert, "utf8", function(err) { if (err) winston.error(err); });
             const credentials = {
                 key: privKey,
                 cert: cert
-            }
-            var httpsServer = https.createServer(credentials, app)
+            };
+            var httpsServer = https.createServer(credentials, app);
             httpsServer.listen(config.httpsPort, () => {
                 winston.info(`Opened https web interface on ${config.server_ip}:${config.httpsPort}`);
             });
@@ -321,6 +333,7 @@ module.exports = (bot, db, auth, config, winston) => {
                     userProfile.statusColor = "is-warning";
                     break;
                 case "offline":
+					break;
                 default:
                     userProfile.statusColor = "is-dark";
                     break;
@@ -376,10 +389,10 @@ module.exports = (bot, db, auth, config, winston) => {
                 case "timer":
                     typeIcon = "clock-o";
                     if (moment(galleryDocument.interval)) {
-                        let interval = moment.duration(galleryDocument.interval)
+                        let interval = moment.duration(galleryDocument.interval);
                         typeDescription = `Interval: ${interval.hours()} hour(s) and ${interval.minutes()} minute(s)`;
                     } else {
-                        typeDescription = `Interval: ${galleryDocument.interval}`
+                        typeDescription = `Interval: ${galleryDocument.interval}`;
                     }
                     break;
             }
@@ -784,8 +797,8 @@ module.exports = (bot, db, auth, config, winston) => {
                                         userDocument.save(() => {
                                             db.users.findOrCreate({ _id: galleryDocument.owner_id }, (err, ownerUserDocument) => {
                                                 if (!err && ownerUserDocument) {
-                                                    ownerUserDocument.points += vote * 10; //TODO possibly related to AwesomePoints
-                                                    ownerUserDocument.save(() => {});
+                                                    //ownerUserDocument.points += vote * 10; //TODO possibly related to AwesomePoints maybe the error for webserver!
+                                                    //ownerUserDocument.save(() => {});
                                                 }
                                                 res.sendStatus(200);
                                             });
@@ -838,8 +851,8 @@ module.exports = (bot, db, auth, config, winston) => {
                                 messageOwner(galleryDocument.owner_id, `Your extension ${galleryDocument.name} has been ${req.body.action}${req.body.action=="reject" ? "e" : ""}d from the G4M3R extension gallery for the following reason:\`\`\`${req.body.reason}\`\`\``);
                                 db.users.findOrCreate({ _id: galleryDocument.owner_id }, (err, ownerUserDocument) => {
                                     if (!err && ownerUserDocument) {
-                                        ownerUserDocument.points -= galleryDocument.points * 10; //TODO possibly related to AwesomePoints
-                                        ownerUserDocument.save(() => {});
+                                        //ownerUserDocument.points -= galleryDocument.points * 10; //TODO possibly related to AwesomePoints
+                                        //ownerUserDocument.save(() => {});
                                     }
                                     galleryDocument.state = "saved";
                                     galleryDocument.save(err => {
@@ -2362,7 +2375,7 @@ module.exports = (bot, db, auth, config, winston) => {
 	});
 
 	// Admin console stats collection
-	app.get("/dashboard/stats/stats-collection", (req, res) => {
+	app.get("/dashboard/stats-points/stats-collection", (req, res) => {
 		checkAuth(req, res, (consolemember, svr, serverDocument) => {
 			res.render("pages/admin-stats-collection.ejs", {
 				authUser: req.isAuthenticated() ? getAuthUser(req.user) : null,
@@ -2393,10 +2406,10 @@ module.exports = (bot, db, auth, config, winston) => {
 			});
 		});
 	});
-	io.of("/dashboard/stats/stats-collection").on("connection", socket => {
+	io.of("/dashboard/stats-points/stats-collection").on("connection", socket => {
 		socket.on("disconnect", () => {});
 	});
-	app.post("/dashboard/stats/stats-collection", (req, res) => {
+	app.post("/dashboard/stats-points/stats-collection", (req, res) => {
 		checkAuth(req, res, (consolemember, svr, serverDocument) => {
 			parseCommandOptions(svr, serverDocument, "stats", req.body);
 			parseCommandOptions(svr, serverDocument, "games", req.body);
@@ -2407,7 +2420,7 @@ module.exports = (bot, db, auth, config, winston) => {
 	});
 
 	// Admin console ranks
-	app.get("/dashboard/stats/ranks", (req, res) => {
+	app.get("/dashboard/stats-points/ranks", (req, res) => {
 		checkAuth(req, res, (consolemember, svr, serverDocument) => {
 			res.render("pages/admin-ranks.ejs", {
 				authUser: req.isAuthenticated() ? getAuthUser(req.user) : null,
@@ -2430,10 +2443,10 @@ module.exports = (bot, db, auth, config, winston) => {
 			});
 		});
 	});
-	io.of("/dashboard/stats/ranks").on("connection", socket => {
+	io.of("/dashboard/stats-points/ranks").on("connection", socket => {
 		socket.on("disconnect", () => {});
 	});
-	app.post("/dashboard/stats/ranks", (req, res) => {
+	app.post("/dashboard/stats-points/ranks", (req, res) => {
 		checkAuth(req, res, (consolemember, svr, serverDocument) => {
 			if(req.body["new-name"] && req.body["new-max_score"] && !serverDocument.config.ranks_list.id(req.body["new-name"])) {
 				serverDocument.config.ranks_list.push({
@@ -3024,6 +3037,39 @@ module.exports = (bot, db, auth, config, winston) => {
 		});
 	});
 
+    // Admin console event channels
+    app.get("/dashboard/management/event-channels", (req, res) => {
+        checkAuth(req, res, (consolemember, svr, serverDocument) => {
+            res.render("pages/admin-event-channels.ejs", {
+                authUser: req.isAuthenticated() ? getAuthUser(req.user) : null,
+                serverData: {
+                    name: svr.name,
+                    id: svr.id,
+                    icon: svr.iconURL || "/static/img/discord-icon.png"
+                },
+                channelData: getChannelData(svr),
+                announceChannel: getChannel(svr, serverDocument.event_channels.announce),
+                advertsChannel: getChannel(svr, serverDocument.event_channels.adverts),
+                currentPage: req.path
+            });
+        });
+    });
+    io.of("/dashboard/management/event-channels").on("connection", socket => {
+        socket.on("disconnect", () => {});
+    });
+    app.post("/dashboard/management/event-channels", (req, res) => {
+        checkAuth(req, res, (consolemember, svr, serverDocument) => {
+            if(req.body.announce_channel) {
+                serverDocument.event_channels.announce = req.body.announce_channel;
+            }
+            if(req.body.adverts_channel) {
+                serverDocument.event_channels.adverts = req.body.adverts;
+            }
+
+            saveAdminConsoleOptions(consolemember, svr, serverDocument, req, res);
+        });
+    });
+
 	// Admin console roles
 	app.get("/dashboard/management/roles", (req, res) => {
 		checkAuth(req, res, (consolemember, svr, serverDocument) => {
@@ -3083,8 +3129,8 @@ module.exports = (bot, db, auth, config, winston) => {
 	app.get("/dashboard/management/logs", (req, res) => {
 		checkAuth(req, res, (consolemember, svr) => {
 			winston.query({
-				from: new Date - 48 * 60 * 60 * 1000,
-				until: new Date,
+				from: new Date() - 48 * 60 * 60 * 1000,
+				until: new Date(),
 				limit: 500,
 				order: "desc"
 			}, (err, results) => {
@@ -3177,7 +3223,6 @@ module.exports = (bot, db, auth, config, winston) => {
 			const ongoingTrivia = [];
 			const ongoingPolls = [];
 			const ongoingGiveaways = [];
-			const ongoingLotteries = [];
 			serverDocument.channels.forEach(channelDocument => {
 				const ch = svr.channels.get(channelDocument._id);
 				if(ch) {
@@ -3222,15 +3267,6 @@ module.exports = (bot, db, auth, config, winston) => {
 							participants: channelDocument.giveaway.participant_ids.length
 						});
 					}
-					if(channelDocument.lottery.isOngoing) {
-						ongoingLotteries.push({
-							channel: {
-								name: ch.name,
-								id: ch.id
-							},
-							participants: channelDocument.giveaway.participant_ids.length
-						});
-					}
 				}
 			});
 			res.render("pages/admin-ongoing-activities.ejs", {
@@ -3245,7 +3281,6 @@ module.exports = (bot, db, auth, config, winston) => {
 				trivia: ongoingTrivia,
 				polls: ongoingPolls,
 				giveaways: ongoingGiveaways,
-				lotteries: ongoingLotteries,
 				commandPrefix: bot.getCommandPrefix(svr, serverDocument)
 			});
 		});
@@ -3273,9 +3308,6 @@ module.exports = (bot, db, auth, config, winston) => {
 							break;
 						case "giveaway":
 							Giveaways.end(bot, svr, serverDocument, ch, channelDocument);
-							break;
-						case "lottery":
-							Lotteries.end(db, svr, serverDocument, ch, channelDocument);
 							break;
 					}
 				}
@@ -3642,7 +3674,7 @@ module.exports = (bot, db, auth, config, winston) => {
 			if(req.body.message) {
 				bot.guilds.forEach(svr => {
 					svr.defaultChannel.createMessage(req.body.message).then(() => {}, (err) => {
-						winston.error(err)
+						winston.error(err);
 					});
 				});
 			}
@@ -3745,7 +3777,7 @@ module.exports = (bot, db, auth, config, winston) => {
 					saveMaintainerConsoleOptions(consolemember, req, res);
 
 				}, (err) => {
-					winston.error(err)
+					winston.error(err);
 				});
 			};
 
