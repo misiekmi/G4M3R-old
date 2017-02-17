@@ -136,6 +136,8 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                         if (usr_input_str === "back" || usr_input_str === "b") {
                             embed = viewer.getPageView(current_page_no);
                         }
+                    } else if (viewer.mode === 5) { // cancel loop
+                        cancel = true;
                     }
 
                     bot_message.delete();

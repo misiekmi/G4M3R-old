@@ -121,18 +121,24 @@ Viewer.prototype.getEventEditView = function() {
     msg_color = default_color;
     title_content = `Event #⃣ ${this.event._no}`;
     page_content = "" +
-        `\`\`[1]\`\` Event Title ` +
-        (this.edits_made.title?": **"+this.edits_made.title+"**\n":"\n") +
-        `\`\`[2]\`\` Start Time ` +
-        (this.edits_made.start?": **"+moment(this.edits_made.start).format(`${config.moment_date_format}`)+"**\n":"\n") +
-        `\`\`[3]\`\` End Time ` +
-        (this.edits_made.end?": **"+moment(this.edits_made.end).format(`${config.moment_date_format}`)+"**\n":"\n") +
-        `\`\`[4]\`\` Description ` +
-        (this.edits_made.description?"```md\n"+this.edits_made.description+"```\n":"\n")  +
-        `\`\`[5]\`\` Max Attendees ` +
-        (this.edits_made.attendee_max?": **"+this.edits_made.attendee_max+"**\n":"\n") +
-        `\`\`[6]\`\` Tags ` +
-        (this.edits_made.tags?": **"+this.edits_made.tags.join(", ")+"**\n":"\n");
+        `\`\`[1]\`\` **Event Title** ` +
+        (this.edits_made.title?": \`"+this.edits_made.title+"\`\n":
+        "\`"+this.event.title+"\`\n") +
+        `\`\`[2]\`\` **Start Time**` +
+        (this.edits_made.start?": \`"+moment(this.edits_made.start).format(`${config.moment_date_format}`)+"\`\n":
+        ": \`"+moment(this.event.start).format(`${config.moment_date_format}`)+"\`\n") +
+        `\`\`[3]\`\` **End Time** ` +
+        (this.edits_made.end?": \`"+moment(this.edits_made.end).format(`${config.moment_date_format}`)+"\`\n":
+         ": \`"+moment(this.event.end).format(`${config.moment_date_format}`)+"\`\n") +
+        `\`\`[4]\`\` **Description** ` +
+        (this.edits_made.description?"```md\n"+this.edits_made.description+"```\n":
+         ": \`"+this.event.description+"\`\n") +
+        `\`\`[5]\`\` **Max Attendees** ` +
+        (this.edits_made.attendee_max?": \`"+this.edits_made.attendee_max+"\`\n":
+         ": \`"+this.event.attendee_max+"\`\n") +
+        `\`\`[6]\`\` **Tags** ` +
+        (this.edits_made.tags?": \`"+this.edits_made.tags.join(", ")+"\`\n":
+         ": \`"+this.event.tags+"\`\n");
 
     footer_content = `## Options: [B]ack, [Q]uit`;
     embed_author = {name: `EVENT CREATION / EDIT PROCESS`};
@@ -174,12 +180,12 @@ Viewer.prototype.getEditorView = function() {
             break;
         case 5:
             page_content = "" +
-                `Current maximum member count: \n\`\`${this.event.attendee_max}\`\`\n\n` +
+                `Current maximum member count: \`\`${this.event.attendee_max}\`\`\n\n` +
                 "Enter a new maximum member count for the event.";
             break;
         case 6:
             page_content = "" +
-                `Current set tags: \n${(this.event.tags.length?"``"+this.event.tags.join(", ")+"``":"")}\n\n` +
+                `Current set tags: ${(this.event.tags.length?"``"+this.event.tags.join(", ")+"``":"")}\n\n` +
                 "Enter a new set of tags for the event.";
             break;
         default:
@@ -211,6 +217,31 @@ Viewer.prototype.deleteEvent = function(event) {
     let footer_content = `## Options: [B]ack, [Q]uit`;
     
     let embed_author = {name: `EVENT DELETION PROCESS`};
+
+    return {embed: {author: embed_author, color: msg_color, description: body, footer: {text: footer_content}}};
+};
+
+/// remove an event and return NO event removed prompt (delete event whiling canceling event creation)
+Viewer.prototype.deleteEventSilent = function(event) {
+    this.mode = 5;
+
+    // delete the eventDocument and return to main page
+    this.db.events.remove({_id: event._id}, (err)=>{
+        if(err) {
+            console.log(err.stack);
+        }
+    });
+    for(let i=0; i<this.events.length; i++){
+        if(this.events[i]._id===event._id) {
+            this.events.splice(i,1);
+        }
+    }
+
+    msg_color = 0x17f926; //green color
+    let body = `ℹ Event #${event._id} creation canceled.`;
+    let footer_content = `## No options available`;
+    
+    let embed_author = {name: `EVENT CREATION PROCESS`};
 
     return {embed: {author: embed_author, color: msg_color, description: body, footer: {text: footer_content}}};
 };
