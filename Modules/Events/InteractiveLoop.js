@@ -107,7 +107,6 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                         } else {
                             if (usr_input_str === "save" || usr_input_str === "s") {
                                 embed = viewer.getEventEditView();
-                                viewer.edit_mode = 0;
                             } else {
                                 let time, error;
                                 switch (viewer.edit_mode) {
@@ -156,7 +155,6 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
 
                                 if (!error) {
                                     embed = viewer.getEventEditView();
-                                    viewer.edit_mode = 0;
                                 }
                             }
                         }
@@ -164,15 +162,14 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                         if (usr_input_str === "back" || usr_input_str === "b") {
                             embed = viewer.getPageView(current_page_no);
                         }
-                    } else if (viewer.mode === 5) { // cancel loop
-                        cancel = true;
-                        return;
-                    } else if (viewer.mode === 6) { //TODO back to event edit mode from error if user types back or b 
-                    
-                        if (usr_input_str === "back" || usr_input_str === "b") {
+                    } else if (viewer.mode === 5) { // error mode
+                        if(viewer.previous_mode === 3) {
                             embed = viewer.getEventEditView();
+                        } else {
+                            embed = viewer.getPageView(current_page_no);
                         }
                     }
+
                     bot_message.delete();
                     if (hasDeletePerm) {
                         usr_message.delete();
