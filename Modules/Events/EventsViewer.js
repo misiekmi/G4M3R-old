@@ -199,7 +199,7 @@ Viewer.prototype.getEditorView = function() {
 };
 
 /// remove an event and return an event removed prompt
-Viewer.prototype.deleteEvent = function(event) {
+Viewer.prototype.deleteEvent = function(event, silent) {
     this.mode = 4;
 
     // delete the eventDocument and return to main page
@@ -216,10 +216,12 @@ Viewer.prototype.deleteEvent = function(event) {
 
     msg_color = 0x17f926; //green color
     let body = `ℹ Event #${event._id} is queued for removal.`;
-    let footer_content = `## Options: [B]ack, [Q]uit`;
-    
     let embed_author = {name: `EVENT DELETION PROCESS`};
 
+    if(silent) {
+        return {embed: {author: embed_author, color: msg_color, description: body}};
+    }
+    let footer_content = `## Options: [B]ack, [Q]uit`;
     return {embed: {author: embed_author, color: msg_color, description: body, footer: {text: footer_content}}};
 };
 
@@ -364,42 +366,39 @@ Viewer.prototype.leaveEvent = function(event, msg) {
     }
 };
 
-Viewer.prototype.getErrorView = (error,bad_input) => {
+Viewer.prototype.getErrorView = (error, bad_input, silent) => {
     this.mode = 4;
 
     let title, body;
     switch(error) {
         case 1:
             title = `⚠ Your input ${bad_input} is not a number from the list!`;
-            body = `You can return to the list, or quit`;
             break;
         case 2:
             title = `⚠ Event #${bad_input} does not exists!`;
-            body = `You can return to the list, or quit`;
             break;
         case 3:
             title = `⚠ \"${bad_input}\" is not a valid start time!`;
-            body = `You can return to the edit menu, or quit`;
             break;
         case 4:
             title = `⚠ \"${bad_input}\" is not a valid end time!`;
-            body = `You can return to the edit menu, or quit`;
             break;
         case 5:
             title = `⚠ \"${bad_input}\" is not valid amount!`;
-            body = `You can return to the edit menu, or quit`;
-            break;
-        case 6:
             break;
         default:
             title = `⚠ There was an error! `;
-            body = `You can return to the menu, or quit`;
 
             break;
     }
 
-    let footer_content = `## Options: [B]ack, [Q]uit`;
+    if(silent) {
+        body = "Double check to make sure you have the correct event number!";
+        return {embed: {color: 0xecf925, title: title, description: body}};
+    }
 
+    body = `You can return to the edit menu, or quit`;
+    let footer_content = `## Options: [B]ack, [Q]uit`;
     return {embed: {color: 0xecf925, title: title, description: body, footer: {text: footer_content}}};
 };
 
