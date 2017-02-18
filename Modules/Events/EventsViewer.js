@@ -127,6 +127,13 @@ Viewer.prototype.getEventEditView = function(add) {
     }
 
     let title_content, page_content, footer_content, embed_author;
+
+    if(this.add_not_edit) {
+        embed_author = {name: `CREATION PROCESS`};
+    } else {
+        embed_author = {name: `EDIT PROCESS`};
+    }
+
     msg_color = default_color;
     title_content = `Event #⃣ ${this.event._no}`;
     page_content = "" +
@@ -149,8 +156,8 @@ Viewer.prototype.getEventEditView = function(add) {
         (this.edits_made.tags?": \`"+this.edits_made.tags.join(", ")+"\`\n":
          ": \`"+this.event.tags+"\`\n");
 
-    footer_content = `## Options: [S]ave, [C]ancel`;
-    embed_author = {name: `EVENT CREATION / EDIT PROCESS`};
+    footer_content = `## Options: [S]ave, [C]ancel, [Q]uit`;
+
     return {embed: {author: embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
 };
 
@@ -163,8 +170,12 @@ Viewer.prototype.getEditorView = function() {
     let title_content, page_content, footer_content, embed_author;
 
     title_content = `Event #⃣ ${this.event._no}`;
-    embed_author = {name: `EVENT CREATION / EDIT PROCESS`};
-    footer_content = `## Options: [S]ave, [C]ancel`;
+    footer_content = `## Options: [Q]uit`;
+    if(this.add_not_edit) {
+        embed_author = {name: `CREATION PROCESS`};
+    } else {
+        embed_author = {name: `EDIT PROCESS`};
+    }
 
     switch(this.edit_mode) {
         case 1:
