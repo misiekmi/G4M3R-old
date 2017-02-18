@@ -4,27 +4,22 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
             const getCommandHelp = (name, type, usage, description, examples) => {
                     let title_content, page_content, footer_content;
                     let embed_author = {
-                        name: bot.user.username + ` >>> Help for ${type} command [${name}]`,
+                        name: `Please go to the Wiki for more details`,
                         icon_url: bot.user.avatarURL,
-                        url: "https://github.com/pedall/G4M3R"
+                        url: config.hosting_url
                     };
 
                     msg_color = 0xffffff; //white color
                     title_content = ``;
-                    page_content = `${description ? (`**Description:** *${description}*`) : "*no description*"}`;
-					page_content += `\n\n${usage ? (`**Usage:** ${usage}`) : "*no usage*"}`;
-					page_content += `\n${examples ? (`**Examples:** ${examples}`) : "*no example*"}`;
+                    page_content = `${description ? (`**Description:** \`${description}\``) : "**Description:** \`no description\`"}`;
+					page_content += `\n\n${usage ? (`**Usage:** \`${usage}\``) : "**Usage:** \`no usage\`"}`;
+					page_content += `\n${examples ? (`**Examples:** \`${examples}\``) : "**Examples:** \`no example\`"}`;
 					//TODO Delete after Testing page_content += `\n**WIKI Link:** <${config.hosting_url}wiki/Commands#${name}>`;
 
                     
-					footer_content = `Please go to the Wiki for more details`;
+					footer_content = `Help for ${type} command [${name}]`;
 
                     return { embed: { author: embed_author, color: msg_color, description: page_content, footer: { text: footer_content } } };
-
-
-/*                    return `__Help for ${type} command **${name}**__\n${description ? (`Description: ${description}\n`) : ""}
-					${usage ? (`Usage: \`${usage}\`\n`) : ""}<${config.hosting_url}wiki/Commands#${name}>`;
-*/
 		};
 
 		const info = [];
@@ -45,7 +40,7 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
 		if(info.length==0) {
 			info.push(`No such command \`${suffix}\``);
 		}
-		bot.sendArray(ch, info);
+		bot.sendArray(msg.channel, info);
 		
 	} else {
 
@@ -53,14 +48,13 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
 		
 		let msg_color = 0xffffff; //white color
 		let embed_author = {
-			name: bot.user.username + ` >>> Help for G4M3R's commands`,
+			name: `Type the respective command for more infos`,
 			icon_url: bot.user.avatarURL,
-			url: "https://github.com/pedall/G4M3R"
+			url: config.hosting_url
 		};
 
-		footer_content = `To get an overview type the respective command (e.g. commands all)`;
-		
 		/* not needed atm
+		footer_content = `To get an overview type the respective command (e.g. commands all)`;	
 		title_content = ``; 
 		page_content = `\n
 		\`commands\` (to get all command categories)\n
@@ -98,9 +92,6 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
 					author: embed_author,
 					color: msg_color,
 					fields: fields_content,
-					footer: {
-						text: footer_content 
-					} 
 				} 
 			});
 
