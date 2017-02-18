@@ -104,8 +104,8 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
 				} 
 			});
 
-			ch.createMessage(`**##** Link to WIKI: *(<${config.hosting_url}wiki/Commands>)*\n` +
-									`**##** Support Discord server *(<${config.discord_link}>)*`);
+			ch.createMessage(`**##** *Link to WIKI: (<${config.hosting_url}wiki/Commands>)*\n` +
+									`**##** *Support Discord server (<${config.discord_link}>)*`);
 		});
 	}
 };

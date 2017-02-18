@@ -97,8 +97,8 @@ module.exports = (bot, db, config, winston, userDocument, msg, suffix) => {
 			} 
 		});
 
-		msg.channel.createMessage(`**##** Link to WIKI: *(<${config.hosting_url}wiki/Commands>)*\n` +
-								`**##** Support Discord server *(<${config.discord_link}>)*`);
+		msg.channel.createMessage(`**##** *Link to WIKI: (<${config.hosting_url}wiki/Commands>)*\n` +
+								`**##** *Support Discord server (<${config.discord_link}>)*`);
 
 	}
 };
