@@ -14,6 +14,7 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
             return !cancel;
         },
         (callback) => {
+            console.log(viewer.mode);
             msg.channel.createMessage(embed).then(bot_message => {
                 let timeout = setTimeout(() => { bot_message.delete(); }, 30000); //delete message in 1/2 minute
                 bot.awaitMessage(msg.channel.id, msg.author.id, usr_message => {
@@ -81,7 +82,6 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                         } else {
                             if (usr_input_str === "back" || usr_input_str === "b") {
                                 embed = viewer.getEventEditView();
-                                viewer.edit_mode = 0;
                             } else {
                                 let time, error;
                                 switch (viewer.edit_mode) {
@@ -130,7 +130,6 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
 
                                 if (!error) {
                                     embed = viewer.getEventEditView();
-                                    viewer.edit_mode = 0;
                                 }
                             }
                         }
@@ -138,9 +137,12 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                         if (usr_input_str === "back" || usr_input_str === "b") {
                             embed = viewer.getPageView(current_page_no);
                         }
-                    } else if (viewer.mode === 5) { // cancel loop
-                        cancel = true;
-                        return;
+                    } else if (viewer.mode === 5) { // error mode
+                        if(viewer.previous_mode === 3) {
+                            embed = viewer.getEventEditView();
+                        } else {
+                            embed = viewer.getPageView(current_page_no);
+                        }
                     }
 
                     bot_message.delete();
