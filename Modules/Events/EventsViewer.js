@@ -367,30 +367,37 @@ Viewer.prototype.leaveEvent = function(event, msg) {
 Viewer.prototype.getErrorView = (error,bad_input) => {
     this.mode = 4;
 
-    let title;
+    let title, body;
     switch(error) {
         case 1:
             title = `⚠ Your input ${bad_input} is not a number from the list!`;
+            body = `You can return to the list, or quit`;
             break;
         case 2:
             title = `⚠ Event #${bad_input} does not exists!`;
+            body = `You can return to the list, or quit`;
             break;
         case 3:
             title = `⚠ \"${bad_input}\" is not a valid start time!`;
+            body = `You can return to the edit menu, or quit`;
             break;
         case 4:
             title = `⚠ \"${bad_input}\" is not a valid end time!`;
+            body = `You can return to the edit menu, or quit`;
             break;
         case 5:
             title = `⚠ \"${bad_input}\" is not valid amount!`;
+            body = `You can return to the edit menu, or quit`;
             break;
         case 6:
             break;
         default:
             title = `⚠ There was an error! `;
+            body = `You can return to the menu, or quit`;
+
             break;
     }
-    let body = `You can return to the editor menu, or quit`;
+
     let footer_content = `## Options: [B]ack, [Q]uit`;
 
     return {embed: {color: 0xecf925, title: title, description: body, footer: {text: footer_content}}};
