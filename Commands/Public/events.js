@@ -128,7 +128,7 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
                 viewer = new EventViewer(db, serverDocument, eventDocuments, msg.member, page_size);
 
                 if (viewer.setEvent(tmp)) {
-                    list(bot, db, winston, serverDocument, msg, viewer, viewer.leaveEvent(viewer.event, tmpMsg));
+                    list(bot, db, winston, serverDocument, msg, viewer, viewer.leaveEvent(viewer.event, msg));
                 } else {
                     list(bot, db, winston, serverDocument, msg, viewer, viewer.getErrorView(2, tmp));
                 }
