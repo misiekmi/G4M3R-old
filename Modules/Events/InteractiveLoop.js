@@ -64,14 +64,40 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                         }
                     } else if (viewer.mode === 3) { // editor mode
                         if (viewer.edit_mode === 0) {
-                            if (usr_input_str == "back" || usr_input_str == "b") {
+                            if (usr_input_str == "save" || usr_input_str == "s") { //save event after edit or add
+
+                                //edits are only saved to the event if users saves it, when canceling old values stay the same
+                                viewer.event.title = viewer.edits_made.title;
+                                viewer.event.start = viewer.edits_made.start;
+                                viewer.event.end = viewer.edits_made.end;
+                                viewer.event.description = viewer.edits_made.description;
+                                viewer.event.attendee_max = viewer.edits_made.attendee_max;
+                                viewer.event.tags = viewer.edits_made.tags;
+
                                 viewer.event.save((err) => {
                                     if (err) {
-                                        winston.error(`Failed to save event changes`, { _id: viewer.event._id }, err);
+                                        winston.error(`Failed to save event changes in edit mode`, { _id: viewer.event._id }, err);
                                     }
                                 });
                                 embed = viewer.getEventView();
                                 viewer.edits_made = {};
+                            } else if(usr_input_str == "cancel" || usr_input_str == "c") {
+                                //check if user is coming from add event or edit event
+                                if (viewer.add_not_edit) {
+                                    viewer.db.events.remove({_id: viewer.event._id}, (err)=>{
+                                        if(err) {
+                                            console.log(err.stack);
+                                        }
+                                    });
+                                    for(let i=0; i<viewer.events.length; i++){
+                                        if(viewer.events[i]._id===viewer.event._id) {
+                                            viewer.events.splice(i,1);
+                                        }
+                                    }
+                                } else {
+                                    embed = viewer.getEventView();
+                                    viewer.edits_made = {};
+                                }
                             } else {
                                 if (!isNaN(usr_input_no) && usr_input_no > 0 && usr_input_no <= 6) {
                                     viewer.edit_mode = Number(usr_input_no);
@@ -79,20 +105,20 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                                 }
                             }
                         } else {
-                            if (usr_input_str === "back" || usr_input_str === "b") {
+                            if (usr_input_str === "save" || usr_input_str === "s") {
                                 embed = viewer.getEventEditView();
                                 viewer.edit_mode = 0;
                             } else {
                                 let time, error;
                                 switch (viewer.edit_mode) {
                                     case 1:
-                                        viewer.event.title = usr_input_no;
+                                        //viewer.event.title = usr_input_no;
                                         viewer.edits_made.title = usr_input_no;
                                         break;
                                     case 2:
                                         time = moment(usr_message.content.trim(), formats, true); // parse start time
                                         if (time.isValid()) {
-                                            viewer.event.start = time;
+                                            //viewer.event.start = time;
                                             viewer.edits_made.start = time;
                                         } else {
                                             embed = viewer.getErrorView(3, usr_input_no);
@@ -102,7 +128,7 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                                     case 3:
                                         time = moment(usr_message.content.trim(), formats, true); // parse start time
                                         if (time.isValid()) {
-                                            viewer.event.end = time;
+                                            //viewer.event.end = time;
                                             viewer.edits_made.end = time;
                                         } else {
                                             embed = viewer.getErrorView(4, usr_input_no);
@@ -110,12 +136,12 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                                         }
                                         break;
                                     case 4:
-                                        viewer.event.description = usr_input_no;
+                                        //viewer.event.description = usr_input_no;
                                         viewer.edits_made.description = usr_input_no;
                                         break;
                                     case 5:
-                                        if (usr_input_no >= 0) {
-                                            viewer.event.attendee_max = usr_input_no;
+                                        if (usr_input_no >= 0 && usr_input_no <= 999999) { //added upper limit 999999
+                                            //viewer.event.attendee_max = usr_input_no;
                                             viewer.edits_made.attendee_max = usr_input_no;
                                         } else {
                                             embed = viewer.getErrorView(5, usr_input_no);
@@ -124,7 +150,7 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                                         break;
                                     case 6:
                                         let tags = usr_input_no.split(",");
-                                        viewer.event.tags = tags;
+                                        //viewer.event.tags = tags;
                                         viewer.edits_made.tags = tags;
                                 }
 
@@ -141,8 +167,12 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                     } else if (viewer.mode === 5) { // cancel loop
                         cancel = true;
                         return;
+                    } else if (viewer.mode === 6) { //TODO back to event edit mode from error if user types back or b 
+                    
+                        if (usr_input_str === "back" || usr_input_str === "b") {
+                            embed = viewer.getEventEditView();
+                        }
                     }
-
                     bot_message.delete();
                     if (hasDeletePerm) {
                         usr_message.delete();

@@ -8,8 +8,8 @@ module.exports = new mongoose.Schema({
 		_server: {type: String, required: false},	// id of server the event belongs too
 		_clan: {type: String, required: false},		// id of clan event belongs too
 
-		title: {type: String, default: "(no title)"},             // title of the event
-    	description: {type: String, default: "(no description)"}, // short description of the event
+		title: {type: String, default: "(default title)"},             // title of the event
+    	description: {type: String, default: "(default description)"}, // short description of the event
     	tags: {type: [String], default: []},					  // event tags relevant for search
 
 		start: {type: Date, required: true}, // start date of the event

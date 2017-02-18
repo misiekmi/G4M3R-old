@@ -18,6 +18,7 @@ function Viewer(db, serverDocument, eventDocuments, memberObject, page_size, fil
     this.mode = 0;
     this.edit_mode = 0;
     this.edits_made = {};
+    this.add_not_edit = false;
 
     // set the filter display
     this.filter_disp = "";
@@ -114,9 +115,14 @@ Viewer.prototype.getEventView = function() {
 };
 
 /// generate the main editor view for the currently set event
-Viewer.prototype.getEventEditView = function() {
+Viewer.prototype.getEventEditView = function(add) {
     this.mode = 3;
-    
+
+    //check if view comes from add or from edit command
+    if (add) {
+        this.add_not_edit = true;
+    }
+
     let title_content, page_content, footer_content, embed_author;
     msg_color = default_color;
     title_content = `Event #⃣ ${this.event._no}`;
@@ -140,7 +146,7 @@ Viewer.prototype.getEventEditView = function() {
         (this.edits_made.tags?": \`"+this.edits_made.tags.join(", ")+"\`\n":
          ": \`"+this.event.tags+"\`\n");
 
-    footer_content = `## Options: [B]ack, [Q]uit`;
+    footer_content = `## Options: [S]ave, [C]ancel`;
     embed_author = {name: `EVENT CREATION / EDIT PROCESS`};
     return {embed: {author: embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
 };
@@ -155,7 +161,7 @@ Viewer.prototype.getEditorView = function() {
 
     title_content = `Event #⃣ ${this.event._no}`;
     embed_author = {name: `EVENT CREATION / EDIT PROCESS`};
-    footer_content = `## Options: [B]ack, [Q]uit`;
+    footer_content = `## Options: [S]ave, [C]ancel`;
 
     switch(this.edit_mode) {
         case 1:
@@ -219,31 +225,6 @@ Viewer.prototype.deleteEvent = function(event) {
     let footer_content = `## Options: [B]ack, [Q]uit`;
     
     let embed_author = {name: `EVENT DELETION PROCESS`};
-
-    return {embed: {author: embed_author, color: msg_color, description: body, footer: {text: footer_content}}};
-};
-
-/// remove an event and return NO event removed prompt (delete event whiling canceling event creation)
-Viewer.prototype.deleteEventSilent = function(event) {
-    this.mode = 5;
-
-    // delete the eventDocument and return to main page
-    this.db.events.remove({_id: event._id}, (err)=>{
-        if(err) {
-            console.log(err.stack);
-        }
-    });
-    for(let i=0; i<this.events.length; i++){
-        if(this.events[i]._id===event._id) {
-            this.events.splice(i,1);
-        }
-    }
-
-    msg_color = 0x17f926; //green color
-    let body = `ℹ Event #${event._id} creation canceled.`;
-    let footer_content = `## No options available`;
-    
-    let embed_author = {name: `EVENT CREATION PROCESS`};
 
     return {embed: {author: embed_author, color: msg_color, description: body, footer: {text: footer_content}}};
 };
@@ -365,7 +346,8 @@ Viewer.prototype.leaveEvent = function(event, msg) {
 };
 
 Viewer.prototype.getErrorView = (error,bad_input) => {
-    this.mode = 4;
+    //TODO back to event edit mode from error if user types back or b 
+    this.mode = 6;
 
     let title, body;
     switch(error) {
@@ -378,14 +360,17 @@ Viewer.prototype.getErrorView = (error,bad_input) => {
             body = `You can return to the list, or quit`;
             break;
         case 3:
+            this.edit_mode = 2;
             title = `⚠ \"${bad_input}\" is not a valid start time!`;
             body = `You can return to the edit menu, or quit`;
             break;
         case 4:
+            this.edit_mode = 3;
             title = `⚠ \"${bad_input}\" is not a valid end time!`;
             body = `You can return to the edit menu, or quit`;
             break;
         case 5:
+            this.edit_mode = 5;
             title = `⚠ \"${bad_input}\" is not valid amount!`;
             body = `You can return to the edit menu, or quit`;
             break;
