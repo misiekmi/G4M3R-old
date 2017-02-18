@@ -324,34 +324,34 @@ Viewer.prototype.getErrorView = function(error, bad_input, silent) {
     this.mode = 5;
 
     let title, body;
+    title = `⚠ There was an error! `;
+
     switch(error) {
         case 1:
-            title = `⚠ Your input ${bad_input} is not a number from the list!`;
+            body = `Your input ${bad_input} is not a number from the list!`;
             break;
         case 2:
-            title = `⚠ Event #${bad_input} does not exists!`;
+            body = `Event #${bad_input} does not exists!`;
             break;
         case 3:
-            title = `⚠ \"${bad_input}\" is not a valid start time!`;
+            body = `\"${bad_input}\" is not a valid start time!`;
             break;
         case 4:
-            title = `⚠ \"${bad_input}\" is not a valid end time!`;
+            body = `\"${bad_input}\" is not a valid end time!`;
             break;
         case 5:
-            title = `⚠ \"${bad_input}\" is not valid amount!`;
+            body = `\"${bad_input}\" is not valid amount!`;
             break;
         default:
-            title = `⚠ There was an error! `;
-
+            body = `Unknown error!`;
             break;
     }
 
     if(silent) {
-        body = "Double check to make sure you have the correct event number!";
         return {embed: {color: 0xecf925, title: title, description: body}};
     }
 
-    body = `You can return to the edit menu, or quit`;
+    body += `\n\nYou can return to the edit menu, or quit`;
     let footer_content = `## Options: [B]ack, [Q]uit`;
     return {embed: {color: 0xecf925, title: title, description: body, footer: {text: footer_content}}};
 };
