@@ -1,6 +1,5 @@
-module.exports = (bot, db, config, winston, userDocument, serverDocument, channelDocument, memberDocument, msg, suffix) => {
+module.exports = (bot, db, config, winston, userDocument, msg, suffix) => {
         if (suffix) {
-
             const getCommandHelp = (name, type, usage, description, examples) => {
                     let title_content, page_content, footer_content;
                     let embed_author = {
@@ -20,11 +19,6 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
 					footer_content = `Please go to the Wiki for more details`;
 
                     return { embed: { author: embed_author, color: msg_color, description: page_content, footer: { text: footer_content } } };
-
-
-/*                    return `__Help for ${type} command **${name}**__\n${description ? (`Description: ${description}\n`) : ""}
-					${usage ? (`Usage: \`${usage}\`\n`) : ""}<${config.hosting_url}wiki/Commands#${name}>`;
-*/
 		};
 
 		const info = [];
@@ -48,6 +42,7 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
 		bot.sendArray(msg.channel, info);
 		
 	} else {
+		
 		let description = `\`\`\`Markdown\n
 		To get an overview over my commands just type:\n
 		[commands] (to get all command categories)\n
@@ -58,8 +53,7 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
 		**##** For detailed information visi our wiki (${config.hosting_url}wiki/Commands)\n
 		**##** To get some support, please join our Discord server (${config.discord_link})`;
 
-        msg.author.getDMChannel().then(ch => {
-            ch.createMessage(description);
-        });	
+        msg.channel.createMessage(description);
+
 	}
 };
