@@ -2,24 +2,25 @@ module.exports = (bot, db, config, winston, userDocument, msg, suffix) => {
         if (suffix) {
             const getCommandHelp = (name, type, usage, description, examples) => {
                     let title_content, page_content, footer_content;
+                    //footer_content = `Please go to the Wiki for more details`;
+
                     let embed_author = {
-                        name: bot.user.username + ` >>> Help for ${type} command [${name}]`,
+                        name: `Please go to the Wiki for more details`,
                         icon_url: bot.user.avatarURL,
-                        url: "https://github.com/pedall/G4M3R"
+                        url: config.hosting_url
                     };
 
-                    msg_color = 0xffffff; //white color
+                    let msg_color = 0xffffff; //white color
                     title_content = ``;
-                    page_content = `${description ? (`**Description:** *${description}*`) : "*no description*"}`;
-					page_content += `\n\n${usage ? (`**Usage:** ${usage}`) : "*no usage*"}`;
-					page_content += `\n${examples ? (`**Examples:** ${examples}`) : "*no example*"}`;
+                    page_content = `${description ? (`**Description:** \`${description}\``) : "**Description:** \`no description\`"}`;
+					page_content += `\n\n${usage ? (`**Usage:** \`${usage}\``) : "**Usage:** \`no usage\`"}`;
+					page_content += `\n${examples ? (`**Examples:** \`${examples}\``) : "**Examples:** \`no example\`"}`;
 					//TODO Delete after Testing page_content += `\n**WIKI Link:** <${config.hosting_url}wiki/Commands#${name}>`;
 
                     
-					footer_content = `Please go to the Wiki for more details`;
 
-                    return { embed: { author: embed_author, color: msg_color, description: page_content, footer: { text: footer_content } } };
-		};
+                    return { embed: { author: embed_author, color: msg_color, description: page_content } };
+			};
 
 		const info = [];
 		const pmcommand = bot.getPMCommandMetadata(suffix);
@@ -42,18 +43,61 @@ module.exports = (bot, db, config, winston, userDocument, msg, suffix) => {
 		bot.sendArray(msg.channel, info);
 		
 	} else {
+        
+		let title_content, page_content, footer_content, fields_content;
 		
-		let description = `\`\`\`Markdown\n
-		To get an overview over my commands just type:\n
-		[commands] (to get all command categories)\n
-		[commands <category>] (do not type the whole name 😅)\n
-		[commands pm] (to get all commands in PM mode)\n
-		[commands all] (to get all commands at once)\n
-		\`\`\`\n\n
-		**##** For detailed information visi our wiki (${config.hosting_url}wiki/Commands)\n
-		**##** To get some support, please join our Discord server (${config.discord_link})`;
+		let msg_color = 0xffffff; //white color
+		
+		let embed_author = {
+			name: `Type the respective command for more infos`,
+			icon_url: bot.user.avatarURL,
+			url: config.hosting_url
+		};
+		
+		/*
+		title_content = ``; 
+		page_content = `\n
+		\`commands\` (to get all command categories)\n
+		\`commands <category>\` (do not type the whole name 😅)\n
+		\`commands pm\` (to get all commands in PM mode)\n
+		\`commands all\` (to get all commands at once)`;
+		
+		footer_content = `To get an overview type the respective command (e.g. commands all)`;
+		*/
+		
+		fields_content = [
+			{
+				name: "commands",
+				value: `to get all command categories`,
+				inline: false
+			},
+			{
+				name: "commands <category>",
+				value: ` please do not type the whole name 😅`,
+				inline: false
+			},
+			{
+				name: "commands 'pm'",
+				value: `shows all possible PM commands`,
+				inline: false
+			},
+			{
+				name: "commands 'all'",
+				value: `Get all commands at once`,
+				inline: false
+			}
+		];
 
-        msg.channel.createMessage(description);
+        msg.channel.createMessage({
+			 embed: {
+				author: embed_author,
+				color: msg_color,
+				fields: fields_content,
+			} 
+		});
+
+		msg.channel.createMessage(`**##** *Link to WIKI: (<${config.hosting_url}wiki/Commands>)*\n` +
+								`**##** *Support Discord server (<${config.discord_link}>)*`);
 
 	}
 };

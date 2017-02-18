@@ -19,6 +19,7 @@ function Viewer(db, serverDocument, eventDocuments, memberObject, page_size, fil
     this.previous_mode = 0;
     this.edit_mode = 0;
     this.edits_made = {};
+    this.add_not_edit = false;
 
     // set the filter display
     this.filter_disp = "";
@@ -115,10 +116,16 @@ Viewer.prototype.getEventView = function() {
 };
 
 /// generate the main editor view for the currently set event
-Viewer.prototype.getEventEditView = function() {
+Viewer.prototype.getEventEditView = function(add) {
     this.mode = 3;
     this.edit_mode = 0;
-    
+
+
+    //check if view comes from add or from edit command
+    if (add) {
+        this.add_not_edit = true;
+    }
+
     let title_content, page_content, footer_content, embed_author;
     msg_color = default_color;
     title_content = `Event #⃣ ${this.event._no}`;
@@ -142,7 +149,7 @@ Viewer.prototype.getEventEditView = function() {
         (this.edits_made.tags?": \`"+this.edits_made.tags.join(", ")+"\`\n":
          ": \`"+this.event.tags+"\`\n");
 
-    footer_content = `## Options: [B]ack, [Q]uit`;
+    footer_content = `## Options: [S]ave, [C]ancel`;
     embed_author = {name: `EVENT CREATION / EDIT PROCESS`};
     return {embed: {author: embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
 };
@@ -157,7 +164,7 @@ Viewer.prototype.getEditorView = function() {
 
     title_content = `Event #⃣ ${this.event._no}`;
     embed_author = {name: `EVENT CREATION / EDIT PROCESS`};
-    footer_content = `## Options: [B]ack, [Q]uit`;
+    footer_content = `## Options: [S]ave, [C]ancel`;
 
     switch(this.edit_mode) {
         case 1:
