@@ -138,6 +138,7 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                         }
                     } else if (viewer.mode === 5) { // cancel loop
                         cancel = true;
+                        return;
                     }
 
                     bot_message.delete();

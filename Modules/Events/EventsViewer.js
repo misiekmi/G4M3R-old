@@ -99,9 +99,9 @@ Viewer.prototype.getEventView = function() {
         embed_author = { name: `EVENT OVERVIEW PROCESS` };
         title_content = `Event #⃣ ${this.event._no}`;
         page_content = "" +
-        `Title: **${this.event.title}**\n` +
-        `Author: <@${this.event._author}>\n\n` +
-        `Start: **${moment(this.event.start).format(`${config.moment_date_format}`)}**\n` +
+            `Title: **${this.event.title}**\n` +
+            `Author: <@${this.event._author}>\n\n` +
+            `Start: **${moment(this.event.start).format(`${config.moment_date_format}`)}**\n` +
         `End: **${moment(this.event.end).format(`${config.moment_date_format}`)}**\n\n` +
         `Tags: **${this.event.tags.join(", ")} **\n` +
         `Description: \n\`\`\`md\n${this.event.description}\n\`\`\`\n` +
@@ -166,12 +166,14 @@ Viewer.prototype.getEditorView = function() {
         case 2:
             page_content = "" +
                 `Current start: \n\`\`${moment(this.event.start).format(`${config.moment_date_format}`)}\`\`\n\n` +
-                "Enter the new start time for the event.";
+                `Enter the start end time for the event.\n\n` + 
+                `# Format: YYYY/MM/DD hh:mm`;
             break;
         case 3:
             page_content = "" +
                 `Current end: \n\`\`${moment(this.event.end).format(`${config.moment_date_format}`)}\`\`\n\n` +
-                "Enter the new end time for the event.";
+                `Enter the new end time for the event.\n\n` + 
+                `# Format: YYYY/MM/DD hh:mm`;
             break;
         case 4:
             page_content = "" +
@@ -247,14 +249,15 @@ Viewer.prototype.deleteEventSilent = function(event) {
 };
 
 /// add a user to an event and generate a prompt
-Viewer.prototype.joinEvent = function(event, msgAuthor) {
-    this.mode = 4;
+Viewer.prototype.joinEvent = function(event, msg) {
+    this.mode = 5; //mode 5 for canceling interactive menu
     let alreadyMember = false;
 
     // check if msgAuthor is already an Attendee
     for (let i = 0; i < event.attendees.length; i++) {
-        if (event.attendees[i]._id === msgAuthor) {
+        if (event.attendees[i]._id === msg.author.id) {
             alreadyMember = true;
+            break;
         }
     }
     //check if msgAuthor already joined that event
@@ -262,63 +265,65 @@ Viewer.prototype.joinEvent = function(event, msgAuthor) {
     if (alreadyMember) {
         
         msg_color = 0xecf925; //yellow color
-        title_content = `⚠ You __already__ joined the Event #${event._no}.`;
+        title_content = `⚠ ${msg.author.username} __already__ joined the Event #${event._no}.`;
         page_content =  `Title: \`\`${event.title}\`\`\n` +
                         `Author: <@${event._author}>\n` +
                         `Attendees: [${event.attendees.length}/${event.attendee_max}]`;
-        footer_content = `## Options: [B]ack, [Q]uit`;
+        //footer_content = `## Options: [B]ack, [Q]uit`;
         
-        embed_author = {name: `EVENT ATTENDEES PROCESS`};
+        //embed_author = {name: `EVENT ATTENDEES PROCESS`};
 
-        return {embed: {author: embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
-
+        //return {embed: {author: embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
+        return {embed: {color: msg_color, title: title_content, description: page_content}};
 
     //if user is not already an attendee of the event
     } else {
         // Event attendee_max limit is not reached yet
         if (event.attendees.length < event.attendee_max) {
 
-            event.attendees.push({_id: msgAuthor, timestamp: Date.now()});
+            event.attendees.push({_id: msg.author.id, timestamp: Date.now()});
             event.save(err => {
                 if(err) {
                     console.log(err.stack);
                 }
             });
             msg_color = 0x17f926; //green color
-            title_content = `ℹ You just joined Event #${event._no}.`;
+            title_content = `ℹ ${msg.author.username} just joined Event #${event._no}.`;
             page_content =  `Title: \`\`${event.title}\`\`\n` +
                             `Author: <@${event._author}>\n` +
                             `Attendees: [${event.attendees.length}/${event.attendee_max}]`;
-            footer_content = `## Options: [B]ack, [Q]uit`;
+            //footer_content = `## Options: [B]ack, [Q]uit`;
 
-            embed_author = {name: `EVENT ATTENDEES PROCESS`};
-            return {embed: {author: embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
+            //embed_author = {name: `EVENT ATTENDEES PROCESS`};
+            //return {embed: {author: embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
+            return {embed: {color: msg_color, title: title_content, description: page_content}};
 
         // Event attendee_max limit is already reached   
         } else {
             msg_color = 0xecf925; //yellow color
-            title_content = `⚠ You cannot join Event #${event._no} because there is no open slot left.`;
+            title_content = `⚠ ${msg.author.username} cannot join Event #${event._no} because there is no open slot left.`;
             page_content =  `Title: \`\`${event.title}\`\`\n` +
                             `Author: <@${event._author}>\n` +
                             `Attendees: [${event.attendees.length}/${event.attendee_max}]`;
-            footer_content = `## Options: [B]ack, [Q]uit`;
+            //footer_content = `## Options: [B]ack, [Q]uit`;
             
-            embed_author = {name: `EVENT ATTENDEES PROCESS`};
+            //embed_author = {name: `EVENT ATTENDEES PROCESS`};
             
-            return {embed: {author: embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
-        }
+            //return {embed: {author: embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
+            return {embed: {color: msg_color, title: title_content, description: page_content}};
+    }
     }
 };
 
 /// remove a user from an event and generate a prompt
-Viewer.prototype.leaveEvent = function(event, msgAuthor) {
-    this.mode = 4;
+Viewer.prototype.leaveEvent = function(event, msg) {
+    this.mode = 5; //mode 5 for canceling interactive menu
     let wasMember = false;
     let title_content, page_content, footer_content, embed_author;
 
     // check if msgAuthor is an Attendee and delete that entry
     for (let i = 0; i < event.attendees.length; i++) {
-        if (event.attendees[i]._id === msgAuthor) {
+        if (event.attendees[i]._id === msg.author.id) {
             wasMember = true;
             event.attendees.splice(i,1);
             
@@ -331,30 +336,31 @@ Viewer.prototype.leaveEvent = function(event, msgAuthor) {
         }
     }
     
-    
     // msgAuthor was an attendee of the event
     if (wasMember) {
         msg_color = 0x17f926; //green color
-        title_content = `ℹ You left the Event #${event._no}.`;
+        title_content = `ℹ ${msg.author.username} left the Event #${event._no}.`;
         page_content =  `Title: \`\`${event.title}\`\`\n` +
             `Author: <@${event._author}>\n` +
             `Attendees: [${event.attendees.length}/${event.attendee_max}]`;
-        footer_content = `## Options: [B]ack, [Q]uit`;
-        embed_author = {name: `EVENT ATTENDEES PROCESS`};
+        //footer_content = `## Options: [B]ack, [Q]uit`;
+        //embed_author = {name: `EVENT ATTENDEES PROCESS`};
 
-        return {embed: {author: embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
-    
+        //return {embed: {author: embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
+        return {embed: {color: msg_color, title: title_content, description: page_content}};
+
     // msgAuthor was not an attendee of the event
     } else {
         msg_color = 0xecf925; //yellow color
-        title_content = `⚠ You are not an attendee of the Event #${event._no}.`;
+        title_content = `⚠ ${msg.author.username} is not an attendee of the Event #${event._no}.`;
         page_content =  `Title: \`\`${event.title}\`\`\n` +
             `Author: <@${event._author}>\n` +
             `Attendees: [${event.attendees.length}/${event.attendee_max}]`;
-        footer_content = `## Options: [B]ack, [Q]uit`;
-        embed_author = {name: `EVENT ATTENDEES PROCESS`};
+        //footer_content = `## Options: [B]ack, [Q]uit`;
+        //embed_author = {name: `EVENT ATTENDEES PROCESS`};
 
-        return {embed: {author: embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
+        //return {embed: {author: embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
+        return {embed: {color: msg_color, title: title_content, description: page_content}};
     }
 };
 

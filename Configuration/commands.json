@@ -50,7 +50,7 @@
         }
     },
     "public": {
-        "event": {
+        "events": {
             "examples": "event show 1, event list, event add",
             "usage": "event + add, list, show [ID], edit [ID], join [ID], leave [ID]",
             "description": "Create events people can RSVP to",
