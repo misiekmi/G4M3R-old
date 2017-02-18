@@ -70,7 +70,7 @@ module.exports = (bot, db, config, winston, userDocument, msg, suffix) => {
 				inline: false
 			},
 			{
-				name: "#commands <category>",
+				name: "commands <category>",
 				value: ` please do not type the whole name 😅`,
 				inline: false
 			},
