@@ -56,9 +56,11 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                             (auth(viewer.server, viewer.event, viewer.user))) {
                             embed = viewer.deleteEvent(viewer.event);
                         } else if (usr_input_str == "join" || usr_input_str == "j") {
-                            embed = viewer.joinEvent(viewer.event, msg.author.id);
+                            msg.channel.createMessage(viewer.joinEvent(viewer.event, msg));
+                            cancel = true;
                         } else if (usr_input_str == "leave" || usr_input_str == "l") {
-                            embed = viewer.leaveEvent(viewer.event, msg.author.id);
+                            msg.channel.createMessage(viewer.leaveEvent(viewer.event, msg));
+                            cancel = true;
                         }
                     } else if (viewer.mode === 3) { // editor mode
                         if (viewer.edit_mode === 0) {

@@ -107,28 +107,23 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
                 list(bot, db, winston, serverDocument, msg, viewer, viewer.getPageView(1));
             });
         } else if (suffix.toLowerCase().startsWith("join")) {
-            //let author = msg.author.id;
-            const tmpMsg = msg;
             let tmp = suffix.toLowerCase().split("join")[1].trim();
             QueryHelper.findServerEvents(db, serverDocument._id).then((eventDocuments) => {
                 viewer = new EventViewer(db, serverDocument, eventDocuments, msg.member, page_size);
 
                 if (viewer.setEvent(tmp)) {
-                    list(bot, db, winston, serverDocument, msg, viewer, viewer.joinEvent(viewer.event, msg));
+                    msg.channel.createMessage(viewer.joinEvent(viewer.event, msg));
                 } else {
                     list(bot, db, winston, serverDocument, msg, viewer, viewer.getErrorView(2, tmp));
                 }
             });
         } else if (suffix.toLowerCase().startsWith("leave")) {
-            //let author = msg.author.id;
-            const tmpMsg = msg;
-
             let tmp = suffix.toLowerCase().split("leave")[1].trim();
             QueryHelper.findServerEvents(db, serverDocument._id).then((eventDocuments) => {
                 viewer = new EventViewer(db, serverDocument, eventDocuments, msg.member, page_size);
 
                 if (viewer.setEvent(tmp)) {
-                    list(bot, db, winston, serverDocument, msg, viewer, viewer.leaveEvent(viewer.event, msg));
+                    msg.channel.createMessage(viewer.leaveEvent(viewer.event, msg));
                 } else {
                     list(bot, db, winston, serverDocument, msg, viewer, viewer.getErrorView(2, tmp));
                 }
