@@ -45,21 +45,67 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
 		if(info.length==0) {
 			info.push(`No such command \`${suffix}\``);
 		}
-		bot.sendArray(msg.channel, info);
+		bot.sendArray(ch, info);
 		
 	} else {
-		let description = `\`\`\`Markdown\n
-		To get an overview over my commands just type:\n
-		[commands] (to get all command categories)\n
-		[commands <category>] (do not type the whole name 😅)\n
-		[commands pm] (to get all commands in PM mode)\n
-		[commands all] (to get all commands at once)\n
-		\`\`\`\n\n
-		**##** For detailed information visi our wiki (${config.hosting_url}wiki/Commands)\n
-		**##** To get some support, please join our Discord server (${config.discord_link})`;
 
-        msg.author.getDMChannel().then(ch => {
-            ch.createMessage(description);
-        });	
+		let title_content, page_content, footer_content, fields_content;
+		
+		let msg_color = 0xffffff; //white color
+		let embed_author = {
+			name: bot.user.username + ` >>> Help for G4M3R's commands`,
+			icon_url: bot.user.avatarURL,
+			url: "https://github.com/pedall/G4M3R"
+		};
+
+		footer_content = `To get an overview type the respective command (e.g. commands all)`;
+		
+		/* not needed atm
+		title_content = ``; 
+		page_content = `\n
+		\`commands\` (to get all command categories)\n
+		\`commands <category>\` (do not type the whole name 😅)\n
+		\`commands pm\` (to get all commands in PM mode)\n
+		\`commands all\` (to get all commands at once)`;
+		*/
+
+		fields_content = [
+			{
+				name: "commands",
+				value: `to get all command categories`,
+				inline: false
+			},
+			{
+				name: "#commands <category>",
+				value: ` please do not type the whole name 😅`,
+				inline: false
+			},
+			{
+				name: "commands 'pm'",
+				value: `shows all possible PM commands`,
+				inline: false
+			},
+			{
+				name: "commands 'all'",
+				value: `Get all commands at once`,
+				inline: false
+			}
+		];
+
+		msg.author.getDMChannel().then(ch => {
+			ch.createMessage({
+				embed: {
+					author: embed_author,
+					color: msg_color,
+					fields: fields_content,
+					footer: {
+						text: footer_content 
+					} 
+				} 
+			});
+
+			ch.createMessage(`**##** Link to WIKI: *(${config.hosting_url}wiki/Commands)*\n` +
+									`**##** Support Discord server *(${config.discord_link})*`);
+		});
 	}
 };
