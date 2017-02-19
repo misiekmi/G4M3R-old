@@ -9,12 +9,10 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
 
     let viewer;
     const page_size = 5;
-    let add_not_edit = false;
 
     if (suffix) {
         if (suffix.toLowerCase() == "add") {
             // chained promise statements to generate a new event id number for the server
-            add_not_edit = true;
             IDHelper.newServerEventNumber(db, serverDocument._id).then((no) => {
                 db.events.create({
                     _id: IDHelper.computeID(no, msg.author.id, serverDocument._id, null),
@@ -31,7 +29,7 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
                         QueryHelper.findServerEvents(db, serverDocument._id).then((eventDocuments) => {
                             let viewer = new EventViewer(db, serverDocument, eventDocuments, msg.member, page_size);
                             if (viewer.setEvent(no)) {
-                                list(bot, db, winston, serverDocument, msg, viewer, viewer.getEventEditView(add_not_edit));
+                                list(bot, db, winston, serverDocument, msg, viewer, viewer.getEventEditView(true));
                             } else {
                                 list(bot, db, winston, serverDocument, msg, viewer, viewer.getErrorView());
                             }
@@ -51,7 +49,6 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
                 }
             });
         } else if (suffix.toLowerCase().startsWith("edit")) {
-            add_not_edit = false;
             let tmp = suffix.toLowerCase().split("edit")[1].trim();
             QueryHelper.findServerEvents(db, serverDocument._id).then((eventDocuments) => {
                 viewer = new EventViewer(db, serverDocument, eventDocuments, msg.member, page_size);
