@@ -21,7 +21,7 @@ module.exports = {
 			channelDocument.trivia.past_questions = [];
 			channelDocument.trivia.score = 0;
 			channelDocument.trivia.responders = [];
-			ch.createMessage(`Trivia game started by ${usr.mention} ${set ? (`(set: ${set}) `) : ""}🎮`).then(() => { // TODO FIXME
+			ch.createMessage(`Trivia game started by ${usr.mention} ${set ? (`(set: ${set}) `) : ""}🎮`).then(() => { // TODO: FIXME:
 				module.exports.next(bot, db, svr, serverDocument, ch, channelDocument);
 			});
 		}

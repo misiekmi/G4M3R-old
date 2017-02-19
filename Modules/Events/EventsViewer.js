@@ -99,9 +99,13 @@ Viewer.prototype.getEventView = function() {
         let hasAttendees = false;
 
         if (typeof this.event.attendees !== "undefined" && this.event.attendees.length > 0) {
-            for (let i = 0; i<14;i++) { //showing max 15 attendees
-                attendeesNames += `<@`+this.event.attendees[i]._id+`>, `;
-                hasAttendees = true;
+            for (let i = 0; i<this.event.attendees.length;i++) {
+                if (i >14) { //showing max 15 attendees
+                    break;
+                } else { 
+                    attendeesNames += `<@`+this.event.attendees[i]._id+`>, `;
+                    hasAttendees = true;
+                }
             }
         }
 
@@ -122,6 +126,7 @@ Viewer.prototype.getEventView = function() {
         (hasAttendees ? `(${attendeesNames})` : `(no attendees)`);
 
     footer_content = `## Options: [J]oin, [L]eave, ` +
+        (hasAttendees ? `[A]ttendees, ` : "") +
         (auth(this.server, this.event, this.user)?`[E]dit, [D]elete, `:"") + `[B]ack, [Q]uit`;
     return {embed: {author: embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
 };
@@ -386,5 +391,20 @@ Viewer.prototype.getErrorView = function(error, bad_input, silent) {
     return {embed: {color: 0xecf925, title: title, description: body, footer: {text: footer_content}}};
 };
 
+Viewer.prototype.getEventAttendeesView = function(event) {
+    this.previous_mode = this.mode;
+    this.mode = 6;
+
+    let title, body;
+    title = `ℹ List of attendees for #⃣ ${event._no}`;
+
+    if (typeof event.attendees !== "undefined" && event.attendees.length > 0) {
+        for (let i = 0; i<this.event.attendees.length;i++) {
+            body += `<@`+this.event.attendees[i]._id+`>, `;
+        }
+}
+    let footer_content = `## Options: [B]ack, [Q]uit`;
+    return {embed: {color: 0xffffff, title: title, description: body, footer: {text: footer_content}}};
+};
 
 module.exports = Viewer;

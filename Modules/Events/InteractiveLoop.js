@@ -74,6 +74,9 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                         } else if (usr_input_str == "leave" || usr_input_str == "l") {
                             msg.channel.createMessage(viewer.leaveEvent(viewer.event, msg));
                             cancel = true;
+                        } else if ((usr_input_str == "attendees" || usr_input_str == "a") &&
+                            (typeof viewer.event.attendees !== "undefined" && viewer.event.attendees.length > 0)){  //TODO: set 0 to 14 after testing
+                            embed = viewer.getEventAttendeesView(viewer.event);
                         }
                     } else if (viewer.mode === 3) { // editor mode
                         if (viewer.edit_mode === 0) {
@@ -176,8 +179,13 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                         } else {
                             embed = viewer.getPageView(current_page_no);
                         }
+                    } else if (viewer.mode === 6) { // error mode
+                        if(viewer.previous_mode === 2) {
+                            embed = viewer.getEventView();
+                        } else {
+                            cancel = true;
+                        }
                     }
-
                     bot_message.delete();
                     if (hasDeletePerm) {
                         usr_message.delete();

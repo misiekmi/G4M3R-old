@@ -85,7 +85,7 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
 			});
 
 		});
-		//TODO Change Wiki URL
+		//TODO: Change Wiki URL
 		let embed_footer = `For detailed information about each command and all of G4M3R's other features, head over to our wiki: <${config.hosting_url}wiki/Commands>. If you need support using G4M3R, please join our Discord server: <${config.discord_link}>. 🎮`;
 		
 		//msg.channel.createMessage(preInfo);

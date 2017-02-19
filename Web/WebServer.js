@@ -797,7 +797,7 @@ module.exports = (bot, db, auth, config, winston) => {
                                         userDocument.save(() => {
                                             db.users.findOrCreate({ _id: galleryDocument.owner_id }, (err, ownerUserDocument) => {
                                                 if (!err && ownerUserDocument) {
-                                                    //ownerUserDocument.points += vote * 10; //TODO possibly related to AwesomePoints maybe the error for webserver!
+                                                    //ownerUserDocument.points += vote * 10; //TODO: possibly related to AwesomePoints maybe the error for webserver!
                                                     //ownerUserDocument.save(() => {});
                                                 }
                                                 res.sendStatus(200);
@@ -851,7 +851,7 @@ module.exports = (bot, db, auth, config, winston) => {
                                 messageOwner(galleryDocument.owner_id, `Your extension ${galleryDocument.name} has been ${req.body.action}${req.body.action=="reject" ? "e" : ""}d from the G4M3R extension gallery for the following reason:\`\`\`${req.body.reason}\`\`\``);
                                 db.users.findOrCreate({ _id: galleryDocument.owner_id }, (err, ownerUserDocument) => {
                                     if (!err && ownerUserDocument) {
-                                        //ownerUserDocument.points -= galleryDocument.points * 10; //TODO possibly related to AwesomePoints
+                                        //ownerUserDocument.points -= galleryDocument.points * 10; //TODO: possibly related to AwesomePoints
                                         //ownerUserDocument.save(() => {});
                                     }
                                     galleryDocument.state = "saved";

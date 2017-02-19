@@ -14,7 +14,7 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
                     page_content = `${description ? (`**Description:** \`${description}\``) : "**Description:** \`no description\`"}`;
 					page_content += `\n\n${usage ? (`**Usage:** \`${usage}\``) : "**Usage:** \`no usage\`"}`;
 					page_content += `\n${examples ? (`**Examples:** \`${examples}\``) : "**Examples:** \`no example\`"}`;
-					//TODO Delete after Testing page_content += `\n**WIKI Link:** <${config.hosting_url}wiki/Commands#${name}>`;
+					//TODO: Delete after Testing page_content += `\n**WIKI Link:** <${config.hosting_url}wiki/Commands#${name}>`;
 
                     
 					footer_content = `Help for ${type} command [${name}]`;
