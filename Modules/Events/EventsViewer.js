@@ -94,24 +94,25 @@ Viewer.prototype.getPageView = function(page_no) {
 
 /// generate a view of a single event
 Viewer.prototype.getEventView = function() {
-   this.mode = 2;
+        this.mode = 2;
 
-   let title_content, page_content, footer_content, embed_author;
-   msg_color = default_color;
-   embed_author = { name: `EVENT OVERVIEW PROCESS` };
-   title_content = `Event #⃣ ${this.event._no}`;
-   page_content = "" +
-       `Title: **${this.event.title}**\n` +
-       `Author: <@${this.event._author}>\n\n` +
-       `Start: **${moment(this.event.start).format(`${config.moment_date_format}`)}**\n` +
-   `End: **${moment(this.event.end).format(`${config.moment_date_format}`)}**\n\n` +
-   `Tags: **${this.event.tags.join(", ")} **\n` +
-   `Description: \n\`\`\`md\n${this.event.description}\n\`\`\`\n` +
-   `Attendees: \`[${this.event.attendees.length}/${this.event.attendee_max}]\``;
+        let title_content, page_content, footer_content, embed_author;
+        msg_color = default_color;
+        embed_author = {
+            name: `EVENT OVERVIEW PROCESS`
+        };
+        title_content = `Event #⃣ ${this.event._no}`;
+        page_content = "" +
+            `Title: **${this.event.title}**\n` +
+            `Author: <@${this.event._author}>\n\n` +
+            `Start: **${moment(this.event.start).format(`${config.moment_date_format}`)}**\n` +
+       `End: **${moment(this.event.end).format(`${config.moment_date_format}`)}**\n\n` +
+       `Tags: **${this.event.tags.join(", ")} **\n` +
+       `Description: \n\`\`\`md\n${this.event.description}\n\`\`\`\n` +
+       `Attendees: \`[${this.event.attendees.length}/${this.event.attendee_max}]\``;
 
     footer_content = `## Options: [J]oin, [L]eave, ` +
-        (auth(this.server, this.event, this.user)?`[E]dit, [D]elete, `:"") +
-        `[B]ack, [Q]uit`;
+        (auth(this.server, this.event, this.user)?`[E]dit, [D]elete, `:"") + `[B]ack, [Q]uit`;
     return {embed: {author: embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
 };
 
