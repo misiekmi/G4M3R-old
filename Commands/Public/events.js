@@ -9,12 +9,10 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
 
     let viewer;
     const page_size = 5;
-    let add_not_edit = false;
 
     if (suffix) {
         if (suffix.toLowerCase() == "add") {
             // chained promise statements to generate a new event id number for the server
-            add_not_edit = true;
             IDHelper.newServerEventNumber(db, serverDocument._id).then((no) => {
                 db.events.create({
                     _id: IDHelper.computeID(no, msg.author.id, serverDocument._id, null),
@@ -31,7 +29,7 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
                         QueryHelper.findServerEvents(db, serverDocument._id).then((eventDocuments) => {
                             let viewer = new EventViewer(db, serverDocument, eventDocuments, msg.member, page_size);
                             if (viewer.setEvent(no)) {
-                                list(bot, db, winston, serverDocument, msg, viewer, viewer.getEventEditView(add_not_edit));
+                                list(bot, db, winston, serverDocument, msg, viewer, viewer.getEventEditView(true));
                             } else {
                                 list(bot, db, winston, serverDocument, msg, viewer, viewer.getErrorView());
                             }
@@ -50,21 +48,7 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
                     list(bot, db, winston, serverDocument, msg, viewer, viewer.getErrorView(2, tmp));
                 }
             });
-        } else if (suffix.toLowerCase().startsWith("remove")) {
-            QueryHelper.findServerEvents(db, serverDocument._id).then((eventDocuments) => {
-                let tmp = suffix.toLowerCase().split("remove")[1].trim();
-                viewer = new EventViewer(db, serverDocument, eventDocuments, msg.member, page_size);
-
-                if (viewer.setEvent(tmp)) {
-                    if (auth(viewer.server, viewer.event, viewer.user)) {
-                        list(bot, db, winston, serverDocument, msg, viewer, viewer.deleteEvent(viewer.event));
-                    } // else exit silently
-                } else {
-                    list(bot, db, winston, serverDocument, msg, viewer, viewer.getErrorView(2, tmp));
-                }
-            });
         } else if (suffix.toLowerCase().startsWith("edit")) {
-            add_not_edit = false;
             let tmp = suffix.toLowerCase().split("edit")[1].trim();
             QueryHelper.findServerEvents(db, serverDocument._id).then((eventDocuments) => {
                 viewer = new EventViewer(db, serverDocument, eventDocuments, msg.member, page_size);
@@ -109,6 +93,21 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
                 viewer = new EventViewer(db, serverDocument, eventDocuments, msg.member, page_size);
                 list(bot, db, winston, serverDocument, msg, viewer, viewer.getPageView(1));
             });
+        }
+        // suffixes which do not trigger the interactive loop
+        else if (suffix.toLowerCase().startsWith("remove")) {
+            QueryHelper.findServerEvents(db, serverDocument._id).then((eventDocuments) => {
+                let tmp = suffix.toLowerCase().split("remove")[1].trim();
+                viewer = new EventViewer(db, serverDocument, eventDocuments, msg.member, page_size);
+
+                if (viewer.setEvent(tmp)) {
+                    if (auth(viewer.server, viewer.event, viewer.user)) {
+                        list(bot, db, winston, serverDocument, msg, viewer, viewer.deleteEvent(viewer.event, true));
+                    } // else exit silently
+                } else {
+                    msg.channel.createMessage(viewer.getErrorView(2, tmp, true));
+                }
+            });
         } else if (suffix.toLowerCase().startsWith("join")) {
             let tmp = suffix.toLowerCase().split("join")[1].trim();
             QueryHelper.findServerEvents(db, serverDocument._id).then((eventDocuments) => {
@@ -117,7 +116,7 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
                 if (viewer.setEvent(tmp)) {
                     msg.channel.createMessage(viewer.joinEvent(viewer.event, msg));
                 } else {
-                    list(bot, db, winston, serverDocument, msg, viewer, viewer.getErrorView(2, tmp));
+                    msg.channel.createMessage(viewer.getErrorView(2, tmp, true));
                 }
             });
         } else if (suffix.toLowerCase().startsWith("leave")) {
@@ -128,14 +127,13 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
                 if (viewer.setEvent(tmp)) {
                     msg.channel.createMessage(viewer.leaveEvent(viewer.event, msg));
                 } else {
-                    list(bot, db, winston, serverDocument, msg, viewer, viewer.getErrorView(2, tmp));
+                    msg.channel.createMessage(viewer.getErrorView(2, tmp, true));
                 }
             });
         }
     } else {
         QueryHelper.findServerEvents(db, serverDocument._id).then((eventDocuments) => {
             let viewer = new EventViewer(db, serverDocument, eventDocuments, msg.member, page_size);
-
             list(bot, db, winston, serverDocument, msg, viewer, viewer.getPageView(1));
         });
     }

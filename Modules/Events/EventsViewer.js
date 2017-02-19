@@ -16,6 +16,7 @@ function Viewer(db, serverDocument, eventDocuments, memberObject, page_size, fil
     this.page_size = page_size ? page_size : 5;
 
     this.mode = 0;
+    this.previous_mode = 0;
     this.edit_mode = 0;
     this.edits_made = {};
     this.add_not_edit = false;
@@ -101,9 +102,12 @@ for (let i=0;this.event.attendees.length;i++) {
 
         let title_content, page_content, footer_content, embed_author;
         msg_color = default_color;
-        embed_author = { name: `EVENT OVERVIEW PROCESS` };
+        embed_author = {
+            name: `EVENT OVERVIEW PROCESS`
+        };
         title_content = `Event #⃣ ${this.event._no}`;
         page_content = "" +
+<<<<<<< HEAD
         `Title: **${this.event.title}**\n` +
         `Author: <@${this.event._author}>\n\n` +
         `Start: **${moment(this.event.start).format(`${config.moment_date_format}`)}**\n` +
@@ -112,16 +116,26 @@ for (let i=0;this.event.attendees.length;i++) {
         `Description: \n\`\`\`md\n${this.event.description}\n\`\`\`\n` +
         `Attendees: \`[${this.event.attendees.length}/${this.event.attendee_max}]\`\n` +
         `(${attendeesNames})`;
+=======
+            `Title: **${this.event.title}**\n` +
+            `Author: <@${this.event._author}>\n\n` +
+            `Start: **${moment(this.event.start).format(`${config.moment_date_format}`)}**\n` +
+       `End: **${moment(this.event.end).format(`${config.moment_date_format}`)}**\n\n` +
+       `Tags: **${this.event.tags.join(", ")} **\n` +
+       `Description: \n\`\`\`md\n${this.event.description}\n\`\`\`\n` +
+       `Attendees: \`[${this.event.attendees.length}/${this.event.attendee_max}]\``;
+>>>>>>> 0db22c0b8a5529162878e72d179c58e6bd1ca7de
 
     footer_content = `## Options: [J]oin, [L]eave, ` +
-        (auth(this.server, this.event, this.user)?`[E]dit, [D]elete, `:"") +
-        `[B]ack, [Q]uit`;
+        (auth(this.server, this.event, this.user)?`[E]dit, [D]elete, `:"") + `[B]ack, [Q]uit`;
     return {embed: {author: embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
 };
 
 /// generate the main editor view for the currently set event
 Viewer.prototype.getEventEditView = function(add) {
     this.mode = 3;
+    this.edit_mode = 0;
+
 
     //check if view comes from add or from edit command
     if (add) {
@@ -129,6 +143,15 @@ Viewer.prototype.getEventEditView = function(add) {
     }
 
     let title_content, page_content, footer_content, embed_author;
+
+    if(this.add_not_edit) {
+        embed_author = {name: `CREATION PROCESS`};
+        footer_content = `## Options: [S]ave, [Q]uit`;
+    } else {
+        embed_author = {name: `EDIT PROCESS`};
+        footer_content = `## Options: [S]ave, [C]ancel, [Q]uit`;
+    }
+
     msg_color = default_color;
     title_content = `Event #⃣ ${this.event._no}`;
     page_content = "" +
@@ -151,8 +174,6 @@ Viewer.prototype.getEventEditView = function(add) {
         (this.edits_made.tags?": \`"+this.edits_made.tags.join(", ")+"\`\n":
          ": \`"+this.event.tags+"\`\n");
 
-    footer_content = `## Options: [S]ave, [C]ancel`;
-    embed_author = {name: `EVENT CREATION / EDIT PROCESS`};
     return {embed: {author: embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
 };
 
@@ -165,8 +186,13 @@ Viewer.prototype.getEditorView = function() {
     let title_content, page_content, footer_content, embed_author;
 
     title_content = `Event #⃣ ${this.event._no}`;
-    embed_author = {name: `EVENT CREATION / EDIT PROCESS`};
-    footer_content = `## Options: [S]ave, [C]ancel`;
+    if(this.add_not_edit) {
+        embed_author = {name: `CREATION PROCESS`};
+        footer_content = `## Options: [Q]uit`;
+    } else {
+        embed_author = {name: `EDIT PROCESS`};
+        footer_content = `## Options: [C]ancel, [Q]uit`;
+    }
 
     switch(this.edit_mode) {
         case 1:
@@ -210,7 +236,7 @@ Viewer.prototype.getEditorView = function() {
 };
 
 /// remove an event and return an event removed prompt
-Viewer.prototype.deleteEvent = function(event) {
+Viewer.prototype.deleteEvent = function(event, silent) {
     this.mode = 4;
 
     // delete the eventDocument and return to main page
@@ -227,16 +253,17 @@ Viewer.prototype.deleteEvent = function(event) {
 
     msg_color = 0x17f926; //green color
     let body = `ℹ Event #${event._id} is queued for removal.`;
-    let footer_content = `## Options: [B]ack, [Q]uit`;
-    
     let embed_author = {name: `EVENT DELETION PROCESS`};
 
+    if(silent) {
+        return {embed: {author: embed_author, color: msg_color, description: body}};
+    }
+    let footer_content = `## Options: [B]ack, [Q]uit`;
     return {embed: {author: embed_author, color: msg_color, description: body, footer: {text: footer_content}}};
 };
 
 /// add a user to an event and generate a prompt
 Viewer.prototype.joinEvent = function(event, msg) {
-    this.mode = 5; //mode 5 for canceling interactive menu
     let alreadyMember = false;
 
     // check if msgAuthor is already an Attendee
@@ -247,7 +274,7 @@ Viewer.prototype.joinEvent = function(event, msg) {
         }
     }
     //check if msgAuthor already joined that event
-    let title_content, page_content, footer_content, embed_author;
+    let title_content, page_content;
     if (alreadyMember) {
         
         msg_color = 0xecf925; //yellow color
@@ -255,11 +282,6 @@ Viewer.prototype.joinEvent = function(event, msg) {
         page_content =  `Title: \`\`${event.title}\`\`\n` +
                         `Author: <@${event._author}>\n` +
                         `Attendees: [${event.attendees.length}/${event.attendee_max}]`;
-        //footer_content = `## Options: [B]ack, [Q]uit`;
-        
-        //embed_author = {name: `EVENT ATTENDEES PROCESS`};
-
-        //return {embed: {author: embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
         return {embed: {color: msg_color, title: title_content, description: page_content}};
 
     //if user is not already an attendee of the event
@@ -278,10 +300,6 @@ Viewer.prototype.joinEvent = function(event, msg) {
             page_content =  `Title: \`\`${event.title}\`\`\n` +
                             `Author: <@${event._author}>\n` +
                             `Attendees: [${event.attendees.length}/${event.attendee_max}]`;
-            //footer_content = `## Options: [B]ack, [Q]uit`;
-
-            //embed_author = {name: `EVENT ATTENDEES PROCESS`};
-            //return {embed: {author: embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
             return {embed: {color: msg_color, title: title_content, description: page_content}};
 
         // Event attendee_max limit is already reached   
@@ -291,21 +309,15 @@ Viewer.prototype.joinEvent = function(event, msg) {
             page_content =  `Title: \`\`${event.title}\`\`\n` +
                             `Author: <@${event._author}>\n` +
                             `Attendees: [${event.attendees.length}/${event.attendee_max}]`;
-            //footer_content = `## Options: [B]ack, [Q]uit`;
-            
-            //embed_author = {name: `EVENT ATTENDEES PROCESS`};
-            
-            //return {embed: {author: embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
             return {embed: {color: msg_color, title: title_content, description: page_content}};
-    }
+        }
     }
 };
 
 /// remove a user from an event and generate a prompt
 Viewer.prototype.leaveEvent = function(event, msg) {
-    this.mode = 5; //mode 5 for canceling interactive menu
     let wasMember = false;
-    let title_content, page_content, footer_content, embed_author;
+    let title_content, page_content;
 
     // check if msgAuthor is an Attendee and delete that entry
     for (let i = 0; i < event.attendees.length; i++) {
@@ -329,10 +341,6 @@ Viewer.prototype.leaveEvent = function(event, msg) {
         page_content =  `Title: \`\`${event.title}\`\`\n` +
             `Author: <@${event._author}>\n` +
             `Attendees: [${event.attendees.length}/${event.attendee_max}]`;
-        //footer_content = `## Options: [B]ack, [Q]uit`;
-        //embed_author = {name: `EVENT ATTENDEES PROCESS`};
-
-        //return {embed: {author: embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
         return {embed: {color: msg_color, title: title_content, description: page_content}};
 
     // msgAuthor was not an attendee of the event
@@ -342,54 +350,44 @@ Viewer.prototype.leaveEvent = function(event, msg) {
         page_content =  `Title: \`\`${event.title}\`\`\n` +
             `Author: <@${event._author}>\n` +
             `Attendees: [${event.attendees.length}/${event.attendee_max}]`;
-        //footer_content = `## Options: [B]ack, [Q]uit`;
-        //embed_author = {name: `EVENT ATTENDEES PROCESS`};
-
-        //return {embed: {author: embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
         return {embed: {color: msg_color, title: title_content, description: page_content}};
     }
 };
 
-Viewer.prototype.getErrorView = (error,bad_input) => {
-    //TODO back to event edit mode from error if user types back or b 
-    this.mode = 6;
+Viewer.prototype.getErrorView = function(error, bad_input, silent) {
+    this.previous_mode = this.mode;
+    this.mode = 5;
 
     let title, body;
+    title = `⚠ There was an error! `;
+
     switch(error) {
         case 1:
-            title = `⚠ Your input ${bad_input} is not a number from the list!`;
-            body = `You can return to the list, or quit`;
+            body = `Your input ${bad_input} is not a number from the list!`;
             break;
         case 2:
-            title = `⚠ Event #${bad_input} does not exists!`;
-            body = `You can return to the list, or quit`;
+            body = `Event #${bad_input} does not exists!`;
             break;
         case 3:
-            this.edit_mode = 2;
-            title = `⚠ \"${bad_input}\" is not a valid start time!`;
-            body = `You can return to the edit menu, or quit`;
+            body = `\"${bad_input}\" is not a valid start time!`;
             break;
         case 4:
-            this.edit_mode = 3;
-            title = `⚠ \"${bad_input}\" is not a valid end time!`;
-            body = `You can return to the edit menu, or quit`;
+            body = `\"${bad_input}\" is not a valid end time!`;
             break;
         case 5:
-            this.edit_mode = 5;
-            title = `⚠ \"${bad_input}\" is not valid amount!`;
-            body = `You can return to the edit menu, or quit`;
-            break;
-        case 6:
+            body = `\"${bad_input}\" is not valid amount!`;
             break;
         default:
-            title = `⚠ There was an error! `;
-            body = `You can return to the menu, or quit`;
-
+            body = `Unknown error!`;
             break;
     }
 
-    let footer_content = `## Options: [B]ack, [Q]uit`;
+    if(silent) {
+        return {embed: {color: 0xecf925, title: title, description: body}};
+    }
 
+    body += `\n\nYou can return to the edit menu, or quit`;
+    let footer_content = `## Options: [B]ack, [Q]uit`;
     return {embed: {color: 0xecf925, title: title, description: body, footer: {text: footer_content}}};
 };
 
