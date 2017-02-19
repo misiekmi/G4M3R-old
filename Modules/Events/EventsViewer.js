@@ -94,19 +94,24 @@ Viewer.prototype.getPageView = function(page_no) {
 /// generate a view of a single event
 Viewer.prototype.getEventView = function() {
         this.mode = 2;
+let attendeesNames = "";
+for (let i=0;this.event.attendees.length;i++) {
+    attendeesNames += `<@`+this.event.attendees._id+`> `;
+}
 
         let title_content, page_content, footer_content, embed_author;
         msg_color = default_color;
         embed_author = { name: `EVENT OVERVIEW PROCESS` };
         title_content = `Event #⃣ ${this.event._no}`;
         page_content = "" +
-            `Title: **${this.event.title}**\n` +
-            `Author: <@${this.event._author}>\n\n` +
-            `Start: **${moment(this.event.start).format(`${config.moment_date_format}`)}**\n` +
+        `Title: **${this.event.title}**\n` +
+        `Author: <@${this.event._author}>\n\n` +
+        `Start: **${moment(this.event.start).format(`${config.moment_date_format}`)}**\n` +
         `End: **${moment(this.event.end).format(`${config.moment_date_format}`)}**\n\n` +
         `Tags: **${this.event.tags.join(", ")} **\n` +
         `Description: \n\`\`\`md\n${this.event.description}\n\`\`\`\n` +
-        `Attendees: \`[${this.event.attendees.length}/${this.event.attendee_max}]\``;
+        `Attendees: \`[${this.event.attendees.length}/${this.event.attendee_max}]\`\n` +
+        `(${attendeesNames})`;
 
     footer_content = `## Options: [J]oin, [L]eave, ` +
         (auth(this.server, this.event, this.user)?`[E]dit, [D]elete, `:"") +
