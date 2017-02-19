@@ -395,14 +395,14 @@ Viewer.prototype.getEventAttendeesView = function(event) {
     this.previous_mode = this.mode;
     this.mode = 6;
 
-    let title, body;
-    title = `ℹ List of attendees for #⃣ ${event._no}`;
+    let title = `ℹ List of attendees for #⃣ ${event._no}`;
+    let body = "";
 
-    if (typeof event.attendees !== "undefined" && event.attendees.length > 0) {
-        for (let i = 0; i<this.event.attendees.length;i++) {
+    if (event.attendees.length > 0) {
+        for (let i=0; i<this.event.attendees.length;i++) {
             body += `<@`+this.event.attendees[i]._id+`>, `;
         }
-}
+    }
     let footer_content = `## Options: [B]ack, [Q]uit`;
     return {embed: {color: 0xffffff, title: title, description: body, footer: {text: footer_content}}};
 };
