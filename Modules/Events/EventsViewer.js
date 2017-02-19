@@ -95,10 +95,15 @@ Viewer.prototype.getPageView = function(page_no) {
 /// generate a view of a single event
 Viewer.prototype.getEventView = function() {
         this.mode = 2;
-let attendeesNames = "";
-for (let i=0;this.event.attendees.length;i++) {
-    attendeesNames += `<@`+this.event.attendees._id+`> `;
-}
+        let attendeesNames = "";
+        let hasAttendees = false;
+
+        if (typeof this.event.attendees !== "undefined" && this.event.attendees.length > 0) {
+            for (let i = 0; i<14;i++) { //showing max 15 attendees
+                attendeesNames += `<@`+this.event.attendees[i]._id+`>, `;
+                hasAttendees = true;
+            }
+        }
 
         let title_content, page_content, footer_content, embed_author;
         msg_color = default_color;
@@ -107,7 +112,6 @@ for (let i=0;this.event.attendees.length;i++) {
         };
         title_content = `Event #⃣ ${this.event._no}`;
         page_content = "" +
-<<<<<<< HEAD
         `Title: **${this.event.title}**\n` +
         `Author: <@${this.event._author}>\n\n` +
         `Start: **${moment(this.event.start).format(`${config.moment_date_format}`)}**\n` +
@@ -115,16 +119,7 @@ for (let i=0;this.event.attendees.length;i++) {
         `Tags: **${this.event.tags.join(", ")} **\n` +
         `Description: \n\`\`\`md\n${this.event.description}\n\`\`\`\n` +
         `Attendees: \`[${this.event.attendees.length}/${this.event.attendee_max}]\`\n` +
-        `(${attendeesNames})`;
-=======
-            `Title: **${this.event.title}**\n` +
-            `Author: <@${this.event._author}>\n\n` +
-            `Start: **${moment(this.event.start).format(`${config.moment_date_format}`)}**\n` +
-       `End: **${moment(this.event.end).format(`${config.moment_date_format}`)}**\n\n` +
-       `Tags: **${this.event.tags.join(", ")} **\n` +
-       `Description: \n\`\`\`md\n${this.event.description}\n\`\`\`\n` +
-       `Attendees: \`[${this.event.attendees.length}/${this.event.attendee_max}]\``;
->>>>>>> 0db22c0b8a5529162878e72d179c58e6bd1ca7de
+        (hasAttendees ? `(${attendeesNames})` : `(no attendees)`);
 
     footer_content = `## Options: [J]oin, [L]eave, ` +
         (auth(this.server, this.event, this.user)?`[E]dit, [D]elete, `:"") + `[B]ack, [Q]uit`;
