@@ -108,15 +108,10 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                                 viewer.add_not_edit = false;
 
                                 embed = viewer.getEventView();
-                            } else if(usr_input_str == "cancel" || usr_input_str == "c") {
-                                if(Object.keys(viewer.edits_made).length === 0) {
-                                    viewer.edits_made = {};
-                                    viewer.add_not_edit = false;
-                                    embed = viewer.getEventView();
-                                } else {
-                                    viewer.edits_made = {};
-                                    embed = viewer.getEventEditView();
-                                }
+                            } else if((usr_input_str == "cancel" || usr_input_str == "c") && !viewer.add_not_edit) {
+                                viewer.edits_made = {};
+                                viewer.add_not_edit = false;
+                                embed = viewer.getEventView();
                             } else {
                                 if (!isNaN(usr_input_no) && usr_input_no > 0 && usr_input_no <= 6) {
                                     viewer.edit_mode = Number(usr_input_no);
@@ -124,7 +119,7 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                                 }
                             }
                         } else {
-                            if (usr_input_str === "save" || usr_input_str === "s") {
+                            if (usr_input_str === "cancel" || usr_input_str === "c") {
                                 embed = viewer.getEventEditView();
                             } else {
                                 let time, error;
