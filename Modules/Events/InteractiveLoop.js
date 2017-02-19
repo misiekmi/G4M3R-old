@@ -26,6 +26,19 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                     // quit interactive
                     if (usr_input_str === "quit" || usr_input_str === "q") {
                         cancel = true;
+                        // remove the event if quiting out of the creation process
+                        if (viewer.add_not_edit) {
+                            viewer.db.events.remove({_id: viewer.event._id}, (err) => {
+                                if (err) {
+                                    console.log(err.stack);
+                                }
+                            });
+                            for (let i = 0; i < viewer.events.length; i++) {
+                                if (viewer.events[i]._id === viewer.event._id) {
+                                    viewer.events.splice(i, 1);
+                                }
+                            }
+                        }
                     } else if (viewer.mode === 1) { // list view mode
                         // get eventDocument
                         if (!isNaN(usr_input_no) && usr_input_no > 0) {
@@ -91,29 +104,18 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                                     }
                                 });
 
-                                embed = viewer.getEventView();
-
                                 viewer.edits_made = {};
                                 viewer.add_not_edit = false;
+
+                                embed = viewer.getEventView();
                             } else if(usr_input_str == "cancel" || usr_input_str == "c") {
-                                //check if user is coming from add event or edit event
-                                if (viewer.add_not_edit) {
-                                    viewer.db.events.remove({_id: viewer.event._id}, (err)=>{
-                                        if(err) {
-                                            console.log(err.stack);
-                                        }
-                                    });
-                                    for(let i=0; i<viewer.events.length; i++){
-                                        if(viewer.events[i]._id===viewer.event._id) {
-                                            viewer.events.splice(i,1);
-                                        }
-                                    }
-                                    viewer.edits_made = {};
-                                    embed = viewer.getEventEditView();
-                                } else {
-                                    embed = viewer.getEventView();
+                                if(Object.keys(viewer.edits_made).length === 0) {
                                     viewer.edits_made = {};
                                     viewer.add_not_edit = false;
+                                    embed = viewer.getEventView();
+                                } else {
+                                    viewer.edits_made = {};
+                                    embed = viewer.getEventEditView();
                                 }
                             } else {
                                 if (!isNaN(usr_input_no) && usr_input_no > 0 && usr_input_no <= 6) {

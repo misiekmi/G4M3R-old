@@ -293,7 +293,7 @@ Viewer.prototype.joinEvent = function(event, msg) {
                             `Author: <@${event._author}>\n` +
                             `Attendees: [${event.attendees.length}/${event.attendee_max}]`;
             return {embed: {color: msg_color, title: title_content, description: page_content}};
-    }
+        }
     }
 };
 
