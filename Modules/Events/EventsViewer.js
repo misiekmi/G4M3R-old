@@ -1,4 +1,4 @@
-const moment = require("moment");
+const moment = require("moment-timezone");
 const config = require("../../Configuration/config.json");
 const auth = require("./AdminOrAuthor");
 
@@ -14,7 +14,8 @@ function Viewer(bot, msg, db, serverDocument, eventDocuments, memberObject, page
     this.db = db;
     this.server = serverDocument;
     this.events = eventDocuments;
-    this.user = memberObject;
+    this.user = userDocument;
+    this.member = memberObject;
     this.page_size = page_size ? page_size : 5;
 
     this.mode = 0;
@@ -22,6 +23,7 @@ function Viewer(bot, msg, db, serverDocument, eventDocuments, memberObject, page
     this.edit_mode = 0;
     this.edits_made = {};
     this.add_not_edit = false;
+    this.timezone = (this.user.timezone?this.user.timezone:config.moment_timezone);
 
     // set the filter display
     this.filter_disp = "";
@@ -122,8 +124,8 @@ Viewer.prototype.getEventView = function() {
         page_content = "" +
         `Title: **${this.event.title}**\n` +
         `Author: **${this.bot.getUserOrNickname(this.event._author, this.msg.channel.guild)}**\n\n` +
-        `Start: **${moment(this.event.start).format(`${config.moment_date_format}`)}**\n` +
-        `End: **${moment(this.event.end).format(`${config.moment_date_format}`)}**\n\n` +
+        `Start: **${moment(this.event.start).tz(this.timezone).format(`${config.moment_date_format}`)}**\n` +
+        `End: **${moment(this.event.end).tz(this.timezone).format(`${config.moment_date_format}`)}**\n\n` +
         `Tags: **${this.event.tags.join(", ")} **\n` +
         `Description: \n\`\`\`md\n${this.event.description}\n\`\`\`\n` +
         `Attendees: \`[${this.event.attendees.length}/${this.event.attendee_max}]\`\n` +
@@ -131,7 +133,7 @@ Viewer.prototype.getEventView = function() {
 
     footer_content = `## Options: [J]oin, [L]eave, ` +
         (hasAttendees ? `[A]ttendees, ` : "") +
-        (auth(this.server, this.event, this.user)?`[E]dit, [D]elete, `:"") + `[B]ack, [Q]uit`;
+        (auth(this.server, this.event, this.member)?`[E]dit, [D]elete, `:"") + `[B]ack, [Q]uit`;
     return {embed: {author: embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
 };
 
@@ -163,11 +165,11 @@ Viewer.prototype.getEventEditView = function(add) {
         (this.edits_made.title?": \`"+this.edits_made.title+"\`\n":
         "\`"+this.event.title+"\`\n") +
         `\`\`[2]\`\` **Start Time**` +
-        (this.edits_made.start?": \`"+moment(this.edits_made.start).format(`${config.moment_date_format}`)+"\`\n":
-        ": \`"+moment(this.event.start).format(`${config.moment_date_format}`)+"\`\n") +
+        (this.edits_made.start?": \`"+moment(this.edits_made.start).tz(this.timezone).format(`${config.moment_date_format}`)+"\`\n":
+        ": \`"+moment(this.event.start).tz(this.timezone).format(`${config.moment_date_format}`)+"\`\n") +
         `\`\`[3]\`\` **End Time** ` +
-        (this.edits_made.end?": \`"+moment(this.edits_made.end).format(`${config.moment_date_format}`)+"\`\n":
-         ": \`"+moment(this.event.end).format(`${config.moment_date_format}`)+"\`\n") +
+        (this.edits_made.end?": \`"+moment(this.edits_made.end).tz(this.timezone).format(`${config.moment_date_format}`)+"\`\n":
+         ": \`"+moment(this.event.end).tz(this.timezone).format(`${config.moment_date_format}`)+"\`\n") +
         `\`\`[4]\`\` **Description** ` +
         (this.edits_made.description?"```md\n"+this.edits_made.description+"```\n":
          ": \`"+this.event.description+"\`\n") +
@@ -205,14 +207,16 @@ Viewer.prototype.getEditorView = function() {
                 `Enter the new title for the event`;
             break;
         case 2:
+            let start = moment(this.event.start).tz(this.timezone).format(`${config.moment_date_format}`);
             page_content = "" +
-                `Current start: \n\`\`${moment(this.event.start).format(`${config.moment_date_format}`)}\`\`\n\n` +
+                `Current start: \n\`\`${start}\`\`\n\n` +
                 `Enter the start end time for the event.\n\n` + 
                 `# Format: YYYY/MM/DD hh:mm`;
             break;
         case 3:
+            let end = moment(this.event.end).tz(this.timezone).format(`${config.moment_date_format}`);
             page_content = "" +
-                `Current end: \n\`\`${moment(this.event.end).format(`${config.moment_date_format}`)}\`\`\n\n` +
+                `Current end: \n\`\`${end}\`\`\n\n` +
                 `Enter the new end time for the event.\n\n` + 
                 `# Format: YYYY/MM/DD hh:mm`;
             break;

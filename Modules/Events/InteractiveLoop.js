@@ -1,5 +1,5 @@
 const async = require("async");
-const moment = require("moment");
+const moment = require("moment-timezone");
 const auth = require("./AdminOrAuthor");
 
 module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
@@ -131,7 +131,7 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                                         viewer.edits_made.title = usr_input_no;
                                         break;
                                     case 2:
-                                        time = moment(usr_message.content.trim(), formats, true); // parse start time
+                                        time = moment.tz(usr_message.content.trim(), formats, true, viewer.timezone); // parse start time
                                         if (time.isValid()) {
                                             viewer.edits_made.start = time;
                                         } else {
@@ -140,7 +140,7 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                                         }
                                         break;
                                     case 3:
-                                        time = moment(usr_message.content.trim(), formats, true); // parse start time
+                                        time = moment.tz(usr_message.content.trim(), formats, true, viewer.timezone); // parse start time
                                         if (time.isValid()) {
                                             viewer.edits_made.end = time;
                                         } else {
