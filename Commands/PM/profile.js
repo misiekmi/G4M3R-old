@@ -1,4 +1,5 @@
 const getUserProfile = require("./../../Modules/UserProfile.js");
+const moment = require("moment-timezone");
 
 module.exports = (bot, db, config, winston, userDocument, msg, suffix, commandData) => {
         if (suffix == "setup") {
