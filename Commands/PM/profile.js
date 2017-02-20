@@ -94,7 +94,18 @@ module.exports = (bot, db, config, winston, userDocument, msg, suffix, commandDa
 						userDocument.location = args[1].trim();
 					}
 					saveUserDocument();
-				} else if(userDocument.profile_fields && userDocument.profile_fields[key]) {
+				}
+
+				else if(key.toLowerCase()==="timezone") {
+                    if(!args[1] || args[1].trim()==".") {
+                        userDocument.timezone = null;
+                    } else {
+                        userDocument.timezone = args[1].trim();
+                    }
+                    saveUserDocument();
+				}
+
+				else if(userDocument.profile_fields && userDocument.profile_fields[key]) {
 					if(!args[1] || args[1].trim()==".") {
 						setProfileField(true);
 					} else {
