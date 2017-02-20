@@ -63,10 +63,10 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                         if (usr_input_str == "back" || usr_input_str == "b") {
                             embed = viewer.getPageView(current_page_no);
                         } else if ((usr_input_str == "edit" || usr_input_str == "e") &&
-                            (auth(viewer.server, viewer.event, viewer.user))) {
+                            (auth(viewer.server, viewer.event, viewer.member))) {
                             embed = viewer.getEventEditView();
                         } else if ((usr_input_str == "delete" || usr_input_str == "d") &&
-                            (auth(viewer.server, viewer.event, viewer.user))) {
+                            (auth(viewer.server, viewer.event, viewer.member))) {
                             embed = viewer.deleteEvent(viewer.event);
                         } else if (usr_input_str == "join" || usr_input_str == "j") {
                             msg.channel.createMessage(viewer.joinEvent(viewer.event, msg));
