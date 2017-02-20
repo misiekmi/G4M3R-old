@@ -99,10 +99,16 @@ module.exports = (bot, db, config, winston, userDocument, msg, suffix, commandDa
 				else if(key.toLowerCase()==="timezone") {
                     if(!args[1] || args[1].trim()==".") {
                         userDocument.timezone = null;
+                        saveUserDocument();
                     } else {
-                        userDocument.timezone = args[1].trim();
+                    	if(moment.tz.zone(args[1].trim())) {
+                            userDocument.timezone = args[1].trim();
+                            saveUserDocument();
+						} else {
+                            msg.channel.createMessage("That isn't a timezone I understand." +
+								" See (http://momentjs.com/timezone/) for available zone names (ex. Europe/Berlin) 😾");
+						}
                     }
-                    saveUserDocument();
 				}
 
 				else if(userDocument.profile_fields && userDocument.profile_fields[key]) {
