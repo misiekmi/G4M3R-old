@@ -8,7 +8,7 @@ let default_color = 0xff8c00; // default color = orange
 
 /*jshint -W027*/
 /// events viewer constructor
-function Viewer(bot, msg, db, serverDocument, eventDocuments, memberObject, page_size, filter) {
+function Viewer(bot, msg, db, serverDocument, eventDocuments, userDocument, memberObject, page_size, filter) {
     this.bot = bot;
     this.msg = msg;
     this.db = db;
