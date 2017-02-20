@@ -101,9 +101,9 @@ const getChannelData = (svr, type) => {
 };
 
 const getChannel = (svr, id) => {
-    for(let i=0; i<svr.channels.length; i++) {
+    for (let i = 0; i < svr.channels.length; i++) {
         console.log(svr.channels[i].name);
-        if(svr.channels[i].id==id) {
+        if (svr.channels[i].id == id) {
             return svr.channels[i];
         }
     }
@@ -333,7 +333,7 @@ module.exports = (bot, db, auth, config, winston) => {
                     userProfile.statusColor = "is-warning";
                     break;
                 case "offline":
-					break;
+                    break;
                 default:
                     userProfile.statusColor = "is-dark";
                     break;
@@ -2793,6 +2793,12 @@ module.exports = (bot, db, auth, config, winston) => {
 							memberDocument.strikes = [];
 						}
 					}
+					else if(args[0]=="removestrike" && !isNaN(args[1]) && !isNaN(args[2])) {
+						const memberDocument = serverDocument.members.id(args[1]);
+						if(memberDocument) {
+							memberDocument.strikes.splice(args[2], 1);
+						}
+					}
 				}
 			}
 
@@ -3232,7 +3238,7 @@ module.exports = (bot, db, auth, config, winston) => {
 								name: ch.name,
 								id: ch.id
 							},
-							set: channelDocument.trivia.set,
+							set: channelDocument.trivia.set_id,
 							score: channelDocument.trivia.score,
 							max_score: channelDocument.trivia.max_score,
 							responders: channelDocument.trivia.responders.length
@@ -3788,7 +3794,11 @@ module.exports = (bot, db, auth, config, winston) => {
 					updateBotUser(data);
 				});
 			} else {
-				updateBotUser();
+				base64.encode(bot.user.avatarURL.replace(".jpg",".webp"), {
+					string: true
+				}, (err, data) => {
+					updateBotUser(data);
+				});
 			}
 		});
 	});

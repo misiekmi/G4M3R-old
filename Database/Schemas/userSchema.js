@@ -19,7 +19,8 @@ module.exports = new mongoose.Schema({
     isProfilePublic: { type: Boolean, default: true },
     upvoted_gallery_extensions: [String],
 
-    event_notifications: {type: Number, default: 1}, // 0 - none; 1 - DM; 2 - mentions; 3 - both
+    event_notifications: { type: Number, default: 1 }, // 0 - none; 1 - DM; 2 - mentions; 3 - both
     location: String,
-    timezone: String
+    timezone: String,
+    weatherunit: String
 });

@@ -7,15 +7,6 @@ const default_tag_reaction_messages = require("./../Configuration/tag_reaction.j
 // Set defaults for new server document
 module.exports = (bot, svr, serverDocument) => {
     // Default admin roles
-    const rolesOfOwner = svr.members.get(svr.ownerID).roles.sort((a, b) => {
-        return svr.roles.get(a).position - svr.roles.get(b).position;
-    });
-    if (rolesOfOwner[0] && svr.roles.get(rolesOfOwner[0]).name != "@everyone") {
-        serverDocument.config.admins.push({
-            _id: rolesOfOwner[0],
-            level: 3
-        });
-    }
     svr.roles.forEach(role => {
         if (role.name != "@everyone" && !role.managed && role.permissions.has("manageGuild") && !serverDocument.config.admins.id(role.id)) {
             serverDocument.config.admins.push({
@@ -45,9 +36,9 @@ module.exports = (bot, svr, serverDocument) => {
     // Default tag reactions
     serverDocument.config.tag_reaction.messages = default_tag_reaction_messages;
 
-    // Send message to server owner about G4M3R
+    // Send message to server owner about AwesomeBot
     // TODO: uncomment this after testing
-    //bot.messageBotAdmins(svr, serverDocument, "Hello! " + bot.user.username + " (that's me) has been added to " + svr.name + ", a server you moderate! " + (bot.guilds.size % 1000==0 ? ("*Wow, you're server #" + bot.guilds.size + " for me!* ") : "") + "Use `" + bot.getCommandPrefix(svr, serverDocument) + "help` to learn more or check out https://G4M3R.xyz/ :slight_smile: :tada:");
+    //bot.messageBotAdmins(svr, serverDocument, "Hello! " + bot.user.username + " (that's me) has been added to " + svr.name + ", a server you moderate! " + (bot.guilds.size % 1000==0 ? ("*Wow, you're server #" + bot.guilds.size + " for me!* ") : "") + "Use `" + bot.getCommandPrefix(svr, serverDocument) + "help` to learn more or check out https://awesomebot.xyz/ :slight_smile: :tada:");
 
     return serverDocument;
 };

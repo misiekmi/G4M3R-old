@@ -412,7 +412,7 @@ module.exports = (db, auth, config) => {
                 blockMember();
                 break;
             case "mute":
-                bot.muteMember(ch, member).then(err => {
+                bot.muteMember(ch, member, err => { //TODO: possible failure from merge
                     if (err) {
                         blockMember();
                     } else {
