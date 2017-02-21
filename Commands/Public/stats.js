@@ -62,11 +62,6 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
                 inline: false
             });
             embed_fields.push({
-                name: "**🤑 Richest members**",
-                value: `${richestMembers.join("\n") || "*Everyone on this server is really poor*"}`,
-                inline: false
-            });
-            embed_fields.push({
                 name: "**ℹ Most-used commands**",
                 value: `${mostUsedCommands.join("\n") || "*I haven't been used much this week*"}`,
                 inline: false
