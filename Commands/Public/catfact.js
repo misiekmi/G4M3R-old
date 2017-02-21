@@ -14,11 +14,14 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
 				embed: {
                     author: {
                         name: "Did you know THAT fact about cats?",
-                        icon_url: "http://frid.li/uBqJb",
+                        icon_url: bot.user.avatarURL,
                         url: "https://github.com/pedall/G4M3R"
                     },
                     color: 0x00FF00,
-					description: JSON.parse(res.body).facts.toString()
+					description: JSON.parse(res.body).facts.toString(),
+					thumbnail: {
+						url: "http://frid.li/uBqJb"
+					}
 				}
 			});
 		} else {
