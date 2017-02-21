@@ -14,68 +14,44 @@ module.exports = (bot, db, config, winston, userDocument, msg, suffix, commandDa
                             title: `Profile Setup for __${msg.author.username}__`,
                             description: `Hey ${msg.author.mention}, let's talk about your public G4M3R profile, available [here](${config.hosting_url}activity/users?q=${encodeURIComponent(`${msg.author.username}#${msg.author.discriminator}`)})\nFirst of all, do you want to make data such as your mutual servers with ${bot.user.username} and profile fields public?${userDocument.isProfilePublic ? " It's already public right now, by answering yes you're keeping it that way." : ""}`
 			}
-		}).then(() => {
-			bot.awaitMessage(msg.channel.id, msg.author.id, message => {
-				userDocument.isProfilePublic = config.yes_strings.includes(message.content.toLowerCase().trim());
-				userDocument.save(err => {
-					if (err) {
-						winston.error("Failed to save user data for profile setup", {
-							usrid: msg.author.id
-						}, err);
-					}
-					msg.channel.createMessage({
-						embed: {
-							author: {
-								name: bot.user.username,
-								icon_url: bot.user.avatarURL,
-								url: "https://github.com/pedall/G4M3R"
-							},
-							color: 0x9ECDF2,
-							description: `Alright! 😀 Next up, what's the URL of the background image you'd like to use? Currently, it's the image you can see, answer with \`.\` to continue using this.`,
-							image: {
-								url: `${userDocument.profile_background_image}`
-							}
+			}).then(() => {
+				bot.awaitMessage(msg.channel.id, msg.author.id, message => {
+					userDocument.isProfilePublic = config.yes_strings.includes(message.content.toLowerCase().trim());
+					userDocument.save(err => {
+						if (err) {
+							winston.error("Failed to save user data for profile setup", {
+								usrid: msg.author.id
+							}, err);
 						}
-					}).then(() => {
-						bot.awaitMessage(msg.channel.id, msg.author.id, message => {
-							const askDescription = () => {
-								msg.channel.createMessage({
-									embed: {
-										author: {
-											name: bot.user.username,
-											icon_url: bot.user.avatarURL,
-											url: "https://github.com/pedall/G4M3R"
-										},
-										color: 0x9ECDF2,
-										description: "Done, that's your new picture. 🏖 Now, please tell me a little about yourself (max 2000 characters)..."
-									}
-								}).then(() => {
-									bot.awaitMessage(msg.channel.id, msg.author.id, message => {
-										if (message.content.trim() == ".") {
-											msg.channel.createMessage({
-												embed: {
-													author: {
-														name: bot.user.username,
-														icon_url: bot.user.avatarURL,
-														url: "https://github.com/pedall/G4M3R"
-													},
-													color: 0x00FF00,
-													title: "All set!",
-													description: `I would've liked to know more about you, but your profile is all setup! Click [here](${config.hosting_url}activity/users?q=${encodeURIComponent(`${msg.author.username}#${msg.author.discriminator}`)}) to see it. 👀`
-												}
-											});
-										} else {
-											if (!userDocument.profile_fields) {
-												userDocument.profile_fields = {};
-											}
-											userDocument.profile_fields.Bio = message.content.trim();
-											userDocument.markModified("profile_fields");
-											userDocument.save(err => {
-												if (err) {
-													winston.error("Failed to save user data for profile setup", {
-														usrid: msg.author.id
-													}, err);
-												}
+						msg.channel.createMessage({
+							embed: {
+								author: {
+									name: bot.user.username,
+									icon_url: bot.user.avatarURL,
+									url: "https://github.com/pedall/G4M3R"
+								},
+								color: 0x9ECDF2,
+								description: `Alright! 😀 Next up, what's the URL of the background image you'd like to use? Currently, it's the image you can see, answer with \`.\` to continue using this.`,
+								image: {
+									url: `${userDocument.profile_background_image}`
+								}
+							}
+						}).then(() => {
+							bot.awaitMessage(msg.channel.id, msg.author.id, message => {
+								const askDescription = () => {
+									msg.channel.createMessage({
+										embed: {
+											author: {
+												name: bot.user.username,
+												icon_url: bot.user.avatarURL,
+												url: "https://github.com/pedall/G4M3R"
+											},
+											color: 0x9ECDF2,
+											description: "Done, that's your new picture. 🏖 Now, please tell me a little about yourself (max 2000 characters)..."
+										}
+									}).then(() => {
+										bot.awaitMessage(msg.channel.id, msg.author.id, message => {
+											if (message.content.trim() == ".") {
 												msg.channel.createMessage({
 													embed: {
 														author: {
@@ -85,32 +61,56 @@ module.exports = (bot, db, config, winston, userDocument, msg, suffix, commandDa
 														},
 														color: 0x00FF00,
 														title: "All set!",
-														description: `Thanks! Your profile is good to go! 👤 Click [here](${config.hosting_url}activity/users?q=${encodeURIComponent(`${msg.author.username}#${msg.author.discriminator}`)}) to see it. 👀`
+														description: `I would've liked to know more about you, but your profile is all setup! Click [here](${config.hosting_url}activity/users?q=${encodeURIComponent(`${msg.author.username}#${msg.author.discriminator}`)}) to see it. 👀`
 													}
 												});
-											});
-										}
+											} else {
+												if (!userDocument.profile_fields) {
+													userDocument.profile_fields = {};
+												}
+												userDocument.profile_fields.Bio = message.content.trim();
+												userDocument.markModified("profile_fields");
+												userDocument.save(err => {
+													if (err) {
+														winston.error("Failed to save user data for profile setup", {
+															usrid: msg.author.id
+														}, err);
+													}
+													msg.channel.createMessage({
+														embed: {
+															author: {
+																name: bot.user.username,
+																icon_url: bot.user.avatarURL,
+																url: "https://github.com/pedall/G4M3R"
+															},
+															color: 0x00FF00,
+															title: "All set!",
+															description: `Thanks! Your profile is good to go! 👤 Click [here](${config.hosting_url}activity/users?q=${encodeURIComponent(`${msg.author.username}#${msg.author.discriminator}`)}) to see it. 👀`
+														}
+													});
+												});
+											}
+										});
 									});
-								});
-							};
-							if (message.content.trim() == ".") {
-								askDescription();
-							} else {
-								userDocument.profile_background_image = message.content.trim();
-								userDocument.save(err => {
-									if (err) {
-										winston.error("Failed to save user data for profile setup", {
-											usrid: msg.author.id
-										}, err);
-									}
+								};
+								if (message.content.trim() == ".") {
 									askDescription();
-								});
-							}
+								} else {
+									userDocument.profile_background_image = message.content.trim();
+									userDocument.save(err => {
+										if (err) {
+											winston.error("Failed to save user data for profile setup", {
+												usrid: msg.author.id
+											}, err);
+										}
+										askDescription();
+									});
+								}
+							});
 						});
 					});
 				});
 			});
-		});
 	} else if (suffix && suffix.toLowerCase() != "me") {
 		if (suffix.indexOf("|") > -1) {
 			const args = suffix.split("|");
@@ -293,6 +293,19 @@ module.exports = (bot, db, config, winston, userDocument, msg, suffix, commandDa
 						color: 0x9ECDF2,
 						title: "Here's the weather unit you've set",
 						description: userDocument.weatherunit
+					}
+				});
+			} else if (suffix.toLowerCase() == "timezone" && userDocument.timezone) {
+				msg.channel.createMessage({
+					embed: {
+						author: {
+							name: bot.user.username,
+							icon_url: bot.user.avatarURL,
+							url: "https://github.com/pedall/G4M3R"
+						},
+						color: 0x9ECDF2,
+						title: "Here's the timezone you've set",
+						description: userDocument.timezone
 					}
 				});
 			} else if (userDocument.profile_fields && userDocument.profile_fields[suffix]) {

@@ -10,18 +10,15 @@ module.exports = (bot, config, usr, userDocument, titleName) => {
                     name: "Name 👤",
                     value: `${usr.username}`,
                     inline: true
-                },
-                {
+                }, {
                     name: "#⃣",
                     value: `${usr.discriminator}`,
                     inline: true
-                },
-                {
+                }, {
                     name: "🆔",
                     value: `${usr.id}`,
                     inline: true
-                },
-                {
+                }, {
                     name: "Status",
                     value: `${firstMember.status}${firstMember.game ? (`, playing **\`${firstMember.game.name}\`**`) : ""}`,
 		inline: true
@@ -31,19 +28,6 @@ module.exports = (bot, config, usr, userDocument, titleName) => {
 		value: `${moment(usr.createdAt).fromNow()}`,
 		inline: true
 	}];
-	if(!usr.bot && userDocument) {
-		embed_fields.push({
-			name: `AwesomePoints`,
-			value: `⭐️ ${userDocument.points} AwesomePoint${userDocument.points==1 ? "" : "s"}`,
-			inline: true
-		});
-	} else {
-		embed_fields.push({
-			name: "🤖",
-			value: "User is a robot!",
-			inline: true
-		});
-	}
 	embed_fields.push({
 		name: "Mutual Servers",
 		value: `❤️ ${mutualServersCount} mutual server${mutualServersCount==1 ? "" : "s"} with ${bot.user.username}`,
