@@ -34,7 +34,7 @@
         },
         "reload": {
             "examples": "",
-            "usage": "\"pm\" or \"public\"/<command>"
+            "usage": "\"pm\" or \"public\".<command>"
         },
         "remindme": {
             "examples": "",
