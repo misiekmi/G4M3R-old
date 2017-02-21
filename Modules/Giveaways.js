@@ -13,7 +13,7 @@ module.exports = {
                         author: {
                             name: bot.user.username,
                             icon_url: bot.user.avatarURL,
-                            url: "https://github.com/GilbertGobbels/GAwesomeBot"
+                            url: "https://github.com/pedall/G4M3R"
                         },
                         color: 0x00FF00,
 						description: `${usr.mention} has started a giveaway: **${title}**! Use \`${bot.getCommandPrefix(svr, serverDocument)}giveaway enroll\` or \`${bot.getCommandPrefix(svr, serverDocument)}giveaway join\` for a chance to win. Good luck! 🍻`
@@ -47,7 +47,7 @@ module.exports = {
                                 author: {
                                     name: bot.user.username,
                                     icon_url: bot.user.avatarURL,
-                                    url: "https://github.com/GilbertGobbels/GAwesomeBot"
+                                    url: "https://github.com/pedall/G4M3R"
                                 },
                                 color: 0x00FF00,
                                 description: `Congratulations **@${bot.getName(svr, serverDocument, winner)}**! 🎊 You won the giveaway **${channelDocument.giveaway.title}** out of ${channelDocument.giveaway.participant_ids.length} ${channelDocument.giveaway.participant_ids.length==1 ? "person" : "people"}.`
@@ -59,7 +59,7 @@ module.exports = {
                                     author: {
                                         name: bot.user.username,
                                         icon_url: bot.user.avatarURL,
-                                        url: "https://github.com/GilbertGobbels/GAwesomeBot"
+                                        url: "https://github.com/pedall/G4M3R"
                                     },
                                     color: 0x00FF00,
                                     description: `Congratulations! 🎁😁 You won the giveaway in #${ch.name} on ${svr.name}:\`\`\`${channelDocument.giveaway.secret}\`\`\``
@@ -75,7 +75,7 @@ module.exports = {
                                     author: {
                                         name: bot.user.username,
                                         icon_url: bot.user.avatarURL,
-                                        url: "https://github.com/GilbertGobbels/GAwesomeBot"
+                                        url: "https://github.com/pedall/G4M3R"
                                     },
                                     color: 0x00FF00,
                                     description: `Your giveaway "${channelDocument.giveaway.title}" running in <#${ch.id}> has ended.` + `\n${winner ? (`The winner was **@${bot.getName(svr, serverDocument, winner)}**`) : "I couldn't choose a winner for some reason tho 😕"}`

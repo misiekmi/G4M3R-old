@@ -21,7 +21,7 @@ module.exports = {
                         author: {
                             name: bot.user.username,
                             icon_url: bot.user.avatarURL,
-                            url: "https://github.com/GilbertGobbels/GAwesomeBot"
+                            url: "https://github.com/pedall/G4M3R"
                         },
 						description: `${usr.mention} has started a poll in this channel named **${title}** 🗳\nUse \`${bot.getCommandPrefix(svr, serverDocument)}poll <no. of option>\` here or PM me \`poll ${svr.name}|#${ch.name}\` to vote.\nThe following options are available:`,
                         color: 0x00FF00,

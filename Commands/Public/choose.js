@@ -6,7 +6,7 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
                 author: {
                     name: bot.user.username,
                     icon_url: bot.user.avatarURL,
-                    url: "https://github.com/GilbertGobbels/GAwesomeBot"
+                    url: "https://github.com/pedall/G4M3R"
                 },
                 color: 0x00FF00,
 				title: "I choose:",
@@ -20,7 +20,7 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
                 author: {
                     name: bot.user.username,
                     icon_url: bot.user.avatarURL,
-                    url: "https://github.com/GilbertGobbels/GAwesomeBot"
+                    url: "https://github.com/pedall/G4M3R"
                 },
                 color: 0xFF0000,
 				description: `🤔 I didn't quite get that. Make sure to use the syntax \`${bot.getCommandPrefix(msg.guild, serverDocument)}${commandData.name} ${commandData.usage}\``

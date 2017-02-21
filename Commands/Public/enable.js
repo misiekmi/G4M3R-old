@@ -35,7 +35,7 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
                     author: {
                         name: bot.user.username,
                         icon_url: bot.user.avatarURL,
-                        url: "https://github.com/GilbertGobbels/GAwesomeBot"
+                        url: "https://github.com/pedall/G4M3R"
                     },
                     color: 0xFF0000,
 					description: `Missing command or commands to enable.`
@@ -49,7 +49,7 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
                     author: {
                         name: bot.user.username,
                         icon_url: bot.user.avatarURL,
-                        url: "https://github.com/GilbertGobbels/GAwesomeBot"
+                        url: "https://github.com/pedall/G4M3R"
                     },
                     color: 0x00FF00,
 					description: `The following commands have been enabled in this channel: ✨\`\`\`${enables.join(", ")}\`\`\``
@@ -62,7 +62,7 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
                     author: {
                         name: bot.user.username,
                         icon_url: bot.user.avatarURL,
-                        url: "https://github.com/GilbertGobbels/GAwesomeBot"
+                        url: "https://github.com/pedall/G4M3R"
                     },
                     color: 0xFF0000,
 					description: `Unable to enable the following commands in this channel: 😿\`\`\`${errors.join(". ")}\`\`\``
@@ -84,7 +84,7 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
                     author: {
                         name: bot.user.username,
                         icon_url: bot.user.avatarURL,
-                        url: "https://github.com/GilbertGobbels/GAwesomeBot"
+                        url: "https://github.com/pedall/G4M3R"
                     },
                     color: 0x00FF00,
 					description: `The following commands are enabled in this channel: ✨\`\`\`${enabled.join(", ")}\`\`\``
@@ -97,7 +97,7 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
                 author: {
                     name: bot.user.username,
                     icon_url: bot.user.avatarURL,
-                    url: "https://github.com/GilbertGobbels/GAwesomeBot"
+                    url: "https://github.com/pedall/G4M3R"
                 },
                 color: 0xFF0000,
 				description: "There are no commands enabled in this channel. 💔"

@@ -99,7 +99,7 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
                 author: {
                     name: bot.user.username,
                     icon_url: bot.user.avatarURL,
-                    url: "https://github.com/GilbertGobbels/GAwesomeBot"
+                    url: "https://github.com/pedall/G4M3R"
                 },
                 color: 0xFF0000,
 				description: "I don't know who that is, so I can't tell you anything about them 💤"
