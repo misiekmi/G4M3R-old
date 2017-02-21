@@ -25,11 +25,11 @@ module.exports = (bot, db, config, winston, userDocument, msg, suffix, commandDa
         });
     } else {
         let info = [];
-        userDocument.reminders.forEach(reminderDocument => {
+        userDocument.reminders.forEach(reminderDocument => { //TODO: Implement without embed_fields and sorted with rest time
             info.push({
                 name: `__**${reminderDocument.name}**__`,
                 value: `${moment(reminderDocument.expiry_timestamp).toNow()}`,
-                inline: true
+                inline: false
             });
         });
         if (info.empty || userDocument.reminders.length == 0) {
