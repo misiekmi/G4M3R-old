@@ -12,7 +12,7 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
         let filter = {_author: userDocument._id};
         // setup the menu
         QueryHelper.findFilteredServerEvents(db, serverDocument._id, filter).then((eventDocuments) => {
-            viewer = new EventViewer(db, serverDocument, eventDocuments, userDocument, msg.member, page_size);
+            viewer = new EventViewer(bot, msg, db, serverDocument, eventDocuments, userDocument, msg.member, page_size);
             list(bot, db, winston, serverDocument, msg, viewer, viewer.getPageView(1));
         });
     }

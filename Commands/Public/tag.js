@@ -92,7 +92,7 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
 		msg.channel.createMessage("Loaded default tags 📥");
 	};
 
-	this.list = () => {
+	this.loop = () => {
 		const tags = serverDocument.config.tags.list.map(tag => {
 			const content = tag.content.replace(/(https?:[^ ]+)/gi, "<$1>");
 			return `**${tag._id}**: ${content}`;
@@ -185,7 +185,7 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
 	};
 
 	if(!suffix) {
-		this.list();
+		this.loop();
 		return;
 	}
 
