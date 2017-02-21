@@ -13,12 +13,12 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
 			msg.channel.createMessage({
 				embed: {
                     author: {
-                        name: bot.user.username,
-                        icon_url: bot.user.avatarURL,
-                        url: "https://github.com/GilbertGobbels/GAwesomeBot"
+                        name: "Did you know THAT fact about cats?",
+                        icon_url: "http://frid.li/uBqJb",
+                        url: "https://github.com/pedall/G4M3R"
                     },
                     color: 0x00FF00,
-					description: JSON.parse(res.body).facts
+					description: JSON.parse(res.body).facts.toString()
 				}
 			});
 		} else {
@@ -26,9 +26,9 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
 			msg.channel.createMessage({
 				embed: {
                     author: {
-                        name: bot.user.username,
-                        icon_url: bot.user.avatarURL,
-                        url: "https://github.com/GilbertGobbels/GAwesomeBot"
+                        name: "cat lover",
+                        icon_url: "http://frid.li/uBqJb",
+                        url: "https://github.com/pedall/G4M3R"
                     },
                     color: 0x9ECDF2,
 					description: "Cats exist and are cute af. 😻"
