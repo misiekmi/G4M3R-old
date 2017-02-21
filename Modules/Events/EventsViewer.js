@@ -191,8 +191,6 @@ Viewer.prototype.getEventView = function() {
         (auth.toDeleteOrEdit(this.server, this.event, this.member)?`[E]dit, [D]elete, `:"") +
         `[B]ack, [Q]uit`;
 
-    return {embed: {author: embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
-        (auth(this.server, this.event, this.member)?`[E]dit, [D]elete, `:"") + `[B]ack, [Q]uit`;
     //return {embed: {author: embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
     return {
         embed: {
