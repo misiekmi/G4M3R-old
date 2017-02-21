@@ -3,7 +3,7 @@ const list = require("./../../Modules/Events/InteractiveLoop.js");
 const EventViewer = require("./../../Modules/Events/EventsViewer");
 const IDHelper = require('../../Modules/Events/IDHelper');
 const QueryHelper = require('../../Modules/Events/EventsQueryHelper');
-const auth = require('../../Modules/Events/AdminOrAuthor');
+const auth = require('../../Modules/Events/EventsAuth');
 const moment = require('moment');
 
 module.exports = (bot, db, config, winston, userDocument, serverDocument, channelDocument, memberDocument, msg, suffix) => {
