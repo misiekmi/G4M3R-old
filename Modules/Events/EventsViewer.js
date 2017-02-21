@@ -23,7 +23,7 @@ function Viewer(bot, msg, db, serverDocument, eventDocuments, userDocument, memb
     this.edit_mode = 0;
     this.edits_made = {};
     this.add_not_edit = false;
-    this.timezone = (this.user.timezone?this.user.timezone:config.moment_timezone);
+    this.timezone = (this.user.timezone ? this.user.timezone : config.moment_timezone);
 
     // set the filter display
     this.filter_disp = "";
@@ -92,7 +92,10 @@ Viewer.prototype.getPageView = function(page_no) {
     }
 
     footer_content += ` | type [Q]uit to leave` + this.filter_disp;
-    embed_author = { name: `EVENT CREATION PROCESS` };
+    embed_author = {
+        name: `EVENT OVERVIEW`,
+        url: "http://frid.li/lrR-u"
+    };
 
     return { embed: { author: embed_author, color: msg_color, title: title_content, description: page_content, fields: embed_fields, footer: { text: footer_content } } };
 };
@@ -102,40 +105,102 @@ Viewer.prototype.getEventView = function() {
         this.mode = 2;
         let attendeesNames = "";
         let hasAttendees = false;
+        let username = this.bot.getUserOrNickname(this.event._author, this.msg.channel.guild);
+        let title_content, page_content, footer_content, embed_author, tag_content = "";
 
         if (typeof this.event.attendees !== "undefined" && this.event.attendees.length > 0) {
-            for (let i = 0; i<this.event.attendees.length;i++) {
-                if (i >14) { //showing max 15 attendees
+            for (let i = 0; i < this.event.attendees.length; i++) {
+                if (i > 14) { //showing max 15 attendees
                     break;
-                } else { 
-                   attendeesNames += `\`${this.bot.getUserOrNickname(this.event.attendees[i]._id, this.msg.channel.guild)}\`, `;
-/*                 
-*/                    //attendeesNames += `<@`+this.event.attendees[i]._id+`>, `; TODO: Reenable when android is able to show embeds properly
+                } else {
+                    if (i % 2 === 1) {
+                        attendeesNames += `\`${this.bot.getUserOrNickname(this.event.attendees[i]._id, this.msg.channel.guild)}\`\n`;
+                    } else {
+                        attendeesNames += `\`${this.bot.getUserOrNickname(this.event.attendees[i]._id, this.msg.channel.guild)}\`, `;
+                    }
+                    //attendeesNames += `<@`+this.event.attendees[i]._id+`>, `; TODO: Reenable when android is able to show embeds properly
                     hasAttendees = true;
                 }
             }
         }
 
-        let title_content, page_content, footer_content, embed_author;
-        msg_color = default_color;
+        if (typeof this.event.tags !== "undefined" && this.event.tags.length > 0) {
+            tag_content = "" +
+                `${this.event.tags.join(`, `)}`;
+        } else {
+            tag_content = "" +
+                `no tags defined`;
+        }
+        let title_content2 = "" +
+            `\`${this.event.title}\``;
+
+        msg_color = 0x5ed7f7;
+        
         embed_author = {
-            name: `EVENT OVERVIEW PROCESS`
+            name: `[${this.event._no}] created by ${username}`,
+            icon_url: "http://frid.li/sSVIJ"
         };
-        title_content = `Event #⃣ ${this.event._no}`;
-        page_content = "" +
-        `Title: **${this.event.title}**\n` +
-        `Author: **${this.bot.getUserOrNickname(this.event._author, this.msg.channel.guild)}**\n\n` +
-        `Start: **${moment(this.event.start).tz(this.timezone).format(`${config.moment_date_format}`)}**\n` +
-        `End: **${moment(this.event.end).tz(this.timezone).format(`${config.moment_date_format}`)}**\n\n` +
-        `Tags: **${this.event.tags.join(", ")} **\n` +
-        `Description: \n\`\`\`md\n${this.event.description}\n\`\`\`\n` +
-        `Attendees: \`[${this.event.attendees.length}/${this.event.attendee_max}]\`\n` +
-        (hasAttendees ? `(${attendeesNames})` : `\`(no attendees)\``);
+        /*        title_content = `Event #⃣ ${this.event._no}`;
+                page_content = "" +
+                    `Title: **${this.event.title}**\n` +
+                    `Author: **${this.bot.getUserOrNickname(this.event._author, this.msg.channel.guild)}**\n\n` +
+                    `Start: **${moment(this.event.start).tz(this.timezone).format(`${config.moment_date_format}`)}**\n` +
+                `End: **${moment(this.event.end).tz(this.timezone).format(`${config.moment_date_format}`)}**\n\n` +
+                `Tags: **${this.event.tags.join(", ")} **\n` +
+                `Description: \n\`\`\`md\n${this.event.description}\n\`\`\`\n` +
+                `Attendees: \`[${this.event.attendees.length}/${this.event.attendee_max}]\`\n` +
+                (hasAttendees ? `(${attendeesNames})` : `\`(no attendees)\``);
+        */
+        
+        let fields_content = [];
+        fields_content = [{
+                    name: `Start`,
+                    value: `${moment(this.event.start).tz(this.timezone).format(`${config.moment_date_format}`)}`,
+                inline: true
+            },
+            {
+                name: `End`,
+                value: `${moment(this.event.end).tz(this.timezone).format(`${config.moment_date_format}`)}`,
+                inline: true
+            },
+            {
+                name: `Description`,
+                value: `${this.event.description}`,
+                inline: false
+            },
+            {
+                name: `Attendees`,
+                value: `[${this.event.attendees.length}/${this.event.attendee_max}]`,
+                inline: true
+            },
+            {
+                name: `Attendees joined`,
+                value: `${hasAttendees ? `${attendeesNames}` : `(no attendees)`}`,
+                inline: true
+            },
+            {
+                name: `Tags`,
+                value: `${tag_content}`,
+                inline: false
+            }
+
+        ];
 
     footer_content = `## Options: [J]oin, [L]eave, ` +
         (hasAttendees ? `[A]ttendees, ` : "") +
         (auth(this.server, this.event, this.member)?`[E]dit, [D]elete, `:"") + `[B]ack, [Q]uit`;
-    return {embed: {author: embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
+    //return {embed: {author: embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
+    return {
+        embed: {
+            author: embed_author,
+            color: msg_color,
+            title: title_content2,
+            fields: fields_content,
+            footer: {
+                text: footer_content
+            }
+        }
+    };
 };
 
 /// generate the main editor view for the currently set event
