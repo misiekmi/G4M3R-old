@@ -1,6 +1,6 @@
 const moment = require("moment-timezone");
 const config = require("../../Configuration/config.json");
-const auth = require("./AdminOrAuthor");
+const auth = require("./EventsAuth");
 
 let msg_color = 0xff8c00; //start with orange embed color
 let default_color = 0xff8c00; // default color = orange
@@ -133,7 +133,9 @@ Viewer.prototype.getEventView = function() {
 
     footer_content = `## Options: [J]oin, [L]eave, ` +
         (hasAttendees ? `[A]ttendees, ` : "") +
-        (auth(this.server, this.event, this.member)?`[E]dit, [D]elete, `:"") + `[B]ack, [Q]uit`;
+        (auth.toDeleteOrEdit(this.server, this.event, this.member)?`[E]dit, [D]elete, `:"") +
+        `[B]ack, [Q]uit`;
+
     return {embed: {author: embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
 };
 
