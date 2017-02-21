@@ -1,3 +1,4 @@
+/*jshint -W041*/
 const commands = require("./../Configuration/commands.json");
 const computeRankScore = require("./../Modules/RankScoreCalculator.js");
 const removeMd = require("remove-markdown");
@@ -219,6 +220,21 @@ module.exports = (db, auth, config) => {
             }
         }
         return member;
+    };
+
+    //get nickname on a server, if not possible, get username
+    bot.getUserOrNickname = (_id, svr) => {
+        if (!svr.members) {
+            return "";
+        } else {
+            let searchedUser = svr.members.get(_id);
+            if (searchedUser.nick === null) {
+                return searchedUser.username;
+            } else {
+                return searchedUser.nick;
+            }
+        }
+
     };
 
     // Finds a server (by name, ID, etc.) for a user

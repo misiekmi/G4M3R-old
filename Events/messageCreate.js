@@ -392,7 +392,7 @@ module.exports = (bot, db, config, winston, msg) => {
                                             });
                                         } catch (err) {
                                             winston.error(`Failed to process command '${command.command}'`, { svrid: msg.guild.id, chid: msg.channel.id, usrid: msg.author.id }, err);
-                                            msg.channel.createMessage("Something went wrong 😱");
+                                            msg.channel.createMessage("Something went wrong (getPublicCommand) 😱");
                                         }
                                         setCooldown(winston, serverDocument, channelDocument);
                                     }

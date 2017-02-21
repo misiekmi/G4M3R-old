@@ -8,7 +8,9 @@ let default_color = 0xff8c00; // default color = orange
 
 /*jshint -W027*/
 /// events viewer constructor
-function Viewer(db, serverDocument, eventDocuments, userDocument, memberObject, page_size, filter) {
+function Viewer(bot, msg, db, serverDocument, eventDocuments, userDocument, memberObject, page_size, filter) {
+    this.bot = bot;
+    this.msg = msg;
     this.db = db;
     this.server = serverDocument;
     this.events = eventDocuments;
@@ -68,7 +70,7 @@ Viewer.prototype.getPageView = function(page_no) {
 
         for (let i = start_index; i < end_index; i++) {
             page_content += `**[${this.events[i]._no}]** | **${this.events[i].title}**\n` +
-                `by <@${this.events[i]._author}> | [${this.events[i].attendees.length}/${this.events[i].attendee_max}]` +
+                `by \`${this.bot.getUserOrNickname(this.events[i]._author, this.msg.channel.guild)}\` | [${this.events[i].attendees.length}/${this.events[i].attendee_max}]` +
                 (moment(this.events[i].start).isAfter(moment.now()) ?
                     ` | starts ${moment(this.events[i].start).fromNow()}` : ` | ends ${moment(this.events[i].end).fromNow()}`) +
                 "\n\n";
@@ -104,8 +106,10 @@ Viewer.prototype.getEventView = function() {
             for (let i = 0; i<this.event.attendees.length;i++) {
                 if (i >14) { //showing max 15 attendees
                     break;
-                } else {
-                    attendeesNames += `<@`+this.event.attendees[i]._id+`>, `;
+                } else { 
+                   attendeesNames += `\`${this.bot.getUserOrNickname(this.event.attendees[i]._id, this.msg.channel.guild)}\`, `;
+/*                 
+*/                    //attendeesNames += `<@`+this.event.attendees[i]._id+`>, `; TODO: Reenable when android is able to show embeds properly
                     hasAttendees = true;
                 }
             }
@@ -119,13 +123,13 @@ Viewer.prototype.getEventView = function() {
         title_content = `Event #⃣ ${this.event._no}`;
         page_content = "" +
         `Title: **${this.event.title}**\n` +
-        `Author: <@${this.event._author}>\n\n` +
+        `Author: **${this.bot.getUserOrNickname(this.event._author, this.msg.channel.guild)}**\n\n` +
         `Start: **${moment(this.event.start).tz(this.timezone).format(`${config.moment_date_format}`)}**\n` +
         `End: **${moment(this.event.end).tz(this.timezone).format(`${config.moment_date_format}`)}**\n\n` +
         `Tags: **${this.event.tags.join(", ")} **\n` +
         `Description: \n\`\`\`md\n${this.event.description}\n\`\`\`\n` +
         `Attendees: \`[${this.event.attendees.length}/${this.event.attendee_max}]\`\n` +
-        (hasAttendees ? `(${attendeesNames})` : `(no attendees)`);
+        (hasAttendees ? `(${attendeesNames})` : `\`(no attendees)\``);
 
     footer_content = `## Options: [J]oin, [L]eave, ` +
         (hasAttendees ? `[A]ttendees, ` : "") +
@@ -284,8 +288,8 @@ Viewer.prototype.joinEvent = function(event, msg) {
         msg_color = 0xecf925; //yellow color
         title_content = `⚠ ${msg.author.username} __already__ joined the Event #${event._no}.`;
         page_content =  `Title: \`\`${event.title}\`\`\n` +
-                        `Author: <@${event._author}>\n` +
-                        `Attendees: [${event.attendees.length}/${event.attendee_max}]`;
+                        `Author: \`${this.bot.getUserOrNickname(event._author, this.msg.channel.guild)}\`\n` +
+                        `Attendees: \`[${event.attendees.length}/${event.attendee_max}]\``;
         return {embed: {color: msg_color, title: title_content, description: page_content}};
 
     //if user is not already an attendee of the event
@@ -302,8 +306,8 @@ Viewer.prototype.joinEvent = function(event, msg) {
             msg_color = 0x17f926; //green color
             title_content = `ℹ ${msg.author.username} just joined Event #${event._no}.`;
             page_content =  `Title: \`\`${event.title}\`\`\n` +
-                            `Author: <@${event._author}>\n` +
-                            `Attendees: [${event.attendees.length}/${event.attendee_max}]`;
+                            `Author: \`${this.bot.getUserOrNickname(event._author, this.msg.channel.guild)}\`\n` +
+                            `Attendees: \`[${event.attendees.length}/${event.attendee_max}]\``;
             return {embed: {color: msg_color, title: title_content, description: page_content}};
 
         // Event attendee_max limit is already reached   
@@ -311,8 +315,8 @@ Viewer.prototype.joinEvent = function(event, msg) {
             msg_color = 0xecf925; //yellow color
             title_content = `⚠ ${msg.author.username} cannot join Event #${event._no} because there is no open slot left.`;
             page_content =  `Title: \`\`${event.title}\`\`\n` +
-                            `Author: <@${event._author}>\n` +
-                            `Attendees: [${event.attendees.length}/${event.attendee_max}]`;
+                            `Author: \`${this.bot.getUserOrNickname(event._author, this.msg.channel.guild)}\`\n` +
+                            `Attendees: \`[${event.attendees.length}/${event.attendee_max}]\``;
             return {embed: {color: msg_color, title: title_content, description: page_content}};
         }
     }
@@ -343,7 +347,7 @@ Viewer.prototype.leaveEvent = function(event, msg) {
         msg_color = 0x17f926; //green color
         title_content = `ℹ ${msg.author.username} left the Event #${event._no}.`;
         page_content =  `Title: \`\`${event.title}\`\`\n` +
-            `Author: <@${event._author}>\n` +
+            `Author: \`${this.bot.getUserOrNickname(event._author, this.msg.channel.guild)}\`\n` +
             `Attendees: [${event.attendees.length}/${event.attendee_max}]`;
         return {embed: {color: msg_color, title: title_content, description: page_content}};
 
@@ -352,7 +356,7 @@ Viewer.prototype.leaveEvent = function(event, msg) {
         msg_color = 0xecf925; //yellow color
         title_content = `⚠ ${msg.author.username} is not an attendee of the Event #${event._no}.`;
         page_content =  `Title: \`\`${event.title}\`\`\n` +
-            `Author: <@${event._author}>\n` +
+            `Author: \`${this.bot.getUserOrNickname(event._author, this.msg.channel.guild)}\`\n` +
             `Attendees: [${event.attendees.length}/${event.attendee_max}]`;
         return {embed: {color: msg_color, title: title_content, description: page_content}};
     }
@@ -399,12 +403,13 @@ Viewer.prototype.getEventAttendeesView = function(event) {
     this.previous_mode = this.mode;
     this.mode = 6;
 
-    let title = `ℹ List of attendees for #⃣ ${event._no}`;
-    let body = "";
+    let title, body = "";
+    title = `ℹ List of attendees for #⃣ ${event._no}`;
 
-    if (event.attendees.length > 0) {
-        for (let i=0; i<this.event.attendees.length;i++) {
-            body += `<@`+this.event.attendees[i]._id+`>, `;
+    if (typeof event.attendees !== "undefined" && event.attendees.length > 0) {
+        for (let i = 0; i<this.event.attendees.length;i++) {
+            body += `\`${this.bot.getUserOrNickname(this.event.attendees[i]._id, this.msg.channel.guild)}\`, `;
+            //body += `<@`+this.event.attendees[i]._id+`>, `; TODO: enable when embdes on android work correct
         }
     }
     let footer_content = `## Options: [B]ack, [Q]uit`;

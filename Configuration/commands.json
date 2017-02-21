@@ -51,8 +51,8 @@
     },
     "public": {
         "events": {
-            "examples": "event show 1, event list, event add",
-            "usage": "event + add, list, show [ID], edit [ID], join [ID], leave [ID]",
+            "examples": "events show 123, events, event add, events join 1337",
+            "usage": "events [<add>], [<show [ID]>], [<edit [ID]>], [<join [ID]>], [<leave [ID]>]",
             "description": "Create events people can RSVP to",
             "defaults": {
                 "is_enabled": true,
@@ -60,7 +60,7 @@
                 "admin_level": 0
             },
             "category": "Gaming 🎮",
-            "category_desc": "Focus on productivity and function"
+            "category_desc": "Special features related to gaming"
         },
         "myevents": {
             "examples": "just type the freakin command",
@@ -72,7 +72,7 @@
                 "admin_level": 0
             },
             "category": "Gaming 🎮",
-            "category_desc": "Focus on productivity and function"
+            "category_desc": "Special features related to gaming"
         },
         "trello": {
             "examples": "just type the freakin command",
@@ -120,7 +120,7 @@
                 "admin_level": 0
             },
             "category": "Utility 🔦",
-            "category_desc": "Focus on productivity and function"
+            "category_desc": "Special features related to gaming"
         },
         "alert": {
             "examples": "",
@@ -144,7 +144,7 @@
                 "admin_level": 0
             },
             "category": "Utility 🔦",
-            "category_desc": "Focus on productivity and function"
+            "category_desc": "Special features related to gaming"
         },
         "avatar": {
             "examples": "",
@@ -156,7 +156,7 @@
                 "admin_level": 0
             },
             "category": "Utility 🔦",
-            "category_desc": "Focus on productivity and function"
+            "category_desc": "Special features related to gaming"
         },
         "ban": {
             "examples": "",
@@ -204,7 +204,7 @@
                 "admin_level": 0
             },
             "category": "Utility 🔦",
-            "category_desc": "Focus on productivity and function"
+            "category_desc": "Special features related to gaming"
         },
         "convert": {
             "examples": "",
@@ -216,7 +216,7 @@
                 "admin_level": 0
             },
             "category": "Utility 🔦",
-            "category_desc": "Focus on productivity and function"
+            "category_desc": "Special features related to gaming"
         },
         "cool": {
             "examples": "",
@@ -288,7 +288,7 @@
                 "admin_level": 0
             },
             "category": "Utility 🔦",
-            "category_desc": "Focus on productivity and function"
+            "category_desc": "Special features related to gaming"
         },
         "enable": {
             "examples": "",
@@ -336,7 +336,7 @@
                 "admin_level": 0
             },
             "category": "Utility 🔦",
-            "category_desc": "Focus on productivity and function",
+            "category_desc": "Special features related to gaming",
             "admin_exempt": true
         },
         "google": {
@@ -397,7 +397,7 @@
                 "admin_level": 0
             },
             "category": "Utility 🔦",
-            "category_desc": "Focus on productivity and function"
+            "category_desc": "Special features related to gaming"
         },
         "info": {
             "examples": "",
@@ -409,7 +409,7 @@
                 "admin_level": 0
             },
             "category": "Utility 🔦",
-            "category_desc": "Focus on productivity and function"
+            "category_desc": "Special features related to gaming"
         },
         "join": {
             "examples": "",
@@ -445,7 +445,7 @@
                 "admin_level": 1
             },
             "category": "Utility 🔦",
-            "category_desc": "Focus on productivity and function"
+            "category_desc": "Special features related to gaming"
         },
         "meme": {
             "examples": "",
@@ -553,7 +553,7 @@
                 "admin_level": 0
             },
             "category": "Utility 🔦",
-            "category_desc": "Focus on productivity and function",
+            "category_desc": "Special features related to gaming",
             "admin_exempt": true
         },
         "prefix": {
@@ -578,7 +578,7 @@
                 "admin_level": 0
             },
             "category": "Utility 🔦",
-            "category_desc": "Focus on productivity and function"
+            "category_desc": "Special features related to gaming"
         },
         "quiet": {
             "examples": "",
@@ -638,7 +638,7 @@
                 "admin_level": 0
             },
             "category": "Utility 🔦",
-            "category_desc": "Focus on productivity and function"
+            "category_desc": "Special features related to gaming"
         },
         "role": {
             "examples": "",
@@ -662,7 +662,7 @@
                 "admin_level": 0
             },
             "category": "Utility 🔦",
-            "category_desc": "Focus on productivity and function"
+            "category_desc": "Special features related to gaming"
         },
         "room": {
             "examples": "",
@@ -674,7 +674,7 @@
                 "admin_level": 0
             },
             "category": "Utility 🔦",
-            "category_desc": "Focus on productivity and function"
+            "category_desc": "Special features related to gaming"
         },
         "rss": {
             "examples": "",
@@ -699,7 +699,7 @@
                 "admin_level": 1
             },
             "category": "Utility 🔦",
-            "category_desc": "Focus on productivity and function"
+            "category_desc": "Special features related to gaming"
         },
         "shorten": {
             "examples": "",
@@ -711,7 +711,7 @@
                 "admin_level": 0
             },
             "category": "Utility 🔦",
-            "category_desc": "Focus on productivity and function"
+            "category_desc": "Special features related to gaming"
         },
         "softban": {
             "examples": "",
@@ -771,7 +771,7 @@
                 "admin_level": 0
             },
             "category": "Utility 🔦",
-            "category_desc": "Focus on productivity and function"
+            "category_desc": "Special features related to gaming"
         },
         "time": {
             "examples": "",
@@ -783,7 +783,7 @@
                 "admin_level": 0
             },
             "category": "Utility 🔦",
-            "category_desc": "Focus on productivity and function"
+            "category_desc": "Special features related to gaming"
         },
         "translate": {
             "examples": "",
@@ -795,7 +795,7 @@
                 "admin_level": 0
             },
             "category": "Utility 🔦",
-            "category_desc": "Focus on productivity and function"
+            "category_desc": "Special features related to gaming"
         },
         "trivia": {
             "examples": "",
