@@ -32,12 +32,17 @@
 					<br>
 					<div class="container">
 						<form id="form" action="<%= currentPage %>?svrid=<%= serverData.id %>" method="post">
-							<p>Select a channel for event announcements</p>
+							<label class="label">Select a channel for event announcements</label>
 
 							<input type="radio" name="announce_channel" value="none" checked>none</input>
 
                             <% for(var i=0; i<channelData.length; i++) { %>
-							<input type="radio" name="announce_channel" value="<%= channelData[i].id%>" <%= channelData[i].id===serverData.announce_channel?"checked":""%>><%= channelData[i].name%></input>
+							<label class="checkbox">
+							<input type="radio" name="announce_channel" value="<%= channelData[i].id%>" <%= channelData[i].id===serverData.announce_channel?"checked":""%>>
+								<%= channelData[i].name%>
+								</input>
+							</label>
+							<br>
                             <% } %>
 							<br>
                             <% var formButtonsUnsaved = false; %>
