@@ -34,10 +34,10 @@
 						<form id="form" action="<%= currentPage %>?svrid=<%= serverData.id %>" method="post">
 							<p>Select a channel for event announcements</p>
 
-							<input type="radio" name="channel">none</input>
+							<input type="radio" name="channel" value="none">none</input>
 
                             <% for(var i=0; i<channelData.length; i++) { %>
-							<input type="radio" name="channel" value="<%= channelData[i].id%>"><%= channelData[i].name%></input>
+							<input type="radio" name="announce-channel" value="<%= channelData[i].id%>"><%= channelData[i].name%></input>
                             <% } %>
 							<br>
                             <% var formButtonsUnsaved = false; %>

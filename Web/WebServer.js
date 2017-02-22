@@ -3066,13 +3066,10 @@ module.exports = (bot, db, auth, config, winston) => {
     app.post("/dashboard/management/event-channels", (req, res) => {
         checkAuth(req, res, (consolemember, svr, serverDocument) => {
             console.log(req.body);
-            svr.channels.forEach(ch=> {
-                if(ch.type==2) {
-                    if(req.body[`announce-${ch.id}`]=="on") {
-                        serverDocument.event_channels.announce = ch._id;
-                    }
-                }
-            });
+            if(req.body.announce-channel && req.body.announce-channel!=="none") {
+                serverDocument.event_channels.announce = req.body.announce-channel;
+            }
+
             saveAdminConsoleOptions(consolemember, svr, serverDocument, req, res);
         });
     });
