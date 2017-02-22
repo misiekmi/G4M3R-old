@@ -262,11 +262,10 @@ Viewer.prototype.getEditorView = function() {
     title_content = `Event #⃣ ${this.event._no}`;
     if(this.add_not_edit) {
         embed_author = {name: `CREATION PROCESS`};
-        footer_content = `## Options: [Q]uit`;
     } else {
         embed_author = {name: `EDIT PROCESS`};
-        footer_content = `## Options: [C]ancel, [Q]uit`;
     }
+    footer_content = `## Options: [C]ancel, [Q]uit`;
 
     switch(this.edit_mode) {
         case 1:
