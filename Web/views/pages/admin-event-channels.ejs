@@ -5,30 +5,6 @@
 	<% include ../partials/head %>
 
 	<script src="/static/js/form-change-listener.js"></script>
-	<script>
-        function setAnnounceChannel() {
-            var announceChannel = $("#set-announce-channel");
-            if(announceChannel.val()) {
-                announceChannel.removeClass("is-danger");
-            } else {
-                announceChannel.addClass("is-danger");
-            }
-
-            if(announceChannel.val()) {
-                $.ajax({
-                    type: "POST",
-                    url: "<%= currentPage %>?svrid=<%= serverData.id %>",
-                    data: {
-                        announce_channel: announceChannel.val(),
-                    },
-                    success: function() {
-                        saveFormState();
-                        $("#form").submit();
-                    }
-                });
-            }
-        }
-	</script>
 </head>
 <body onload="saveFormState();">
 	<% include ../partials/dashboard-header %>
@@ -55,49 +31,20 @@
 					</div>
 					<br>
 					<div class="container">
-						<div class="control is-horizontal">
-							<div class="control is-grouped">
-								<p class="control is-expanded">
-									<input id="set-announce-channel" class="input" type="text" placeholder="Announce Channel" list="channels" onkeypress="return event.keyCode != 13;">
-									<datalist id="channels">
-                                        <% for(var i=0; i<channelData.length; i++) { %>
-										<option value="<%= channelData[i].id%>"><%= channelData[i].name%></option>
-                                        <% } %>
-									</datalist>
-                                    <% if(announceChannel) { %>
-									<span class="help">I am set to announce to <strong><%= announceChannel.name%></strong>.</span>
-                                    <% } else { %>
-									<span class="help">No announce channel is set.</span>
-                                    <% } %>
-								</p>
-								<p class="control">
-									<a class="button is-primary" onclick="setAnnounceChannel();window.location.reload()">
-													<span class="icon">
-												        <i class="fa fa-plus"></i>
-												    </span>
-										<span>Set</span>
-									</a>
-								</p>
-							</div>
-						</div>
-					</div>
-					<br>
-					<div class="container">
-						<p>Select a channel for event announcements</p>
-						<form>
-							<input type="radio" name="channel">
-							none
-							</input>
+						<form id="form" action="<%= currentPage %>?svrid=<%= serverData.id %>" method="post">
+							<p>Select a channel for event announcements</p>
+
+							<input type="radio" name="channel">none</input>
+
                             <% for(var i=0; i<channelData.length; i++) { %>
-							<input type="radio" name="channel" value="<%= channelData[i].id%>">
-                            <%= channelData[i].name%>
-							</input>
+							<input type="radio" name="<%= channelData[i].id%>"><%= channelData[i].name%></input>
                             <% } %>
+
+                            <% var formButtonsUnsaved = false; %>
+                            <% include ../partials/form-buttons %>
+                            <% include ../partials/form-buttons-bar %>
 						</form>
 					</div>
-                    <% var formButtonsUnsaved = false; %>
-                    <% include ../partials/form-buttons %>
-                    <% include ../partials/form-buttons-bar %>
 				</div>
 			</div>
 		</div>

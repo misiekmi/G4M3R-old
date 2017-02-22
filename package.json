@@ -34,7 +34,7 @@
     "imgur-node-api": ">=0.1.0",
     "mathjs": ">=3.0",
     "moment": ">=2.0",
-    "mroment-timezone": "^0.5.11",
+    "moment-timezone": "^0.5.11",
     "money": "*",
     "mongoose": ">=4.5.0",
     "mongoose-findorcreate": ">=0.1.2",
