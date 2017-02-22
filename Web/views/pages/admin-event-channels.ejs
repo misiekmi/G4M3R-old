@@ -37,9 +37,9 @@
 							<input type="radio" name="channel">none</input>
 
                             <% for(var i=0; i<channelData.length; i++) { %>
-							<input type="radio" name="<%= channelData[i].id%>"><%= channelData[i].name%></input>
+							<input type="radio" name="channel" value="<%= channelData[i].id%>"><%= channelData[i].name%></input>
                             <% } %>
-
+							<br>
                             <% var formButtonsUnsaved = false; %>
                             <% include ../partials/form-buttons %>
                             <% include ../partials/form-buttons-bar %>
