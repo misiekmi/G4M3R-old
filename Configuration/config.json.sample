@@ -26,6 +26,12 @@
     "donate_charities": [],
     "moment_date_format": "ddd MMMM Do YYYY [at] HH:mm",
     "moment_timezone": "Europe/Berlin",
+    "colors": {
+        "orange": "0xff8c00",
+        "yellow": "0xecf925",
+        "blue": "0x5ed7f7",
+        "green": "0x17f926"
+    },
     "vote_triggers": [
         " +!",
         " +1",
