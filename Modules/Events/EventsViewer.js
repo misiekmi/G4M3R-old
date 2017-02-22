@@ -2,8 +2,8 @@ const moment = require("moment-timezone");
 const config = require("../../Configuration/config.json");
 const auth = require("./EventsAuth");
 
-let msg_color = 0xff8c00; //start with orange embed color
-let default_color = 0xff8c00; // default color = orange
+let msg_color = 0x5ed7f7; //start with blue embed color
+let default_color = 0x5ed7f7; // default color = blue - old color 0xff8c00 (orange  )
 
 
 /*jshint -W027*/
@@ -69,7 +69,7 @@ Viewer.prototype.getPageView = function(page_no) {
         let end_index = (start_index + this.page_size) > events_length ? events_length : start_index + this.page_size;
 
         for (let i = start_index; i < end_index; i++) {
-            page_content += `**[${this.events[i]._no}]** **|** **${this.events[i].title}**\n` +
+            page_content += `\`[${this.events[i]._no}]\` **|** **${this.events[i].title}**\n` +
                 `**by** \`${this.bot.getUserOrNickname(this.events[i]._author, this.msg.channel.guild)}\`` +
                 ` **//** \`[${this.events[i].attendees.length}/${this.events[i].attendee_max}]\`` +
                 (moment(this.events[i].start).isAfter(moment.now()) ?
