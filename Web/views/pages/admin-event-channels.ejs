@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title><%= serverData.name %> Event Channels - AwesomeBot Admin Console</title>
+	<title><%= serverData.name %> Event Announcement Channel - AwesomeBot Admin Console</title>
 	<% include ../partials/head %>
 
 	<script src="/static/js/form-change-listener.js"></script>
@@ -35,15 +35,17 @@
 							<label class="label">Select a channel for event announcements</label>
 
 							<input type="radio" name="announce_channel" value="none" checked>none</input>
+							<br>
 
                             <% for(var i=0; i<channelData.length; i++) { %>
 							<label class="checkbox">
 							<input type="radio" name="announce_channel" value="<%= channelData[i].id%>" <%= channelData[i].id===serverData.announce_channel?"checked":""%>>
-								<%= channelData[i].name%>
+								#<%= channelData[i].name%>
 								</input>
 							</label>
 							<br>
                             <% } %>
+
 							<br>
                             <% var formButtonsUnsaved = false; %>
                             <% include ../partials/form-buttons %>
