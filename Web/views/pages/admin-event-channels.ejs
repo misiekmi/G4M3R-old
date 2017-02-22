@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title><%= serverData.name %> Event Announcement Channel - AwesomeBot Admin Console</title>
+	<title><%= serverData.name %> Events Announcement Channel - AwesomeBot Admin Console</title>
 	<% include ../partials/head %>
 
 	<script src="/static/js/form-change-listener.js"></script>
@@ -18,7 +18,7 @@
 				</div>
 				<div class="column">
 					<h1 class="title">
-						Event Channels
+						Events - Announcement Channel
 					</h1>
 					<div class="container">
 						<article class="message is-primary">
@@ -35,6 +35,7 @@
 							<label class="label">Select a channel for event announcements</label>
 
 							<input type="radio" name="announce_channel" value="none" checked>none</input>
+							<br>
 							<br>
 
                             <% for(var i=0; i<channelData.length; i++) { %>

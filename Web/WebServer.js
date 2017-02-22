@@ -3055,7 +3055,6 @@ module.exports = (bot, db, auth, config, winston) => {
     });
     app.post("/dashboard/management/event-channels", (req, res) => {
         checkAuth(req, res, (consolemember, svr, serverDocument) => {
-            console.log(req.body);
             if(req.body.announce_channel && req.body.announce_channel!=="none") {
                 serverDocument.event_channels.announce = req.body.announce_channel;
             } else {
