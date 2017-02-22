@@ -328,7 +328,7 @@ Viewer.prototype.deleteEvent = function(event, silent) {
     }
 
     msg_color = 0x17f926; //green color
-    let body = `ℹ Event #⃣${event._id} is queued for removal.`;
+    let body = `ℹ Event #⃣${event._no} is queued for removal.`;
     let embed_author = {name: `EVENT DELETION PROCESS`};
 
     if(silent) {
