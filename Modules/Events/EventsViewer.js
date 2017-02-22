@@ -73,7 +73,7 @@ Viewer.prototype.getPageView = function(page_no) {
         }
 
         if (this.events.length > end_index || page_no > 1) {
-            embed.description += `\n## `;
+            embed.description += `## `;
         }
         if (this.events.length > end_index) {
             embed.description += `\`\`[+]\`\` next page`;
@@ -191,25 +191,39 @@ Viewer.prototype.getEventEditView = function(add) {
         embed.footer = {text: `## Options: [S]ave, [C]ancel, [Q]uit`};
     }
 
-    embed.description = "" +
-        `\`\`[1]\`\` **Event Title** ` +
-        (this.edits_made.title ? ": \`" + this.edits_made.title + "\`\n" :
-            "\`" + this.event.title + "\`\n") +
-        `\`\`[2]\`\` **Start Time**` +
-        (this.edits_made.start ? ": \`" + moment(this.edits_made.start).tz(this.timezone).format(`${config.moment_date_format}`) + "\`\n" :
-            ": \`" + moment(this.event.start).tz(this.timezone).format(`${config.moment_date_format}`) + "\`\n") +
-        `\`\`[3]\`\` **End Time** ` +
-        (this.edits_made.end ? ": \`" + moment(this.edits_made.end).tz(this.timezone).format(`${config.moment_date_format}`) + "\`\n" :
-            ": \`" + moment(this.event.end).tz(this.timezone).format(`${config.moment_date_format}`) + "\`\n") +
-        `\`\`[4]\`\` **Description** ` +
-        (this.edits_made.description ? "```md\n" + this.edits_made.description + "```\n" :
-            ": \`" + this.event.description + "\`\n") +
-        `\`\`[5]\`\` **Max Attendees** ` +
-        (this.edits_made.attendee_max ? ": \`" + this.edits_made.attendee_max + "\`\n" :
-            ": \`" + this.event.attendee_max + "\`\n") +
-        `\`\`[6]\`\` **Tags** ` +
-        (this.edits_made.tags ? ": \`" + this.edits_made.tags.join(", ") + "\`\n" :
-            ": \`" + this.event.tags + "\`\n");
+    embed.fields = [{
+        name: this.edits_made.title ? `[1] Title (edited)`:`[1] Title`,
+        value: this.edits_made.title ? `${this.edits_made.title}`:`${this.event.title}`,
+        inline: false
+    }, {
+        name: this.edits_made.start ? `[2] Start (edited)`:`[2] Start`,
+        value: this.edits_made.start ?
+            `${moment(this.edits_made.start).tz(this.timezone).format(`${config.moment_date_format}`)}}` :
+            `${moment(this.event.start).tz(this.timezone).format(`${config.moment_date_format}`)}`,
+        inline: true
+    }, {
+        name: this.edits_made.end ? `[3] End (edited)`:`[3] End`,
+        value: this.edits_made.end ?
+            `${moment(this.edits_made.end).tz(this.timezone).format(`${config.moment_date_format}`)}` :
+            `${moment(this.event.end).tz(this.timezone).format(`${config.moment_date_format}`)}`,
+        inline: true
+    }, {
+        name: this.edits_made.description ? `[4] Description (edited)` : `[4] Description`,
+        value: this.edits_made.description ? `${this.edits_made.description}`:`${this.event.description}`,
+        inline: false
+    }, {
+        name: this.edits_made.attendee_max ? `[5] Max Attendees (edited)` : `[5] Max Attendees`,
+        value: this.edits_made.attendee_max ? `${this.edits_made.attendee_max}`:`${this.event.attendee_max}`,
+        inline: true
+    }, {
+        name: this.edits_made.tags ? `[6] Tags (edited)` : `[6] Tags`,
+        value: this.edits_made.tags ?
+            (this.edits_made.tags.length>0 ? `${this.edits_made.tags.join(', ')}` : "no tags defined") :
+            (this.event.tags.length>0 ? `${this.event.tags.join(', ')}` : "no tags defined"),
+        inline: true
+    }];
+
+    console.log(embed);
 
     return {embed: embed};
 };
