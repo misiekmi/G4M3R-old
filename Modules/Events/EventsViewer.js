@@ -246,18 +246,22 @@ Viewer.prototype.getEditorView = function() {
     switch (this.edit_mode) {
         case 1:
             embed.description = "" +
-                `Current title: \n\`\`${this.event.title}\`\`\n\n` +
+                `Current title: \n\`\`${this.edits_made.title?this.edits_made.title:this.event.title}\`\`\n\n` +
                 `Enter the new title for the event`;
             break;
         case 2:
-            let start = moment(this.event.start).tz(this.timezone).format(`${config.moment_date_format}`);
+            let start = this.edits_made.start ?
+                moment(this.edits_made.start).tz(this.timezone).format(`${config.moment_date_format}`) :
+                moment(this.event.start).tz(this.timezone).format(`${config.moment_date_format}`);
             embed.description = "" +
                 `Current start: \n\`\`${start}\`\`\n\n` +
                 `Enter the start end time for the event.\n\n` +
                 `# Format: YYYY/MM/DD hh:mm`;
             break;
         case 3:
-            let end = moment(this.event.end).tz(this.timezone).format(`${config.moment_date_format}`);
+            let end = this.edits_made.end ?
+                moment(this.edits_made.end).tz(this.timezone).format(`${config.moment_date_format}`) :
+                moment(this.event.end).tz(this.timezone).format(`${config.moment_date_format}`);
             embed.description = "" +
                 `Current end: \n\`\`${end}\`\`\n\n` +
                 `Enter the new end time for the event.\n\n` +
@@ -265,17 +269,21 @@ Viewer.prototype.getEditorView = function() {
             break;
         case 4:
             embed.description = "" +
-                `Current Description: \n\`\`\`md\n${this.event.description}\n\`\`\`\n` +
+                `Current Description: \n\`\`\`md\n${this.edits_made.description?
+                    this.edits_made.description:this.event.description}\n\`\`\`\n` +
                 "Enter a new description for the event.";
             break;
         case 5:
             embed.description = "" +
-                `Current maximum member count: \`\`${this.event.attendee_max}\`\`\n\n` +
+                `Current maximum member count: \`\`${this.edits_made.attendee_max?
+                    this.edits_made.attendee_max:this.event.attendee_max}\`\`\n\n` +
                 "Enter a new maximum member count for the event.";
             break;
         case 6:
             embed.description = "" +
-                `Current set tags: ${(this.event.tags.length ? "``" + this.event.tags.join(", ") + "``" : "")}\n\n` +
+                `Current set tags: ${this.edits_made.tags?
+                    (this.edits_made.tags.length>0 ? "``" + this.edits_made.tags.join(", ") + "``" : ""):
+                    (this.event.tags.length>0 ? "``" + this.event.tags.join(", ") + "``" : "")}\n\n` +
                 "Enter a new set of tags for the event.";
             break;
         default:
