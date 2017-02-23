@@ -5,7 +5,7 @@ const auth = require("./EventsAuth");
 module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
     const hasDeletePerm = msg.channel.permissionsOf(bot.user.id).has("manageMessages");
     const page_size = viewer.page_size;
-    const formats = ["YYYY/MM/DD H:mm", "YYYY/MM/DD h:mma", "YYYY/MM/DD"];
+    const formats = ["h:mma", "MM-DD h:mma", "YYYY-MM-DD h:mma"];
 
     let current_page_no = 1;
 
@@ -131,7 +131,7 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                                         viewer.edits_made.title = usr_input_no;
                                         break;
                                     case 2:
-                                        time = moment.tz(usr_message.content.trim(), formats, true, viewer.timezone); // parse start time
+                                        time = moment.tz(usr_message.content.trim(), formats, false, viewer.timezone); // parse start time
                                         if (time.isValid()) {
                                             viewer.edits_made.start = time;
                                         } else {
@@ -140,7 +140,7 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                                         }
                                         break;
                                     case 3:
-                                        time = moment.tz(usr_message.content.trim(), formats, true, viewer.timezone); // parse start time
+                                        time = moment.tz(usr_message.content.trim(), formats, false, viewer.timezone); // parse start time
                                         if (time.isValid()) {
                                             viewer.edits_made.end = time;
                                         } else {

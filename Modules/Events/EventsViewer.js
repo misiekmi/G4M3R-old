@@ -2,11 +2,6 @@ const moment = require("moment-timezone");
 const config = require("../../Configuration/config.json");
 const auth = require("./EventsAuth");
 
-let msg_color = 0x5ed7f7; //start with blue embed color
-let default_color = 0x5ed7f7; // default color = blue - old color 0xff8c00 (orange  )
-
-
-/*jshint -W027*/
 /// events viewer constructor
 function Viewer(bot, msg, db, serverDocument, eventDocuments, userDocument, memberObject, page_size, filter) {
     this.bot = bot;
@@ -54,22 +49,22 @@ Viewer.prototype.setEvent = function(event_no) {
 
 /// generate a list view embed
 Viewer.prototype.getPageView = function(page_no) {
-    let events_length = this.events.length;
     this.mode = 1;
 
-    let page_content = "",
-        footer_content = "",
-        title_content = "";
-    let embed_fields = [];
-    let embed_author;
-    msg_color = default_color;
+    let embed = {};
+    embed.color = parseInt(config.colors.blue, 16);
+    embed.description = "";
+    embed.author = {
+        name: `EVENT OVERVIEW`,
+        url: "http://frid.li/lrR-u"
+    };
 
-    if ((page_no - 1) * this.page_size < events_length) {
+    if ((page_no - 1) * this.page_size < this.events.length) {
         let start_index = (page_no - 1) * this.page_size;
-        let end_index = (start_index + this.page_size) > events_length ? events_length : start_index + this.page_size;
+        let end_index = (start_index + this.page_size) > this.events.length ? this.events.length : start_index + this.page_size;
 
         for (let i = start_index; i < end_index; i++) {
-            page_content += `\`[${this.events[i]._no}]\` **|** **${this.events[i].title}**\n` +
+            embed.description += `**[${this.events[i]._no}]** **|** **${this.events[i].title}**\n` +
                 `**by** \`${this.bot.getUserOrNickname(this.events[i]._author, this.msg.channel.guild)}\`` +
                 ` **//** \`[${this.events[i].attendees.length}/${this.events[i].attendee_max}]\`` +
                 (moment(this.events[i].start).isAfter(moment.now()) ?
@@ -77,132 +72,101 @@ Viewer.prototype.getPageView = function(page_no) {
                 "\n\n";
         }
 
-        if (events_length > end_index) {
-            page_content += `\n## \`\`[+]\`\` next page`;
+        if (this.events.length > end_index || page_no > 1) {
+            embed.description += `## `;
+        }
+        if (this.events.length > end_index) {
+            embed.description += `\`\`[+]\`\` next page`;
+        }
+        if (this.events.length > end_index && page_no > 1) {
+            embed.description += ` | `;
         }
         if (page_no > 1) {
-            page_content += ` | \`\`[-]\`\` previous page\n`;
+            embed.description += `\`\`[-]\`\` previous page\n`;
         }
-        footer_content = `page (${page_no}/${Math.ceil(events_length/this.page_size)})`;
-        title_content = `Type the Event 🆔 to show details`;
+        embed.footer = {text: `page (${page_no}/${Math.ceil(this.events.length / this.page_size)})`};
+        embed.title = `Type the Event 🆔 to show details`;
     } else {
-        title_content = `There are no events scheduled on this server.`;
-        page_content = ""; // no entries
-        footer_content = "page (1/1)";
+        embed.title = `There are no events scheduled on this server.`;
+        embed.footer = {text: "page (1/1)"};
     }
+    embed.footer.text += ` | type [Q]uit to leave` + this.filter_disp;
 
-    footer_content += ` | type [Q]uit to leave` + this.filter_disp;
-    embed_author = {
-        name: `EVENT OVERVIEW`,
-        url: "http://frid.li/lrR-u"
-    };
-
-    return { embed: { author: embed_author, color: msg_color, title: title_content, description: page_content, fields: embed_fields, footer: { text: footer_content } } };
+    return {embed: embed};
 };
 
 /// generate a view of a single event
 Viewer.prototype.getEventView = function() {
-        this.mode = 2;
-        let attendeesNames = "";
-        let hasAttendees = false;
-        let username = this.bot.getUserOrNickname(this.event._author, this.msg.channel.guild);
-        let title_content, page_content, footer_content, embed_author, tag_content = "";
+    this.mode = 2;
+    let attendeesNames = "";
+    let hasAttendees = false;
+    let username = this.bot.getUserOrNickname(this.event._author, this.msg.channel.guild);
+    let tag_content = "";
 
-        if (typeof this.event.attendees !== "undefined" && this.event.attendees.length > 0) {
-            for (let i = 0; i < this.event.attendees.length; i++) {
-                if (i > 14) { //showing max 15 attendees
-                    break;
-                } else {
-                    if (i % 2 === 1) {
-                        attendeesNames += `\`${this.bot.getUserOrNickname(this.event.attendees[i]._id, this.msg.channel.guild)}\`\n`;
-                    } else {
-                        attendeesNames += `\`${this.bot.getUserOrNickname(this.event.attendees[i]._id, this.msg.channel.guild)}\`, `;
-                    }
-                    //attendeesNames += `<@`+this.event.attendees[i]._id+`>, `; TODO: Reenable when android is able to show embeds properly
-                    hasAttendees = true;
-                }
-            }
-        }
-
-        if (typeof this.event.tags !== "undefined" && this.event.tags.length > 0) {
-            tag_content = "" +
-                `${this.event.tags.join(`, `)}`;
-        } else {
-            tag_content = "" +
-                `no tags defined`;
-        }
-        let title_content2 = "" +
-            `\`${this.event.title}\``;
-
-        msg_color = 0x5ed7f7;
-
-        embed_author = {
-            name: `[${this.event._no}] created by ${username}`,
-            icon_url: "http://frid.li/sSVIJ"
-        };
-        /*        title_content = `Event #⃣ ${this.event._no}`;
-                page_content = "" +
-                    `Title: **${this.event.title}**\n` +
-                    `Author: **${this.bot.getUserOrNickname(this.event._author, this.msg.channel.guild)}**\n\n` +
-                    `Start: **${moment(this.event.start).tz(this.timezone).format(`${config.moment_date_format}`)}**\n` +
-                `End: **${moment(this.event.end).tz(this.timezone).format(`${config.moment_date_format}`)}**\n\n` +
-                `Tags: **${this.event.tags.join(", ")} **\n` +
-                `Description: \n\`\`\`md\n${this.event.description}\n\`\`\`\n` +
-                `Attendees: \`[${this.event.attendees.length}/${this.event.attendee_max}]\`\n` +
-                (hasAttendees ? `(${attendeesNames})` : `\`(no attendees)\``);
-        */
-
-        let fields_content = [];
-        fields_content = [{
-                    name: `Start`,
-                    value: `${moment(this.event.start).tz(this.timezone).format(`${config.moment_date_format}`)}`,
-                inline: true
-            },
-            {
-                name: `End`,
-                value: `${moment(this.event.end).tz(this.timezone).format(`${config.moment_date_format}`)}`,
-                inline: true
-            },
-            {
-                name: `Description`,
-                value: `${this.event.description}`,
-                inline: false
-            },
-            {
-                name: `Attendees`,
-                value: `[${this.event.attendees.length}/${this.event.attendee_max}]`,
-                inline: true
-            },
-            {
-                name: `Attendees joined`,
-                value: `${hasAttendees ? `${attendeesNames}` : `(no attendees)`}`,
-                inline: true
-            },
-            {
-                name: `Tags`,
-                value: `${tag_content}`,
-                inline: false
-            }
-
-        ];
-
-    footer_content = `## Options: [J]oin, [L]eave, ` +
-        (hasAttendees ? `[A]ttendees, ` : "") +
-        (auth.toDeleteOrEdit(this.server, this.event, this.member)?`[E]dit, [D]elete, `:"") +
-        `[B]ack, [Q]uit`;
-
-    //return {embed: {author: embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
-    return {
-        embed: {
-            author: embed_author,
-            color: msg_color,
-            title: title_content2,
-            fields: fields_content,
-            footer: {
-                text: footer_content
-            }
-        }
+    let embed = {};
+    embed.title = `\`${this.event.title}\``;
+    embed.color = parseInt(config.colors.blue,16);
+    embed.author = {
+        name: `[${this.event._no}] created by ${username}`,
+        icon_url: "http://frid.li/sSVIJ"
     };
+
+    if (this.event.attendees.length > 0) {
+        for (let i = 0; i < this.event.attendees.length; i++) {
+            if (i > 14) { //showing max 15 attendees
+                break;
+            } else {
+                if (i % 2 === 1) {
+                    attendeesNames += `\`${this.bot.getUserOrNickname(this.event.attendees[i]._id, this.msg.channel.guild)}\`\n`;
+                } else {
+                    attendeesNames += `\`${this.bot.getUserOrNickname(this.event.attendees[i]._id, this.msg.channel.guild)}\`, `;
+                }
+                //attendeesNames += `<@`+this.event.attendees[i]._id+`>, `;
+                hasAttendees = true;
+            }
+        }
+    }
+
+    if(this.event.tags.length > 0) {
+        tag_content = "" +
+            `${this.event.tags.join(`, `)}`;
+    } else {
+        tag_content = "" +
+            `no tags defined`;
+    }
+
+    embed.fields = [{
+        name: `Start`,
+        value: `${moment(this.event.start).tz(this.timezone).format(`${config.moment_date_format}`)}`,
+        inline: true
+    }, {
+        name: `End`,
+        value: `${moment(this.event.end).tz(this.timezone).format(`${config.moment_date_format}`)}`,
+        inline: true
+    }, {
+        name: `Description`,
+        value: `${this.event.description}`,
+        inline: false
+    }, {
+        name: `Attendees`,
+        value: `[${this.event.attendees.length}/${this.event.attendee_max}]`,
+        inline: true
+    }, {
+        name: `Attendees joined`,
+        value: `${hasAttendees ? `${attendeesNames}` : `(no attendees)`}`,
+        inline: true
+    }, {
+        name: `Tags`,
+        value: `${tag_content}`,
+        inline: false
+    }];
+
+    embed.footer = {text: `## Options: [J]oin, [L]eave, ` +
+    (hasAttendees ? `[A]ttendees, ` : "") +
+    (auth.toDeleteOrEdit(this.server, this.event, this.member)?`[E]dit, [D]elete, `:"") +
+    `[B]ack, [Q]uit`};
+
+    return {embed: embed};
 };
 
 /// generate the main editor view for the currently set event
@@ -210,105 +174,124 @@ Viewer.prototype.getEventEditView = function(add) {
     this.mode = 3;
     this.edit_mode = 0;
 
-
     //check if view comes from add or from edit command
     if (add) {
         this.add_not_edit = true;
     }
 
-    let title_content, page_content, footer_content, embed_author;
+    let embed = {};
+    embed.color = parseInt(config.colors.blue,16);
+    embed.title = `Event #⃣ ${this.event._no}`;
 
-    if(this.add_not_edit) {
-        embed_author = {name: `CREATION PROCESS`};
-        footer_content = `## Options: [S]ave, [Q]uit`;
+    if (this.add_not_edit) {
+        embed.author = {name: `CREATION PROCESS`};
+        embed.footer = {text: `## Options: [S]ave, [Q]uit`};
     } else {
-        embed_author = {name: `EDIT PROCESS`};
-        footer_content = `## Options: [S]ave, [C]ancel, [Q]uit`;
+        embed.author = {name: `EDIT PROCESS`};
+        embed.footer = {text: `## Options: [S]ave, [C]ancel, [Q]uit`};
     }
 
-    msg_color = default_color;
-    title_content = `Event #⃣ ${this.event._no}`;
-    page_content = "" +
-        `\`\`[1]\`\` **Event Title** ` +
-        (this.edits_made.title?": \`"+this.edits_made.title+"\`\n":
-        "\`"+this.event.title+"\`\n") +
-        `\`\`[2]\`\` **Start Time**` +
-        (this.edits_made.start?": \`"+moment(this.edits_made.start).tz(this.timezone).format(`${config.moment_date_format}`)+"\`\n":
-        ": \`"+moment(this.event.start).tz(this.timezone).format(`${config.moment_date_format}`)+"\`\n") +
-        `\`\`[3]\`\` **End Time** ` +
-        (this.edits_made.end?": \`"+moment(this.edits_made.end).tz(this.timezone).format(`${config.moment_date_format}`)+"\`\n":
-         ": \`"+moment(this.event.end).tz(this.timezone).format(`${config.moment_date_format}`)+"\`\n") +
-        `\`\`[4]\`\` **Description** ` +
-        (this.edits_made.description?"```md\n"+this.edits_made.description+"```\n":
-         ": \`"+this.event.description+"\`\n") +
-        `\`\`[5]\`\` **Max Attendees** ` +
-        (this.edits_made.attendee_max?": \`"+this.edits_made.attendee_max+"\`\n":
-         ": \`"+this.event.attendee_max+"\`\n") +
-        `\`\`[6]\`\` **Tags** ` +
-        (this.edits_made.tags?": \`"+this.edits_made.tags.join(", ")+"\`\n":
-         ": \`"+this.event.tags+"\`\n");
+    embed.fields = [{
+        name: this.edits_made.title ? `[1] Title (edited)`:`[1] Title`,
+        value: this.edits_made.title ? `${this.edits_made.title}`:`${this.event.title}`,
+        inline: false
+    }, {
+        name: this.edits_made.start ? `[2] Start (edited)`:`[2] Start`,
+        value: this.edits_made.start ?
+            `${moment(this.edits_made.start).tz(this.timezone).format(`${config.moment_date_format}`)}}` :
+            `${moment(this.event.start).tz(this.timezone).format(`${config.moment_date_format}`)}`,
+        inline: true
+    }, {
+        name: this.edits_made.end ? `[3] End (edited)`:`[3] End`,
+        value: this.edits_made.end ?
+            `${moment(this.edits_made.end).tz(this.timezone).format(`${config.moment_date_format}`)}` :
+            `${moment(this.event.end).tz(this.timezone).format(`${config.moment_date_format}`)}`,
+        inline: true
+    }, {
+        name: this.edits_made.description ? `[4] Description (edited)` : `[4] Description`,
+        value: this.edits_made.description ? `${this.edits_made.description}`:`${this.event.description}`,
+        inline: false
+    }, {
+        name: this.edits_made.attendee_max ? `[5] Max Attendees (edited)` : `[5] Max Attendees`,
+        value: this.edits_made.attendee_max ? `${this.edits_made.attendee_max}`:`${this.event.attendee_max}`,
+        inline: true
+    }, {
+        name: this.edits_made.tags ? `[6] Tags (edited)` : `[6] Tags`,
+        value: this.edits_made.tags ?
+            (this.edits_made.tags.length>0 ? `${this.edits_made.tags.join(', ')}` : "no tags defined") :
+            (this.event.tags.length>0 ? `${this.event.tags.join(', ')}` : "no tags defined"),
+        inline: true
+    }];
 
-    return {embed: {author: embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
+    return {embed: embed};
 };
 
 /// generate the edit [attribute] prompt
 Viewer.prototype.getEditorView = function() {
-    if(this.mode!=3) {
+    if (this.mode != 3) {
         return false; // something is wrong!
     }
-    msg_color = default_color;
-    let title_content, page_content, footer_content, embed_author;
 
-    title_content = `Event #⃣ ${this.event._no}`;
-    if(this.add_not_edit) {
-        embed_author = {name: `CREATION PROCESS`};
-        footer_content = `## Options: [Q]uit`;
+    let embed = {};
+    embed.color = parseInt(config.colors.blue,16);
+    embed.title = `Event #⃣ ${this.event._no}`;
+    embed.footer = {text: `## Options: [C]ancel, [Q]uit`};
+
+    if (this.add_not_edit) {
+        embed.author = {name: `CREATION PROCESS`};
     } else {
-        embed_author = {name: `EDIT PROCESS`};
-        footer_content = `## Options: [C]ancel, [Q]uit`;
+        embed.author = {name: `EDIT PROCESS`};
     }
 
-    switch(this.edit_mode) {
+    switch (this.edit_mode) {
         case 1:
-            page_content = "" +
-                `Current title: \n\`\`${this.event.title}\`\`\n\n` +
+            embed.description = "" +
+                `Current title: \n\`\`${this.edits_made.title?this.edits_made.title:this.event.title}\`\`\n\n` +
                 `Enter the new title for the event`;
             break;
         case 2:
-            let start = moment(this.event.start).tz(this.timezone).format(`${config.moment_date_format}`);
-            page_content = "" +
+            let start = this.edits_made.start ?
+                moment(this.edits_made.start).tz(this.timezone).format(`${config.moment_date_format}`) :
+                moment(this.event.start).tz(this.timezone).format(`${config.moment_date_format}`);
+            embed.description = "" +
                 `Current start: \n\`\`${start}\`\`\n\n` +
-                `Enter the start end time for the event.\n\n` + 
+                `Enter the start end time for the event.\n\n` +
                 `# Format: YYYY/MM/DD hh:mm`;
             break;
         case 3:
-            let end = moment(this.event.end).tz(this.timezone).format(`${config.moment_date_format}`);
-            page_content = "" +
+            let end = this.edits_made.end ?
+                moment(this.edits_made.end).tz(this.timezone).format(`${config.moment_date_format}`) :
+                moment(this.event.end).tz(this.timezone).format(`${config.moment_date_format}`);
+            embed.description = "" +
                 `Current end: \n\`\`${end}\`\`\n\n` +
-                `Enter the new end time for the event.\n\n` + 
+                `Enter the new end time for the event.\n\n` +
                 `# Format: YYYY/MM/DD hh:mm`;
             break;
         case 4:
-            page_content = "" +
-                `Current Description: \n\`\`\`md\n${this.event.description}\n\`\`\`\n` +
+            embed.description = "" +
+                `Current Description: \n\`\`\`md\n${this.edits_made.description?
+                    this.edits_made.description:this.event.description}\n\`\`\`\n` +
                 "Enter a new description for the event.";
             break;
         case 5:
-            page_content = "" +
-                `Current maximum member count: \`\`${this.event.attendee_max}\`\`\n\n` +
+            embed.description = "" +
+                `Current maximum member count: \`\`${this.edits_made.attendee_max?
+                    this.edits_made.attendee_max:this.event.attendee_max}\`\`\n\n` +
                 "Enter a new maximum member count for the event.";
             break;
         case 6:
-            page_content = "" +
-                `Current set tags: ${(this.event.tags.length?"``"+this.event.tags.join(", ")+"``":"")}\n\n` +
+            embed.description = "" +
+                `Current set tags: ${this.edits_made.tags?
+                    (this.edits_made.tags.length>0 ? "``" + this.edits_made.tags.join(", ") + "``" : ""):
+                    (this.event.tags.length>0 ? "``" + this.event.tags.join(", ") + "``" : "")}\n\n` +
                 "Enter a new set of tags for the event.";
             break;
         default:
-            page_content = `Something went wrong if this is being read!`;
+            embed.description = `Something went wrong if this is being read!`;
             break;
     }
 
-    return {embed: {author: embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
+    return {embed: embed};
 };
 
 /// remove an event and return an event removed prompt
@@ -327,38 +310,41 @@ Viewer.prototype.deleteEvent = function(event, silent) {
         }
     }
 
-    msg_color = 0x17f926; //green color
-    let body = `ℹ Event #⃣${event._id} is queued for removal.`;
-    let embed_author = {name: `EVENT DELETION PROCESS`};
+    let embed = {};
+    embed.color = parseInt(config.colors.green,16);
+    embed.description = `ℹ Event #⃣${event._no} is queued for removal.`;
+    embed.author = {name: `EVENT DELETION PROCESS`};
 
     if(silent) {
-        return {embed: {author: embed_author, color: msg_color, description: body}};
+        return {embed: embed};
+    } else {
+        embed.footer = {text: `## Options: [B]ack, [Q]uit`};
+        return {embed: embed};
     }
-    let footer_content = `## Options: [B]ack, [Q]uit`;
-    return {embed: {author: embed_author, color: msg_color, description: body, footer: {text: footer_content}}};
 };
 
 /// add a user to an event and generate a prompt
 Viewer.prototype.joinEvent = function(event, msg) {
-    let alreadyMember = false;
-
     // check if msgAuthor is already an Attendee
+    let alreadyMember = false;
     for (let i = 0; i < event.attendees.length; i++) {
         if (event.attendees[i]._id === msg.author.id) {
             alreadyMember = true;
             break;
         }
     }
-    //check if msgAuthor already joined that event
-    let title_content, page_content;
+
+    let embed = {};
+
     if (alreadyMember) {
-        
-        msg_color = 0xecf925; //yellow color
-        title_content = `⚠ ${msg.author.username} __already__ joined the Event #⃣${event._no}.`;
-        page_content =  `**Title:** \`${event.title}\`\n` +
-                        `**Author:** \`${this.bot.getUserOrNickname(event._author, this.msg.channel.guild)}\`\n` +
-                        `**Attendees:** \`[${event.attendees.length}/${event.attendee_max}]\``;
-        return {embed: {color: msg_color, title: title_content, description: page_content}};
+        embed.color = parseInt(config.colors.yellow,16);
+        embed.title = `⚠ ${msg.author.username} __already__ joined the Event #⃣${event._no}.`;
+        embed.description =  "" +
+            `**Title:** \`${event.title}\`\n` +
+            `**Author:** \`${this.bot.getUserOrNickname(event._author, this.msg.channel.guild)}\`\n` +
+            `**Attendees:** \`[${event.attendees.length}/${event.attendee_max}]\``;
+
+        return {embed: embed};
 
     //if user is not already an attendee of the event
     } else {
@@ -371,31 +357,33 @@ Viewer.prototype.joinEvent = function(event, msg) {
                     console.log(err.stack);
                 }
             });
-            msg_color = 0x17f926; //green color
-            title_content = `ℹ ${msg.author.username} just joined Event #⃣${event._no}.`;
-            page_content =  `**Title:** \`${event.title}\`\n` +
-                            `**Author:** \`${this.bot.getUserOrNickname(event._author, this.msg.channel.guild)}\`\n` +
-                            `**Attendees:** \`[${event.attendees.length}/${event.attendee_max}]\``;
-            return {embed: {color: msg_color, title: title_content, description: page_content}};
+            embed.color = parseInt(config.colors.green);
+            embed.title = `ℹ ${msg.author.username} just joined Event #⃣${event._no}.`;
+            embed.description =  "" +
+                `**Title:** \`${event.title}\`\n` +
+                `**Author:** \`${this.bot.getUserOrNickname(event._author, this.msg.channel.guild)}\`\n` +
+                `**Attendees:** \`[${event.attendees.length}/${event.attendee_max}]\``;
 
-        // Event attendee_max limit is already reached   
-        } else {
-            msg_color = 0xecf925; //yellow color
-            title_content = `⚠ ${msg.author.username} cannot join Event #⃣${event._no} because there is no open slot left.`;
-            page_content =  `**Title:** \`${event.title}\`\n` +
-                            `**Author:** \`${this.bot.getUserOrNickname(event._author, this.msg.channel.guild)}\`\n` +
-                            `**Attendees:** \`[${event.attendees.length}/${event.attendee_max}]\``;
-            return {embed: {color: msg_color, title: title_content, description: page_content}};
+            return {embed: embed};
+        }
+        // Event attendee_max limit is already reached
+        else {
+            embed.color = parseInt(config.colors.yellow);
+            embed.title = `⚠ ${msg.author.username} cannot join Event #⃣${event._no} because there is no open slot left.`;
+            embed.description =  "" +
+                `**Title:** \`${event.title}\`\n` +
+                `**Author:** \`${this.bot.getUserOrNickname(event._author, this.msg.channel.guild)}\`\n` +
+                `**Attendees:** \`[${event.attendees.length}/${event.attendee_max}]\``;
+
+            return {embed: embed};
         }
     }
 };
 
 /// remove a user from an event and generate a prompt
 Viewer.prototype.leaveEvent = function(event, msg) {
-    let wasMember = false;
-    let title_content, page_content;
-
     // check if msgAuthor is an Attendee and delete that entry
+    let wasMember = false;
     for (let i = 0; i < event.attendees.length; i++) {
         if (event.attendees[i]._id === msg.author.id) {
             wasMember = true;
@@ -409,24 +397,30 @@ Viewer.prototype.leaveEvent = function(event, msg) {
             break;
         }
     }
-    
+
+    let embed = {};
+
     // msgAuthor was an attendee of the event
     if (wasMember) {
-        msg_color = 0x17f926; //green color
-        title_content = `ℹ ${msg.author.username} left the Event #⃣${event._no}.`;
-        page_content =  `**Title:** \`\`${event.title}\`\`\n` +
+        embed.color = parseInt(config.colors.green,16);
+        embed.title = `ℹ ${msg.author.username} left the Event #⃣${event._no}.`;
+        embed.description =  "" +
+            `**Title:** \`\`${event.title}\`\`\n` +
             `**Author:** \`${this.bot.getUserOrNickname(event._author, this.msg.channel.guild)}\`\n` +
             `**Attendees:** \`[${event.attendees.length}/${event.attendee_max}]\``;
-        return {embed: {color: msg_color, title: title_content, description: page_content}};
+
+        return {embed: embed};
 
     // msgAuthor was not an attendee of the event
     } else {
-        msg_color = 0xecf925; //yellow color
-        title_content = `⚠ ${msg.author.username} is not an attendee of the Event #⃣${event._no}.`;
-        page_content =  `**Title:** \`${event.title}    \`\n` +
+        embed.color = parseInt(config.colors.yellow,16);
+        embed.title = `⚠ ${msg.author.username} is not an attendee of the Event #⃣${event._no}.`;
+        embed.description = "" +
+            `**Title:** \`${event.title}\`\n` +
             `**Author:** \`${this.bot.getUserOrNickname(event._author, this.msg.channel.guild)}\`\n` +
             `**Attendees:** \`[${event.attendees.length}/${event.attendee_max}]\``;
-        return {embed: {color: msg_color, title: title_content, description: page_content}};
+
+        return {embed: embed};
     }
 };
 
@@ -434,54 +428,59 @@ Viewer.prototype.getErrorView = function(error, bad_input, silent) {
     this.previous_mode = this.mode;
     this.mode = 5;
 
-    let title, body;
-    title = `⚠ There was an error! `;
+    let embed = {};
+    embed.title = `⚠ There was an error! `;
+    embed.color = parseInt(config.colors.yellow,16);
 
-    switch(error) {
+    switch (error) {
         case 1:
-            body = `Your input ${bad_input} is not a number from the list!`;
+            embed.description = `Your input ${bad_input} is not a number from the list!`;
             break;
         case 2:
-            body = `Event #${bad_input} does not exists!`;
+            embed.description = `Event #${bad_input} does not exists!`;
             break;
         case 3:
-            body = `\"${bad_input}\" is not a valid start time!`;
+            embed.description = `\"${bad_input}\" is not a valid start time!`;
             break;
         case 4:
-            body = `\"${bad_input}\" is not a valid end time!`;
+            embed.description = `\"${bad_input}\" is not a valid end time!`;
             break;
         case 5:
-            body = `\"${bad_input}\" is not valid amount!`;
+            embed.description = `\"${bad_input}\" is not valid amount!`;
             break;
         default:
-            body = `Unknown error!`;
+            embed.description = `Unknown error!`;
             break;
     }
 
-    if(silent) {
-        return {embed: {color: 0xecf925, title: title, description: body}};
+    if (silent) {
+        return {embed: embed};
+    } else {
+        embed.description += `\n\nYou can return to the edit menu, or quit`;
+        embed.footer = {text: `## Options: [B]ack, [Q]uit`};
+        return {embed: embed};
     }
 
-    body += `\n\nYou can return to the edit menu, or quit`;
-    let footer_content = `## Options: [B]ack, [Q]uit`;
-    return {embed: {color: 0xecf925, title: title, description: body, footer: {text: footer_content}}};
 };
 
 Viewer.prototype.getEventAttendeesView = function(event) {
     this.previous_mode = this.mode;
     this.mode = 6;
 
-    let title, body = "";
-    title = `ℹ List of attendees for Event #⃣ ${event._no}`;
+    let embed = {};
+    embed.title = `ℹ List of attendees for Event #⃣ ${event._no}`;
+    embed.description = "";
+    embed.color = parseInt(config.colors.blue, 16);
+    embed.footer = {text: `## Options: [B]ack, [Q]uit`};
 
     if (typeof event.attendees !== "undefined" && event.attendees.length > 0) {
-        for (let i = 0; i<this.event.attendees.length;i++) {
-            body += `\`${this.bot.getUserOrNickname(this.event.attendees[i]._id, this.msg.channel.guild)}\`, `;
-            //body += `<@`+this.event.attendees[i]._id+`>, `; TODO: enable when embdes on android work correct
+        for (let i = 0; i < this.event.attendees.length; i++) {
+            embed.description += `\`${this.bot.getUserOrNickname(this.event.attendees[i]._id, this.msg.channel.guild)}\`, `;
+            //embed.description += `<@`+this.event.attendees[i]._id+`>, `;
         }
     }
-    let footer_content = `## Options: [B]ack, [Q]uit`;
-    return {embed: {color: 0xffffff, title: title, description: body, footer: {text: footer_content}}};
+
+    return {embed: embed};
 };
 
 module.exports = Viewer;
