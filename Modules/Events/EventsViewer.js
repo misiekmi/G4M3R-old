@@ -223,8 +223,6 @@ Viewer.prototype.getEventEditView = function(add) {
         inline: true
     }];
 
-    console.log(embed);
-
     return {embed: embed};
 };
 
