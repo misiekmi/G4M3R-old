@@ -100,15 +100,6 @@ const getChannelData = (svr, type) => {
     });
 };
 
-const getChannel = (svr, id) => {
-    for (let i = 0; i < svr.channels.length; i++) {
-        console.log(svr.channels[i].name);
-        if (svr.channels[i].id == id) {
-            return svr.channels[i];
-        }
-    }
-};
-
 const getRoleData = svr => {
     return svr.roles.filter(role => {
         return role.name != "@everyone" && role.name.indexOf("color-") != 0;
@@ -3051,11 +3042,10 @@ module.exports = (bot, db, auth, config, winston) => {
                 serverData: {
                     name: svr.name,
                     id: svr.id,
-                    icon: svr.iconURL || "/static/img/discord-icon.png"
+                    icon: svr.iconURL || "/static/img/discord-icon.png",
+                    announce_channel: serverDocument.event_channels.announce
                 },
                 channelData: getChannelData(svr),
-                announceChannel: getChannel(svr, serverDocument.event_channels.announce),
-                advertsChannel: getChannel(svr, serverDocument.event_channels.adverts),
                 currentPage: req.path
             });
         });
@@ -3065,11 +3055,10 @@ module.exports = (bot, db, auth, config, winston) => {
     });
     app.post("/dashboard/management/event-channels", (req, res) => {
         checkAuth(req, res, (consolemember, svr, serverDocument) => {
-            if(req.body.announce_channel) {
+            if(req.body.announce_channel && req.body.announce_channel!=="none") {
                 serverDocument.event_channels.announce = req.body.announce_channel;
-            }
-            if(req.body.adverts_channel) {
-                serverDocument.event_channels.adverts = req.body.adverts;
+            } else {
+                serverDocument.event_channels.announce = null;
             }
 
             saveAdminConsoleOptions(consolemember, svr, serverDocument, req, res);
