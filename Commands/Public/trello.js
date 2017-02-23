@@ -1,5 +1,5 @@
 module.exports = (bot, db, config, winston, userDocument, serverDocument, channelDocument, memberDocument, msg, suffix) => {
-let strLink = "https://trello.com/b/qBjbOh48/g4m3r";
+    let strLink = "https://trello.com/b/nzg2JhAt/g4m3r";
 
 		msg.channel.createMessage({
 			embed: {
