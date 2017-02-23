@@ -1,6 +1,6 @@
 const moment = require("moment-timezone");
 const config = require("../../Configuration/config.json");
-const auth = require("./AdminOrAuthor");
+const auth = require("./EventsAuth");
 
 let msg_color = 0x5ed7f7; //start with blue embed color
 let default_color = 0x5ed7f7; // default color = blue - old color 0xff8c00 (orange  )
@@ -135,7 +135,7 @@ Viewer.prototype.getEventView = function() {
             `\`${this.event.title}\``;
 
         msg_color = 0x5ed7f7;
-        
+
         embed_author = {
             name: `[${this.event._no}] created by ${username}`,
             icon_url: "http://frid.li/sSVIJ"
@@ -151,7 +151,7 @@ Viewer.prototype.getEventView = function() {
                 `Attendees: \`[${this.event.attendees.length}/${this.event.attendee_max}]\`\n` +
                 (hasAttendees ? `(${attendeesNames})` : `\`(no attendees)\``);
         */
-        
+
         let fields_content = [];
         fields_content = [{
                     name: `Start`,
@@ -188,7 +188,9 @@ Viewer.prototype.getEventView = function() {
 
     footer_content = `## Options: [J]oin, [L]eave, ` +
         (hasAttendees ? `[A]ttendees, ` : "") +
-        (auth(this.server, this.event, this.member)?`[E]dit, [D]elete, `:"") + `[B]ack, [Q]uit`;
+        (auth.toDeleteOrEdit(this.server, this.event, this.member)?`[E]dit, [D]elete, `:"") +
+        `[B]ack, [Q]uit`;
+
     //return {embed: {author: embed_author, color: msg_color, title: title_content, description: page_content, footer: {text: footer_content}}};
     return {
         embed: {
