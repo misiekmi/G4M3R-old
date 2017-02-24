@@ -19,6 +19,11 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
 			serverDocument.modlog.isEnabled = false;
 			serverDocument.modlog.channel_id = null;
 			msg.channel.createMessage("Moderation logging is now disabled. ❎");
+            serverDocument.save(err => {
+                if(err) {
+                    winston.error("Failure while enabling mod-log");
+                }
+            });
 		}
 	};
 
@@ -29,6 +34,8 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
 				serverDocument.modlog.isEnabled = true;
 				serverDocument.modlog.channel_id = ch.id;
 				msg.channel.createMessage(`Moderation logging enabled in ${ch.mention} 🙌`);
+                serverDocument.save();
+
 			} else {
 				msg.channel.createMessage(`Unable to find channel \`${chname}\` 🚫`);
 			}
@@ -50,7 +57,7 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
 			this.enable(args[1]);
 			break;
 		default:
-			msg.channel.createMessage(`Modlog is currently ${serverDocument.modlog.log_channel ? "enabled" : "disabled"}. 😺 The commands that work with my wonderful modlog feature are: \`ban\`, \`kick\`, \`mute\`, \`reason\`, \`softban\`, \`unban\`, \`unmute\`, \`warn\``);
+			msg.channel.createMessage(`Mod-log is currently ${serverDocument.modlog.channel_id ? "enabled" : "disabled"}. 😺 The commands that work with my wonderful modlog feature are: \`ban\`, \`kick\`, \`mute\`, \`reason\`, \`softban\`, \`unban\`, \`unmute\`, \`warn\``);
 			break;
 	}
 };
