@@ -6,7 +6,7 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
 		googl.setKey(serverDocument.config.custom_api_keys.google_api_key || auth.tokens.google_api_key);
 		if(suffix.toLowerCase().indexOf("http://goo.gl/")==0 || suffix.toLowerCase().indexOf("https://goo.gl/")==0 || suffix.toLowerCase().indexOf("goo.gl/")==0) {
 			googl.expand(suffix).then(url => {
-				msg.channel.createMessage(`<${url}>`);
+				msg.channel.createMessage(`**Here is your shortened url:** <${url}>`);
 			}).catch(err => {
 				winston.warn(`Failed to expand URL '${suffix}'`, {svrid: msg.guild.id, chid: msg.channel.id, usrid: msg.author.id}, err);
 				msg.channel.createMessage("An error occurred. *That's all we know.*");
