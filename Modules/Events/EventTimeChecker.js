@@ -14,24 +14,16 @@ function eventStart(bot, winston, db, eventDocument) {
             let embed = {};
             embed.color = parseInt(config.colors.blue, 16);
             embed.author = {
-                name: `[${eventDocument._no}] created by ${bot.getUserOrNickname(eventDocument._author, svr)}`,
+                name: `Event \`${eventDocument.title}\` has started on ${svr.name}!`,
                 icon_url: "http://frid.li/sSVIJ"
             };
             embed.footer = {text: `Be fair and participate in the events you join`};
 
-            embed.title = `The event you joined \`${eventDocument.title}\` has just started on ${svr.name}!`;
+            embed.title = `\`${eventDocument.title}\` ends in ${moment(eventDocument.end).fromNow()}`;
             embed.fields = [{
                 name: `Description`,
                 value: `${eventDocument.description}`,
                 inline: false
-            }, {
-                name: `End Time`,
-                value: `${moment(eventDocument.end).format(`${config.moment_date_format}`)}`,
-                inline: true
-            }, {
-                name: `Attendees`,
-                value: `[${eventDocument.attendees.length}/${eventDocument.attendee_max}]`,
-                inline: true
             }];
 
             for(let i=0; i<eventDocument.attendees.length; i++) {
