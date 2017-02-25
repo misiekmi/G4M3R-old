@@ -688,7 +688,9 @@ module.exports = (bot, db, auth, config, winston) => {
             if (req.isAuthenticated()) {
                 const usr = bot.users.get(req.user.id);
                 if (usr) {
-                    if (req.query.svrid == "maintainer") {
+                    if (req.query.svrid == "user") {
+                        next(usr, {t:'t'});
+                    } else if (req.query.svrid == "maintainer") {
                         if (config.maintainers.indexOf(req.user.id) > -1) {
                             next(usr);
                         } else {
@@ -1747,8 +1749,9 @@ module.exports = (bot, db, auth, config, winston) => {
 				serverData.sort((a, b) => {
 					return a.name.localeCompare(b.name);
 				});
+				// if maintainer, place the maintainer link at the top
 				if(config.maintainers.indexOf(req.user.id)>-1) {
-					serverData.push({
+					serverData.unshift({
 						name: "Maintainer Console",
 						id: "maintainer",
 						icon: "/static/img/transparent.png",
@@ -1756,6 +1759,14 @@ module.exports = (bot, db, auth, config, winston) => {
 						isAdmin: true
 					});
 				}
+				// place the user console link at the top
+                serverData.unshift({
+                    name: "User Console",
+                    id: "user",
+                    icon: "/static/img/transparent.png",
+                    botJoined: true,
+                    isAdmin: true
+                });
 				res.render("pages/dashboard.ejs", {
 					authUser: req.isAuthenticated() ? getAuthUser(req.user) : null,
 					serverData,
@@ -1771,7 +1782,9 @@ module.exports = (bot, db, auth, config, winston) => {
 			// Redirect to maintainer console if necessary
 			if(!svr) {
 				res.redirect("/dashboard/maintainer?svrid=maintainer");
-			} else {
+			} else if(svr.t==='t') {
+			    res.redirect("/dashboard/user?svrid=user");
+            } else {
 				let topCommand;
 				let topCommandUsage = 0;
 				for(const cmd in serverDocument.command_usage) {
@@ -3580,6 +3593,27 @@ module.exports = (bot, db, auth, config, winston) => {
 			});
 		});
 	});
+
+	// User console overview !!! I have no idea what I'm doing -notem
+	app.get("/dashboard/user", (req, res) => {
+	    checkAuth(req, res, ()=>{
+	        db.users.find({
+	            _id: req.user.id
+            }).then(userDocument=>{
+                res.render("pages/user.ejs", {
+                    authUser: req.isAuthenticated() ? getAuthUser(req.user) : null,
+                    serverData: {
+                        name: "User",
+                        id: req.user.id,
+                        icon: req.user.avatarURL || "/static/img/discord-icon.png",
+                        isMaintainer: false
+                    },
+                    currentPage: req.path,
+                    userDocument: userDocument
+                });
+            })
+        });
+    });
 
 	// Maintainer console server list
 	app.get("/dashboard/servers/server-list", (req, res) => {
