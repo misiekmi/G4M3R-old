@@ -6,8 +6,9 @@
 
 	<link rel="stylesheet" href="/static/css/auto-complete.css">
 	<script src="/static/js/auto-complete.min.js"></script>
+	<script src="/static/js/form-change-listener.js"></script>
 </head>
-<body>
+<body onload="saveFormState();">
 	<% include ../partials/dashboard-header %>
 
 	<section class="section is-white">
@@ -30,7 +31,7 @@
 						</article>
 						<br>
 						<div>
-							<form>
+							<form id="form" action="<%= currentPage %>?svrid=user" method="post">
 								<p class="control">
 									<label class="checkbox">
 										<input name="profile_is_public" type="checkbox" <%= userDocument.isProfilePublic ? "checked" : "" %>>
@@ -38,6 +39,10 @@
 									</label>
 									<span class="help">Remember, if enable anyone and everyone can view profile without restrictions.</span>
 								</p>
+								<br>
+                                <% var formButtonsUnsaved = false; %>
+                                <% include ../partials/form-buttons %>
+                                <% include ../partials/form-buttons-bar %>
 							</form>
 						</div>
 					</div>

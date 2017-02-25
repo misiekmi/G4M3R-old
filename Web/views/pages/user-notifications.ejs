@@ -6,8 +6,9 @@
 
 	<link rel="stylesheet" href="/static/css/auto-complete.css">
 	<script src="/static/js/auto-complete.min.js"></script>
+	<script src="/static/js/form-change-listener.js"></script>
 </head>
-<body>
+<body onload="saveFormState();">
 	<% include ../partials/dashboard-header %>
 
 	<section class="section is-white">
@@ -28,6 +29,29 @@
 								</div>
 							</div>
 						</article>
+						<br>
+						<div>
+							<label class="label">Turn On/Off Notification Types</label>
+							<form id="form" action="<%= currentPage %>?svrid=user" method="post">
+								<p class="control">
+									<label class="checkbox">
+										<input name="notify_dm" type="checkbox" <%= (userDocument.event_notifications===1||userDocument.event_notifications===3) ? "checked" : "" %>>
+										Notify by DM
+									</label>
+								</p>
+								<p class="control">
+									<label class="checkbox">
+										<input name="notify_mention" type="checkbox" <%= userDocument.event_notifications===2||userDocument.event_notifications===3 ? "checked" : "" %>>
+										Notify by <code>@mention</code> on hosting server
+									</label>
+									<span class="help">If the server hosting the event does not have an announcement channel configured, notifications as mentions will not be used for that event.</span>
+								</p>
+								<br>
+                                <% var formButtonsUnsaved = false; %>
+                                <% include ../partials/form-buttons %>
+                                <% include ../partials/form-buttons-bar %>
+							</form>
+						</div>
 					</div>
 				</div>
 			</div>

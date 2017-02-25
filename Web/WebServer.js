@@ -1689,6 +1689,17 @@ module.exports = (bot, db, auth, config, winston) => {
 		});
 	};
 
+    // Save userDocument after admin console form data is received
+    const saveUserConsoleOptions = (consolemember, userDocument, req, res) => {
+        userDocument.save(err => {
+            io.of(req.path).emit("update", "user");
+            if(err) {
+                winston.error(`Failed to update settings at ${req.path}`, {usrid: consolemember.id}, err);
+            }
+            res.redirect(req.originalUrl);
+        });
+    };
+
 	// Login to admin console
 	app.get("/login", passport.authenticate("discord", {
 		scope: discordOAuthScopes
@@ -3961,9 +3972,10 @@ module.exports = (bot, db, auth, config, winston) => {
     // User console overview !!! I have no idea what I'm doing -notem
     app.get("/dashboard/user", (req, res) => {
         checkAuth(req, res, ()=>{
-            db.users.find({
+            db.users.findOne({
                 _id: req.user.id
             }).then(userDocument=>{
+                console.log(userDocument);
                 res.render("pages/user.ejs", {
                     authUser: req.isAuthenticated() ? getAuthUser(req.user) : null,
                     serverData: {
@@ -3982,7 +3994,7 @@ module.exports = (bot, db, auth, config, winston) => {
     // User console profile options
     app.get("/dashboard/profile", (req, res) => {
         checkAuth(req, res, () => {
-            db.users.find({
+            db.users.findOne({
                 _id: req.user.id
             }).then(userDocument=>{
                 res.render("pages/user-profile.ejs", {
@@ -4002,17 +4014,28 @@ module.exports = (bot, db, auth, config, winston) => {
     io.of("/dashboard/profile").on("connection", socket => {
         socket.on("disconnect", () => {});
     });
-    app.post("/dashboard/global-options/bot-user", (req, res) => {
-        checkAuth(req, res, consolemember => {});
+    app.post("/dashboard/profile", (req, res) => {
+        checkAuth(req, res, consolemember => {
+            db.users.findOne({
+                _id: consolemember.id
+            }).then(userDocument=> {
+                if(req.body.profile_is_public === "on") {
+                    userDocument.isProfilePublic = true;
+                } else {
+                    userDocument.isProfilePublic = false;
+                }
+
+                saveUserConsoleOptions(consolemember, userDocument, req, res);
+            });
+        });
     });
 
     // User console locale options
     app.get("/dashboard/profile/locale", (req, res) => {
         checkAuth(req, res, () => {
-            db.users.find({
+            db.users.findOne({
                 _id: req.user.id
             }).then(userDocument=>{
-                console.log(req.user);
                 res.render("pages/user-locale.ejs", {
                     authUser: req.isAuthenticated() ? getAuthUser(req.user) : null,
                     serverData: {
@@ -4022,7 +4045,8 @@ module.exports = (bot, db, auth, config, winston) => {
                         isMaintainer: false
                     },
                     currentPage: req.path,
-                    userDocument: userDocument
+                    userDocument: userDocument,
+                    timezones: require('moment-timezone').tz.names()
                 });
             })
         });
@@ -4031,13 +4055,20 @@ module.exports = (bot, db, auth, config, winston) => {
         socket.on("disconnect", () => {});
     });
     app.post("/dashboard/profile/locale", (req, res) => {
-        checkAuth(req, res, consolemember => {});
+        checkAuth(req, res, consolemember => {
+            db.users.findOne({
+                _id: consolemember.id
+            }).then(userDocument=> {
+
+                saveUserConsoleOptions(consolemember, userDocument, req, res);
+            });
+        });
     });
 
     // User console notification options
     app.get("/dashboard/notifications", (req, res) => {
         checkAuth(req, res, () => {
-            db.users.find({
+            db.users.findOne({
                 _id: req.user.id
             }).then(userDocument=>{
                 res.render("pages/user-notifications.ejs", {
@@ -4058,7 +4089,22 @@ module.exports = (bot, db, auth, config, winston) => {
         socket.on("disconnect", () => {});
     });
     app.post("/dashboard/notifications", (req, res) => {
-        checkAuth(req, res, consolemember => {});
+        checkAuth(req, res, consolemember => {
+            db.users.findOne({
+                _id: consolemember.id
+            }).then(userDocument=> {
+                let notif = 0;
+                if(req.body.notify_dm === "on") {
+                    notif += 1;
+                }
+                if(req.body.notify_mention === "on") {
+                    notif += 2;
+                }
+                userDocument.event_notifications = notif;
+
+                saveUserConsoleOptions(consolemember, userDocument, req, res);
+            });
+        });
     });
 
     // Under construction for v4
