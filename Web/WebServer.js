@@ -223,7 +223,7 @@ module.exports = (bot, db, auth, config, winston) => {
                 bannerMessage: config.homepage_message_html,
                 rawServerCount: bot.guilds.size,
                 roundedServerCount: Math.floor(bot.guilds.size / 100) * 100,
-                rawUserCount: `${Math.floor(bot.users.size/1000)}K`,
+                rawUserCount: `${Math.floor(bot.users.size)}`,
                 rawUptime: moment.duration(uptime, "seconds").humanize(),
                 roundedUptime: getRoundedUptime(uptime)
             });
