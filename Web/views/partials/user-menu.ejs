@@ -1,0 +1,39 @@
+<aside class="menu">
+	<ul class="menu-list">
+		<li>
+			<% if(currentPage=="/dashboard/user") { %>
+				<a class="is-active" href="#">Overview</a>
+			<% } else { %>
+				<a href="/dashboard/user?svrid=user">Overview</a>
+			<% } %>
+		</li>
+	</ul>
+	<p class="menu-label">
+		User Settings
+	</p>
+	<ul class="menu-list">
+		<li>
+            <% if(["/dashboard/profile", "/dashboard/profile/locale"].indexOf(currentPage)>-1) { %>
+			<a class="<%= currentPage=='/dashboard/profile' ? 'is-active' : '' %>" href="<%= currentPage=='/dashboard/profile' ? '#' : ('/dashboard/profile?svrid=user') %>">Profile</a>
+			<ul>
+				<li>
+                    <% if(currentPage=="/dashboard/profile/locale") { %>
+					<a class="is-active" href="#">Locale</a>
+                    <% } else { %>
+					<a href="/dashboard/profile/locale?svrid=user">Locale</a>
+                    <% } %>
+				</li>
+			</ul>
+            <% } else { %>
+			<a href="/dashboard/profile?svrid=user">Profile &#9662;</a>
+            <% } %>
+		</li>
+		<li>
+            <% if(currentPage=="/dashboard/notifications") { %>
+			<a class="is-active" href="#">Event Notifications</a>
+            <% } else { %>
+			<a href="/dashboard/notifications?svrid=user">Event Notifications</a>
+            <% } %>
+		</li>
+	</ul>
+</aside>

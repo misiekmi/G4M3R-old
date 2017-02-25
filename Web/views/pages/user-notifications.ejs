@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Server List - <%= serverData.name %> Maintainer Console</title>
+	<% include ../partials/head %>
+
+	<link rel="stylesheet" href="/static/css/auto-complete.css">
+	<script src="/static/js/auto-complete.min.js"></script>
+</head>
+<body>
+	<% include ../partials/dashboard-header %>
+
+	<section class="section is-white">
+		<div class="container">
+			<div class="columns">
+				<div id="menu" class="column is-one-quarter">
+					<% include ../partials/user-menu %>
+				</div>
+				<div class="column">
+					<h1 class="title">
+						Event Notification Settings
+					</h1>
+					<div class="container">
+						<article class="message is-primary">
+							<div class="message-body">
+								<div class="content">
+									<strong>G4M3R</strong> can notify you when an event you have joined begins, is modified by it's author, or is cancelled.
+								</div>
+							</div>
+						</article>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<% include ../partials/footer %>
+	<% include ../partials/scroll-top-button %>
+</body>
+</html>
