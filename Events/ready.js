@@ -243,11 +243,11 @@ module.exports = (bot, db, config, winston) => {
 	const showStartupMessage = () => {
 		bot.isReady = true;
 		winston.info(`Started the best Discord bot, version ${config.version}\n\
-     ____	     	 _	    _   ____	____	\n\
-	/ 	      /  |  | \\    / |      \\  |    \\ \n\
-   | ___     /   |  |  \\  /  |   ___/  |____/ \n\
-   |    |   /____|  |   \\/   |      \\  |	\\ \n\
-    \\___/        |  |        |  ____/  |     \\ \n`);
+     ____	     	_	   _    ___    ____	\n\
+	/ 	      / |  | \\    / |      \\  |    \\ \n\
+   | ___     /  |  |  \\  /  |   ___/  |____/ \n\
+   |    |   /___|  |   \\/   |      \\  |	  \\ \n\
+    \\___/       |  |        |  ____/  |    \\ \n`);
 	};
 
 	// Start the 60 second repeating timer that handles the start/end of events
