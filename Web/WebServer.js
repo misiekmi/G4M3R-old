@@ -22,7 +22,7 @@ const sizeof = require("object-sizeof");
 const moment = require("moment");
 const textDiff = require("text-diff");
 const diff = new textDiff();
-
+var lastPage = "";
 const showdown = require("showdown");
 const md = new showdown.Converter({
     tables: true,
@@ -734,6 +734,74 @@ module.exports = (bot, db, auth, config, winston) => {
             }
         });
 
+        // Events tab
+        app.get("/events", (req, res) => {
+            res.redirect("/events/overview");
+        });
+
+        app.get("/events/(|overview|my|config)", (req, res) => {
+            const eventState = req.path.substring(req.path.lastIndexOf("/") + 1);
+            const pageTitle = `${eventState.charAt(0).toUpperCase() + eventState.slice(1)} - G4M3R Events`
+
+            const renderPage = (serverData) => {
+                res.render("pages/events.ejs", {
+                    authUser: req.isAuthenticated() ? getAuthUser(req.user) : null,
+                    isMaintainer: req.isAuthenticated() ? config.maintainers.indexOf(req.user.id) > -1 : false,
+                    pageTitle,
+                    serverData,
+                    activeSearchQuery: req.query.id || req.query.q,
+                    mode: eventState,
+                });
+            };
+
+            if (req.isAuthenticated()) {
+                lastPage = "events"
+                const serverData = [];
+                const usr = bot.users.get(req.user.id);
+                const addServerData = (i, callback) => {
+                    if (req.user.guilds && i < req.user.guilds.length) {
+                        const svr = bot.guilds.get(req.user.guilds[i].id);
+                        if (svr && usr) {
+                            db.servers.findOne({_id: svr.id}, (err, serverDocument) => {
+                                if (!err && serverDocument) {
+                                    const member = svr.members.get(usr.id);
+                                    if (bot.getUserBotAdmin(svr, serverDocument, member) >= 3) {
+                                        serverData.push({
+                                            name: req.user.guilds[i].name,
+                                            id: req.user.guilds[i].id,
+                                            icon: req.user.guilds[i].icon ? (`https://cdn.discordapp.com/icons/${req.user.guilds[i].id}/${req.user.guilds[i].icon}.jpg`) : "/static/img/discord-icon.png"
+                                        });
+                                    }
+                                }
+                                addServerData(++i, callback);
+                            });
+                        } else {
+                            addServerData(++i, callback);
+                        }
+                    } else {
+                        callback();
+                    }
+                };
+
+                if (serverData) {
+                    addServerData(0, () => {
+                        serverData.sort((a, b) => {
+                            return a.name.localeCompare(b.name);
+                        });
+                        db.users.findOne({_id: req.user.id}, (err, userDocument) => {
+                            renderPage(serverData);
+                        });
+                    });
+                } else {
+                    renderPage();
+                }
+            } else {
+                res.redirect("/login");
+            }
+        });
+
+
+
         // Extension gallery
         app.get("/extensions", (req, res) => {
             res.redirect("/extensions/gallery");
@@ -916,7 +984,7 @@ module.exports = (bot, db, auth, config, winston) => {
                         res.render("pages/extensions.ejs", {
                             authUser: req.isAuthenticated() ? getAuthUser(req.user) : null,
                             isMaintainer: req.isAuthenticated() ? config.maintainers.indexOf(req.user.id) > -1 : false,
-                            pageTitle,
+                            pageTitle: "My G4M3R Events",
                             serverData,
                             activeSearchQuery: req.query.id || req.query.q,
                             mode: extensionState,
@@ -1699,7 +1767,13 @@ module.exports = (bot, db, auth, config, winston) => {
 		if(config.global_blocklist.indexOf(req.user.id)>-1 || !req.user.verified) {
 			res.redirect("/error");
 		} else {
-			res.redirect("/dashboard");
+            //if events page before login, redirect to events page directly, not to dashboard
+		    if(lastPage == "events") {
+                res.redirect("/events");
+                lastPage = "";
+            } else {
+                res.redirect("/dashboard");
+            }
 		}
 	});
 

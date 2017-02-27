@@ -36,83 +36,39 @@
 					<span class="icon is-large">
                         <i class="fa fa-bolt"></i>
                     </span>
-					Extensions for <strong>everyone</strong>.
+					Your <strong>events</strong> area.
 				</h1>
-				<% if(['my', 'builder'].indexOf(mode)==-1) { %>
-					<div class="columns">
-						<div class="column is-8 is-offset-2">
-							<form method="get">
-								<p class="control has-addons has-addons-centered">
-									<input id="search-input" name="q" class="input is-expanded is-large header-search-box" type="text" placeholder="I'm looking for..." value="<%= activeSearchQuery %>">
-									<button id="search-button" type="submit" class="button is-primary is-large header-search-box">
-										<span class="icon">
-											<i class="fa fa-search"></i>
-										</span>
-										<span>Search</span>
-									</button>
-								</p>
-								<script>
-								mediaStyle(mq);
-								</script>
-							</form>
-						</div>
-					</div>
-				<% } %>
 			</div>
 		</div>
 		<div class="hero-foot">
 			<nav class="tabs is-boxed is-fullwidth">
 				<div class="container">
 					<ul>
-						<li class="<%= mode=='gallery' ? 'is-active' : '' %>">
-							<a href="/extensions/gallery">
+                        <% if(authUser) { %>
+						<li class="<%= mode=='overview' ? 'is-active' : '' %>">
+							<a href="/events/overview">
 								<span class="icon">
-									<i class="fa fa-fa"></i>
+									<i class="fa fa-gamepad"></i>
 								</span>
-								<% if(mode=="gallery") { %>
-									Gallery
-									&nbsp;
-									<span class="tag is-small is-primary">
-										<%= rawCount %>
-									</span>
-								<% } else { %>
-									<span>Gallery</span>
-								<% } %>
+									<span>Overview</span>
 							</a>
 						</li>
-						<li class="<%= mode=='queue' ? 'is-active' : '' %>">
-							<a href="/extensions/queue">
+						<li class="<%= mode=='my' ? 'is-active' : '' %>">
+							<a href="/events/my">
 								<span class="icon">
-									<i class="fa fa-clock-o"></i>
+									<i class="fa fa-calendar"></i>
 								</span>
-								<% if(mode=="queue") { %>
-									Queue
-									&nbsp;
-									<span class="tag is-small is-primary">
-										<%= rawCount %>
-									</span>
-								<% } else { %>
-									<span>Queue</span>
-								<% } %>
+									<span>My Events</span>
 							</a>
 						</li>
-						<% if(authUser) { %>
-							<li class="<%= ['my', 'builder'].indexOf(mode)>-1 ? 'is-active' : '' %>">
-								<a href="/extensions/my">
-									<span class="icon">
-										<i class="fa fa-dashboard"></i>
-									</span>
-									<% if(mode=="my") { %>
-										My Extensions
-										&nbsp;
-										<span class="tag is-small is-primary">
-											<%= rawCount %>
-										</span>
-									<% } else { %>
-										<span>My Extensions</span>
-									<% } %>
-								</a>
-							</li>
+						<li class="<%= mode=='config' ? 'is-active' : '' %>">
+							<a href="/events/config">
+								<span class="icon">
+									<i class="fa fa-cog"></i>
+								</span>
+								<span>Event Config</span>
+							</a>
+						</li>
 						<% } %>
 					</ul>
 				</div>
@@ -122,19 +78,16 @@
 
 	<section id="frame"	class="section is-white">
 		<div class="container">
-			<% if(["gallery", "queue"].indexOf(mode)>-1) { %>
-				<% include ../partials/extension-gallery %>
-			<% } else { %>
-				<% include ../partials/dashboard-socket-updates %>
-				<% if(mode=="my") { %>
-					<% include ../partials/my-extensions %>
-				<% } else if(mode=="builder") { %>
-					<script src="/static/js/form-change-listener.js"></script>
-					<% var extensionBuilderPostUrl = "/extensions/builder?"; %>
-					<% var extensionBuilderPublishUrl; %>
-					<% include ../partials/extension-builder %>
-				<% } %>
-			<% } %>
+            <% if(mode == "overview") { %>
+				<% include ../partials/event-overview %>
+            <% } else { %>
+				<div class="heading">
+					<h1 class="title">Planned event overview</h1>
+					<h2 class="subtitle">
+						In this section your <strong>EVENT OVERVIEW</strong> will be shown!
+					</h2>
+				</div>
+            <% } %>
 		</div>
 	</section>
 
@@ -147,7 +100,7 @@
 							<span class="icon">
 								<i class="fa fa-book"></i>
 							</span>
-							<span>Read the extension docs</span>
+							<span>Read the event docs</span>
 						</a>
 					</p>
 					<br>
