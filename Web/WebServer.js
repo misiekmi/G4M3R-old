@@ -738,12 +738,12 @@ module.exports = (bot, db, auth, config, winston) => {
         app.get("/events", (req, res) => {
             res.redirect("/events/overview");
         });
-
-        app.get("/events/(|overview|my|config)", (req, res) => {
-            const eventState = req.path.substring(req.path.lastIndexOf("/") + 1);
+        var eventState = "";
+        app.get("/events/(|overview|myevents)", (req, res) => {
+            eventState = req.path.substring(req.path.lastIndexOf("/") + 1);
             const pageTitle = `${eventState.charAt(0).toUpperCase() + eventState.slice(1)} - G4M3R Events`
 
-            const renderPage = (serverData) => {
+            const renderPage = (serverData, eventData) => {
                 res.render("pages/events.ejs", {
                     authUser: req.isAuthenticated() ? getAuthUser(req.user) : null,
                     isMaintainer: req.isAuthenticated() ? config.maintainers.indexOf(req.user.id) > -1 : false,
@@ -757,6 +757,7 @@ module.exports = (bot, db, auth, config, winston) => {
             if (req.isAuthenticated()) {
                 lastPage = "events"
                 const serverData = [];
+                const eventData = [];
                 const usr = bot.users.get(req.user.id);
                 const addServerData = (i, callback) => {
                     if (req.user.guilds && i < req.user.guilds.length) {
@@ -771,9 +772,38 @@ module.exports = (bot, db, auth, config, winston) => {
                                             id: req.user.guilds[i].id,
                                             icon: req.user.guilds[i].icon ? (`https://cdn.discordapp.com/icons/${req.user.guilds[i].id}/${req.user.guilds[i].icon}.jpg`) : "/static/img/discord-icon.png"
                                         });
+
+                                        db.events.find({
+                                            $or: [ { _author: usr.id},{ attendees: usr.id} ]
+                                        }, (err, eventDocument) => {
+                                            if (!err && eventDocument) {
+                                                let noAttendees = 0;
+                                                const arrayAttendees = [];
+                                                if(eventDocument.attendees) {
+                                                    noAttendees = eventDocument.attendees.length;
+                                                    for (j=0;j<eventDocument.attendees.length;j++) {
+                                                        arrayAttendees.push({
+                                                            attendees: eventDocument.attendees._id
+                                                        });
+                                                    }
+                                                }
+                                                eventData.push({
+                                                    id: eventDocument._id,
+                                                    author: eventDocument._author,
+                                                    server: eventDocument._server,
+                                                    clan: eventDocument._clan,
+                                                    title: eventDocument.title,
+                                                    description: eventDocument.description,
+                                                    maxAttendees: eventDocument.attendee_max,
+                                                    actualAttendees: noAttendees,
+                                                    attendees: arrayAttendees,
+                                                    isPublic: eventDocument.isPublic
+                                                    });
+                                            }
+                                        });
                                     }
-                                }
                                 addServerData(++i, callback);
+                                }
                             });
                         } else {
                             addServerData(++i, callback);
@@ -783,13 +813,13 @@ module.exports = (bot, db, auth, config, winston) => {
                     }
                 };
 
-                if (serverData) {
+                if (serverData && eventData) {
                     addServerData(0, () => {
                         serverData.sort((a, b) => {
                             return a.name.localeCompare(b.name);
                         });
                         db.users.findOne({_id: req.user.id}, (err, userDocument) => {
-                            renderPage(serverData);
+                            renderPage(serverData,eventData);
                         });
                     });
                 } else {

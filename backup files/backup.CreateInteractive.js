@@ -126,7 +126,7 @@ module.exports = (bot, db, winston, serverDocument, msg) => {
                                             serverDocument.save(err => { // 'save' the server and handle error
                                                 if (err) {
                                                     winston.error("Failed to save server data for message", {
-                                                        svrid: msg.guild.id
+                                                        svrid: msg.channel.guild.id
                                                     }, err);
                                                     msg.channel.createMessage("Something went wrong! I failed to save your event. It's my dev's fault!");
                                                 } else {

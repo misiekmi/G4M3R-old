@@ -53,8 +53,8 @@
 									<span>Overview</span>
 							</a>
 						</li>
-						<li class="<%= mode=='my' ? 'is-active' : '' %>">
-							<a href="/events/my">
+						<li class="<%= mode=='myevents' ? 'is-active' : '' %>">
+							<a href="/events/myevents">
 								<span class="icon">
 									<i class="fa fa-calendar"></i>
 								</span>
@@ -80,13 +80,9 @@
 		<div class="container">
             <% if(mode == "overview") { %>
 				<% include ../partials/event-overview %>
-            <% } else { %>
-				<div class="heading">
-					<h1 class="title">Planned event overview</h1>
-					<h2 class="subtitle">
-						In this section your <strong>EVENT OVERVIEW</strong> will be shown!
-					</h2>
-				</div>
+            <% } %>
+            <% if(mode == "myevents") { %>
+                <% include ../partials/event-myevents %>
             <% } %>
 		</div>
 	</section>

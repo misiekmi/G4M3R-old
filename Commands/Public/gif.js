@@ -6,12 +6,12 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
             if(url) {
                 msg.channel.createMessage(url);
             } else {
-                winston.warn(`No GIFs found for '${suffix}'`, {svrid: msg.guild.id, chid: msg.channel.id, usrid: msg.author.id});
+                winston.warn(`No GIFs found for '${suffix}'`, {svrid: msg.channel.guild.id, chid: msg.channel.id, usrid: msg.author.id});
                 msg.channel.createMessage("The Internet has run out of memes **(╯°□°）╯︵ ┻━┻**");
             }
         });
     } else {
         msg.channel.createMessage(`How am I able to guess what GIF you want? Please use the syntax \`` +
-                                    `${bot.getCommandPrefix(msg.guild, serverDocument)}${commandData.name} <terms to search>\``);
+                                    `${bot.getCommandPrefix(msg.channel.guild, serverDocument)}${commandData.name} <terms to search>\``);
     }
 };
