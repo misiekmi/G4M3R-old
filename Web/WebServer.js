@@ -751,6 +751,7 @@ module.exports = (bot, db, auth, config, winston) => {
                     serverData,
                     activeSearchQuery: req.query.id || req.query.q,
                     mode: eventState,
+                    eventData
                 });
             };
 
@@ -772,35 +773,6 @@ module.exports = (bot, db, auth, config, winston) => {
                                             id: req.user.guilds[i].id,
                                             icon: req.user.guilds[i].icon ? (`https://cdn.discordapp.com/icons/${req.user.guilds[i].id}/${req.user.guilds[i].icon}.jpg`) : "/static/img/discord-icon.png"
                                         });
-
-                                        db.events.find({
-                                            $or: [ { _author: usr.id},{ attendees: usr.id} ]
-                                        }, (err, eventDocument) => {
-                                            if (!err && eventDocument) {
-                                                let noAttendees = 0;
-                                                const arrayAttendees = [];
-                                                if(eventDocument.attendees) {
-                                                    noAttendees = eventDocument.attendees.length;
-                                                    for (j=0;j<eventDocument.attendees.length;j++) {
-                                                        arrayAttendees.push({
-                                                            attendees: eventDocument.attendees._id
-                                                        });
-                                                    }
-                                                }
-                                                eventData.push({
-                                                    id: eventDocument._id,
-                                                    author: eventDocument._author,
-                                                    server: eventDocument._server,
-                                                    clan: eventDocument._clan,
-                                                    title: eventDocument.title,
-                                                    description: eventDocument.description,
-                                                    maxAttendees: eventDocument.attendee_max,
-                                                    actualAttendees: noAttendees,
-                                                    attendees: arrayAttendees,
-                                                    isPublic: eventDocument.isPublic
-                                                    });
-                                            }
-                                        });
                                     }
                                 addServerData(++i, callback);
                                 }
@@ -812,6 +784,45 @@ module.exports = (bot, db, auth, config, winston) => {
                         callback();
                     }
                 };
+
+                const addEventData = () => {
+
+                    db.events.find( { _author: usr.id }, (err, eventDocument) => {
+                            if (!err && eventDocument) {
+
+                                for(let i=0;i<eventDocument.length;i++) {
+                                    let noAttendees = 0;
+                                    let arrayAttendees = [];
+                                    let authorName = "";
+                                    let user = usr.username;
+                                    authorName = bot.getUserOrNickname(usr.id,eventDocument[i]._server);
+                                    if(eventDocument[i].attendees) {
+                                        noAttendees = eventDocument[i].attendees.length;
+                                        for (let j=0;j<eventDocument[i].attendees.length;j++) {
+                                            arrayAttendees.push({
+                                                attendees: eventDocument[i].attendees._id
+                                            });
+                                        }
+                                    }
+
+                                    eventData.push({
+                                        id: eventDocument[i]._no,
+                                        author: user,
+                                        server: eventDocument[i]._server,
+                                        clan: eventDocument[i]._clan,
+                                        title: eventDocument[i].title,
+                                        description: eventDocument[i].description,
+                                        maxAttendees: eventDocument[i].attendee_max,
+                                        actualAttendees: noAttendees,
+                                        attendees: arrayAttendees,
+                                        isPublic: eventDocument[i].isPublic
+                                    });
+                                }
+                            }
+                    });
+                };
+
+                addEventData();
 
                 if (serverData && eventData) {
                     addServerData(0, () => {

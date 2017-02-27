@@ -10,7 +10,7 @@
 					<th>Starts</th>
 					<th>Ends</th>
 					<th>Tags</th>
-					<th>Join</th>
+					<th>Leave</th>
 					<th>Info</th>
 				</tr>
 				</thead>
@@ -23,7 +23,7 @@
 					<th>Starts</th>
 					<th>Ends</th>
 					<th>Tags</th>
-					<th>Join</th>
+					<th>Leave</th>
 					<th>Info</th>
 				</tr>
 				</tfoot>
@@ -32,7 +32,7 @@
 						<tr>
 							<td>
 								<%= eventData[i].id %>
-							</td>	&nbsp;
+							</td>
 							<td>
 								<%= eventData[i].title %>
 							</td>
@@ -40,7 +40,7 @@
 								<%= eventData[i].author %>
 							</td>
 							<td>
-								Start-time
+                                ( <%= eventData[i].actualAttendees %> / <%= eventData[i].maxAttendees %> )
 							</td>
 							<td>
 								End-time
@@ -52,7 +52,7 @@
 								Start-time
 							</td>
 							<td>
-								<a class="button is-small is-primary is-hovered" href="/events/myevents">
+								<a class="button is-small is-danger is-hovered" href="/events/myevents">
 								<span class="icon is-small">
 									<i class="fa fa-sign-out"></i>
 								</span>
