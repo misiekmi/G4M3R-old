@@ -20,14 +20,14 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
 					}
 				}
 			} else {
-				winston.warn(`Invalid parameters '${suffix}' provided for ${commandData.name} command`, {svrid: msg.guild.id, chid: msg.channel.id, usrid: msg.author.id});
+				winston.warn(`Invalid parameters '${suffix}' provided for ${commandData.name} command`, {svrid: msg.channel.guild.id, chid: msg.channel.id, usrid: msg.author.id});
 				msg.channel.createMessage(`${msg.author.mention} huh? this command only takes \`enroll\` as a parameter`);
 			}
 		} else {
-			const creator = msg.guild.members.get(channelDocument.giveaway.creator_id);
-			msg.channel.createMessage(`**${channelDocument.giveaway.title}** 🍰\nStarted by @${creator ? bot.getName(msg.guild, serverDocument, creator) : "invalid-user"}\t${channelDocument.giveaway.participant_ids.length} ${channelDocument.giveaway.participant_ids.length==1 ? "person" : "people"} enrolled currently`);
+			const creator = msg.channel.guild.members.get(channelDocument.giveaway.creator_id);
+			msg.channel.createMessage(`**${channelDocument.giveaway.title}** 🍰\nStarted by @${creator ? bot.getName(msg.channel.guild, serverDocument, creator) : "invalid-user"}\t${channelDocument.giveaway.participant_ids.length} ${channelDocument.giveaway.participant_ids.length==1 ? "person" : "people"} enrolled currently`);
 		}
 	} else {
-		msg.channel.createMessage(`There's isn't a giveaway going on in this channel. 👻 PM me \`${commandData.name} ${msg.guild.name}|#${msg.channel.name}\` to start one.`);
+		msg.channel.createMessage(`There's isn't a giveaway going on in this channel. 👻 PM me \`${commandData.name} ${msg.channel.guild.name}|#${msg.channel.name}\` to start one.`);
 	}
 };

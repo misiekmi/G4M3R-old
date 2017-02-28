@@ -2,9 +2,9 @@ const ModLog = require("./../../Modules/ModerationLogging.js");
 
 module.exports = (bot, db, config, winston, userDocument, serverDocument, channelDocument, memberDocument, msg, suffix) => {
 	this.delete = id => {
-		ModLog.delete(msg.guild, serverDocument, id, err => {
+		ModLog.delete(msg.channel.guild, serverDocument, id, err => {
 			if(err) {
-				winston.error(`Failed to delete modlog entry on server '${msg.guild.name}'`, {svrid: msg.guild.id}, err);
+				winston.error(`Failed to delete modlog entry on server '${msg.channel.guild.name}'`, {svrid: msg.channel.guild.id}, err);
 				msg.channel.createMessage("Oh no! Something went wrong. 🥀 Make sure moderation logging is enabled and that you provided a valid case ID number.");
 			} else {
 				msg.channel.createMessage(`Done! Case #${id} is gone 💨`);
@@ -29,7 +29,7 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
 
 	this.enable = chname => {
 		if(chname) {
-			const ch = bot.channelSearch(chname, msg.guild);
+			const ch = bot.channelSearch(chname, msg.channel.guild);
 			if(ch) {
 				serverDocument.modlog.isEnabled = true;
 				serverDocument.modlog.channel_id = ch.id;
