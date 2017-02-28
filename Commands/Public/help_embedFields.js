@@ -13,7 +13,7 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
                     title_content = ``;
                     let embed_fields = [{
                                 name: "Usage",
-                                value: `${usage ? (`${bot.getCommandPrefix(msg.guild, serverDocument)}${usage}`) : "no usage"}`,
+                                value: `${usage ? (`${bot.getCommandPrefix(msg.channel.guild, serverDocument)}${usage}`) : "no usage"}`,
 							inline: false
 						},
 						{
@@ -64,7 +64,7 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
 			url: "https://github.com/pedall/G4M3R"
 		};
 
-		const memberBotAdmin = bot.getUserBotAdmin(msg.guild, serverDocument, msg.member);
+		const memberBotAdmin = bot.getUserBotAdmin(msg.channel.guild, serverDocument, msg.member);
 		bot.getPublicCommandList().forEach(command => {
 			if(serverDocument.config.commands[command] && serverDocument.config.commands[command].isEnabled && memberBotAdmin>=serverDocument.config.commands[command].admin_level) {
 				const commandData = bot.getPublicCommandMetadata(command);
@@ -92,14 +92,14 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
 		msg.channel.createMessage({			
 			embed : {
 				author: {
-					name: bot.user.username + ` | PUBLIC COMMANDS (use with prefix \`${bot.getCommandPrefix(msg.guild, serverDocument)}\`)`,
+					name: bot.user.username + ` | PUBLIC COMMANDS (use with prefix \`${bot.getCommandPrefix(msg.channel.guild, serverDocument)}\`)`,
 					icon_url: bot.user.avatarURL,
 					url: "https://github.com/pedall/G4M3R"
 				},
 				color: 0xffffff,
 				fields: embed_fields,
 				footer: {
-					text: `type [${bot.getCommandPrefix(msg.guild, serverDocument)}help <commandName>] to get more details` +
+					text: `type [${bot.getCommandPrefix(msg.channel.guild, serverDocument)}help <commandName>] to get more details` +
 					` | For a list of private commands, DM me 'help'
 					`
 				}

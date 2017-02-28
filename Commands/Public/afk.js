@@ -5,7 +5,7 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
             msg.channel.createMessage("Welcome back! I removed your AFK message");
 		} else {
 			memberDocument.afk_message = suffix;
-            msg.channel.createMessage(`Alright, I'll show that when someone mentions you on this server. 👌 Use \`${bot.getCommandPrefix(msg.guild, serverDocument)}${commandData.name} .\` to remove it`)
+            msg.channel.createMessage(`Alright, I'll show that when someone mentions you on this server. 👌 Use \`${bot.getCommandPrefix(msg.channel.guild, serverDocument)}${commandData.name} .\` to remove it`)
 		}
         serverDocument.save(err => {
             if (err) {
