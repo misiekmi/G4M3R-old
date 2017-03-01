@@ -22,23 +22,31 @@ module.exports = {
         return db.events.find({ _server: _server }).sort({ start: 1 }).then((events) => {
             if (filter) {
                 let tmp = [];
-                for (let i = 0; i < events.length; i++) {
+                let i = 0, j = 0, k = 0;
+                //delete after testing
+                let filtertag = "", eventtag = "", eventtitle = "";
+
+                //iterate over all events
+                for (i = 0; i < events.length; i++) {
                     let event = events[i];
                     let pass = true;
+                    let found = false;
 
-                    if (filter._author && event._author != filter._author) {
+                    if (filter._author && event._author !== filter._author) {
                         pass = false;
                     } else if (filter.tags) {
-                        for (let i = 0; i < filter.tags.length; i++) {
-                            let found = false;
-                            for (let j = 0; j < event.tags.length; j++) {
-                                if (filter.tags[i].toLowerCase() == event.tags[j].toLowerCase()) {
+                        for (j = 0; j < filter.tags.length; j++) {
+
+                            for (k = 0; k < event.tags.length; k++) {
+                                //found = false;
+                                if (filter.tags[j].trim().toLowerCase() === event.tags[k].trim().toLowerCase()) {
                                     found = true;
-                                    break;
+                                    //break;
                                 }
                             }
-                            pass = found && pass;
                         }
+
+                        pass = found && pass;
                     }
 
                     if (pass) {
