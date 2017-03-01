@@ -12,8 +12,8 @@ Configuration/config.json
 #ignore folders
 node_modules/
 .idea/
-.vscode/
 
 #auto added
 G4M3R.iml
-launch.json
+
+
