@@ -22,7 +22,7 @@ module.exports = {
 		// Save changes to serverDocument
 		serverDocument.save(err => {
 			if(err) {
-				winston.error("Failed to save server data for voice activity", {svrid: svr.id}, err);
+				winston.error("Failed to save server data for voice activity - VoiceStatsCollector1", {svrid: svr.id}, err);
 			}
 		});
 	},
@@ -42,7 +42,7 @@ module.exports = {
 			// Save changes to serverDocument
 			serverDocument.save(err => {
 				if(err) {
-					winston.error("Failed to save server data for voice activity", {svrid: svr.id}, err);
+					winston.error("Failed to save server data for voice activity  - VoiceStatsCollector2", {svrid: svr.id}, err);
 				}
 			});
 		}
