@@ -1,105 +1,80 @@
-	<div class="columns">
-		<div class="column is-12">
-			<table class="table">
-				<thead>
-				<tr>
-					<th><abbr title="Event ID">ID</abbr></th>
-					<th>Title</th>
-					<th><abbr title="Author">by</abbr></th>
-					<th><abbr title="Attendees">Slots</abbr></th>
-					<th>Starts</th>
-					<th>Ends</th>
-					<th>Tags</th>
-					<th>Join</th>
-					<th>Info</th>
-				</tr>
-				</thead>
-				<tfoot>
-				<tr>
-					<th><abbr title="Event ID">ID</abbr></th>
-					<th>Title</th>
-					<th><abbr title="Author">by</abbr></th>
-					<th><abbr title="Attendees">Slots</abbr></th>
-					<th>Starts</th>
-					<th>Ends</th>
-					<th>Tags</th>
-					<th>Join</th>
-					<th>Info</th>
-				</tr>
-				</tfoot>
-				<tbody>
-				<tr>
-					<th>1</th>
-					<td><a href="">Wildlands with pedall</a></td>
-					<td>pedall</td>
-					<td><strong>(0 / 4)</strong></td>
-					<td>2017/03/07 19:00 (CET)</td>
-					<td>2017/03/07 23:30 (CET)</td>
-					<td>PS4, Wildlands,<br> Coop, Extreme</td>
-					<td>
-						<a class="button is-small is-primary is-hovered" href="/events/my">
-                            <span class="icon is-small">
-                                <i class="fa fa-sign-in"></i>
-                            </span>
-						</a>
-					</td>
-					<td>
-						<a class="button is-small is-info is-hovered" href="/events/my">
-                            <span class="icon is-small">
-                                <i class="fa fa-info"></i>
-                            </span>
-						</a>
-					</td>
-				</tr>
-				<tr>
-					<th>2</th>
-					<td><a href="https://en.wikipedia.org/wiki/Arsenal_F.C." title="Arsenal F.C.">Arsenal</a></td>
-					<td>38</td>
-					<td>20</td>
-					<td>11</td>
-					<td>7</td>
-					<td>65</td>
-					<td>
-						<a class="button is-small is-primary is-hovered" href="/events/my">
-                            <span class="icon is-small">
-                                <i class="fa fa-sign-in"></i>
-                            </span>
-						</a>
-					</td>
-					<td>
-						<a class="button is-small is-info is-hovered" href="/events/my">
-                            <span class="icon is-small">
-                                <i class="fa fa-info"></i>
-                            </span>
-						</a>
-					</td>
-				</tr>
-				<tr>
-					<th>3</th>
-					<td><a href="https://en.wikipedia.org/wiki/Tottenham_Hotspur_F.C." title="Tottenham Hotspur F.C.">Tottenham Hotspur</a></td>
-					<td>38</td>
-					<td>19</td>
-					<td>13</td>
-					<td>6</td>
-					<td>69</td>
-					<td>
-						<a class="button is-small is-primary is-hovered" href="/events/my">
-                            <span class="icon is-small">
-                                <i class="fa fa-sign-in"></i>
-                            </span>
-						</a>
-					</td>
-					<td>
-						<a class="button is-small is-info is-hovered" href="/events/my">
-                            <span class="icon is-small">
-                                <i class="fa fa-info"></i>
-                            </span>
-						</a>
-					</td>
-				</tr>
-				</tbody>
-			</table>
-		</div>
+<div class="columns">
+	<div class="column is-12">
+		<table class="table">
+			<thead>
+			<tr>
+				<th><abbr title="Event ID">ID</abbr></th>
+				<th>Title</th>
+				<th><abbr title="Author">by</abbr></th>
+				<th>Server</th>
+				<th><abbr title="Attendees">Slots</abbr></th>
+				<th>Starts</th>
+				<th>Ends</th>
+				<th>Tags</th>
+				<th>Leave</th>
+				<th>Info</th>
+			</tr>
+			</thead>
+			<tfoot>
+			<tr>
+				<th><abbr title="Event ID">ID</abbr></th>
+				<th>Title</th>
+				<th><abbr title="Author">by</abbr></th>
+				<th>Server</th>
+				<th><abbr title="Attendees">Slots</abbr></th>
+				<th>Starts</th>
+				<th>Ends</th>
+				<th>Tags</th>
+				<th>Leave</th>
+				<th>Info</th>
+			</tr>
+			</tfoot>
+			<tbody>
+            <% for(var i=0; i<eventData.length; i++) { %>
+			<tr>
+				<td>
+                    <%= eventData[i].id %>
+				</td>
+				<td>
+                    <%= eventData[i].title %>
+				</td>
+				<td>
+                    <%= eventData[i].author %>
+				</td>
+				<td>
+                    <%= eventData[i].title %>
+				</td>
+				<td>
+					( <%= eventData[i].actualAttendees %> / <%= eventData[i].maxAttendees %> )
+				</td>
+				<td>
+					End-time
+				</td>
+				<td>
+					Tags
+				</td>
+				<td>
+					Start-time
+				</td>
+				<td>
+					<a class="button is-small is-danger is-hovered" href="/events/myevents">
+								<span class="icon is-small">
+									<i class="fa fa-sign-out"></i>
+								</span>
+					</a>
+				</td>
+				<td>
+					<a class="button is-small is-info is-hovered" href="/events/myevents">
+								<span class="icon is-small">
+									<i class="fa fa-info"></i>
+								</span>
+					</a>
+				</td>
+			</tr>
+            <% } %>
+			</tbody>
+		</table>
 	</div>
+</div>
 
 

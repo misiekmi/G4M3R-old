@@ -760,6 +760,9 @@ module.exports = (bot, db, auth, config, winston) => {
                 const serverData = [];
                 const eventData = [];
                 const usr = bot.users.get(req.user.id);
+
+
+
                 const addServerData = (i, callback) => {
                     if (req.user.guilds && i < req.user.guilds.length) {
                         const svr = bot.guilds.get(req.user.guilds[i].id);
@@ -767,27 +770,118 @@ module.exports = (bot, db, auth, config, winston) => {
                             db.servers.findOne({_id: svr.id}, (err, serverDocument) => {
                                 if (!err && serverDocument) {
                                     const member = svr.members.get(usr.id);
-                                    if (bot.getUserBotAdmin(svr, serverDocument, member) >= 3) {
+                                    if (bot.getUserBotAdmin(svr, serverDocument, member) >= 0) {
                                         serverData.push({
                                             name: req.user.guilds[i].name,
                                             id: req.user.guilds[i].id,
                                             icon: req.user.guilds[i].icon ? (`https://cdn.discordapp.com/icons/${req.user.guilds[i].id}/${req.user.guilds[i].icon}.jpg`) : "/static/img/discord-icon.png"
                                         });
+
                                     }
-                                addServerData(++i, callback);
+                                    addServerData(++i, callback);
                                 }
                             });
                         } else {
                             addServerData(++i, callback);
                         }
+
                     } else {
                         callback();
                     }
                 };
 
-                const addEventData = () => {
+                const findServerName = (eventDocument) => {
 
-                    db.events.find( { _author: usr.id }, (err, eventDocument) => {
+                    for (let i = 0; i<serverData.length;i++) {
+                        if (serverData[i].name === eventDocument._server) {
+                            return serverData[i].name;
+                        }
+                    }
+                };
+
+
+                const getUserServers = () => {
+                    const userServers = [];
+                    if (req.user.guilds) {
+                        for (let i = 0; i < req.user.guilds.length; i++) {
+                            userServers.push(req.user.guilds[i].id);
+                        }
+                        return userServers;
+                    }
+                };
+
+                if (req.path === "/events/overview") {
+
+                    const addEventData = () => {
+
+                        const userServers = [];
+                        if (req.user.guilds) {
+                            for (let i = 0; i < req.user.guilds.length; i++) {
+                                userServers.push(req.user.guilds[i].id);
+                            }
+                        }
+                        // TODO: get function to work to events for all servers the user is in
+                        db.events.find( { _id: { $in: userServers } }).forEach( function(eventDocument) {
+                            if (eventDocument) {
+
+                                for(let i=0;i<eventDocument.length;i++) {
+                                    let noAttendees = 0;
+                                    let arrayAttendees = [];
+                                    let authorName = "";
+                                    let user = usr.username;
+                                    authorName = bot.getUserOrNickname(usr.id,eventDocument[i]._server);
+                                    if(eventDocument[i].attendees) {
+                                        noAttendees = eventDocument[i].attendees.length;
+                                        for (let j=0;j<eventDocument[i].attendees.length;j++) {
+                                            arrayAttendees.push({
+                                                attendees: eventDocument[i].attendees._id
+                                            });
+                                        }
+                                    }
+
+                                    eventData.push({
+                                        id: eventDocument[i]._no,
+                                        author: user,
+                                        server: findServerName(eventDocument[i]),
+                                        clan: eventDocument[i]._clan,
+                                        title: eventDocument[i].title,
+                                        description: eventDocument[i].description,
+                                        maxAttendees: eventDocument[i].attendee_max,
+                                        actualAttendees: noAttendees,
+                                        attendees: arrayAttendees,
+                                        isPublic: eventDocument[i].isPublic
+                                    });
+                                }
+                            }
+                        });
+                    };
+
+                    if (serverData && eventData) {
+                        addServerData(0, () => {
+                            serverData.sort((a, b) => {
+                                return a.name.localeCompare(b.name);
+                            });
+                        });
+
+                        addEventData();
+
+                        db.users.findOne({_id: req.user.id}, (err) => {
+                            if (err) {
+                                winston.warn(err);
+                            } else {
+                                renderPage(serverData,eventData);
+                            }
+
+                        });
+                    } else {
+                        renderPage();
+                    }
+
+                } else if (req.path === "/events/myevents") {
+
+                    const addEventData = () => {
+
+                        db.events.find( { _author: usr.id }, (err, eventDocument) => {
                             if (!err && eventDocument) {
 
                                 for(let i=0;i<eventDocument.length;i++) {
@@ -819,23 +913,33 @@ module.exports = (bot, db, auth, config, winston) => {
                                     });
                                 }
                             }
-                    });
-                };
-
-                addEventData();
-
-                if (serverData && eventData) {
-                    addServerData(0, () => {
-                        serverData.sort((a, b) => {
-                            return a.name.localeCompare(b.name);
                         });
-                        db.users.findOne({_id: req.user.id}, (err, userDocument) => {
-                            renderPage(serverData,eventData);
+                    };
+
+                    if (serverData && eventData) {
+                        addServerData(0, () => {
+                            serverData.sort((a, b) => {
+                                return a.name.localeCompare(b.name);
+                            });
                         });
-                    });
-                } else {
-                    renderPage();
+
+                        addEventData();
+
+                        db.users.findOne({_id: req.user.id}, (err) => {
+                            if (err) {
+                                winston.warn(err);
+                            } else {
+                                renderPage(serverData,eventData);
+                            }
+
+                        });
+                    } else {
+                        renderPage();
+                    }
+
                 }
+
+
             } else {
                 res.redirect("/login");
             }
