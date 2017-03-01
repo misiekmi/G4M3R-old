@@ -22,12 +22,10 @@ module.exports = {
         return db.events.find({ _server: _server }).sort({ start: 1 }).then((events) => {
             if (filter) {
                 let tmp = [];
-                let i = 0, j = 0, k = 0;
-                //delete after testing
-                let filtertag = "", eventtag = "", eventtitle = "";
+
 
                 //iterate over all events
-                for (i = 0; i < events.length; i++) {
+                for (let i = 0; i < events.length; i++) {
                     let event = events[i];
                     let pass = true;
                     let found = false;
@@ -35,9 +33,9 @@ module.exports = {
                     if (filter._author && event._author !== filter._author) {
                         pass = false;
                     } else if (filter.tags) {
-                        for (j = 0; j < filter.tags.length; j++) {
+                        for (let j = 0; j < filter.tags.length; j++) {
 
-                            for (k = 0; k < event.tags.length; k++) {
+                            for (let k = 0; k < event.tags.length; k++) {
                                 //found = false;
                                 if (filter.tags[j].trim().toLowerCase() === event.tags[k].trim().toLowerCase()) {
                                     found = true;
