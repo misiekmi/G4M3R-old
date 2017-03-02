@@ -273,6 +273,18 @@ module.exports = (bot, db, auth, config, winston) => {
             }
             return data;
         };
+
+        //get all servers as ID for a user
+        function getUserServers(req) {
+            const userServers = [];
+            if (req.user.guilds) {
+                for (let i = 0; i < req.user.guilds.length; i++) {
+                    userServers.push(req.user.guilds[i].id);
+                }
+                return userServers;
+            }
+        }
+
         app.get("/api/servers", (req, res) => {
             const params = {
                 "config.public_data.isShown": true
@@ -352,6 +364,8 @@ module.exports = (bot, db, auth, config, winston) => {
             }
             return userProfile;
         };
+
+
         app.get("/api/users", (req, res) => {
             const usr = bot.users.get(req.query.id);
             if (usr) {
@@ -761,8 +775,6 @@ module.exports = (bot, db, auth, config, winston) => {
                 const eventData = [];
                 const usr = bot.users.get(req.user.id);
 
-
-
                 const addServerData = (i, callback) => {
                     if (req.user.guilds && i < req.user.guilds.length) {
                         const svr = bot.guilds.get(req.user.guilds[i].id);
@@ -793,67 +805,60 @@ module.exports = (bot, db, auth, config, winston) => {
                 const findServerName = (eventDocument) => {
 
                     for (let i = 0; i<serverData.length;i++) {
-                        if (serverData[i].name === eventDocument._server) {
+                        if (serverData[i].id === eventDocument._server) {
                             return serverData[i].name;
                         }
                     }
                 };
 
 
-                const getUserServers = () => {
-                    const userServers = [];
-                    if (req.user.guilds) {
-                        for (let i = 0; i < req.user.guilds.length; i++) {
-                            userServers.push(req.user.guilds[i].id);
-                        }
-                        return userServers;
-                    }
-                };
-
                 if (req.path === "/events/overview") {
 
                     const addEventData = () => {
 
-                        const userServers = [];
-                        if (req.user.guilds) {
-                            for (let i = 0; i < req.user.guilds.length; i++) {
-                                userServers.push(req.user.guilds[i].id);
-                            }
-                        }
+                        var userServers = getUserServers(req);
+
                         // TODO: get function to work to events for all servers the user is in
-                        db.events.find( { _id: { $in: userServers } }).forEach( function(eventDocument) {
-                            if (eventDocument) {
+                        for(let l = 0; l < userServers.length; l++) {
 
-                                for(let i=0;i<eventDocument.length;i++) {
-                                    let noAttendees = 0;
-                                    let arrayAttendees = [];
-                                    let authorName = "";
-                                    let user = usr.username;
-                                    authorName = bot.getUserOrNickname(usr.id,eventDocument[i]._server);
-                                    if(eventDocument[i].attendees) {
-                                        noAttendees = eventDocument[i].attendees.length;
-                                        for (let j=0;j<eventDocument[i].attendees.length;j++) {
-                                            arrayAttendees.push({
-                                                attendees: eventDocument[i].attendees._id
-                                            });
+                            db.events.find( { _server: userServers[l] }, (err, eventDocument) => {
+                                if (!err && eventDocument) {
+
+                                    for(let i=0;i<eventDocument.length;i++) {
+                                        let noAttendees = 0;
+                                        let arrayAttendees = [];
+                                        let authorName = "";
+                                        let user = usr.username;
+                                        const svr = bot.guilds.get(userServers[l]);
+
+                                        authorName = bot.getUserOrNickname(eventDocument[i]._author, svr);
+                                        if(eventDocument[i].attendees) {
+                                            noAttendees = eventDocument[i].attendees.length;
+                                            for (let j=0;j<eventDocument[i].attendees.length;j++) {
+                                                arrayAttendees.push({
+                                                    attendees: eventDocument[i].attendees._id
+                                                });
+                                            }
                                         }
-                                    }
 
-                                    eventData.push({
-                                        id: eventDocument[i]._no,
-                                        author: user,
-                                        server: findServerName(eventDocument[i]),
-                                        clan: eventDocument[i]._clan,
-                                        title: eventDocument[i].title,
-                                        description: eventDocument[i].description,
-                                        maxAttendees: eventDocument[i].attendee_max,
-                                        actualAttendees: noAttendees,
-                                        attendees: arrayAttendees,
-                                        isPublic: eventDocument[i].isPublic
-                                    });
+                                        eventData.push({
+                                            id: eventDocument[i]._no,
+                                            author: authorName,
+                                            server: svr.name,
+                                            clan: eventDocument[i]._clan,
+                                            title: eventDocument[i].title,
+                                            description: eventDocument[i].description,
+                                            maxAttendees: eventDocument[i].attendee_max,
+                                            actualAttendees: noAttendees,
+                                            attendees: arrayAttendees,
+                                            isPublic: eventDocument[i].isPublic
+                                        });
+                                    }
+                                } else {
+                                    winston.error(err);
                                 }
-                            }
-                        });
+                            });
+                        }
                     };
 
                     if (serverData && eventData) {
@@ -863,7 +868,11 @@ module.exports = (bot, db, auth, config, winston) => {
                             });
                         });
 
-                        addEventData();
+                        addEventData(() => {
+                            eventData.sort((a, b) => {
+                                return a.title.localeCompare(b.title);
+                            });
+                        });
 
                         db.users.findOne({_id: req.user.id}, (err) => {
                             if (err) {
@@ -889,7 +898,9 @@ module.exports = (bot, db, auth, config, winston) => {
                                     let arrayAttendees = [];
                                     let authorName = "";
                                     let user = usr.username;
-                                    authorName = bot.getUserOrNickname(usr.id,eventDocument[i]._server);
+                                    const svr = bot.guilds.get(eventDocument[i]._server);
+                                    authorName = bot.getUserOrNickname(eventDocument[i]._author, svr);
+
                                     if(eventDocument[i].attendees) {
                                         noAttendees = eventDocument[i].attendees.length;
                                         for (let j=0;j<eventDocument[i].attendees.length;j++) {
@@ -901,8 +912,8 @@ module.exports = (bot, db, auth, config, winston) => {
 
                                     eventData.push({
                                         id: eventDocument[i]._no,
-                                        author: user,
-                                        server: eventDocument[i]._server,
+                                        author: authorName,
+                                        server: svr.name,
                                         clan: eventDocument[i]._clan,
                                         title: eventDocument[i].title,
                                         description: eventDocument[i].description,
@@ -912,6 +923,8 @@ module.exports = (bot, db, auth, config, winston) => {
                                         isPublic: eventDocument[i].isPublic
                                     });
                                 }
+                            } else {
+                                winston.error(err);
                             }
                         });
                     };
@@ -923,7 +936,11 @@ module.exports = (bot, db, auth, config, winston) => {
                             });
                         });
 
-                        addEventData();
+                        addEventData(() => {
+                            eventData.sort((a, b) => {
+                                return a.title.localeCompare(b.title);
+                            });
+                        });
 
                         db.users.findOne({_id: req.user.id}, (err) => {
                             if (err) {
