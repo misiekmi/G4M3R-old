@@ -810,9 +810,9 @@ module.exports = (bot, db, auth, config, winston) => {
                         var userServers = getUserServers(req);
 
                         // TODO: get function to work to events for all servers the user is in
-                        for(let l = 0; l < userServers.length; l++) {
+                        for(let l = 0; l < req.user.guilds.length; l++) {
 
-                            db.events.find( { _server: userServers[l] }, (err, eventDocument) => {
+                            db.events.find( { _server: req.user.guilds[l].id }, (err, eventDocument) => {
                                 if (!err && eventDocument) {
 
                                     for(let i=0;i<eventDocument.length;i++) {
@@ -820,7 +820,7 @@ module.exports = (bot, db, auth, config, winston) => {
                                         let arrayAttendees = [];
                                         let authorName = "";
                                         let user = usr.username;
-                                        let svr = bot.guilds.get(eventDocument[i]._server);
+                                        //let svr = bot.guilds.get(eventDocument[i]._server);
 
                                         //authorName = bot.getUserOrNickname(eventDocument[i]._author, svr);
                                         if(eventDocument[i].attendees) {
@@ -835,7 +835,7 @@ module.exports = (bot, db, auth, config, winston) => {
                                         eventData.push({
                                             id: eventDocument[i]._no,
                                             author: user,
-                                            server: svr.name,
+                                            server: req.user.guilds[l].name,
                                             clan: eventDocument[i]._clan,
                                             title: eventDocument[i].title,
                                             description: eventDocument[i].description,
