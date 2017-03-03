@@ -821,7 +821,7 @@ module.exports = (bot, db, auth, config, winston) => {
                                         let authorName = "";
                                         let user = usr.username;
                                         //let svr = bot.guilds.get(eventDocument[i]._server);
-                                        let svr = bot.guilds.find(guild=>{ return guild.id === eventDocument[i]._server; })
+                                        let svr = bot.guilds.find(guild=>{ return guild.id === eventDocument[i]._server; });
 
                                         //authorName = bot.getUserOrNickname(eventDocument[i]._author, svr);
                                         if(eventDocument[i].attendees) {
@@ -890,7 +890,7 @@ module.exports = (bot, db, auth, config, winston) => {
                                     let arrayAttendees = [];
                                     let authorName = "";
                                     let user = usr.username;
-                                    let svr = bot.guilds.find(guild=>{ return guild.id === eventDocument[i]._server; })
+                                    let svr = bot.guilds.find(guild=>{ return guild.id === eventDocument[i]._server; });
 
                                     //authorName = bot.getUserOrNickname(eventDocument[i]._author, svr);
 
