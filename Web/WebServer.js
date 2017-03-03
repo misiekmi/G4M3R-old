@@ -820,7 +820,7 @@ module.exports = (bot, db, auth, config, winston) => {
                                         let arrayAttendees = [];
                                         let authorName = "";
                                         let user = usr.username;
-                                        const svr = bot.guilds.get(userServers[l]);
+                                        let svr = bot.guilds.get(eventDocument[i]._server);
 
                                         //authorName = bot.getUserOrNickname(eventDocument[i]._author, svr);
                                         if(eventDocument[i].attendees) {
@@ -889,7 +889,7 @@ module.exports = (bot, db, auth, config, winston) => {
                                     let arrayAttendees = [];
                                     let authorName = "";
                                     let user = usr.username;
-                                    const svr = bot.guilds.get(eventDocument[i]._server);
+                                    let svr = bot.guilds.get(eventDocument[i]._server);
                                     //authorName = bot.getUserOrNickname(eventDocument[i]._author, svr);
 
                                     if(eventDocument[i].attendees) {
