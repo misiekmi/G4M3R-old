@@ -17,6 +17,9 @@
 		#G4M3R-subtitle {
 			font-size: 30px;
 		}
+		#G4M3R-subsubtitle {
+			font-size: 25px;
+		}
 		#G4M3R-discord {
 			height: 31px;
 		}
@@ -27,6 +30,9 @@
 		}
 		#G4M3R-subtitle {
 			font-size: 40px;
+		}
+		#G4M3R-subsubtitle {
+			font-size: 30px;
 		}
 		#G4M3R-discord {
 			height: 42px;
@@ -49,30 +55,45 @@
 			<% include ../partials/header %>
 		</div>
 		<div class="hero-body">
-			<div class="container has-text-centered">
-				<img src="/static/img/icon.png" style="border-radius: 100%;width:200px;">
-				<h1 id="G4M3R-title" class="title is-1" style="font-family: Montserrat;">
-					<span style="display: inline-block;">G4M3R</span>
-				</h1>
-				<h2 id="G4M3R-subtitle" class="title is-2">
-					The best <img id="G4M3R-discord" src="/static/img/discord-logo.png" style="vertical-align: top;"> bot!
-				</h2>
-				<br>
+			<div class="container">
+				<div class="columns">
+					<div class="column is-half has-text-centered">
+						<img src="/static/img/icon.png" style="border-radius: 100%;width:200px;">
+						<h1 id="G4M3R-title" class="title is-1" style="font-family: Montserrat;">
+							<span style="display: inline-block;">G4M3R</span>
+						</h1>
+						<h2 id="G4M3R-subtitle" class="title is-2">
+							The best <img id="G4M3R-discord" src="/static/img/discord-logo.png" style="vertical-align: top;"> bot <br>
+							for gaming related stuff!
+						</h2>
+						<br>
 
-				<p class="hero-buttons">
-					<a class="button is-primary is-large" href="/add">
+						<p class="hero-buttons">
+							<a class="button is-primary is-large" href="/add">
 						<span class="icon">
 							<i class="fa fa-plus"></i>
 						</span>
-						<span>Add to Server</span>
-					</a>
-				</p>
-				<br>
+								<span>Add to Server</span>
+							</a>
+						</p>
+						<br>
 
-				<% if(bannerMessage) { %>
-					<br><br>
-					<h3 class="title is-5"><%- bannerMessage %></h3>
-				<% } %>
+                        <% if(bannerMessage) { %>
+						<br><br>
+						<h3 class="title is-5"><%- bannerMessage %></h3>
+                        <% } %>
+					</div>
+					<div class="column is-half has-text-centered">
+						<h1 id="G4M3R-subtitle" class="title is-5" style="font-family: Montserrat;">
+							<span style="display: inline-block;"><strong>New event system</strong> </span>
+						</h1>
+						<h2 id="G4M3R-subsubtitle" class="title is-7">
+							The only event system out there!
+						</h2>
+						<br>
+						<img src="/static/img/events.gif" style="width:400px;">
+					</div>
+				</div>
 			</div>
 		</div>
 		<div class="hero-foot">

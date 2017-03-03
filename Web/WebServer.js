@@ -802,15 +802,6 @@ module.exports = (bot, db, auth, config, winston) => {
                     }
                 };
 
-                const findServerName = (eventDocument) => {
-
-                    for (let i = 0; i<serverData.length;i++) {
-                        if (serverData[i].id === eventDocument._server) {
-                            return serverData[i].name;
-                        }
-                    }
-                };
-
 
                 if (req.path === "/events/overview") {
 
