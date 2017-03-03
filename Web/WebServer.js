@@ -822,7 +822,7 @@ module.exports = (bot, db, auth, config, winston) => {
                                         let user = usr.username;
                                         const svr = bot.guilds.get(userServers[l]);
 
-                                        authorName = bot.getUserOrNickname(eventDocument[i]._author, svr);
+                                        //authorName = bot.getUserOrNickname(eventDocument[i]._author, svr);
                                         if(eventDocument[i].attendees) {
                                             noAttendees = eventDocument[i].attendees.length;
                                             for (let j=0;j<eventDocument[i].attendees.length;j++) {
@@ -834,7 +834,7 @@ module.exports = (bot, db, auth, config, winston) => {
 
                                         eventData.push({
                                             id: eventDocument[i]._no,
-                                            author: authorName,
+                                            author: user,
                                             server: svr.name,
                                             clan: eventDocument[i]._clan,
                                             title: eventDocument[i].title,
@@ -890,7 +890,7 @@ module.exports = (bot, db, auth, config, winston) => {
                                     let authorName = "";
                                     let user = usr.username;
                                     const svr = bot.guilds.get(eventDocument[i]._server);
-                                    authorName = bot.getUserOrNickname(eventDocument[i]._author, svr);
+                                    //authorName = bot.getUserOrNickname(eventDocument[i]._author, svr);
 
                                     if(eventDocument[i].attendees) {
                                         noAttendees = eventDocument[i].attendees.length;
@@ -903,7 +903,7 @@ module.exports = (bot, db, auth, config, winston) => {
 
                                     eventData.push({
                                         id: eventDocument[i]._no,
-                                        author: authorName,
+                                        author: user,
                                         server: svr.name,
                                         clan: eventDocument[i]._clan,
                                         title: eventDocument[i].title,
