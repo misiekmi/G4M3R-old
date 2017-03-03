@@ -821,8 +821,9 @@ module.exports = (bot, db, auth, config, winston) => {
                                         let authorName = "";
                                         let user = usr.username;
                                         //let svr = bot.guilds.get(eventDocument[i]._server);
-                                        let svr = bot.guilds.find(guild=>{ return guild.id === eventDocument[i]._server; });
-
+                                        let serv = {};
+                                        serv = bot.guilds.find(guild=>{ return guild.id === eventDocument[i]._server; });
+                                        let serverName = serv.name;
                                         //authorName = bot.getUserOrNickname(eventDocument[i]._author, svr);
                                         if(eventDocument[i].attendees) {
                                             noAttendees = eventDocument[i].attendees.length;
@@ -836,7 +837,7 @@ module.exports = (bot, db, auth, config, winston) => {
                                         eventData.push({
                                             id: eventDocument[i]._no,
                                             author: user,
-                                            server: svr.name,
+                                            server: serverName,
                                             clan: eventDocument[i]._clan,
                                             title: eventDocument[i].title,
                                             description: eventDocument[i].description,
@@ -890,7 +891,9 @@ module.exports = (bot, db, auth, config, winston) => {
                                     let arrayAttendees = [];
                                     let authorName = "";
                                     let user = usr.username;
-                                    let svr = bot.guilds.find(guild=>{ return guild.id === eventDocument[i]._server; });
+                                    let serv = {};
+                                    serv = bot.guilds.find(guild=>{ return guild.id === eventDocument[i]._server; });
+                                    let serverName = serv.name;
 
                                     //authorName = bot.getUserOrNickname(eventDocument[i]._author, svr);
 
@@ -906,7 +909,7 @@ module.exports = (bot, db, auth, config, winston) => {
                                     eventData.push({
                                         id: eventDocument[i]._no,
                                         author: user,
-                                        server: svr.name,
+                                        server: serverName,
                                         clan: eventDocument[i]._clan,
                                         title: eventDocument[i].title,
                                         description: eventDocument[i].description,
