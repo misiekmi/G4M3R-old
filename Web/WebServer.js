@@ -837,8 +837,8 @@ module.exports = (bot, db, auth, config, winston) => {
 
                                         eventData.push({
                                             id: eventDocument[i]._no,
-                                            author: eventDocument[i]._author,
-                                            server: eventDocument[i]._server,
+                                            author: authorName,
+                                            server: serverName,
                                             clan: eventDocument[i]._clan,
                                             title: eventDocument[i].title,
                                             description: eventDocument[i].description,
