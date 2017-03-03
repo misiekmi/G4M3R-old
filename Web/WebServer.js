@@ -824,7 +824,8 @@ module.exports = (bot, db, auth, config, winston) => {
                                         let serv = {};
                                         serv = bot.guilds.find(guild=>{ return guild.id === eventDocument[i]._server; });
                                         let serverName = serv.name;
-                                        //authorName = bot.getUserOrNickname(eventDocument[i]._author, svr);
+                                        authorName = bot.getUserOrNickname(eventDocument[i]._author, serv);
+
                                         if(eventDocument[i].attendees) {
                                             noAttendees = eventDocument[i].attendees.length;
                                             for (let j=0;j<eventDocument[i].attendees.length;j++) {
@@ -836,8 +837,8 @@ module.exports = (bot, db, auth, config, winston) => {
 
                                         eventData.push({
                                             id: eventDocument[i]._no,
-                                            author: user,
-                                            server: serverName,
+                                            author: eventDocument[i]._author,
+                                            server: eventDocument[i]._server,
                                             clan: eventDocument[i]._clan,
                                             title: eventDocument[i].title,
                                             description: eventDocument[i].description,
@@ -895,7 +896,7 @@ module.exports = (bot, db, auth, config, winston) => {
                                     serv = bot.guilds.find(guild=>{ return guild.id === eventDocument[i]._server; });
                                     let serverName = serv.name;
 
-                                    //authorName = bot.getUserOrNickname(eventDocument[i]._author, svr);
+                                    authorName = bot.getUserOrNickname(eventDocument[i]._author, serv);
 
                                     if(eventDocument[i].attendees) {
                                         noAttendees = eventDocument[i].attendees.length;
@@ -908,7 +909,7 @@ module.exports = (bot, db, auth, config, winston) => {
 
                                     eventData.push({
                                         id: eventDocument[i]._no,
-                                        author: user,
+                                        author: authorName,
                                         server: serverName,
                                         clan: eventDocument[i]._clan,
                                         title: eventDocument[i].title,
