@@ -33,7 +33,7 @@ function eventStart(bot, winston, db, eventDocument) {
                             bot.createMessage(serverDocument.event_channels.announce, msg_content);
                             msg_content = `\`\`continued. . .\`\` `
                         }
-                        msg_content += `<@${mentioned[i]._id}> `
+                        msg_content += `<@${mentioned[i]}> `
                     }
                     bot.createMessage(serverDocument.event_channels.announce, msg_content).then(()=> {
                         console.log("Successfully announced the start of the event!");
