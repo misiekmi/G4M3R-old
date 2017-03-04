@@ -835,6 +835,7 @@ module.exports = (bot, db, auth, config, winston) => {
                                             }
                                         }
 
+
                                         eventData.push({
                                             id: eventDocument[i]._no,
                                             author: authorName,

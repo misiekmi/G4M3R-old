@@ -55,8 +55,37 @@
 			<% include ../partials/header %>
 		</div>
 		<div class="hero-body">
+			<div class="container has-text-centered">
+				<div class="columns is-vcentered">
+					<div class="column is-narrow">
+						<img src="/static/img/info-icon.png" style="border-radius: 100%;width:100px;">
+					</div>
+					<div class="column is-8">
+						<div class="notification is-primary is-small">
+							<h1 class="title is-3 has-text-left" style="font-family: Montserrat;color: white">
+								<span>
+									<strong>G4M3R is searching for additional developers</strong>
+								</span>
+							</h1>
+							<h2 class="title is-5 has-text-left" style="font-family: Montserrat;color: white">
+								If you know NodeJS, Eris and Bulma CSS and are interested, talk to us.
+							</h2>
+						</div>
+					</div>
+					<div class="column is-2 is-centered">
+						<a class="button is-light is-large" href="https://discord.gg/mtJyQjW">
+							<span class="icon">
+								<i class="fa fa-sign-in"></i>
+							</span>
+							<p>Join our Server</p>
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="hero-body">
 			<div class="container">
-				<div class="columns">
+				<div class="columns is-vcentered">
 					<div class="column is-half has-text-centered">
 						<img src="/static/img/icon.png" style="border-radius: 100%;width:200px;">
 						<h1 id="G4M3R-title" class="title is-1" style="font-family: Montserrat;">
@@ -112,9 +141,6 @@
 						<a class="nav-item is-tab section-shortcut-link" href="#features">
 							Features
 						</a>
-						<a class="nav-item is-tab section-shortcut-link" href="#customizability">
-							Customizability
-						</a>
 						<a class="nav-item is-tab section-shortcut-link" href="#servers">
 							Servers
 						</a>
@@ -130,7 +156,7 @@
 		</div>
 	</section>
 
-	<section id="about" class="hero is-primary is-bold is-medium">
+	<section id="about" class="hero is-primary is-bold is-small">
 		<div class="hero-body">
 			<div class="container">
 				<nav class="columns">
@@ -165,7 +191,7 @@
 		</div>
 	</section>
 
-	<section id="media" class="hero is-medium">
+	<section id="media" class="hero is-medium is-dark is-bold">
 		<div class="hero-body">
 			<div class="container">
 				<nav class="columns is-vcentered">
@@ -196,35 +222,35 @@
 								</div>
 							</div>
 							<div class="column is-one-quarter has-text-centered">
-								<div class="notification is-black">
+								<div class="notification is-light">
 									<span class="icon is-large">
 										<i class="fa fa-gamepad"></i>
 									</span>
-									<p class="title is-4"><strong>Events</strong> incl. notification</p>
+									<p class="title is-4" style="color: black"><strong>Events</strong> incl. notification</p>
 								</div>
 							</div>
 							<div class="column is-one-quarter has-text-centered">
-								<div class="notification is-black" title="* feature planned for future releases">
+								<div class="notification is-light" title="* feature planned for future releases">
 									<span class="icon is-large">
 										<i class="fa fa-trophy"></i>
 									</span>
-									<p class="title is-4"><strong>Tournaments</strong><br>management*</p>
+									<p class="title is-4" style="color: black"><strong>Tournaments</strong><br>management*</p>
 								</div>
 							</div>
 							<div class="column is-one-quarter has-text-centered">
-								<div class="notification is-black" title="* feature planned for future releases">
+								<div class="notification is-light" title="* feature planned for future releases">
 									<span class="icon is-large">
 										<i class="fa fa-search"></i>
 									</span>
-									<p class="title is-4"><strong>Looking for Group*</strong></p>
+									<p class="title is-4" style="color: black"><strong>Looking for Group*</strong></p>
 								</div>
 							</div>
 							<div class="column is-one-quarter has-text-centered">
-								<div class="notification is-black" title="* feature planned for future releases">
+								<div class="notification is-light" title="* feature planned for future releases">
 									<span class="icon is-large">
 										<i class="fa fa-users"></i>
 									</span>
-									<p class="title is-4"><strong>Clan / Team</strong><br>manager*</p>
+									<p class="title is-4" style="color: black"><strong>Clan / Team</strong><br>manager*</p>
 								</div>
 							</div>
 							<div class="column is-one-third has-text-centered">
@@ -282,18 +308,15 @@
 		</div>
 	</section>
 
-	<section id="features" class="hero is-medium is-dark is-bold">
+	<section id="features" class="hero is-small is-dark is-bold">
 		<div class="hero-body">
 			<div class="container">
 				<div class="tile is-ancestor">
-					<div class="tile is-vertical is-8">
+					<div class="tile is-vertical is-12">
 						<div class="tile is-parent">
 							<div class="tile is-child">
-								<p class="title is-2">Increase <strong>activity</strong> on <strong>your</strong> server</p>
-								<p class="subtitle is-4">G4M3R provides tons of <strong>in-chat tools</strong>.</p>
-								<p>
-									Whether your server has 5 members or 25000, you can rely on G4M3R to make it enjoyable while doing a great job of moderating annoying people. We've included plenty of powerful, customizable commands (e.g. event system incl. RSVP functionality) as well as a robust extension system, making G4M3R the bot you'll need for your awesome gaming community.
-								</p>
+								<p class="title is-2 has-text-centered">Increase <strong>activity</strong> on <strong>your</strong> server</p>
+								<p class="subtitle is-4 has-text-centered">G4M3R provides tons of <strong>in-chat tools</strong>.</p>
 							</div>
 						</div>
 						<div class="tile">
@@ -379,36 +402,6 @@
 							</div>
 						</div>
 					</div>
-					<div class="tile is-parent">
-						<div class="tile is-child">
-							<center>
-								<img class="image" src="/static/img/demo-activity.gif" style="border-radius: 3px;">
-							</center>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</section>
-
-	<section id="customizability" class="hero is-medium">
-		<div class="hero-body">
-			<div class="container">
-				<nav class="columns">
-					<div class="column has-text-centered">
-						<h2 class="title is-2">
-							<strong>Configure</strong> everything in the comprehensive <strong>admin console</strong>.
-						</h2>
-					</div>
-					<div class="column has-text-centered">
-						<h2 class="title is-2">
-							Build <strong>powerful extensions</strong> with JavaScript and share them.
-						</h2>
-					</div>
-				</nav>
-				<br><br>
-				<div class="has-text-centered">
-					<img src="/static/img/admin-console.png" style="border-radius: 3px;">
 				</div>
 			</div>
 		</div>
@@ -505,7 +498,7 @@
 						The Original <strong>AwesomeBot Creators</strong>
 					</h2>
 					<h4 class="subtitle is-4">
-						These guys created the basis of that bot monster!
+						The guys who created that monster!
 					</h4>
 				</div>
 				<br><br><br>
