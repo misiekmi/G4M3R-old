@@ -55,8 +55,8 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
                 viewer = new EventViewer(bot, msg, db, serverDocument, eventDocuments, userDocument, msg.member, page_size);
 
                 if (viewer.setEvent(tmp)) {
-                    if (auth(viewer.server, viewer.event, viewer.user)) {
-                        list(bot, db, winston, serverDocument, msg, viewer, viewer.getEventEditView(add_not_edit));
+                    if (auth.toDeleteOrEdit(viewer.server, viewer.event, viewer.member)) {
+                        list(bot, db, winston, serverDocument, msg, viewer, viewer.getEventEditView());
                     } // else exit silently
                 } else {
                     list(bot, db, winston, serverDocument, msg, viewer, viewer.getErrorView(2, tmp));
@@ -102,8 +102,8 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
                 viewer = new EventViewer(bot, msg, db, serverDocument, eventDocuments, userDocument, msg.member, page_size);
 
                 if (viewer.setEvent(tmp)) {
-                    if (auth(viewer.server, viewer.event, viewer.user)) {
-                        list(bot, db, winston, serverDocument, msg, viewer, viewer.deleteEvent(viewer.event, true));
+                    if (auth.toDeleteOrEdit(viewer.server, viewer.event, viewer.member)) {
+                        msg.channel.createMessage(viewer.deleteEvent(viewer.event, true));
                     } // else exit silently
                 } else {
                     msg.channel.createMessage(viewer.getErrorView(2, tmp, true));
