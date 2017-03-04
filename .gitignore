@@ -8,6 +8,7 @@ Configuration/config.json
 !.gitignore
 !.gitattributes
 ≠
+.DS-Store
 
 #ignore folders
 node_modules/

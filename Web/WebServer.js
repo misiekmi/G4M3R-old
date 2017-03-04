@@ -22,7 +22,7 @@ const sizeof = require("object-sizeof");
 const moment = require("moment");
 const textDiff = require("text-diff");
 const diff = new textDiff();
-
+var lastPage = "";
 const showdown = require("showdown");
 const md = new showdown.Converter({
     tables: true,
@@ -273,6 +273,18 @@ module.exports = (bot, db, auth, config, winston) => {
             }
             return data;
         };
+
+        //get all servers as ID for a user
+        function getUserServers(req) {
+            const userServers = [];
+            if (req.user.guilds) {
+                for (let i = 0; i < req.user.guilds.length; i++) {
+                    userServers.push(req.user.guilds[i].id);
+                }
+                return userServers;
+            }
+        }
+
         app.get("/api/servers", (req, res) => {
             const params = {
                 "config.public_data.isShown": true
@@ -352,6 +364,8 @@ module.exports = (bot, db, auth, config, winston) => {
             }
             return userProfile;
         };
+
+
         app.get("/api/users", (req, res) => {
             const usr = bot.users.get(req.query.id);
             if (usr) {
@@ -736,6 +750,220 @@ module.exports = (bot, db, auth, config, winston) => {
             }
         });
 
+        // Events tab
+        app.get("/events", (req, res) => {
+            res.redirect("/events/overview");
+        });
+        var eventState = "";
+        app.get("/events/(|overview|myevents)", (req, res) => {
+            eventState = req.path.substring(req.path.lastIndexOf("/") + 1);
+            const pageTitle = `${eventState.charAt(0).toUpperCase() + eventState.slice(1)} - G4M3R Events`
+
+            const renderPage = (serverData, eventData) => {
+                res.render("pages/events.ejs", {
+                    authUser: req.isAuthenticated() ? getAuthUser(req.user) : null,
+                    isMaintainer: req.isAuthenticated() ? config.maintainers.indexOf(req.user.id) > -1 : false,
+                    pageTitle,
+                    serverData,
+                    activeSearchQuery: req.query.id || req.query.q,
+                    mode: eventState,
+                    eventData
+                });
+            };
+
+            if (req.isAuthenticated()) {
+                lastPage = "events"
+                const serverData = [];
+                const eventData = [];
+                const usr = bot.users.get(req.user.id);
+
+                const addServerData = (i, callback) => {
+                    if (req.user.guilds && i < req.user.guilds.length) {
+                        const svr = bot.guilds.get(req.user.guilds[i].id);
+                        if (svr && usr) {
+                            db.servers.findOne({_id: svr.id}, (err, serverDocument) => {
+                                if (!err && serverDocument) {
+                                    const member = svr.members.get(usr.id);
+                                    if (bot.getUserBotAdmin(svr, serverDocument, member) >= 0) {
+                                        serverData.push({
+                                            name: req.user.guilds[i].name,
+                                            id: req.user.guilds[i].id,
+                                            icon: req.user.guilds[i].icon ? (`https://cdn.discordapp.com/icons/${req.user.guilds[i].id}/${req.user.guilds[i].icon}.jpg`) : "/static/img/discord-icon.png"
+                                        });
+
+                                    }
+                                    addServerData(++i, callback);
+                                }
+                            });
+                        } else {
+                            addServerData(++i, callback);
+                        }
+
+                    } else {
+                        callback();
+                    }
+                };
+
+
+                if (req.path === "/events/overview") {
+
+                    const addEventData = () => {
+
+                        var userServers = getUserServers(req);
+
+                        // TODO: get function to work to events for all servers the user is in
+                        for(let l = 0; l < req.user.guilds.length; l++) {
+
+                            db.events.find( { _server: req.user.guilds[l].id }, (err, eventDocument) => {
+                                if (!err && eventDocument) {
+
+                                    for(let i=0;i<eventDocument.length;i++) {
+                                        let noAttendees = 0;
+                                        let arrayAttendees = [];
+                                        let authorName = "";
+                                        let user = usr.username;
+                                        //let svr = bot.guilds.get(eventDocument[i]._server);
+                                        let serv = {};
+                                        serv = bot.guilds.find(guild=>{ return guild.id === eventDocument[i]._server; });
+                                        let serverName = serv.name;
+                                        authorName = bot.getUserOrNickname(eventDocument[i]._author, serv);
+
+                                        if(eventDocument[i].attendees) {
+                                            noAttendees = eventDocument[i].attendees.length;
+                                            for (let j=0;j<eventDocument[i].attendees.length;j++) {
+                                                arrayAttendees.push({
+                                                    attendees: eventDocument[i].attendees._id
+                                                });
+                                            }
+                                        }
+
+
+                                        eventData.push({
+                                            id: eventDocument[i]._no,
+                                            author: authorName,
+                                            server: serverName,
+                                            clan: eventDocument[i]._clan,
+                                            title: eventDocument[i].title,
+                                            description: eventDocument[i].description,
+                                            maxAttendees: eventDocument[i].attendee_max,
+                                            actualAttendees: noAttendees,
+                                            attendees: arrayAttendees,
+                                            isPublic: eventDocument[i].isPublic
+                                        });
+                                    }
+                                } else {
+                                    winston.error(err);
+                                }
+                            });
+                        }
+                    };
+
+                    if (serverData && eventData) {
+                        addServerData(0, () => {
+                            serverData.sort((a, b) => {
+                                return a.name.localeCompare(b.name);
+                            });
+                        });
+
+                        addEventData(() => {
+                            eventData.sort((a, b) => {
+                                return a.title.localeCompare(b.title);
+                            });
+                        });
+
+                        db.users.findOne({_id: req.user.id}, (err) => {
+                            if (err) {
+                                winston.warn(err);
+                            } else {
+                                renderPage(serverData,eventData);
+                            }
+
+                        });
+                    } else {
+                        renderPage();
+                    }
+
+                } else if (req.path === "/events/myevents") {
+
+                    const addEventData = () => {
+
+                        db.events.find( { _author: usr.id }, (err, eventDocument) => {
+                            if (!err && eventDocument) {
+
+                                for(let i=0;i<eventDocument.length;i++) {
+                                    let noAttendees = 0;
+                                    let arrayAttendees = [];
+                                    let authorName = "";
+                                    let user = usr.username;
+                                    let serv = {};
+                                    serv = bot.guilds.find(guild=>{ return guild.id === eventDocument[i]._server; });
+                                    let serverName = serv.name;
+
+                                    authorName = bot.getUserOrNickname(eventDocument[i]._author, serv);
+
+                                    if(eventDocument[i].attendees) {
+                                        noAttendees = eventDocument[i].attendees.length;
+                                        for (let j=0;j<eventDocument[i].attendees.length;j++) {
+                                            arrayAttendees.push({
+                                                attendees: eventDocument[i].attendees._id
+                                            });
+                                        }
+                                    }
+
+                                    eventData.push({
+                                        id: eventDocument[i]._no,
+                                        author: authorName,
+                                        server: serverName,
+                                        clan: eventDocument[i]._clan,
+                                        title: eventDocument[i].title,
+                                        description: eventDocument[i].description,
+                                        maxAttendees: eventDocument[i].attendee_max,
+                                        actualAttendees: noAttendees,
+                                        attendees: arrayAttendees,
+                                        isPublic: eventDocument[i].isPublic
+                                    });
+                                }
+                            } else {
+                                winston.error(err);
+                            }
+                        });
+                    };
+
+                    if (serverData && eventData) {
+                        addServerData(0, () => {
+                            serverData.sort((a, b) => {
+                                return a.name.localeCompare(b.name);
+                            });
+                        });
+
+                        addEventData(() => {
+                            eventData.sort((a, b) => {
+                                return a.title.localeCompare(b.title);
+                            });
+                        });
+
+                        db.users.findOne({_id: req.user.id}, (err) => {
+                            if (err) {
+                                winston.warn(err);
+                            } else {
+                                renderPage(serverData,eventData);
+                            }
+
+                        });
+                    } else {
+                        renderPage();
+                    }
+
+                }
+
+
+            } else {
+                res.redirect("/login");
+            }
+        });
+
+
+
         // Extension gallery
         app.get("/extensions", (req, res) => {
             res.redirect("/extensions/gallery");
@@ -918,7 +1146,7 @@ module.exports = (bot, db, auth, config, winston) => {
                         res.render("pages/extensions.ejs", {
                             authUser: req.isAuthenticated() ? getAuthUser(req.user) : null,
                             isMaintainer: req.isAuthenticated() ? config.maintainers.indexOf(req.user.id) > -1 : false,
-                            pageTitle,
+                            pageTitle: "My G4M3R Events",
                             serverData,
                             activeSearchQuery: req.query.id || req.query.q,
                             mode: extensionState,
@@ -1712,7 +1940,13 @@ module.exports = (bot, db, auth, config, winston) => {
 		if(config.global_blocklist.indexOf(req.user.id)>-1 || !req.user.verified) {
 			res.redirect("/error");
 		} else {
-			res.redirect("/dashboard");
+            //if events page before login, redirect to events page directly, not to dashboard
+		    if(lastPage == "events") {
+                res.redirect("/events");
+                lastPage = "";
+            } else {
+                res.redirect("/dashboard");
+            }
 		}
 	});
 
