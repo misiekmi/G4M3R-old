@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>User Console</title>
+    <% include ../partials/head %>
+	<script src="/static/js/form-change-listener.js"></script>
+</head>
+<body>
+	<% include ../partials/dashboard-header %>
+
+	<section class="section is-white">
+		<div class="container">
+			<div class="columns">
+				<div id="menu" class="column is-one-quarter">
+					<% include ../partials/user-menu %>
+				</div>
+				<div class="column">
+					<h1 class="title">
+						Locale Settings
+					</h1>
+					<div class="container">
+						<article class="message is-primary">
+							<div class="message-body">
+								<div class="content">
+									<strong>ALERT:</strong> This page is not yet operational. Use the <code>profile</code> command to configure these settings.
+								</div>
+							</div>
+						</article>
+						<article class="message is-primary">
+							<div class="message-body">
+								<div class="content">
+									<strong>G4M3R</strong> can adjust commands to reflect your locale.
+									Keep in mind, if you're profile is set to public other users will be able to view this information.
+								</div>
+							</div>
+						</article>
+						<br>
+						<div>
+							<form id="form" action="<%= currentPage %>?svrid=user" method="post">
+								<label class="label">Location / City</label>
+								<p class="control">
+									<input name="user_location" class="input" type="text" value="<%= userDocument.location %>" minlength="0" maxlength="30">
+									<span class="help"></span>
+									<span class="help">Set your location. Accepted input is flexible.</span>
+								</p>
+								<br>
+								<label class="label">Default Timezone</label>
+								<p class="control">
+									<input id="user_timezone" class="input" type="text" minlength="2" maxlength="20" placeholder="Timezone" list="zones" onkeypress="return event.keyCode != 13;">
+									<datalist id="zones">
+                                        <% for(var i=0; i<timezones.length; i++) { %>
+										<option value=<%= timezones[i]%>><%= timezones[i]%></option>
+                                        <% } %>
+									</datalist>
+									<span class="help">All dates and times will be represented in your timezone. You need to do no additional conversions.</span>
+								</p>
+								<br>
+								<label class="label">Preferred Temperature Unit</label>
+								<p class="control">
+									<input type="radio" name="user_temp_unit" value="C" <%= userDocument.weatherunit==="c"?"checked":"" %>>Celsius</input>
+									<input type="radio" name="user_temp_unit" value="F" <%= userDocument.weatherunit==="f"?"checked":"" %>>Fahrenheit</input>
+									<span class="help">Used only when displaying weather information</span>
+								</p>
+								<br>
+								<!--
+                                <% var formButtonsUnsaved = false; %>
+                                <% include ../partials/form-buttons %>
+                                <% include ../partials/form-buttons-bar %>
+                                -->
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<% include ../partials/footer %>
+	<% include ../partials/scroll-top-button %>
+</body>
+</html>

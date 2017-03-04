@@ -3,7 +3,7 @@ const config = require("../../Configuration/config.json");
 const auth = require("./EventsAuth");
 
 /// events viewer constructor
-function Viewer(bot, msg, db, serverDocument, eventDocuments, userDocument, memberObject, page_size, filter) {
+function Viewer(bot, msg, db, winston, serverDocument, eventDocuments, userDocument, memberObject, page_size, filter) {
     this.bot = bot;
     this.msg = msg;
     this.db = db;
@@ -48,11 +48,16 @@ Viewer.prototype.setEvent = function(event_no) {
 };
 
 /// generate a list view embed
-Viewer.prototype.getPageView = function(page_no) {
+Viewer.prototype.getPageView = function(page_no, winston) {
     this.mode = 1;
 
     let embed = {};
-    embed.color = parseInt(config.colors.blue, 16);
+    if (config.colors) {
+        embed.color = parseInt(config.colors.blue, 16);
+    } else {
+        winston.warn("missing colors in config.json");
+    }
+
     embed.description = "";
     embed.author = {
         name: `EVENT OVERVIEW`,
@@ -123,7 +128,7 @@ Viewer.prototype.getEventView = function() {
                 }
                 //attendeesNames += `<@`+this.event.attendees[i]._id+`>, `;
                 hasAttendees = true;
-            }
+            }1
         }
     }
 

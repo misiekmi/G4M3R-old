@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title><%= pageTitle %></title>
+	<% include ../partials/head %>
+
+	<script>
+	var mq = window.matchMedia("screen and (max-width: 768px)");
+	mq.addListener(mediaStyle);
+
+	function mediaStyle(mq) {
+		if(mq.matches) {
+			$(".header-search-box").removeClass("is-large");
+			document.getElementById("frame").style.paddingLeft = "15px";
+			document.getElementById("frame").style.paddingRight = "15px";
+		} else {
+			$(".header-search-box").addClass("is-large");
+			document.getElementById("frame").style.paddingLeft = "0px";
+			document.getElementById("frame").style.paddingRight = "0px";
+		}
+	}
+
+	String.prototype.replaceAll = function(target, replacement) {
+		return this.replace(new RegExp(target, "g"), replacement);
+	};
+	</script>
+</head>
+<body>
+	<section id="header" class="hero is-primary is-small is-bold" style="background: url('/header-image');background-size: cover;">
+		<div class="hero-head">
+			<% include ../partials/header %>
+		</div>
+		<div class="hero-body">
+			<div class="container has-text-centered">
+				<h1 class="title is-1">
+					<span class="icon is-large">
+                        <i class="fa fa-bolt"></i>
+                    </span>
+					Your <strong>events</strong> area.
+				</h1>
+			</div>
+		</div>
+		<div class="hero-foot">
+			<nav class="tabs is-boxed is-fullwidth">
+				<div class="container">
+					<ul>
+                        <% if(authUser) { %>
+						<li class="<%= mode=='overview' ? 'is-active' : '' %>">
+							<a href="/events/overview">
+								<span class="icon">
+									<i class="fa fa-gamepad"></i>
+								</span>
+									<span>Overview</span>
+							</a>
+						</li>
+						<li class="<%= mode=='myevents' ? 'is-active' : '' %>">
+							<a href="/events/myevents">
+								<span class="icon">
+									<i class="fa fa-calendar"></i>
+								</span>
+									<span>My Events</span>
+							</a>
+						</li>
+						<li class="<%= mode=='config' ? 'is-active' : '' %>">
+							<a href="/events/config">
+								<span class="icon">
+									<i class="fa fa-cog"></i>
+								</span>
+								<span>Event Config</span>
+							</a>
+						</li>
+						<% } %>
+					</ul>
+				</div>
+			</nav>
+		</div>
+	</section>
+
+	<section id="frame"	class="section is-white">
+		<div class="container">
+            <% if(mode == "overview") { %>
+				<% include ../partials/event-overview %>
+            <% } %>
+            <% if(mode == "myevents") { %>
+                <% include ../partials/event-myevents %>
+            <% } %>
+		</div>
+	</section>
+
+	<section class="hero is-small is-black">
+		<div class="hero-body">
+			<div class="container">
+				<div class="has-text-centered">
+					<p class="hero-buttons">
+						<a class="button is-primary is-outlined is-large" href="/wiki/Extensions">
+							<span class="icon">
+								<i class="fa fa-book"></i>
+							</span>
+							<span>Read the event docs</span>
+						</a>
+					</p>
+					<br>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<% include ../partials/footer %>
+	<% include ../partials/scroll-top-button %>
+</body>

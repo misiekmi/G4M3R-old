@@ -17,6 +17,9 @@
 		#G4M3R-subtitle {
 			font-size: 30px;
 		}
+		#G4M3R-subsubtitle {
+			font-size: 25px;
+		}
 		#G4M3R-discord {
 			height: 31px;
 		}
@@ -27,6 +30,9 @@
 		}
 		#G4M3R-subtitle {
 			font-size: 40px;
+		}
+		#G4M3R-subsubtitle {
+			font-size: 30px;
 		}
 		#G4M3R-discord {
 			height: 42px;
@@ -44,35 +50,85 @@
 	</script>
 </head>
 <body>
-	<section id="header" class="hero is-primary is-fullheight is-bold" style="background: url('/header-image');background-size: cover;">
-		<div class="hero-head">
-			<% include ../partials/header %>
-		</div>
-		<div class="hero-body">
-			<div class="container has-text-centered">
-				<img src="/static/img/icon.png" style="border-radius: 100%;width:200px;">
-				<h1 id="G4M3R-title" class="title is-1" style="font-family: Montserrat;">
-					<span style="display: inline-block;">G4M3R</span>
-				</h1>
-				<h2 id="G4M3R-subtitle" class="title is-2">
-					The best <img id="G4M3R-discord" src="/static/img/discord-logo.png" style="vertical-align: top;"> bot!
-				</h2>
-				<br>
+<section id="header" class="hero is-primary is-small is-bold" style="background: url('/header-image');background-size: cover;">
+	<div class="hero-head">
+        <% include ../partials/header %>
+	</div>
+</section>
 
-				<p class="hero-buttons">
-					<a class="button is-primary is-large" href="/add">
+<section id="notification" class="hero is-primary is-small is-bold">
+	<div class="hero-head">
+		<div class="container has-text-centered">
+			<div class="columns is-vcentered">
+					<div class="column is-narrow">
+					<img src="/static/img/exclamation-black-nobackground.png" style="border-radius: 100%;width:100px;">
+				</div>
+				<div class="column is-8">
+					<div class="notification is-primary is-small">
+						<h1 class="title is-3 has-text-left" style="font-family: Montserrat;color: white">
+								<span>
+									<strong>G4M3R is searching for additional developers</strong>
+								</span>
+						</h1>
+						<h2 class="subtitle is-5 has-text-left" style="font-family: Montserrat;color: white">
+							If you know NodeJS, Eris and Bulma CSS and are interested, talk to us.
+						</h2>
+					</div>
+				</div>
+				<div class="column is-2 is-centered">
+					<a class="button is-light is-large" href="https://discord.gg/mtJyQjW">
+							<span class="icon">
+								<i class="fa fa-sign-in"></i>
+							</span>
+						<p>Join our Server</p>
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+	<section id="start" class="hero is-primary is-fullheight is-bold" style="background: url('/header-image');background-size: cover;">
+		<div class="hero-body">
+			<div class="container">
+				<div class="columns is-vcentered">
+					<div class="column is-half has-text-centered">
+						<img src="/static/img/icon.png" style="border-radius: 100%;width:200px;">
+						<h1 id="G4M3R-title" class="title is-1" style="font-family: Montserrat;">
+							<span style="display: inline-block;">G4M3R</span>
+						</h1>
+						<h2 id="G4M3R-subtitle" class="title is-2">
+							The best <img id="G4M3R-discord" src="/static/img/discord-logo.png" style="vertical-align: top;"> bot <br>
+							for gaming related stuff!
+						</h2>
+						<br>
+
+						<p class="hero-buttons">
+							<a class="button is-primary is-large" href="/add">
 						<span class="icon">
 							<i class="fa fa-plus"></i>
 						</span>
-						<span>Add to Server</span>
-					</a>
-				</p>
-				<br>
+								<span>Add to Server</span>
+							</a>
+						</p>
+						<br>
 
-				<% if(bannerMessage) { %>
-					<br><br>
-					<h3 class="title is-5"><%- bannerMessage %></h3>
-				<% } %>
+                        <% if(bannerMessage) { %>
+						<br><br>
+						<h3 class="title is-5"><%- bannerMessage %></h3>
+                        <% } %>
+					</div>
+					<div class="column is-half has-text-centered">
+						<h1 id="G4M3R-subtitle" class="title is-5" style="font-family: Montserrat;">
+							<span style="display: inline-block;"><strong>New event system</strong> </span>
+						</h1>
+						<h2 id="G4M3R-subsubtitle" class="title is-7">
+							The only event system out there!
+						</h2>
+						<br>
+						<img src="/static/img/events.gif" style="width:400px;">
+					</div>
+				</div>
 			</div>
 		</div>
 		<div class="hero-foot">
@@ -91,9 +147,6 @@
 						<a class="nav-item is-tab section-shortcut-link" href="#features">
 							Features
 						</a>
-						<a class="nav-item is-tab section-shortcut-link" href="#customizability">
-							Customizability
-						</a>
 						<a class="nav-item is-tab section-shortcut-link" href="#servers">
 							Servers
 						</a>
@@ -109,7 +162,7 @@
 		</div>
 	</section>
 
-	<section id="about" class="hero is-primary is-bold is-medium">
+	<section id="about" class="hero is-primary is-bold is-small">
 		<div class="hero-body">
 			<div class="container">
 				<nav class="columns">
@@ -144,7 +197,7 @@
 		</div>
 	</section>
 
-	<section id="media" class="hero is-medium">
+	<section id="media" class="hero is-medium is-dark is-bold">
 		<div class="hero-body">
 			<div class="container">
 				<nav class="columns is-vcentered">
@@ -175,35 +228,35 @@
 								</div>
 							</div>
 							<div class="column is-one-quarter has-text-centered">
-								<div class="notification is-black">
+								<div class="notification is-light">
 									<span class="icon is-large">
 										<i class="fa fa-gamepad"></i>
 									</span>
-									<p class="title is-4"><strong>Events</strong> incl. notification</p>
+									<p class="title is-4" style="color: black"><strong>Events</strong> incl. notification</p>
 								</div>
 							</div>
 							<div class="column is-one-quarter has-text-centered">
-								<div class="notification is-black" title="* feature planned for future releases">
+								<div class="notification is-light" title="* feature planned for future releases">
 									<span class="icon is-large">
 										<i class="fa fa-trophy"></i>
 									</span>
-									<p class="title is-4"><strong>Tournaments</strong><br>management*</p>
+									<p class="title is-4" style="color: black"><strong>Tournaments</strong><br>management*</p>
 								</div>
 							</div>
 							<div class="column is-one-quarter has-text-centered">
-								<div class="notification is-black" title="* feature planned for future releases">
+								<div class="notification is-light" title="* feature planned for future releases">
 									<span class="icon is-large">
 										<i class="fa fa-search"></i>
 									</span>
-									<p class="title is-4"><strong>Looking for Group*</strong></p>
+									<p class="title is-4" style="color: black"><strong>Looking for Group*</strong></p>
 								</div>
 							</div>
 							<div class="column is-one-quarter has-text-centered">
-								<div class="notification is-black" title="* feature planned for future releases">
+								<div class="notification is-light" title="* feature planned for future releases">
 									<span class="icon is-large">
 										<i class="fa fa-users"></i>
 									</span>
-									<p class="title is-4"><strong>Clan / Team</strong><br>manager*</p>
+									<p class="title is-4" style="color: black"><strong>Clan / Team</strong><br>manager*</p>
 								</div>
 							</div>
 							<div class="column is-one-third has-text-centered">
@@ -261,18 +314,15 @@
 		</div>
 	</section>
 
-	<section id="features" class="hero is-medium is-dark is-bold">
+	<section id="features" class="hero is-small is-dark is-bold">
 		<div class="hero-body">
 			<div class="container">
 				<div class="tile is-ancestor">
-					<div class="tile is-vertical is-8">
+					<div class="tile is-vertical is-12">
 						<div class="tile is-parent">
 							<div class="tile is-child">
-								<p class="title is-2">Increase <strong>activity</strong> on <strong>your</strong> server</p>
-								<p class="subtitle is-4">G4M3R provides tons of <strong>in-chat tools</strong>.</p>
-								<p>
-									Whether your server has 5 members or 25000, you can rely on G4M3R to make it enjoyable while doing a great job of moderating annoying people. We've included plenty of powerful, customizable commands (e.g. event system incl. RSVP functionality) as well as a robust extension system, making G4M3R the bot you'll need for your awesome gaming community.
-								</p>
+								<p class="title is-2 has-text-centered">Increase <strong>activity</strong> on <strong>your</strong> server</p>
+								<p class="subtitle is-4 has-text-centered">G4M3R provides tons of <strong>in-chat tools</strong>.</p>
 							</div>
 						</div>
 						<div class="tile">
@@ -358,36 +408,6 @@
 							</div>
 						</div>
 					</div>
-					<div class="tile is-parent">
-						<div class="tile is-child">
-							<center>
-								<img class="image" src="/static/img/demo-activity.gif" style="border-radius: 3px;">
-							</center>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</section>
-
-	<section id="customizability" class="hero is-medium">
-		<div class="hero-body">
-			<div class="container">
-				<nav class="columns">
-					<div class="column has-text-centered">
-						<h2 class="title is-2">
-							<strong>Configure</strong> everything in the comprehensive <strong>admin console</strong>.
-						</h2>
-					</div>
-					<div class="column has-text-centered">
-						<h2 class="title is-2">
-							Build <strong>powerful extensions</strong> with JavaScript and share them.
-						</h2>
-					</div>
-				</nav>
-				<br><br>
-				<div class="has-text-centered">
-					<img src="/static/img/admin-console.png" style="border-radius: 3px;">
 				</div>
 			</div>
 		</div>
@@ -484,7 +504,7 @@
 						The Original <strong>AwesomeBot Creators</strong>
 					</h2>
 					<h4 class="subtitle is-4">
-						These guys created the basis of that bot monster!
+						The guys who created that monster!
 					</h4>
 				</div>
 				<br><br><br>
@@ -500,8 +520,8 @@
 								<div class="card-content">
 									<div class="media">
 										<div class="media-content">
-											<p class="title is-2" ondblclick="this.innerHTML = 'LazyWaffle';"><strong>BitQuote</strong></p>
-											<p class="subtitle is-4"><em>Creator of AwesomeBot</em></p>
+											<p class="title is-3" ondblclick="this.innerHTML = 'LazyWaffle';"><strong>BitQuote</strong></p>
+											<p class="subtitle is-5"><em>Creator of AwesomeBot</em></p>
 										</div>
 									</div>
 
@@ -527,8 +547,8 @@
 								<div class="card-content">
 									<div class="media">
 										<div class="media-content">
-											<p class="title is-2"><strong>mistmurk</strong></p>
-											<p class="subtitle is-4"><em>AwesomeBot Dev</em></p>
+											<p class="title is-3"><strong>mistmurk</strong></p>
+											<p class="subtitle is-5"><em>AwesomeBot Dev</em></p>
 										</div>
 									</div>
 
@@ -556,8 +576,8 @@
 								<div class="card-content">
 									<div class="media">
 										<div class="media-content">
-											<p class="title is-2"><strong>ksham</strong></p>
-											<p class="subtitle is-4"><em>AwesomeBot Dev</em></p>
+											<p class="title is-3"><strong>ksham</strong></p>
+											<p class="subtitle is-5"><em>AwesomeBot Dev</em></p>
 										</div>
 									</div>
 
@@ -576,40 +596,92 @@
 				<br>
 				<div class="has-text-centered">
 					<h2 class="title is-2">
-						The <strong>new Guy</strong> from the GAwesomeBot version
+						The <strong>new guys</strong> from the GAwesomeBot version
 					</h2>
 					<h4 class="subtitle is-4">
-						He pulls the ropes at the community version of AwesomeBot.
+						They pull the ropes at the community version of AwesomeBot.
 					</h4>
 					<div class="columns">
 						<div class="column">
-						<center>
-							<div class="card" style="text-align: left;">
-								<div class="card-image">
-									<figure class="image is-square">
-										<img src="/static/img/gilbert.png" alt="">
-									</figure>
-								</div>
-								<div class="card-content">
-									<div class="media">
-										<div class="media-content">
-											<p class="title is-2"><strong>Gilbert Gobbels</strong></p>
-											<p class="subtitle is-4"><em>Sysadmin, Hoster, Developer</em></p>
+							<center>
+								<div class="card" style="text-align: left;">
+									<div class="card-image">
+										<figure class="image is-square">
+											<img src="/static/img/gilbert.png" alt="">
+										</figure>
+									</div>
+									<div class="card-content">
+										<div class="media">
+											<div class="media-content">
+												<p class="title is-3"><strong>Gilbert Gobbels</strong></p>
+												<p class="subtitle is-5"><em>Sysadmin, Hoster, Developer</em></p>
+											</div>
+										</div>
+
+										<div class="content">
+											The Almighty Fish <span class="icon">
+												<i class="fa fa-fish"></i>
+											</span>
+											<br>
+											<a href="https://github.com/GilbertGobbels">GitHub</a>
+											&nbsp;
+											<a href="https://twitter.com/GG142_">Twitter</a>
 										</div>
 									</div>
+								</div>
+							</center>
+						</div>
+						<div class="column is-one-third">
+							<center>
+								<div class="card" style="text-align: left;">
+									<div class="card-image">
+										<figure class="image is-square">
+											<img src="/static/img/vlad.png" alt="">
+										</figure>
+									</div>
+									<div class="card-content">
+										<div class="media">
+											<div class="media-content">
+												<p class="title is-3"><strong>King - Vlad</strong></p>
+												<p class="subtitle is-5">Developer, Embedder</p>
+											</div>
+										</div>
 
-									<div class="content">
-										The Almighty Fish <span class="icon">
-											<i class="fa fa-fish"></i>
+										<div class="content">
+											I do embeds <span class="icon">
+											<i class="fa fa-id-card-u"></i>
 										</span>
-										<br>
-										<a href="https://github.com/GilbertGobbels">GitHub</a>
-										&nbsp;
-										<a href="https://twitter.com/GG142_">Twitter</a> 
+											<br>
+											<a href="https://github.com/KingDGrizzle">GitHub</a>
+										</div>
 									</div>
 								</div>
-							</div>
-						</center>
+							</center>
+						</div>
+						<div class="column is-one-third">
+							<center>
+								<div class="card" style="text-align: left;">
+									<div class="card-image">
+										<figure class="image is-square">
+											<img src="/static/img/hilbert.png" alt="">
+										</figure>
+									</div>
+									<div class="card-content">
+										<div class="media">
+											<div class="media-content">
+												<p class="title is-3" ondblclick="if (this.innerHTML=='HilbertGilbertson') {this.innerHTML = 'GilbertHilbertson'} else {this.innerHTML = 'HilbertGilbertson'}"><strong>HilbertGilbertson</strong></p>
+												<p class="subtitle is-5">Contributor, Support, Wiki</p>
+											</div>
+										</div>
+
+										<div class="content">
+											I should give Gilbert a quote <span class="icon">
+											<i class="fa fa-question-circle"></i>
+										</span>
+											<br>
+											<a href="https://github.com/HilbertGilbertson">GitHub</a>
+										</div>
+							</center>
 						</div>
 					</div>
 				</div>
@@ -617,7 +689,7 @@
 		</div>
 	</section>
 
-	<section id="links" class="hero is-medium is-black">
+	<section id="links" class="hero is-small is-black">
 		<div class="hero-body">
 			<div class="container">
 				<div class="has-text-centered">

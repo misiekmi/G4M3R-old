@@ -22,7 +22,7 @@ const sizeof = require("object-sizeof");
 const moment = require("moment");
 const textDiff = require("text-diff");
 const diff = new textDiff();
-
+var lastPage = "";
 const showdown = require("showdown");
 const md = new showdown.Converter({
     tables: true,
@@ -273,6 +273,18 @@ module.exports = (bot, db, auth, config, winston) => {
             }
             return data;
         };
+
+        //get all servers as ID for a user
+        function getUserServers(req) {
+            const userServers = [];
+            if (req.user.guilds) {
+                for (let i = 0; i < req.user.guilds.length; i++) {
+                    userServers.push(req.user.guilds[i].id);
+                }
+                return userServers;
+            }
+        }
+
         app.get("/api/servers", (req, res) => {
             const params = {
                 "config.public_data.isShown": true
@@ -352,6 +364,8 @@ module.exports = (bot, db, auth, config, winston) => {
             }
             return userProfile;
         };
+
+
         app.get("/api/users", (req, res) => {
             const usr = bot.users.get(req.query.id);
             if (usr) {
@@ -689,7 +703,7 @@ module.exports = (bot, db, auth, config, winston) => {
                 const usr = bot.users.get(req.user.id);
                 if (usr) {
                     if (req.query.svrid == "user") {
-                        next(usr, {t:'t'});
+                        next(usr, {magic_cookie:'ZzRtM3IueHl6'});
                     } else if (req.query.svrid == "maintainer") {
                         if (config.maintainers.indexOf(req.user.id) > -1) {
                             next(usr);
@@ -735,6 +749,220 @@ module.exports = (bot, db, auth, config, winston) => {
                 res.json(getUserList(bot.users));
             }
         });
+
+        // Events tab
+        app.get("/events", (req, res) => {
+            res.redirect("/events/overview");
+        });
+        var eventState = "";
+        app.get("/events/(|overview|myevents)", (req, res) => {
+            eventState = req.path.substring(req.path.lastIndexOf("/") + 1);
+            const pageTitle = `${eventState.charAt(0).toUpperCase() + eventState.slice(1)} - G4M3R Events`
+
+            const renderPage = (serverData, eventData) => {
+                res.render("pages/events.ejs", {
+                    authUser: req.isAuthenticated() ? getAuthUser(req.user) : null,
+                    isMaintainer: req.isAuthenticated() ? config.maintainers.indexOf(req.user.id) > -1 : false,
+                    pageTitle,
+                    serverData,
+                    activeSearchQuery: req.query.id || req.query.q,
+                    mode: eventState,
+                    eventData
+                });
+            };
+
+            if (req.isAuthenticated()) {
+                lastPage = "events"
+                const serverData = [];
+                const eventData = [];
+                const usr = bot.users.get(req.user.id);
+
+                const addServerData = (i, callback) => {
+                    if (req.user.guilds && i < req.user.guilds.length) {
+                        const svr = bot.guilds.get(req.user.guilds[i].id);
+                        if (svr && usr) {
+                            db.servers.findOne({_id: svr.id}, (err, serverDocument) => {
+                                if (!err && serverDocument) {
+                                    const member = svr.members.get(usr.id);
+                                    if (bot.getUserBotAdmin(svr, serverDocument, member) >= 0) {
+                                        serverData.push({
+                                            name: req.user.guilds[i].name,
+                                            id: req.user.guilds[i].id,
+                                            icon: req.user.guilds[i].icon ? (`https://cdn.discordapp.com/icons/${req.user.guilds[i].id}/${req.user.guilds[i].icon}.jpg`) : "/static/img/discord-icon.png"
+                                        });
+
+                                    }
+                                    addServerData(++i, callback);
+                                }
+                            });
+                        } else {
+                            addServerData(++i, callback);
+                        }
+
+                    } else {
+                        callback();
+                    }
+                };
+
+
+                if (req.path === "/events/overview") {
+
+                    const addEventData = () => {
+
+                        var userServers = getUserServers(req);
+
+                        // TODO: get function to work to events for all servers the user is in
+                        for(let l = 0; l < req.user.guilds.length; l++) {
+
+                            db.events.find( { _server: req.user.guilds[l].id }, (err, eventDocument) => {
+                                if (!err && eventDocument) {
+
+                                    for(let i=0;i<eventDocument.length;i++) {
+                                        let noAttendees = 0;
+                                        let arrayAttendees = [];
+                                        let authorName = "";
+                                        let user = usr.username;
+                                        //let svr = bot.guilds.get(eventDocument[i]._server);
+                                        let serv = {};
+                                        serv = bot.guilds.find(guild=>{ return guild.id === eventDocument[i]._server; });
+                                        let serverName = serv.name;
+                                        authorName = bot.getUserOrNickname(eventDocument[i]._author, serv);
+
+                                        if(eventDocument[i].attendees) {
+                                            noAttendees = eventDocument[i].attendees.length;
+                                            for (let j=0;j<eventDocument[i].attendees.length;j++) {
+                                                arrayAttendees.push({
+                                                    attendees: eventDocument[i].attendees._id
+                                                });
+                                            }
+                                        }
+
+
+                                        eventData.push({
+                                            id: eventDocument[i]._no,
+                                            author: authorName,
+                                            server: serverName,
+                                            clan: eventDocument[i]._clan,
+                                            title: eventDocument[i].title,
+                                            description: eventDocument[i].description,
+                                            maxAttendees: eventDocument[i].attendee_max,
+                                            actualAttendees: noAttendees,
+                                            attendees: arrayAttendees,
+                                            isPublic: eventDocument[i].isPublic
+                                        });
+                                    }
+                                } else {
+                                    winston.error(err);
+                                }
+                            });
+                        }
+                    };
+
+                    if (serverData && eventData) {
+                        addServerData(0, () => {
+                            serverData.sort((a, b) => {
+                                return a.name.localeCompare(b.name);
+                            });
+                        });
+
+                        addEventData(() => {
+                            eventData.sort((a, b) => {
+                                return a.title.localeCompare(b.title);
+                            });
+                        });
+
+                        db.users.findOne({_id: req.user.id}, (err) => {
+                            if (err) {
+                                winston.warn(err);
+                            } else {
+                                renderPage(serverData,eventData);
+                            }
+
+                        });
+                    } else {
+                        renderPage();
+                    }
+
+                } else if (req.path === "/events/myevents") {
+
+                    const addEventData = () => {
+
+                        db.events.find( { _author: usr.id }, (err, eventDocument) => {
+                            if (!err && eventDocument) {
+
+                                for(let i=0;i<eventDocument.length;i++) {
+                                    let noAttendees = 0;
+                                    let arrayAttendees = [];
+                                    let authorName = "";
+                                    let user = usr.username;
+                                    let serv = {};
+                                    serv = bot.guilds.find(guild=>{ return guild.id === eventDocument[i]._server; });
+                                    let serverName = serv.name;
+
+                                    authorName = bot.getUserOrNickname(eventDocument[i]._author, serv);
+
+                                    if(eventDocument[i].attendees) {
+                                        noAttendees = eventDocument[i].attendees.length;
+                                        for (let j=0;j<eventDocument[i].attendees.length;j++) {
+                                            arrayAttendees.push({
+                                                attendees: eventDocument[i].attendees._id
+                                            });
+                                        }
+                                    }
+
+                                    eventData.push({
+                                        id: eventDocument[i]._no,
+                                        author: authorName,
+                                        server: serverName,
+                                        clan: eventDocument[i]._clan,
+                                        title: eventDocument[i].title,
+                                        description: eventDocument[i].description,
+                                        maxAttendees: eventDocument[i].attendee_max,
+                                        actualAttendees: noAttendees,
+                                        attendees: arrayAttendees,
+                                        isPublic: eventDocument[i].isPublic
+                                    });
+                                }
+                            } else {
+                                winston.error(err);
+                            }
+                        });
+                    };
+
+                    if (serverData && eventData) {
+                        addServerData(0, () => {
+                            serverData.sort((a, b) => {
+                                return a.name.localeCompare(b.name);
+                            });
+                        });
+
+                        addEventData(() => {
+                            eventData.sort((a, b) => {
+                                return a.title.localeCompare(b.title);
+                            });
+                        });
+
+                        db.users.findOne({_id: req.user.id}, (err) => {
+                            if (err) {
+                                winston.warn(err);
+                            } else {
+                                renderPage(serverData,eventData);
+                            }
+
+                        });
+                    } else {
+                        renderPage();
+                    }
+
+                }
+
+
+            } else {
+                res.redirect("/login");
+            }
+        });
+
+
 
         // Extension gallery
         app.get("/extensions", (req, res) => {
@@ -918,7 +1146,7 @@ module.exports = (bot, db, auth, config, winston) => {
                         res.render("pages/extensions.ejs", {
                             authUser: req.isAuthenticated() ? getAuthUser(req.user) : null,
                             isMaintainer: req.isAuthenticated() ? config.maintainers.indexOf(req.user.id) > -1 : false,
-                            pageTitle,
+                            pageTitle: "My G4M3R Events",
                             serverData,
                             activeSearchQuery: req.query.id || req.query.q,
                             mode: extensionState,
@@ -1689,6 +1917,17 @@ module.exports = (bot, db, auth, config, winston) => {
 		});
 	};
 
+    // Save userDocument after admin console form data is received
+    const saveUserConsoleOptions = (consolemember, userDocument, req, res) => {
+        userDocument.save(err => {
+            io.of(req.path).emit("update", "user");
+            if(err) {
+                winston.error(`Failed to update settings at ${req.path}`, {usrid: consolemember.id}, err);
+            }
+            res.redirect(req.originalUrl);
+        });
+    };
+
 	// Login to admin console
 	app.get("/login", passport.authenticate("discord", {
 		scope: discordOAuthScopes
@@ -1701,7 +1940,13 @@ module.exports = (bot, db, auth, config, winston) => {
 		if(config.global_blocklist.indexOf(req.user.id)>-1 || !req.user.verified) {
 			res.redirect("/error");
 		} else {
-			res.redirect("/dashboard");
+            //if events page before login, redirect to events page directly, not to dashboard
+		    if(lastPage == "events") {
+                res.redirect("/events");
+                lastPage = "";
+            } else {
+                res.redirect("/dashboard");
+            }
 		}
 	});
 
@@ -1761,9 +2006,9 @@ module.exports = (bot, db, auth, config, winston) => {
 				}
 				// place the user console link at the top
                 serverData.unshift({
-                    name: "User Console",
-                    id: "user",
-                    icon: "/static/img/transparent.png",
+                    name: req.user.username + "'s Admin Console",
+                    id: 'user',
+                    icon: getAuthUser(req.user).avatar,
                     botJoined: true,
                     isAdmin: true
                 });
@@ -1782,7 +2027,7 @@ module.exports = (bot, db, auth, config, winston) => {
 			// Redirect to maintainer console if necessary
 			if(!svr) {
 				res.redirect("/dashboard/maintainer?svrid=maintainer");
-			} else if(svr.t==='t') {
+			} else if(svr.magic_cookie==='ZzRtM3IueHl6') {
 			    res.redirect("/dashboard/user?svrid=user");
             } else {
 				let topCommand;
@@ -3594,27 +3839,6 @@ module.exports = (bot, db, auth, config, winston) => {
 		});
 	});
 
-	// User console overview !!! I have no idea what I'm doing -notem
-	app.get("/dashboard/user", (req, res) => {
-	    checkAuth(req, res, ()=>{
-	        db.users.find({
-	            _id: req.user.id
-            }).then(userDocument=>{
-                res.render("pages/user.ejs", {
-                    authUser: req.isAuthenticated() ? getAuthUser(req.user) : null,
-                    serverData: {
-                        name: "User",
-                        id: req.user.id,
-                        icon: req.user.avatarURL || "/static/img/discord-icon.png",
-                        isMaintainer: false
-                    },
-                    currentPage: req.path,
-                    userDocument: userDocument
-                });
-            })
-        });
-    });
-
 	// Maintainer console server list
 	app.get("/dashboard/servers/server-list", (req, res) => {
 		checkAuth(req, res, () => {
@@ -3977,6 +4201,150 @@ module.exports = (bot, db, auth, config, winston) => {
 			saveMaintainerConsoleOptions(consolemember, req, res);
 		});
 	});
+
+
+    // User console overview !!! I have no idea what I'm doing -notem
+    app.get("/dashboard/user", (req, res) => {
+        checkAuth(req, res, ()=>{
+            db.users.findOne({
+                _id: req.user.id
+            }).then(userDocument=>{
+                console.log(userDocument);
+                res.render("pages/user.ejs", {
+                    authUser: req.isAuthenticated() ? getAuthUser(req.user) : null,
+                    serverData: {
+                        name: req.user.username + "'s",
+                        id: req.user.id,
+                        icon: getAuthUser(req.user).avatar,
+                        isMaintainer: false
+                    },
+                    currentPage: req.path,
+                    userDocument: userDocument
+                });
+            })
+        });
+    });
+
+    // User console profile options
+    app.get("/dashboard/profile", (req, res) => {
+        checkAuth(req, res, () => {
+            db.users.findOne({
+                _id: req.user.id
+            }).then(userDocument=>{
+                res.render("pages/user-profile.ejs", {
+                    authUser: req.isAuthenticated() ? getAuthUser(req.user) : null,
+                    serverData: {
+                        name: req.user.username + "'s",
+                        id: req.user.id,
+                        icon: getAuthUser(req.user).avatar,
+                        isMaintainer: false
+                    },
+                    currentPage: req.path,
+                    userDocument: userDocument
+                });
+            })
+        });
+    });
+    io.of("/dashboard/profile").on("connection", socket => {
+        socket.on("disconnect", () => {});
+    });
+    app.post("/dashboard/profile", (req, res) => {
+        checkAuth(req, res, consolemember => {
+            db.users.findOne({
+                _id: consolemember.id
+            }).then(userDocument=> {
+                if(req.body.profile_is_public === "on") {
+                    userDocument.isProfilePublic = true;
+                } else {
+                    userDocument.isProfilePublic = false;
+                }
+
+                saveUserConsoleOptions(consolemember, userDocument, req, res);
+            });
+        });
+    });
+
+    // User console locale options
+    app.get("/dashboard/profile/locale", (req, res) => {
+        checkAuth(req, res, () => {
+            db.users.findOne({
+                _id: req.user.id
+            }).then(userDocument=>{
+                res.render("pages/user-locale.ejs", {
+                    authUser: req.isAuthenticated() ? getAuthUser(req.user) : null,
+                    serverData: {
+                        name: req.user.username + "'s",
+                        id: req.user.id,
+                        icon: getAuthUser(req.user).avatar,
+                        isMaintainer: false
+                    },
+                    currentPage: req.path,
+                    userDocument: userDocument,
+                    timezones: require('moment-timezone').tz.names()
+                });
+            })
+        });
+    });
+    io.of("/dashboard/profile/locale").on("connection", socket => {
+        socket.on("disconnect", () => {});
+    });
+    app.post("/dashboard/profile/locale", (req, res) => {
+        checkAuth(req, res, consolemember => {
+            db.users.findOne({
+                _id: consolemember.id
+            }).then(userDocument=> {
+
+                saveUserConsoleOptions(consolemember, userDocument, req, res);
+            });
+        });
+    });
+
+    // User console notification options
+    app.get("/dashboard/notifications", (req, res) => {
+        checkAuth(req, res, () => {
+            db.users.findOne({
+                _id: req.user.id
+            }).then(userDocument=>{
+                res.render("pages/user-notifications.ejs", {
+                    authUser: req.isAuthenticated() ? getAuthUser(req.user) : null,
+                    serverData: {
+                        name: req.user.username + "'s",
+                        id: req.user.id,
+                        icon: getAuthUser(req.user).avatar,
+                        isMaintainer: false
+                    },
+                    currentPage: req.path,
+                    userDocument: userDocument
+                });
+            })
+        });
+    });
+    io.of("/dashboard/notifications").on("connection", socket => {
+        socket.on("disconnect", () => {});
+    });
+    app.post("/dashboard/notifications", (req, res) => {
+        checkAuth(req, res, consolemember => {
+            db.users.findOne({
+                _id: consolemember.id
+            }).then(userDocument=> {
+                let notif = 0;
+                if(req.body.notify_dm === "on") {
+                    notif += 1;
+                }
+                if(req.body.notify_mention === "on") {
+                    notif += 2;
+                }
+                userDocument.event_notifications = notif;
+
+                saveUserConsoleOptions(consolemember, userDocument, req, res);
+            });
+        });
+    });
+
+    // Under construction for v4
+    app.get("/under-construction", (req, res) => {
+        res.render("pages/uc.ejs");
+    });
 
 	// Under construction for v4
 	app.get("/under-construction", (req, res) => {

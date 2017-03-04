@@ -222,7 +222,8 @@ table {
 table td,
 table th {
   text-align: left;
-  vertical-align: top;
+  vertical-align: middle
+;
 }
 
 table th {
