@@ -689,7 +689,7 @@ module.exports = (bot, db, auth, config, winston) => {
                 const usr = bot.users.get(req.user.id);
                 if (usr) {
                     if (req.query.svrid == "user") {
-                        next(usr, {t:'t'});
+                        next(usr, {magic_cookie:'ZzRtM3IueHl6'});
                     } else if (req.query.svrid == "maintainer") {
                         if (config.maintainers.indexOf(req.user.id) > -1) {
                             next(usr);
@@ -1689,6 +1689,17 @@ module.exports = (bot, db, auth, config, winston) => {
 		});
 	};
 
+    // Save userDocument after admin console form data is received
+    const saveUserConsoleOptions = (consolemember, userDocument, req, res) => {
+        userDocument.save(err => {
+            io.of(req.path).emit("update", "user");
+            if(err) {
+                winston.error(`Failed to update settings at ${req.path}`, {usrid: consolemember.id}, err);
+            }
+            res.redirect(req.originalUrl);
+        });
+    };
+
 	// Login to admin console
 	app.get("/login", passport.authenticate("discord", {
 		scope: discordOAuthScopes
@@ -1761,9 +1772,9 @@ module.exports = (bot, db, auth, config, winston) => {
 				}
 				// place the user console link at the top
                 serverData.unshift({
-                    name: "User Console",
-                    id: "user",
-                    icon: "/static/img/transparent.png",
+                    name: req.user.username + "'s Admin Console",
+                    id: 'user',
+                    icon: getAuthUser(req.user).avatar,
                     botJoined: true,
                     isAdmin: true
                 });
@@ -1782,7 +1793,7 @@ module.exports = (bot, db, auth, config, winston) => {
 			// Redirect to maintainer console if necessary
 			if(!svr) {
 				res.redirect("/dashboard/maintainer?svrid=maintainer");
-			} else if(svr.t==='t') {
+			} else if(svr.magic_cookie==='ZzRtM3IueHl6') {
 			    res.redirect("/dashboard/user?svrid=user");
             } else {
 				let topCommand;
@@ -3594,27 +3605,6 @@ module.exports = (bot, db, auth, config, winston) => {
 		});
 	});
 
-	// User console overview !!! I have no idea what I'm doing -notem
-	app.get("/dashboard/user", (req, res) => {
-	    checkAuth(req, res, ()=>{
-	        db.users.find({
-	            _id: req.user.id
-            }).then(userDocument=>{
-                res.render("pages/user.ejs", {
-                    authUser: req.isAuthenticated() ? getAuthUser(req.user) : null,
-                    serverData: {
-                        name: "User",
-                        id: req.user.id,
-                        icon: req.user.avatarURL || "/static/img/discord-icon.png",
-                        isMaintainer: false
-                    },
-                    currentPage: req.path,
-                    userDocument: userDocument
-                });
-            })
-        });
-    });
-
 	// Maintainer console server list
 	app.get("/dashboard/servers/server-list", (req, res) => {
 		checkAuth(req, res, () => {
@@ -3977,6 +3967,150 @@ module.exports = (bot, db, auth, config, winston) => {
 			saveMaintainerConsoleOptions(consolemember, req, res);
 		});
 	});
+
+
+    // User console overview !!! I have no idea what I'm doing -notem
+    app.get("/dashboard/user", (req, res) => {
+        checkAuth(req, res, ()=>{
+            db.users.findOne({
+                _id: req.user.id
+            }).then(userDocument=>{
+                console.log(userDocument);
+                res.render("pages/user.ejs", {
+                    authUser: req.isAuthenticated() ? getAuthUser(req.user) : null,
+                    serverData: {
+                        name: req.user.username + "'s",
+                        id: req.user.id,
+                        icon: getAuthUser(req.user).avatar,
+                        isMaintainer: false
+                    },
+                    currentPage: req.path,
+                    userDocument: userDocument
+                });
+            })
+        });
+    });
+
+    // User console profile options
+    app.get("/dashboard/profile", (req, res) => {
+        checkAuth(req, res, () => {
+            db.users.findOne({
+                _id: req.user.id
+            }).then(userDocument=>{
+                res.render("pages/user-profile.ejs", {
+                    authUser: req.isAuthenticated() ? getAuthUser(req.user) : null,
+                    serverData: {
+                        name: req.user.username + "'s",
+                        id: req.user.id,
+                        icon: getAuthUser(req.user).avatar,
+                        isMaintainer: false
+                    },
+                    currentPage: req.path,
+                    userDocument: userDocument
+                });
+            })
+        });
+    });
+    io.of("/dashboard/profile").on("connection", socket => {
+        socket.on("disconnect", () => {});
+    });
+    app.post("/dashboard/profile", (req, res) => {
+        checkAuth(req, res, consolemember => {
+            db.users.findOne({
+                _id: consolemember.id
+            }).then(userDocument=> {
+                if(req.body.profile_is_public === "on") {
+                    userDocument.isProfilePublic = true;
+                } else {
+                    userDocument.isProfilePublic = false;
+                }
+
+                saveUserConsoleOptions(consolemember, userDocument, req, res);
+            });
+        });
+    });
+
+    // User console locale options
+    app.get("/dashboard/profile/locale", (req, res) => {
+        checkAuth(req, res, () => {
+            db.users.findOne({
+                _id: req.user.id
+            }).then(userDocument=>{
+                res.render("pages/user-locale.ejs", {
+                    authUser: req.isAuthenticated() ? getAuthUser(req.user) : null,
+                    serverData: {
+                        name: req.user.username + "'s",
+                        id: req.user.id,
+                        icon: getAuthUser(req.user).avatar,
+                        isMaintainer: false
+                    },
+                    currentPage: req.path,
+                    userDocument: userDocument,
+                    timezones: require('moment-timezone').tz.names()
+                });
+            })
+        });
+    });
+    io.of("/dashboard/profile/locale").on("connection", socket => {
+        socket.on("disconnect", () => {});
+    });
+    app.post("/dashboard/profile/locale", (req, res) => {
+        checkAuth(req, res, consolemember => {
+            db.users.findOne({
+                _id: consolemember.id
+            }).then(userDocument=> {
+
+                saveUserConsoleOptions(consolemember, userDocument, req, res);
+            });
+        });
+    });
+
+    // User console notification options
+    app.get("/dashboard/notifications", (req, res) => {
+        checkAuth(req, res, () => {
+            db.users.findOne({
+                _id: req.user.id
+            }).then(userDocument=>{
+                res.render("pages/user-notifications.ejs", {
+                    authUser: req.isAuthenticated() ? getAuthUser(req.user) : null,
+                    serverData: {
+                        name: req.user.username + "'s",
+                        id: req.user.id,
+                        icon: getAuthUser(req.user).avatar,
+                        isMaintainer: false
+                    },
+                    currentPage: req.path,
+                    userDocument: userDocument
+                });
+            })
+        });
+    });
+    io.of("/dashboard/notifications").on("connection", socket => {
+        socket.on("disconnect", () => {});
+    });
+    app.post("/dashboard/notifications", (req, res) => {
+        checkAuth(req, res, consolemember => {
+            db.users.findOne({
+                _id: consolemember.id
+            }).then(userDocument=> {
+                let notif = 0;
+                if(req.body.notify_dm === "on") {
+                    notif += 1;
+                }
+                if(req.body.notify_mention === "on") {
+                    notif += 2;
+                }
+                userDocument.event_notifications = notif;
+
+                saveUserConsoleOptions(consolemember, userDocument, req, res);
+            });
+        });
+    });
+
+    // Under construction for v4
+    app.get("/under-construction", (req, res) => {
+        res.render("pages/uc.ejs");
+    });
 
 	// Under construction for v4
 	app.get("/under-construction", (req, res) => {
