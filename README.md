@@ -21,5 +21,10 @@
 + Tournament planning
 + Cross-server clan system
 
-## Contributing
+### Specs
++ Is written in Javascript, uses the Node.js. 
++ Uses the Eris Discord API.
++ Web interface created with Express, Bulma, and JQuery.
+
+### Contributing
 Contributions are always appreciated. If you're interested in joining the G4M3R development team, [please join the G4M3R support server](https://discord.gg/WUCqSzD).
