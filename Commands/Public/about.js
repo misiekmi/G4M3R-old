@@ -26,7 +26,7 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
 
         strOutput += `Hi, I am **G4M3R**, a discord bot by \`pedall\` and \`notem\` 🎮\n\n`;
         strOutput += `I have tons of special features like my __**events and notification system**__!\n`;
-        strOutput += `Use \`${bot.getCommandPrefix(msg.guild, serverDocument)}help\` to get a PM with further instructions.\n\n`;
+        strOutput += `Use \`${bot.getCommandPrefix(msg.channel.guild, serverDocument)}help\` to get a PM with further instructions.\n\n`;
         strOutput += `**>>** Visit the bot's **web dashboard <${config.hosting_url}>** to setup your server.\n`
         strOutput += `**>>** Need more support? Join **<${config.discord_link}>** and ask us directly\n\n`;
         strOutput += `**>>** This bot is based on __AwesomeBot__ by *[BitQuote]* and __GAwesomeBot__ by *[GG142]*\n`;
