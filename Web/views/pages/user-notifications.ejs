@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Server List - <%= serverData.name %> Maintainer Console</title>
+	<% include ../partials/head %>
+
+	<link rel="stylesheet" href="/static/css/auto-complete.css">
+	<script src="/static/js/auto-complete.min.js"></script>
+	<script src="/static/js/form-change-listener.js"></script>
+</head>
+<body onload="saveFormState();">
+	<% include ../partials/dashboard-header %>
+
+	<section class="section is-white">
+		<div class="container">
+			<div class="columns">
+				<div id="menu" class="column is-one-quarter">
+					<% include ../partials/user-menu %>
+				</div>
+				<div class="column">
+					<h1 class="title">
+						Event Notification Settings
+					</h1>
+					<div class="container">
+						<article class="message is-primary">
+							<div class="message-body">
+								<div class="content">
+									<strong>G4M3R</strong> can notify you when an event you have joined begins, is modified by it's author, or is cancelled.
+								</div>
+							</div>
+						</article>
+						<br>
+						<div>
+							<label class="label">Turn On/Off Notification Types</label>
+							<form id="form" action="<%= currentPage %>?svrid=user" method="post">
+								<p class="control">
+									<label class="checkbox">
+										<input name="notify_dm" type="checkbox" <%= (userDocument.event_notifications===1||userDocument.event_notifications===3) ? "checked" : "" %>>
+										Notify by DM
+									</label>
+								</p>
+								<p class="control">
+									<label class="checkbox">
+										<input name="notify_mention" type="checkbox" <%= userDocument.event_notifications===2||userDocument.event_notifications===3 ? "checked" : "" %>>
+										Notify by <code>@mention</code> on hosting server
+									</label>
+									<span class="help">If the server hosting the event does not have an announcement channel configured, notifications as mentions will not be used for that event.</span>
+								</p>
+								<br>
+                                <% var formButtonsUnsaved = false; %>
+                                <% include ../partials/form-buttons %>
+                                <% include ../partials/form-buttons-bar %>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<% include ../partials/footer %>
+	<% include ../partials/scroll-top-button %>
+</body>
+</html>

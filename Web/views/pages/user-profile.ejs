@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Server List - <%= serverData.name %> Maintainer Console</title>
+	<% include ../partials/head %>
+
+	<link rel="stylesheet" href="/static/css/auto-complete.css">
+	<script src="/static/js/auto-complete.min.js"></script>
+	<script src="/static/js/form-change-listener.js"></script>
+</head>
+<body onload="saveFormState();">
+	<% include ../partials/dashboard-header %>
+
+	<section class="section is-white">
+		<div class="container">
+			<div class="columns">
+				<div id="menu" class="column is-one-quarter">
+					<% include ../partials/user-menu %>
+				</div>
+				<div class="column">
+					<h1 class="title">
+						Profile Settings
+					</h1>
+					<div class="container">
+						<article class="message is-primary">
+							<div class="message-body">
+								<div class="content">
+									Here you can control the privacy settings of your profile and change your profile background image.
+								</div>
+							</div>
+						</article>
+						<br>
+						<div>
+							<form id="form" action="<%= currentPage %>?svrid=user" method="post">
+								<p class="control">
+									<label class="checkbox">
+										<input name="profile_is_public" type="checkbox" <%= userDocument.isProfilePublic ? "checked" : "" %>>
+										Allow other users to view your profile?
+									</label>
+									<span class="help">Remember, if enable anyone and everyone can view profile without restrictions.</span>
+								</p>
+								<br>
+                                <% var formButtonsUnsaved = false; %>
+                                <% include ../partials/form-buttons %>
+                                <% include ../partials/form-buttons-bar %>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<% include ../partials/footer %>
+	<% include ../partials/scroll-top-button %>
+</body>
+</html>

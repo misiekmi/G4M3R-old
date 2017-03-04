@@ -457,7 +457,7 @@ Viewer.prototype.getErrorView = function(error, bad_input, silent) {
         return {embed: embed};
     } else {
         embed.description += `\n\nYou can return to the edit menu, or quit`;
-        embed.title = {text: `## Options: [B]ack, [Q]uit`};
+        embed.footer = {text: `## Options: [B]ack, [Q]uit`};
         return {embed: embed};
     }
 
