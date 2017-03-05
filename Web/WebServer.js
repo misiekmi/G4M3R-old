@@ -262,6 +262,7 @@ module.exports = (bot, db, auth, config, winston) => {
                         name: owner.nick || owner.user.username
                     },
                     members: svr.members.size,
+                    //TODO: Delete stats
                     messages: serverDocument.messages_today,
                     rawCreated: moment(svr.createdAt).format(config.moment_date_format),
                     relativeCreated: Math.ceil((Date.now() - svr.createdAt) / 86400000),
@@ -460,6 +461,7 @@ module.exports = (bot, db, auth, config, winston) => {
             res.redirect("/activity/servers");
         });
         app.get("/activity/(|servers|users)", (req, res) => {
+            //TODO: Delete stats
             db.servers.aggregate({
                 $group: {
                     _id: null,
@@ -481,6 +483,7 @@ module.exports = (bot, db, auth, config, winston) => {
             }, (err, result) => {
                 let messageCount = 0;
                 let activeServers = bot.guilds.size;
+                //TODO: Delete stats
                 if (!err && result) {
                     messageCount = result[0].total;
                     activeServers = result[0].active;
@@ -491,6 +494,7 @@ module.exports = (bot, db, auth, config, winston) => {
                         authUser: req.isAuthenticated() ? getAuthUser(req.user) : null,
                         rawServerCount: bot.guilds.size,
                         rawUserCount: bot.users.size,
+                        //TODO: Delete stats
                         totalMessageCount: messageCount,
                         numActiveServers: activeServers,
                         activeSearchQuery: req.query.q,
@@ -515,6 +519,7 @@ module.exports = (bot, db, auth, config, winston) => {
                     } else {
                         page = parseInt(req.query.page);
                     }
+                    //TODO: Delete stats - change to members-desc
                     if (!req.query.sort) {
                         req.query.sort = "messages-des";
                     }
@@ -561,11 +566,13 @@ module.exports = (bot, db, auth, config, winston) => {
                                 "member_count": -1
                             };
                             break;
+                        //TODO: Delete stats
                         case "messages-asc":
                             sortParams = {
                                 "messages_today": 1
                             };
                             break;
+                        //TODO: Delete stats
                         case "messages-des":
                         default:
                             sortParams = {
@@ -578,6 +585,7 @@ module.exports = (bot, db, auth, config, winston) => {
                         if (err || rawCount == null) {
                             rawCount = bot.guilds.size;
                         }
+                        //TODO: Delete stats messages only
                         db.servers.aggregate([{
                                 $match: matchCriteria
                             },
@@ -1146,7 +1154,7 @@ module.exports = (bot, db, auth, config, winston) => {
                         res.render("pages/extensions.ejs", {
                             authUser: req.isAuthenticated() ? getAuthUser(req.user) : null,
                             isMaintainer: req.isAuthenticated() ? config.maintainers.indexOf(req.user.id) > -1 : false,
-                            pageTitle: "My G4M3R Events",
+                            pageTitle: pageTitle,
                             serverData,
                             activeSearchQuery: req.query.id || req.query.q,
                             mode: extensionState,
@@ -2030,6 +2038,7 @@ module.exports = (bot, db, auth, config, winston) => {
 			} else if(svr.magic_cookie==='ZzRtM3IueHl6') {
 			    res.redirect("/dashboard/user?svrid=user");
             } else {
+                //TODO: Delete stats - decide for commandusage if it should stay
 				let topCommand;
 				let topCommandUsage = 0;
 				for(const cmd in serverDocument.command_usage) {
@@ -2038,6 +2047,7 @@ module.exports = (bot, db, auth, config, winston) => {
 						topCommandUsage = serverDocument.command_usage[cmd];
 					}
 				}
+                //TODO: Delete stats messages
 				const topMemberID = serverDocument.members.sort((a, b) => {
 					return b.messages - a.messages;
 				})[0];
@@ -2050,6 +2060,7 @@ module.exports = (bot, db, auth, config, winston) => {
 						"$in": memberIDs
 					}
 				}).limit(1).exec((err, userDocuments) => {
+                    //TODO: Delete stats
 					let richestMember;
 					if(!err && userDocuments && userDocuments.length>0) {
 						richestMember = svr.members.get(userDocuments[0]._id);
@@ -2070,6 +2081,7 @@ module.exports = (bot, db, auth, config, winston) => {
 							}
 						},
 						currentPage: req.path,
+                        //TODO: Delete stats
 						messagesToday: serverDocument.messages_today,
 						topCommand,
 						memberCount: svr.members.size,
@@ -2623,6 +2635,7 @@ module.exports = (bot, db, auth, config, winston) => {
 		});
 	});
 
+    //TODO: Delete stats
 	// Admin console stats collection
 	app.get("/dashboard/stats-points/stats-collection", (req, res) => {
 		checkAuth(req, res, (consolemember, svr, serverDocument) => {
@@ -2668,6 +2681,7 @@ module.exports = (bot, db, auth, config, winston) => {
 		});
 	});
 
+    //TODO: Delete stats - ranks also since nothing is counted
 	// Admin console ranks
 	app.get("/dashboard/stats-points/ranks", (req, res) => {
 		checkAuth(req, res, (consolemember, svr, serverDocument) => {
@@ -3810,11 +3824,13 @@ module.exports = (bot, db, auth, config, winston) => {
 					_id: null,
 					total: {
 						$sum: {
+                            //TODO: Delete stats
 							$add: ["$messages_today"]
 						}
 					}
 				}
 			}, (err, result) => {
+                //TODO: Delete stats
 				let messageCount = 0;
 				if(!err && result) {
 					messageCount = result[0].total;
@@ -3830,6 +3846,7 @@ module.exports = (bot, db, auth, config, winston) => {
 					currentPage: req.path,
 					serverCount: bot.guilds.size,
 					userCount: bot.users.size,
+                    //TODO: Delete stats
 					totalMessageCount: messageCount,
 					roundedUptime: getRoundedUptime(process.uptime()),
 					shardCount: bot.shards.size,

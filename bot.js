@@ -251,6 +251,7 @@ database.initialize(config.db_url, err => {
 			}
 		});
 
+        //TODO: Delete stats (collection only)
 		// User joined server voice channel
 		bot.on("voiceChannelJoin", (member, ch) => {
 			if(bot.isReady) {
@@ -264,6 +265,7 @@ database.initialize(config.db_url, err => {
 			}
 		});
 
+        //TODO: Delete stats (can be deleted completely)
 		// User voice connection details updated on server (muted, deafened, etc.)
 		bot.on("voiceStateUpdate", (member, oldvoice) => {
 			if(bot.isReady) {
@@ -277,6 +279,7 @@ database.initialize(config.db_url, err => {
 			}
 		});
 
+        //TODO: Delete stats (collection only)
 		// User left server voice channel
 		bot.on("voiceChannelLeave", (member, ch) => {
 			if(bot.isReady) {

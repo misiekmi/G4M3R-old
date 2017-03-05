@@ -86,6 +86,7 @@ function switchLayout(type) {
 		<div class="level-item">
 			<span class="select">
 				<select id="sort-select" onchange="window.location.href = '/activity/servers?q=<%= activeSearchQuery %>&count=<%= data.itemsPerPage %>&page=<%= data.currentPage %>&sort=' + this.value + '&category=<%= data.selectedCategory %>&publiconly=<%= data.isPublicOnly %>';">
+					<!--TODO: Delete stats messages-->
 					<option value="messages-asc">Messages Today (ascending)</option>
 					<option value="messages-des">Messages Today (descending)</option>
 					<option value="members-asc">Members (ascending)</option>
@@ -145,6 +146,7 @@ function switchLayout(type) {
 										<p class="heading">Members</p>
 										<p class="title"><%= data.serverData[i].members %></p>
 									</div>
+									<!--TODO: Delete stats messages-->
 									<div class="level-item has-text-centered">
 										<p class="heading">Message<%= data.serverData[i].messages==1 ? "" : "s" %></p>
 										<p class="title"><%= data.serverData[i].messages %></p>
@@ -204,6 +206,7 @@ function switchLayout(type) {
 					<tr>
 						<th>Name</th>
 						<th>Members</th>
+						<!--TODO: Delete stats messages-->
 						<th>Messages</th>
 						<th>Owner</th>
 					</tr>
