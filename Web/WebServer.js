@@ -40,6 +40,8 @@ const createMessageOfTheDay = require("./../Modules/MessageOfTheDay.js");
 const Giveaways = require("./../Modules/Giveaways.js");
 const Polls = require("./../Modules/Polls.js");
 const Trivia = require("./../Modules/Trivia.js");
+const moment_timezone = require("moment-timezone");
+const configFile = require("./../Configuration/config.json");
 
 const app = express();
 app.use(compression());
@@ -759,7 +761,7 @@ module.exports = (bot, db, auth, config, winston) => {
             eventState = req.path.substring(req.path.lastIndexOf("/") + 1);
             const pageTitle = `${eventState.charAt(0).toUpperCase() + eventState.slice(1)} - G4M3R Events`
 
-            const renderPage = (serverData, eventData) => {
+            const renderPage = (serverData, eventData, data) => {
                 res.render("pages/events.ejs", {
                     authUser: req.isAuthenticated() ? getAuthUser(req.user) : null,
                     isMaintainer: req.isAuthenticated() ? config.maintainers.indexOf(req.user.id) > -1 : false,
@@ -767,7 +769,8 @@ module.exports = (bot, db, auth, config, winston) => {
                     serverData,
                     activeSearchQuery: req.query.id || req.query.q,
                     mode: eventState,
-                    eventData
+                    eventData,
+                    data
                 });
             };
 
@@ -776,6 +779,18 @@ module.exports = (bot, db, auth, config, winston) => {
                 const serverData = [];
                 const eventData = [];
                 const usr = bot.users.get(req.user.id);
+                const data = {};
+
+
+                const userDocument = db.users.findOne({_id: req.user.id}, (err) => {
+                    if (err) {
+                        winston.warn(err);
+                    }
+
+                });
+
+                data.tz = (userDocument.timezone ? userDocument.timezone : configFile.moment_timezone);
+                data.dateFormat = "YYYY/MM/DD HH:mm";
 
                 const addServerData = (i, callback) => {
                     if (req.user.guilds && i < req.user.guilds.length) {
@@ -810,7 +825,7 @@ module.exports = (bot, db, auth, config, winston) => {
                     const addEventData = () => {
 
                         var userServers = getUserServers(req);
-
+                        data.rawEventOverviewCount = 0;
                         // TODO: get function to work to events for all servers the user is in
                         for(let l = 0; l < req.user.guilds.length; l++) {
 
@@ -819,21 +834,29 @@ module.exports = (bot, db, auth, config, winston) => {
 
                                     for(let i=0;i<eventDocument.length;i++) {
                                         let noAttendees = 0;
-                                        let arrayAttendees = [];
                                         let authorName = "";
-                                        let user = usr.username;
-                                        //let svr = bot.guilds.get(eventDocument[i]._server);
                                         let serv = {};
                                         serv = bot.guilds.find(guild=>{ return guild.id === eventDocument[i]._server; });
                                         let serverName = serv.name;
                                         authorName = bot.getUserOrNickname(eventDocument[i]._author, serv);
+                                        data.userIsAttendee = false;
+                                        data.rawEventOverviewCount++
 
+                                        data.attendeesNames = "";
                                         if(eventDocument[i].attendees) {
                                             noAttendees = eventDocument[i].attendees.length;
-                                            for (let j=0;j<eventDocument[i].attendees.length;j++) {
-                                                arrayAttendees.push({
-                                                    attendees: eventDocument[i].attendees._id
-                                                });
+
+                                            for (let j = 0; j < eventDocument[i].attendees.length; j++) {
+
+                                                if (i % 2 === 1) {
+                                                    data.attendeesNames += `\`${bot.getUserOrNickname(eventDocument[i].attendees[j]._id, serv)}\`\n`;
+                                                } else {
+                                                    data.attendeesNames += `\`${bot.getUserOrNickname(eventDocument[i].attendees[j]._id, serv)}\`, `;
+                                                }
+
+                                                if (eventDocument[i].attendees[j]._id == req.user.id) {
+                                                    data.userIsAttendee = true;
+                                                }
                                             }
                                         }
 
@@ -847,8 +870,11 @@ module.exports = (bot, db, auth, config, winston) => {
                                             description: eventDocument[i].description,
                                             maxAttendees: eventDocument[i].attendee_max,
                                             actualAttendees: noAttendees,
-                                            attendees: arrayAttendees,
-                                            isPublic: eventDocument[i].isPublic
+                                            attendees: data.attendeesNames,
+                                            tags: eventDocument[i].tags.join(", "),
+                                            isPublic: eventDocument[i].isPublic,
+                                            endDate: moment_timezone(eventDocument[i].end).tz(data.tz).format(`${data.dateFormat}`),
+                                            startDate: moment_timezone(eventDocument[i].start).tz(data.tz).format(`${data.dateFormat}`)
                                         });
                                     }
                                 } else {
@@ -875,7 +901,11 @@ module.exports = (bot, db, auth, config, winston) => {
                             if (err) {
                                 winston.warn(err);
                             } else {
-                                renderPage(serverData,eventData);
+                                renderPage(
+                                    serverData,
+                                    eventData,
+                                    data
+                                );
                             }
 
                         });
@@ -884,6 +914,7 @@ module.exports = (bot, db, auth, config, winston) => {
                     }
 
                 } else if (req.path === "/events/myevents") {
+                    data.rawEventMyCount = 0;
 
                     const addEventData = () => {
 
@@ -892,21 +923,28 @@ module.exports = (bot, db, auth, config, winston) => {
 
                                 for(let i=0;i<eventDocument.length;i++) {
                                     let noAttendees = 0;
-                                    let arrayAttendees = [];
                                     let authorName = "";
-                                    let user = usr.username;
                                     let serv = {};
                                     serv = bot.guilds.find(guild=>{ return guild.id === eventDocument[i]._server; });
                                     let serverName = serv.name;
+                                    data.userIsAttendee = false;
+                                    data.rawEventMyCount = eventDocument.length;
 
                                     authorName = bot.getUserOrNickname(eventDocument[i]._author, serv);
-
+                                    data.attendeesNames = "";
                                     if(eventDocument[i].attendees) {
                                         noAttendees = eventDocument[i].attendees.length;
-                                        for (let j=0;j<eventDocument[i].attendees.length;j++) {
-                                            arrayAttendees.push({
-                                                attendees: eventDocument[i].attendees._id
-                                            });
+                                        for (let j = 0; j < eventDocument[i].attendees.length; j++) {
+
+                                            if (i % 2 === 1) {
+                                                data.attendeesNames += `\`${bot.getUserOrNickname(eventDocument[i].attendees[j]._id, serv)}\`\n`;
+                                            } else {
+                                                data.attendeesNames += `\`${bot.getUserOrNickname(eventDocument[i].attendees[j]._id, serv)}\`, `;
+                                            }
+
+                                            if (eventDocument[i].attendees[j]._id == req.user.id) {
+                                                data.userIsAttendee = true;
+                                            }
                                         }
                                     }
 
@@ -919,8 +957,11 @@ module.exports = (bot, db, auth, config, winston) => {
                                         description: eventDocument[i].description,
                                         maxAttendees: eventDocument[i].attendee_max,
                                         actualAttendees: noAttendees,
-                                        attendees: arrayAttendees,
-                                        isPublic: eventDocument[i].isPublic
+                                        attendees: data.attendeesNames,
+                                        tags: eventDocument[i].tags.join(", "),
+                                        isPublic: eventDocument[i].isPublic,
+                                        endDate: moment_timezone(eventDocument[i].end).tz(data.tz).format(`${data.dateFormat}`),
+                                        startDate: moment_timezone(eventDocument[i].start).tz(data.tz).format(`${data.dateFormat}`)
                                     });
                                 }
                             } else {
@@ -946,7 +987,11 @@ module.exports = (bot, db, auth, config, winston) => {
                             if (err) {
                                 winston.warn(err);
                             } else {
-                                renderPage(serverData,eventData);
+                                renderPage(
+                                    serverData,
+                                    eventData,
+                                    data
+                                );
                             }
 
                         });
