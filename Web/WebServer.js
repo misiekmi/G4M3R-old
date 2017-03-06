@@ -846,6 +846,7 @@ module.exports = (bot, db, auth, config, winston) => {
                                         if(eventDocument[i].attendees) {
                                             noAttendees = eventDocument[i].attendees.length;
 
+                                            //TODO: Fix attendees not showing up in events web modals
                                             for (let j = 0; j < eventDocument[i].attendees.length; j++) {
 
                                                 if (j % 2 === 1) {
@@ -937,6 +938,8 @@ module.exports = (bot, db, auth, config, winston) => {
 
                                     if(eventDocument[i].attendees) {
                                         noAttendees = eventDocument[i].attendees.length;
+
+                                        //TODO: Fix attendees not showing up in events web modals
                                         for (let j = 0; j < eventDocument[i].attendees.length; j++) {
 
                                             if (j % 2 === 1) {
