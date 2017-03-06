@@ -823,7 +823,7 @@ module.exports = (bot, db, auth, config, winston) => {
                 if (req.path === "/events/overview") {
 
                     const addEventData = () => {
-
+                        data.attendeesNames = "";
                         var userServers = getUserServers(req);
                         data.rawEventOverviewCount = 0;
                         // TODO: get function to work to events for all servers the user is in
@@ -842,7 +842,7 @@ module.exports = (bot, db, auth, config, winston) => {
                                         data.userIsAttendee = false;
                                         data.rawEventOverviewCount++
 
-                                        data.attendeesNames = "";
+
                                         if(eventDocument[i].attendees) {
                                             noAttendees = eventDocument[i].attendees.length;
 
@@ -914,9 +914,11 @@ module.exports = (bot, db, auth, config, winston) => {
                     }
 
                 } else if (req.path === "/events/myevents") {
-                    data.rawEventMyCount = 0;
+
 
                     const addEventData = () => {
+                        data.rawEventMyCount = 0;
+                        data.attendeesNames = "";
 
                         db.events.find( { _author: usr.id }, (err, eventDocument) => {
                             if (!err && eventDocument) {
@@ -931,7 +933,7 @@ module.exports = (bot, db, auth, config, winston) => {
                                     data.rawEventMyCount = eventDocument.length;
 
                                     authorName = bot.getUserOrNickname(eventDocument[i]._author, serv);
-                                    data.attendeesNames = "";
+
                                     if(eventDocument[i].attendees) {
                                         noAttendees = eventDocument[i].attendees.length;
                                         for (let j = 0; j < eventDocument[i].attendees.length; j++) {
