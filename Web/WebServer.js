@@ -848,7 +848,7 @@ module.exports = (bot, db, auth, config, winston) => {
 
                                             for (let j = 0; j < eventDocument[i].attendees.length; j++) {
 
-                                                if (i % 2 === 1) {
+                                                if (j % 2 === 1) {
                                                     data.attendeesNames += `\`${bot.getUserOrNickname(eventDocument[i].attendees[j]._id, serv)}\`\n`;
                                                 } else {
                                                     data.attendeesNames += `\`${bot.getUserOrNickname(eventDocument[i].attendees[j]._id, serv)}\`, `;
@@ -936,7 +936,7 @@ module.exports = (bot, db, auth, config, winston) => {
                                         noAttendees = eventDocument[i].attendees.length;
                                         for (let j = 0; j < eventDocument[i].attendees.length; j++) {
 
-                                            if (i % 2 === 1) {
+                                            if (j % 2 === 1) {
                                                 data.attendeesNames += `\`${bot.getUserOrNickname(eventDocument[i].attendees[j]._id, serv)}\`\n`;
                                             } else {
                                                 data.attendeesNames += `\`${bot.getUserOrNickname(eventDocument[i].attendees[j]._id, serv)}\`, `;
