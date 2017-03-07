@@ -921,7 +921,7 @@ module.exports = (bot, db, auth, config, winston) => {
                         data.rawEventMyCount = 0;
 
 
-                        db.events.find( { _author: usr.id }, (err, eventDocument) => {
+                        db.events.find({$or: [{"_author": usr.id}, {"attendees._id": usr.id}]}, (err, eventDocument) => {
                             if (!err && eventDocument) {
 
                                 for(let i=0;i<eventDocument.length;i++) {
