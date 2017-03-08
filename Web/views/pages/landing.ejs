@@ -23,6 +23,12 @@
 		#G4M3R-discord {
 			height: 31px;
 		}
+		#G4M3R-header-title {
+			height: 16px;
+		}
+		#G4M3R-header-subtitle {
+			height: 12px;
+		}
 	}
 	@media screen and (min-width: 769px) {
 		#G4M3R-title {
@@ -37,6 +43,12 @@
 		#G4M3R-discord {
 			height: 42px;
 		}
+		#G4M3R-header-title {
+			height: 18px;
+		}
+		#G4M3R-header-subtitle {
+			height: 14px;
+		}
 	}
 	</style>
 	<script>
@@ -50,44 +62,25 @@
 	</script>
 </head>
 <body>
-<section id="header" class="hero is-primary is-small is-bold" style="background: url('/header-image');background-size: cover;">
-	<div class="hero-head">
-        <% include ../partials/header %>
-	</div>
-</section>
-
-<section id="notification" class="hero is-primary is-small is-bold">
-	<div class="hero-head">
-		<div class="container has-text-centered">
-			<div class="columns is-vcentered">
-					<div class="column is-narrow">
-					<img src="/static/img/exclamation-black-nobackground.png" style="border-radius: 100%;width:100px;">
-				</div>
-				<div class="column is-8">
-					<div class="notification is-primary is-small">
-						<h1 class="title is-3 has-text-left" style="font-family: Montserrat;color: white">
-								<span>
-									<strong>G4M3R is searching for additional developers</strong>
-								</span>
-						</h1>
-						<h2 class="subtitle is-5 has-text-left" style="font-family: Montserrat;color: white">
-							If you know NodeJS, Eris and Bulma CSS and are interested, talk to us.
-						</h2>
-					</div>
-				</div>
-				<div class="column is-2 is-centered">
-					<a class="button is-light is-large" href="https://discord.gg/mtJyQjW">
-							<span class="icon">
-								<i class="fa fa-sign-in"></i>
-							</span>
-						<p>Join our Server</p>
-					</a>
+	<section class="hero is-info is-small">
+		<div class="hero-header is-small">
+			<div class="container">
+				<div class="content" style="color:white">
+					<h4 id="G4M3R-header-title" class="title is-4">
+						<strong style="color:white">G4M3R is searching for additional developers</strong>&emsp;
+					</h4>
+					<h6 id="G4M3R-header-subtitle" class="subtitle is-6">
+						If you are interested in working with us on G4M3R and know NodeJS, Eris and Bulma CSS, talk to us.
+					</h6>
 				</div>
 			</div>
 		</div>
-	</div>
-</section>
-
+	</section>
+	<section id="header" class="hero is-primary is-small is-bold" style="background: url('/header-image');background-size: cover;">
+		<div class="hero-head">
+			<% include ../partials/header %>
+		</div>
+	</section>
 	<section id="start" class="hero is-primary is-fullheight is-bold" style="background: url('/header-image');background-size: cover;">
 		<div class="hero-body">
 			<div class="container">

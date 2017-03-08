@@ -13,7 +13,7 @@ module.exports = (bot, winston, svr, serverDocument, feedDocument, callback) => 
                         if(articles[i].link == feedDocument.streaming.last_article_title) {
                             adding = true;
                         } else if(adding) {
-                            info.push(`\`${moment(articles[i].published).format("MMMM DD, YYYY [at] hh:mmA Z")}\` **${articles    [i].title}**\n${articles[i].link}`);
+                            info.push(`\`${moment(articles[i].published).format("MMMM DD, YYYY [at] hh:mmA Z")}\` **${articles[i].title}**\n${articles[i].link}`);
                         }
                     }
                 };
