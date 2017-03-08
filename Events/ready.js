@@ -168,6 +168,7 @@ module.exports = (bot, db, config, winston) => {
 					} else {
 						setTimeout(() => {
                             startStreamingRSS();
+                            //TODO: reduce to 15000 when testing (originally 600000)
 						}, 600000);
 					}
 				};
@@ -199,7 +200,8 @@ module.exports = (bot, db, config, winston) => {
 					} else {
 						setTimeout(() => {
                             checkStreamers();
-						}, 600000);
+                            //TODO: reduce to 15000 when testing (originally 600000)
+						},600000);
 					}
 				};
 				checkStreamersForServer(0);
