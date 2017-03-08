@@ -35,6 +35,7 @@ module.exports = (bot, db, config, winston, member, ch) => {
 					}
 				});
 
+                //TODO: Delete stats (collection only)
 				// Stop timing voice activity
 				voiceStatsCollector.stopTiming(bot, winston, ch.guild, serverDocument, member);
 			} else {

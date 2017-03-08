@@ -92,6 +92,7 @@ module.exports = (bot, db, config, winston, msg) => {
                 ch.createMessage(res);
             });
         });
+
         // Handle public messages
     } else {
         // Get server data
@@ -114,14 +115,17 @@ module.exports = (bot, db, config, winston, msg) => {
                 }
                 const memberBotAdmin = bot.getUserBotAdmin(msg.channel.guild, serverDocument, msg.member);
 
+                //TODO: Delete stats & ranks?
                 // Increment today's message count for server
                 serverDocument.messages_today++;
                 // Count server stats if enabled in this channel
                 if (channelDocument.isStatsEnabled) {
                     // Increment this week's message count for member
                     memberDocument.messages++;
+                    //TODO: keep lastactive for auto-moderation
                     // Set now as the last active time for member
                     memberDocument.last_active = Date.now();
+                    //TODO: Delete stats & ranks?
                     // Check if the user has leveled up a rank
                     bot.checkRank(winston, msg.channel.guild, serverDocument, msg.member, memberDocument);
                 }
@@ -332,6 +336,7 @@ module.exports = (bot, db, config, winston, msg) => {
                         }
                     };
 
+                    //TODO: Delete stats & ranks? - Keep command usage, since its for commands only?
                     // Increment command usage count
                     const incrementCommandUsage = (serverDocument, command) => {
                         if (!serverDocument.command_usage) {
@@ -359,6 +364,8 @@ module.exports = (bot, db, config, winston, msg) => {
                         const command = bot.checkCommandTag(msg.content, serverDocument);
                         // Check if it's a first-party command and if it's allowed to run here
                         if (command && bot.getPublicCommandMetadata(command.command) && serverDocument.config.commands[command.command].isEnabled && (bot.getPublicCommandMetadata(command.command).admin_exempt || memberBotAdmin >= serverDocument.config.commands[command.command].admin_level) && serverDocument.config.commands[command.command].disabled_channel_ids.indexOf(msg.channel.id) == -1) {
+
+                            //TODO: Delete stats & ranks? - Keep command usage, since its for commands only?
                             // Increment command usage count
                             incrementCommandUsage(serverDocument, command.command);
 

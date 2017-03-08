@@ -35,6 +35,7 @@
 		<div class="hero-body">
 			<div class="container has-text-centered">
 				<h1 class="title is-1">
+					<!--TODO: Delete stats messages-->
 					<strong><%= totalMessageCount %></strong> message<%= totalMessageCount==1 ? "" : "s" %> today, <strong><%= numActiveServers %></strong> active server<%= numActiveServers==1 ? "" : "s" %>
 				</h1>
 				<div class="columns">
@@ -94,19 +95,7 @@
 		</div>
 	</section>
 
-	<section id="frame" class="section">
-		<div class="container">
-			<% if(mode=="servers") { %>
-				<% include ../partials/servers-section %>
-				<script>
-				switchLayout();
-				showSelections();
-				</script>
-			<% } else { %>
-				<% include ../partials/users-section %>
-			<% } %>
-		</div>
-	</section>
+	<section id="frame" class="section"></section>
 
 	<section class="hero is-small is-black">
 		<div class="hero-body">
