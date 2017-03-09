@@ -101,8 +101,14 @@
 						<strong>Slots:</strong> ( <%= eventData[i].actualAttendees %> / <%= eventData[i].maxAttendees %>
 						)
 						<br>
-                        <% if(data.attendeesNames) { %>
-						<strong>Attendees:</strong> <%= data.attendeesNames %>
+                        <% if(eventData[i].attendeesNames) { %>
+						<strong>Attendees:</strong>
+							<% for(var j = 0;j < eventData[i].attendeesNames.length;j++) { %>
+						<span class="tag is is-primary">
+							<%= eventData[i].attendeesNames[j].id %>
+							<button class="delete is-small"></button>
+						</span>
+							<% } %>
 						<br>
                         <% } else { %>
 						<strong>Attendees:</strong> no attendees joined yet!

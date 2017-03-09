@@ -840,19 +840,16 @@ module.exports = (bot, db, auth, config, winston) => {
                                         authorName = bot.getUserOrNickname(eventDocument[i]._author, serv);
                                         data.userIsAttendee = false;
                                         data.rawEventOverviewCount++
-                                        data.attendeesNames = "";
+                                        let attendeesNames = [];
 
                                         if(eventDocument[i].attendees) {
                                             noAttendees = eventDocument[i].attendees.length;
 
                                             //TODO: Fix attendees not showing up in events web modals
                                             for (let j = 0; j < eventDocument[i].attendees.length; j++) {
-
-                                                if (j % 2 === 1) {
-                                                    data.attendeesNames += `\`${bot.getUserOrNickname(eventDocument[i].attendees[j]._id, serv)}\`\n`;
-                                                } else {
-                                                    data.attendeesNames += `\`${bot.getUserOrNickname(eventDocument[i].attendees[j]._id, serv)}\`, `;
-                                                }
+                                                attendeesNames.push({
+                                                    id: `${bot.getUserOrNickname(eventDocument[i].attendees[j]._id, serv)}`
+                                                });
 
                                                 if (eventDocument[i].attendees[j]._id == req.user.id) {
                                                     data.userIsAttendee = true;
@@ -860,6 +857,9 @@ module.exports = (bot, db, auth, config, winston) => {
                                             }
                                         }
 
+                                        for(let j=0;j<attendeesNames.length;j++) {
+                                            let bla = attendeesNames[j].id;
+                                        }
 
                                         eventData.push({
                                             id: eventDocument[i]._no,
@@ -870,7 +870,7 @@ module.exports = (bot, db, auth, config, winston) => {
                                             description: eventDocument[i].description,
                                             maxAttendees: eventDocument[i].attendee_max,
                                             actualAttendees: noAttendees,
-                                            attendees: data.attendeesNames,
+                                            attendeesNames: attendeesNames,
                                             tags: eventDocument[i].tags.join(", "),
                                             isPublic: eventDocument[i].isPublic,
                                             endDate: moment_timezone(eventDocument[i].end).tz(data.tz).format(`${data.dateFormat}`),
