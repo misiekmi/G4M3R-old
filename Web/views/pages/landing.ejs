@@ -10,7 +10,8 @@
 			font-size: 42px;
 		}
 	}
-	@media screen and (min-width: 321px) and (max-width: 768px) {
+
+    @media screen and (min-width: 321px) and (max-width: 767px) {
 		#G4M3R-title {
 			font-size: 46px;
 		}
@@ -29,8 +30,17 @@
 		#G4M3R-header-subtitle {
             font-size: 12px;
 		}
+
+        #G4M3R-hidden {
+            visibility: hidden;
+        }
+
+        .hidden {
+            display: none !important;
+        }
 	}
-	@media screen and (min-width: 769px) {
+
+    @media screen and (min-width: 768px) {
 		#G4M3R-title {
 			font-size: 96px;
 		}
@@ -49,6 +59,14 @@
 		#G4M3R-header-subtitle {
             font-size: 16px;
 		}
+
+        #G4M3R-hidden {
+            visibility: visible;
+        }
+
+        .hidden {
+            display: flex !important;
+        }
 	}
 	</style>
 	<script>
@@ -82,8 +100,8 @@
                             </p>
                         </div>
                     </div>
-                    <div class="media-right is-vcentered" style="padding: 20px">
-                        <a class="button is-light is-large" href="https://discord.gg/mtJyQjW">
+                    <div id="G4M3R-hidden" class="hidden is-vcentered" style="padding: 20px">
+                        <a id="G4M3R-hidden" class="button is-light" href="https://discord.gg/mtJyQjW">
 							<span class="icon">
 								<i class="fa fa-sign-in"></i>
 							</span>
