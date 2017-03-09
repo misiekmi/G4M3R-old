@@ -127,10 +127,15 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                             } else {
                                 let time, error;
                                 switch (viewer.edit_mode) {
-                                    case 1:
-                                        viewer.edits_made.title = usr_input_no;
+                                    case 1: // title
+                                        if(usr_input_no.length <= 100) {            // length of title limit
+                                            viewer.edits_made.title = usr_input_no;
+                                        } else {
+                                            embed = viewer.getErrorView(6, usr_input_no);
+                                            error = true;
+                                        }
                                         break;
-                                    case 2:
+                                    case 2: // start time
                                         time = moment.tz(usr_message.content.trim(), formats, false, viewer.timezone); // parse start time
                                         if (time.isValid()) {
                                             viewer.edits_made.start = time;
@@ -139,7 +144,7 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                                             error = true;
                                         }
                                         break;
-                                    case 3:
+                                    case 3: // end time
                                         time = moment.tz(usr_message.content.trim(), formats, false, viewer.timezone); // parse start time
                                         if (time.isValid()) {
                                             viewer.edits_made.end = time;
@@ -148,20 +153,39 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                                             error = true;
                                         }
                                         break;
-                                    case 4:
-                                        viewer.edits_made.description = usr_input_no;
+                                    case 4: // description
+                                        if(usr_input_no.length <= 300) {                    // length of desc limit
+                                            viewer.edits_made.description = usr_input_no;
+                                        } else {
+                                            embed = viewer.getErrorView(6, usr_input_no);
+                                            error = true;
+                                        }
                                         break;
-                                    case 5:
-                                        if (usr_input_no >= 0 && usr_input_no <= 999999) { //added upper limit 999999
+                                    case 5: // number of player slots
+                                        if (usr_input_no >= 0 && usr_input_no <= 999999) {  //added upper limit 999999
                                             viewer.edits_made.attendee_max = usr_input_no;
                                         } else {
                                             embed = viewer.getErrorView(5, usr_input_no);
                                             error = true;
                                         }
                                         break;
-                                    case 6:
+                                    case 6: // tags
                                         let tags = usr_input_no.split(",");
-                                        viewer.edits_made.tags = tags;
+
+                                        let within_limits = tags.length <= 10;  // number of tag limit
+                                        for(let i=0; i<tags.length; i++) {
+                                            if(tags[i].length>=15) {            // length of each tag limit
+                                                within_limits = false;
+                                            }
+                                        }
+
+                                        if(within_limits) {
+                                            viewer.edits_made.tags = tags;
+                                        } else {
+                                            embed = viewer.getErrorView(6, usr_input_no);
+                                            error = true;
+                                        }
+                                        break;
                                 }
 
                                 if (!error) {

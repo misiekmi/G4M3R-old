@@ -128,7 +128,7 @@ Viewer.prototype.getEventView = function() {
                 }
                 //attendeesNames += `<@`+this.event.attendees[i]._id+`>, `;
                 hasAttendees = true;
-            }1
+            }
         }
     }
 
@@ -452,6 +452,9 @@ Viewer.prototype.getErrorView = function(error, bad_input, silent) {
             break;
         case 5:
             embed.description = `\"${bad_input}\" is not valid amount!`;
+            break;
+        case 6:
+            embed.description = `\"${bad_input}\" is too much input for this field! Please shorten your input string.`;
             break;
         default:
             embed.description = `Unknown error!`;
