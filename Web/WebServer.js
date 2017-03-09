@@ -4209,7 +4209,6 @@ module.exports = (bot, db, auth, config, winston) => {
             db.users.findOne({
                 _id: req.user.id
             }).then(userDocument=>{
-                console.log(userDocument);
                 res.render("pages/user.ejs", {
                     authUser: req.isAuthenticated() ? getAuthUser(req.user) : null,
                     serverData: {
@@ -4270,6 +4269,7 @@ module.exports = (bot, db, auth, config, winston) => {
             db.users.findOne({
                 _id: req.user.id
             }).then(userDocument=>{
+                console.log(userDocument);
                 res.render("pages/user-locale.ejs", {
                     authUser: req.isAuthenticated() ? getAuthUser(req.user) : null,
                     serverData: {
@@ -4293,6 +4293,16 @@ module.exports = (bot, db, auth, config, winston) => {
             db.users.findOne({
                 _id: consolemember.id
             }).then(userDocument=> {
+                console.log(req.body);
+                if(req.body.user_location) {
+                    userDocument.location = req.body.user_location;
+                }
+                if(req.body.user_timezone) {
+                    userDocument.timezone = req.body.user_timezone;
+                }
+                if(req.body.user_temp_unit) {
+                    userDocument.weatherunit = req.body.user_temp_unit;
+                }
 
                 saveUserConsoleOptions(consolemember, userDocument, req, res);
             });
