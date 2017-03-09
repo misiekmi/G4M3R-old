@@ -3,10 +3,12 @@ const moment = require("moment");
 
 // Send streaming RSS updates for a server
 module.exports = (bot, winston, svr, serverDocument, feedDocument, callback) => {
-    getRSS(winston, feedDocument.url, 100, (err, articles) => {
+    var num = serverDocument.config.command_fetch_properties.default_count;
+    getRSS(winston, feedDocument.url, num, (err, articles) => {
         if(!err && articles && articles.length > 0 && articles[0]) {
             let info = [];
-            if(feedDocument.streaming.last_article_title != articles[0].link) {
+
+            if(articles[0].link.indexOf(feedDocument.streaming.last_article_title) < 0) {
                 const getNewArticles = forceAdd => {
                     let adding = forceAdd;
                     for(let i = articles.length - 1; i >= 0; i--) {
@@ -19,7 +21,9 @@ module.exports = (bot, winston, svr, serverDocument, feedDocument, callback) => 
                 };
                 getNewArticles(feedDocument.streaming.last_article_title == "");
                 info.slice(1);
-                if(info.length == 0) {
+
+
+               if(info.length == 0) {
                     getNewArticles(true);
                 }
             }
