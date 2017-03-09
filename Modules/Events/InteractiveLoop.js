@@ -15,7 +15,7 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
         },
         (callback) => {
             msg.channel.createMessage(embed).then(bot_message => {
-                let timeout = setTimeout(() => { bot_message.delete(); }, 30000); //delete message in 1/2 minute
+                let timeout = setTimeout(() => { bot_message.delete(); }, 60000); //delete message in 1/2 minute
                 bot.awaitMessage(msg.channel.id, msg.author.id, usr_message => {
                     bot.removeMessageListener(msg.channel.id, msg.author.id);
                     clearTimeout(timeout); //clear the active timeout

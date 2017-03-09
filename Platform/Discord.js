@@ -63,7 +63,7 @@ module.exports = (db, auth, config) => {
                     delete bot.messageListeners[chid];
                 }
             }
-        }, 30000);
+        }, 60000);
         bot.messageListeners[chid][usrid] = {
             callback,
             filter,
