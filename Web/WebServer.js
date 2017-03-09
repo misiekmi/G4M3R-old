@@ -40,6 +40,8 @@ const createMessageOfTheDay = require("./../Modules/MessageOfTheDay.js");
 const Giveaways = require("./../Modules/Giveaways.js");
 const Polls = require("./../Modules/Polls.js");
 const Trivia = require("./../Modules/Trivia.js");
+const moment_timezone = require("moment-timezone");
+const configFile = require("./../Configuration/config.json");
 
 const app = express();
 app.use(compression());
@@ -759,7 +761,7 @@ module.exports = (bot, db, auth, config, winston) => {
             eventState = req.path.substring(req.path.lastIndexOf("/") + 1);
             const pageTitle = `${eventState.charAt(0).toUpperCase() + eventState.slice(1)} - G4M3R Events`
 
-            const renderPage = (serverData, eventData) => {
+            const renderPage = (serverData, eventData, data) => {
                 res.render("pages/events.ejs", {
                     authUser: req.isAuthenticated() ? getAuthUser(req.user) : null,
                     isMaintainer: req.isAuthenticated() ? config.maintainers.indexOf(req.user.id) > -1 : false,
@@ -767,7 +769,8 @@ module.exports = (bot, db, auth, config, winston) => {
                     serverData,
                     activeSearchQuery: req.query.id || req.query.q,
                     mode: eventState,
-                    eventData
+                    eventData,
+                    data
                 });
             };
 
@@ -776,6 +779,18 @@ module.exports = (bot, db, auth, config, winston) => {
                 const serverData = [];
                 const eventData = [];
                 const usr = bot.users.get(req.user.id);
+                const data = {};
+
+
+                const userDocument = db.users.findOne({_id: req.user.id}, (err) => {
+                    if (err) {
+                        winston.warn(err);
+                    }
+
+                });
+
+                data.tz = (userDocument.timezone ? userDocument.timezone : configFile.moment_timezone);
+                data.dateFormat = "YYYY/MM/DD HH:mm";
 
                 const addServerData = (i, callback) => {
                     if (req.user.guilds && i < req.user.guilds.length) {
@@ -810,8 +825,7 @@ module.exports = (bot, db, auth, config, winston) => {
                     const addEventData = () => {
 
                         var userServers = getUserServers(req);
-
-                        // TODO: get function to work to events for all servers the user is in
+                        data.rawEventOverviewCount = 0;
                         for(let l = 0; l < req.user.guilds.length; l++) {
 
                             db.events.find( { _server: req.user.guilds[l].id }, (err, eventDocument) => {
@@ -819,24 +833,29 @@ module.exports = (bot, db, auth, config, winston) => {
 
                                     for(let i=0;i<eventDocument.length;i++) {
                                         let noAttendees = 0;
-                                        let arrayAttendees = [];
                                         let authorName = "";
-                                        let user = usr.username;
-                                        //let svr = bot.guilds.get(eventDocument[i]._server);
                                         let serv = {};
                                         serv = bot.guilds.find(guild=>{ return guild.id === eventDocument[i]._server; });
                                         let serverName = serv.name;
                                         authorName = bot.getUserOrNickname(eventDocument[i]._author, serv);
+                                        data.userIsAttendee = false;
+                                        data.rawEventOverviewCount++
+                                        let attendeesNames = [];
 
                                         if(eventDocument[i].attendees) {
                                             noAttendees = eventDocument[i].attendees.length;
-                                            for (let j=0;j<eventDocument[i].attendees.length;j++) {
-                                                arrayAttendees.push({
-                                                    attendees: eventDocument[i].attendees._id
+
+                                            //TODO: Fix attendees not showing up in events web modals
+                                            for (let j = 0; j < eventDocument[i].attendees.length; j++) {
+                                                attendeesNames.push({
+                                                    id: `${bot.getUserOrNickname(eventDocument[i].attendees[j]._id, serv)}`
                                                 });
+
+                                                if (eventDocument[i].attendees[j]._id == req.user.id) {
+                                                    data.userIsAttendee = true;
+                                                }
                                             }
                                         }
-
 
                                         eventData.push({
                                             id: eventDocument[i]._no,
@@ -847,8 +866,11 @@ module.exports = (bot, db, auth, config, winston) => {
                                             description: eventDocument[i].description,
                                             maxAttendees: eventDocument[i].attendee_max,
                                             actualAttendees: noAttendees,
-                                            attendees: arrayAttendees,
-                                            isPublic: eventDocument[i].isPublic
+                                            attendeesNames: attendeesNames,
+                                            tags: eventDocument[i].tags.join(", "),
+                                            isPublic: eventDocument[i].isPublic,
+                                            endDate: moment_timezone(eventDocument[i].end).tz(data.tz).format(`${data.dateFormat}`),
+                                            startDate: moment_timezone(eventDocument[i].start).tz(data.tz).format(`${data.dateFormat}`)
                                         });
                                     }
                                 } else {
@@ -875,7 +897,11 @@ module.exports = (bot, db, auth, config, winston) => {
                             if (err) {
                                 winston.warn(err);
                             } else {
-                                renderPage(serverData,eventData);
+                                renderPage(
+                                    serverData,
+                                    eventData,
+                                    data
+                                );
                             }
 
                         });
@@ -885,28 +911,41 @@ module.exports = (bot, db, auth, config, winston) => {
 
                 } else if (req.path === "/events/myevents") {
 
-                    const addEventData = () => {
 
-                        db.events.find( { _author: usr.id }, (err, eventDocument) => {
+                    const addEventData = () => {
+                        data.rawEventMyCount = 0;
+
+
+                        db.events.find({$or: [{"_author": usr.id}, {"attendees._id": usr.id}]}, (err, eventDocument) => {
                             if (!err && eventDocument) {
 
                                 for(let i=0;i<eventDocument.length;i++) {
                                     let noAttendees = 0;
-                                    let arrayAttendees = [];
                                     let authorName = "";
-                                    let user = usr.username;
                                     let serv = {};
                                     serv = bot.guilds.find(guild=>{ return guild.id === eventDocument[i]._server; });
                                     let serverName = serv.name;
+                                    data.userIsAttendee = false;
+                                    data.rawEventMyCount = eventDocument.length;
+                                    data.attendeesNames = "";
 
                                     authorName = bot.getUserOrNickname(eventDocument[i]._author, serv);
 
                                     if(eventDocument[i].attendees) {
                                         noAttendees = eventDocument[i].attendees.length;
-                                        for (let j=0;j<eventDocument[i].attendees.length;j++) {
-                                            arrayAttendees.push({
-                                                attendees: eventDocument[i].attendees._id
-                                            });
+
+                                        //TODO: Fix attendees not showing up in events web modals
+                                        for (let j = 0; j < eventDocument[i].attendees.length; j++) {
+
+                                            if (j % 2 === 1) {
+                                                data.attendeesNames += `\`${bot.getUserOrNickname(eventDocument[i].attendees[j]._id, serv)}\`\n`;
+                                            } else {
+                                                data.attendeesNames += `\`${bot.getUserOrNickname(eventDocument[i].attendees[j]._id, serv)}\`, `;
+                                            }
+
+                                            if (eventDocument[i].attendees[j]._id == req.user.id) {
+                                                data.userIsAttendee = true;
+                                            }
                                         }
                                     }
 
@@ -919,8 +958,11 @@ module.exports = (bot, db, auth, config, winston) => {
                                         description: eventDocument[i].description,
                                         maxAttendees: eventDocument[i].attendee_max,
                                         actualAttendees: noAttendees,
-                                        attendees: arrayAttendees,
-                                        isPublic: eventDocument[i].isPublic
+                                        attendees: data.attendeesNames,
+                                        tags: eventDocument[i].tags.join(", "),
+                                        isPublic: eventDocument[i].isPublic,
+                                        endDate: moment_timezone(eventDocument[i].end).tz(data.tz).format(`${data.dateFormat}`),
+                                        startDate: moment_timezone(eventDocument[i].start).tz(data.tz).format(`${data.dateFormat}`)
                                     });
                                 }
                             } else {
@@ -946,7 +988,11 @@ module.exports = (bot, db, auth, config, winston) => {
                             if (err) {
                                 winston.warn(err);
                             } else {
-                                renderPage(serverData,eventData);
+                                renderPage(
+                                    serverData,
+                                    eventData,
+                                    data
+                                );
                             }
 
                         });
@@ -1146,7 +1192,7 @@ module.exports = (bot, db, auth, config, winston) => {
                         res.render("pages/extensions.ejs", {
                             authUser: req.isAuthenticated() ? getAuthUser(req.user) : null,
                             isMaintainer: req.isAuthenticated() ? config.maintainers.indexOf(req.user.id) > -1 : false,
-                            pageTitle: "My G4M3R Events",
+                            pageTitle: pageTitle,
                             serverData,
                             activeSearchQuery: req.query.id || req.query.q,
                             mode: extensionState,
@@ -2030,6 +2076,7 @@ module.exports = (bot, db, auth, config, winston) => {
 			} else if(svr.magic_cookie==='ZzRtM3IueHl6') {
 			    res.redirect("/dashboard/user?svrid=user");
             } else {
+                //TODO: Delete stats - decide for commandusage if it should stay
 				let topCommand;
 				let topCommandUsage = 0;
 				for(const cmd in serverDocument.command_usage) {
@@ -2038,6 +2085,7 @@ module.exports = (bot, db, auth, config, winston) => {
 						topCommandUsage = serverDocument.command_usage[cmd];
 					}
 				}
+                //TODO: Delete stats messages
 				const topMemberID = serverDocument.members.sort((a, b) => {
 					return b.messages - a.messages;
 				})[0];
@@ -2050,6 +2098,7 @@ module.exports = (bot, db, auth, config, winston) => {
 						"$in": memberIDs
 					}
 				}).limit(1).exec((err, userDocuments) => {
+                    //TODO: Delete stats
 					let richestMember;
 					if(!err && userDocuments && userDocuments.length>0) {
 						richestMember = svr.members.get(userDocuments[0]._id);
@@ -2623,6 +2672,7 @@ module.exports = (bot, db, auth, config, winston) => {
 		});
 	});
 
+    //TODO: Delete stats
 	// Admin console stats collection
 	app.get("/dashboard/stats-points/stats-collection", (req, res) => {
 		checkAuth(req, res, (consolemember, svr, serverDocument) => {
@@ -2668,6 +2718,7 @@ module.exports = (bot, db, auth, config, winston) => {
 		});
 	});
 
+    //TODO: Delete stats - ranks also since nothing is counted
 	// Admin console ranks
 	app.get("/dashboard/stats-points/ranks", (req, res) => {
 		checkAuth(req, res, (consolemember, svr, serverDocument) => {

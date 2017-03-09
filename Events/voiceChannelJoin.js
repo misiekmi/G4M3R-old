@@ -31,6 +31,7 @@ module.exports = (bot, db, config, winston, member, ch) => {
 					}
 				}
 
+                //TODO: Delete stats
 				// Start timing voice activity if unmuted
 				if(!member.voiceState.mute && !member.voiceState.selfMute) {
 					voiceStatsCollector.startTiming(winston, ch.guild, serverDocument, member);
