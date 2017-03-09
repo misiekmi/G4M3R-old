@@ -857,10 +857,6 @@ module.exports = (bot, db, auth, config, winston) => {
                                             }
                                         }
 
-                                        for(let j=0;j<attendeesNames.length;j++) {
-                                            let bla = attendeesNames[j].id;
-                                        }
-
                                         eventData.push({
                                             id: eventDocument[i]._no,
                                             author: authorName,
