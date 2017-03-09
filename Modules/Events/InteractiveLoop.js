@@ -51,23 +51,26 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                         // go to next page
                         else if (usr_input_str === `+` && page_size * current_page_no < viewer.events.length) {
                             current_page_no++;
-                            embed = viewer.getPageView(current_page_no, winston);
+                            embed = viewer.getPageView(current_page_no);
                         }
                         // go to previous page
                         else if (usr_input_str == `-` && current_page_no > 1) {
                             current_page_no--;
-                            embed = viewer.getPageView(current_page_no, winston);
+                            embed = viewer.getPageView(current_page_no);
                         }
                     } else if (viewer.mode === 2) { // event view mode
                         // return to eventDocument list page
                         if (usr_input_str == "back" || usr_input_str == "b") {
-                            embed = viewer.getPageView(current_page_no, winston);
+                            embed = viewer.getPageView(current_page_no);
                         } else if ((usr_input_str == "edit" || usr_input_str == "e") &&
                             (auth.toDeleteOrEdit(viewer.server, viewer.event, viewer.member))) {
                             embed = viewer.getEventEditView();
                         } else if ((usr_input_str == "delete" || usr_input_str == "d") &&
                             (auth.toDeleteOrEdit(viewer.server, viewer.event, viewer.member))) {
                             embed = viewer.deleteEvent(viewer.event);
+                        } else if ((usr_input_str == "kick" || usr_input_str == "k") &&
+                            (auth.toDeleteOrEdit(viewer.server, viewer.event, viewer.member))) {
+                            embed = viewer.getKickView(viewer.event);
                         } else if (usr_input_str == "join" || usr_input_str == "j") {
                             msg.channel.createMessage(viewer.joinEvent(viewer.event, msg));
                             cancel = true;
@@ -195,19 +198,30 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                         }
                     } else if (viewer.mode === 4) { // back to list or quit
                         if (usr_input_str === "back" || usr_input_str === "b") {
-                            embed = viewer.getPageView(current_page_no, winston);
+                            embed = viewer.getPageView(current_page_no);
                         }
                     } else if (viewer.mode === 5) { // error mode
                         if(viewer.previous_mode === 3) {
                             embed = viewer.getEventEditView();
                         } else {
-                            embed = viewer.getPageView(current_page_no, winston);
+                            embed = viewer.getPageView(current_page_no);
                         }
                     } else if (viewer.mode === 6) { // error mode
                         if(viewer.previous_mode === 2) {
                             embed = viewer.getEventView();
                         } else {
                             cancel = true;
+                        }
+                    } else if (viewer.mode === 7) { // kick user mode
+                        console.log(viewer.event.attendees);
+                        if(usr_input_str==="cancel"||usr_input_str==="c") {
+                            embed = viewer.getEventView();
+                        } else {
+                            embed = viewer.kickUser(usr_input_no.replace("<@","").replace(">",""));
+                        }
+                    } else if (viewer.mode === 8) { // return from kick to event view
+                        if (usr_input_str === "back" || usr_input_str === "b") {
+                            embed = viewer.getEventView();
                         }
                     }
                     bot_message.delete();

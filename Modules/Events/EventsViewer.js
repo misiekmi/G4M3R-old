@@ -7,6 +7,7 @@ function Viewer(bot, msg, db, winston, serverDocument, eventDocuments, userDocum
     this.bot = bot;
     this.msg = msg;
     this.db = db;
+    this.winston = winston;
     this.server = serverDocument;
     this.events = eventDocuments;
     this.user = userDocument;
@@ -48,14 +49,14 @@ Viewer.prototype.setEvent = function(event_no) {
 };
 
 /// generate a list view embed
-Viewer.prototype.getPageView = function(page_no, winston) {
+Viewer.prototype.getPageView = function(page_no) {
     this.mode = 1;
 
     let embed = {};
     if (config.colors) {
         embed.color = parseInt(config.colors.blue, 16);
     } else {
-        winston.warn("missing colors in config.json");
+        this.winston.warn("missing colors in config.json");
     }
 
     embed.description = "";
@@ -168,7 +169,7 @@ Viewer.prototype.getEventView = function() {
 
     embed.footer = {text: `## Options: [J]oin, [L]eave, ` +
     (hasAttendees ? `[A]ttendees, ` : "") +
-    (auth.toDeleteOrEdit(this.server, this.event, this.member)?`[E]dit, [D]elete, `:"") +
+    (auth.toDeleteOrEdit(this.server, this.event, this.member)?`[E]dit, [D]elete, [K]ick `:"") +
     `[B]ack, [Q]uit`};
 
     return {embed: embed};
@@ -489,6 +490,61 @@ Viewer.prototype.getEventAttendeesView = function(event) {
     }
 
     return {embed: embed};
+};
+
+Viewer.prototype.getKickView = function() {
+    this.mode = 7;
+
+    let embed = {};
+    embed.title = `Kick a User from Event #⃣ ${this.event._no}`;
+    embed.description = "Input the user you wish to kick from the event as a mention or input their user ID.";
+    embed.color = parseInt(config.colors.blue, 16);
+    embed.footer = {text: `## Options: [C]ancel, [Q]uit`};
+
+    return {embed: embed};
+};
+
+Viewer.prototype.kickUser = function(userID, silent) {
+    let userexists;
+    this.mode = 8;
+    try {
+        for(let i=0; i<this.event.attendees.length; i++) {
+            if(this.event.attendees[i]._id===userID) {
+                this.event.attendees.splice(i, 1);
+                userexists = true;
+                this.event.save((err)=> {
+                    if (err) {
+                        this.winston.error(`Failed to remove user from event`, { _id: viewer.event._id }, err);
+                    }
+                });
+                break;
+            }
+        }
+    } catch (e) {
+        console.log(e);
+    }
+
+    let embed = {};
+    if(silent&&userexists) {
+        embed.color = parseInt(config.colors.green, 16);
+    } else if(silent&&!userexists) {
+        embed.color = parseInt(config.colors.orange, 16);
+    } else {
+        embed.color = parseInt(config.colors.blue, 16);
+        embed.footer = {text: `## Options: [B]ack, [Q]uit`};
+    }
+
+    if(userexists) {
+        embed.title = `User Kicked from Event #⃣ ${this.event._no}`;
+        embed.description = "User has been kicked from the event.";
+
+        return {embed: embed};
+    } else {
+        embed.title = `User has not joined Event #⃣ ${this.event._no}`;
+        embed.description = "The user could not be found in the event's list of attendees.";
+
+        return {embed: embed};
+    }
 };
 
 module.exports = Viewer;
