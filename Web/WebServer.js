@@ -264,7 +264,6 @@ module.exports = (bot, db, auth, config, winston) => {
                         name: owner.nick || owner.user.username
                     },
                     members: svr.members.size,
-                    //TODO: Delete stats
                     messages: serverDocument.messages_today,
                     rawCreated: moment(svr.createdAt).format(config.moment_date_format),
                     relativeCreated: Math.ceil((Date.now() - svr.createdAt) / 86400000),
@@ -463,7 +462,6 @@ module.exports = (bot, db, auth, config, winston) => {
             res.redirect("/activity/servers");
         });
         app.get("/activity/(|servers|users)", (req, res) => {
-            //TODO: Delete stats
             db.servers.aggregate({
                 $group: {
                     _id: null,
@@ -485,7 +483,6 @@ module.exports = (bot, db, auth, config, winston) => {
             }, (err, result) => {
                 let messageCount = 0;
                 let activeServers = bot.guilds.size;
-                //TODO: Delete stats
                 if (!err && result) {
                     messageCount = result[0].total;
                     activeServers = result[0].active;
@@ -496,7 +493,6 @@ module.exports = (bot, db, auth, config, winston) => {
                         authUser: req.isAuthenticated() ? getAuthUser(req.user) : null,
                         rawServerCount: bot.guilds.size,
                         rawUserCount: bot.users.size,
-                        //TODO: Delete stats
                         totalMessageCount: messageCount,
                         numActiveServers: activeServers,
                         activeSearchQuery: req.query.q,
@@ -521,7 +517,6 @@ module.exports = (bot, db, auth, config, winston) => {
                     } else {
                         page = parseInt(req.query.page);
                     }
-                    //TODO: Delete stats - change to members-desc
                     if (!req.query.sort) {
                         req.query.sort = "messages-des";
                     }
@@ -568,13 +563,11 @@ module.exports = (bot, db, auth, config, winston) => {
                                 "member_count": -1
                             };
                             break;
-                        //TODO: Delete stats
                         case "messages-asc":
                             sortParams = {
                                 "messages_today": 1
                             };
                             break;
-                        //TODO: Delete stats
                         case "messages-des":
                         default:
                             sortParams = {
@@ -587,7 +580,6 @@ module.exports = (bot, db, auth, config, winston) => {
                         if (err || rawCount == null) {
                             rawCount = bot.guilds.size;
                         }
-                        //TODO: Delete stats messages only
                         db.servers.aggregate([{
                                 $match: matchCriteria
                             },
@@ -834,7 +826,6 @@ module.exports = (bot, db, auth, config, winston) => {
 
                         var userServers = getUserServers(req);
                         data.rawEventOverviewCount = 0;
-                        // TODO: get function to work to events for all servers the user is in
                         for(let l = 0; l < req.user.guilds.length; l++) {
 
                             db.events.find( { _server: req.user.guilds[l].id }, (err, eventDocument) => {
@@ -2132,7 +2123,6 @@ module.exports = (bot, db, auth, config, winston) => {
 							}
 						},
 						currentPage: req.path,
-                        //TODO: Delete stats
 						messagesToday: serverDocument.messages_today,
 						topCommand,
 						memberCount: svr.members.size,
@@ -3875,13 +3865,11 @@ module.exports = (bot, db, auth, config, winston) => {
 					_id: null,
 					total: {
 						$sum: {
-                            //TODO: Delete stats
 							$add: ["$messages_today"]
 						}
 					}
 				}
 			}, (err, result) => {
-                //TODO: Delete stats
 				let messageCount = 0;
 				if(!err && result) {
 					messageCount = result[0].total;
@@ -3897,7 +3885,6 @@ module.exports = (bot, db, auth, config, winston) => {
 					currentPage: req.path,
 					serverCount: bot.guilds.size,
 					userCount: bot.users.size,
-                    //TODO: Delete stats
 					totalMessageCount: messageCount,
 					roundedUptime: getRoundedUptime(process.uptime()),
 					shardCount: bot.shards.size,
