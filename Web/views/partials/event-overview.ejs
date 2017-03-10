@@ -3,34 +3,29 @@
 		<table class="table">
 			<thead>
 			<tr>
-				<th><abbr title="Event ID">ID</abbr></th>
-				<th>Title</th>
+				<th class="is-smaller">Title</th>
 				<th><abbr title="Author">by</abbr></th>
-				<th>Server</th>
+				<th>Server (ID)</th>
 				<th><abbr title="Attendees">Slots</abbr></th>
-				<th>Starts</th>
-				<th>Ends</th>
-				<th>Join / Leave</th>
+				<th class="is-hidden">Starts</th>
+				<th class="is-hidden">Ends</th>
+				<th class="is-hidden">Join / Leave</th>
 			</tr>
 			</thead>
 			<tfoot>
 			<tr>
-				<th><abbr title="Event ID">ID</abbr></th>
-				<th>Title</th>
+				<th class="is-smaller">Title</th>
 				<th><abbr title="Author">by</abbr></th>
-				<th>Server</th>
+				<th>Server (ID)</th>
 				<th><abbr title="Attendees">Slots</abbr></th>
-				<th>Starts</th>
-				<th>Ends</th>
-				<th>Join / Leave</th>
+				<th class="is-hidden">Starts</th>
+				<th class="is-hidden">Ends</th>
+				<th class="is-hidden">Join / Leave</th>
 			</tr>
 			</tfoot>
 			<tbody>
             <% for(var i=0; i<eventData.length; i++) { %>
 			<tr class="modal-button" data-target="#event-<%= i %>-modal">
-				<td>
-                    <%= eventData[i].id %>
-				</td>
 				<td>
                     <%= eventData[i].title %>
 				</td>
@@ -38,18 +33,18 @@
                     <%= eventData[i].author %>
 				</td>
 				<td>
-                    <%= eventData[i].server %>
+                    <%= eventData[i].server %> (<%= eventData[i].id %>)
 				</td>
 				<td>
 					( <%= eventData[i].actualAttendees %> / <%= eventData[i].maxAttendees %> )
 				</td>
-				<td>
+				<td class="is-hidden">
                     <%= eventData[i].startDate %>
 				</td>
-				<td>
+				<td class="is-hidden">
                     <%= eventData[i].endDate %>
 				</td>
-				<td>
+				<td class="is-hidden">
                     <% if (data.userIsAttendee) { %>
 					<a class="button is-small is-danger is-hovered" href="/events/myevents">
 										<span class="icon is-small">
@@ -131,7 +126,6 @@
 </div>
 <div class="content">
 	<em><strong>Your timezone:</strong> <%= data.tz %></em>
-	<strong>//</strong>
-	<em><strong>date format:</strong> <%= data.dateFormat %></em>
+	<em class="is-hidden-mobile"><strong>// date format:</strong> <%= data.dateFormat %></em>
 </div>
 

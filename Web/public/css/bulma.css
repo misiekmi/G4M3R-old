@@ -249,6 +249,14 @@ table th {
   .is-block-mobile {
     display: block !important;
   }
+
+  .table th.is-hidden tr.is-hidden tr.is-hidden {
+    display: none;
+  }
+
+  .is-smaller {
+    width: 30%;
+  }
 }
 
 @media screen and (min-width: 769px) {
