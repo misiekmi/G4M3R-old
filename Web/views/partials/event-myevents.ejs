@@ -1,50 +1,50 @@
 <div class="columns">
 	<div class="column is-12">
-		<table class="table">
-			<thead>
+		<table class="table" style="overflow-x: scroll;overflow-y: scroll">
+			<thead style="background: #daf1f6;color:black">
 			<tr>
-				<th class="is-smaller">Title</th>
-				<th><abbr title="Author">by</abbr></th>
-				<th>Server (ID)</th>
-				<th><abbr title="Attendees">Slots</abbr></th>
-				<th class="is-hidden">Starts</th>
-				<th class="is-hidden">Ends</th>
-				<th class="is-hidden">Join / Leave</th>
+				<th class="is-smaller-1"><strong>Title</strong></th>
+				<th class="is-smaller-3"><abbr title="Author"><strong>by</strong></abbr></th>
+				<th class="is-smaller-2"><strong>Server</strong> <span class="tag is-small is-primary">ID</span></th>
+				<th><abbr title="Attendees"><strong>Slots</strong></abbr></th>
+				<th class="is-hidden-mobile"><strong>Starts</strong></th>
+				<th class="is-hidden-mobile"><strong>Ends</strong></th>
+				<th class="is-hidden-mobile"><strong>Join / Leave</strong></th>
 			</tr>
 			</thead>
-			<tfoot>
+			<tfoot style="background: #daf1f6;color:black">
 			<tr>
-				<th class="is-smaller">Title</th>
-				<th><abbr title="Author">by</abbr></th>
-				<th>Server (ID)</th>
-				<th><abbr title="Attendees">Slots</abbr></th>
-				<th class="is-hidden">Starts</th>
-				<th class="is-hidden">Ends</th>
-				<th class="is-hidden">Join / Leave</th>
+				<th class="is-smaller-1"><strong>Title</strong></th>
+				<th class="is-smaller-3"><abbr title="Author"><strong>by</strong></abbr></th>
+				<th class="is-smaller-2"><strong>Server</strong> <span class="tag is-small is-primary">ID</span></th>
+				<th><abbr title="Attendees"><strong>Slots</strong></abbr></th>
+				<th class="is-hidden-mobile"><strong>Starts</strong></th>
+				<th class="is-hidden-mobile"><strong>Ends</strong></th>
+				<th class="is-hidden-mobile"><strong>Join / Leave</strong></th>
 			</tr>
 			</tfoot>
 			<tbody>
 			<% for(var i=0; i<eventData.length; i++) { %>
 			<tr class="modal-button" data-target="#event-<%= i %>-modal">
 				<td>
-					<%= eventData[i].title %>
+					<strong><%= eventData[i].title %></strong>
 				</td>
 				<td>
-					<%= eventData[i].author %>
+                    <span class="tag is-small is-dark" style="color: white"><%= eventData[i].author %>
 				</td>
 				<td>
-					<%= eventData[i].server %> (<%= eventData[i].id %>)
+					<%= eventData[i].server %> <span class="tag is-small is-primary"><%= eventData[i].id %></span>
 				</td>
 				<td>
-					( <%= eventData[i].actualAttendees %> / <%= eventData[i].maxAttendees %> )
+					<span class="tag is-small is-danger"><strong style="color: white"><%= eventData[i].actualAttendees %> / <%= eventData[i].maxAttendees %></strong></span>
 				</td>
-				<td class="is-hidden">
-					<%= eventData[i].startDate %>
+				<td class="is-hidden-mobile">
+					<span class="tag is-small is-light"><strong><%= eventData[i].startDate %></strong></span>
 				</td>
-				<td class="is-hidden">
-					<%= eventData[i].endDate %>
+				<td class="is-hidden-mobile">
+					<span class="tag is-small is-light"><strong><%= eventData[i].endDate %></strong></span>
 				</td>
-				<td class="is-hidden">
+				<td class="is-hidden-mobile">
 					<% if (data.userIsAttendee) { %>
 					<a class="button is-small is-danger is-hovered" href="/events/myevents">
 										<span class="icon is-small">
