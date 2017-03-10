@@ -404,7 +404,7 @@ module.exports = (db, auth, config) => {
                 ch.createMessage(`${userMessage}, so I blocked you from using me on the server. Contact a moderator to resolve this.`);
             });
             bot.messageBotAdmins(svr, serverDocument, `${adminMessage}, so I blocked them from using me on the server.`);
-            ModLog.create(svr, serverDocument, "Block", member, null, strikeMessage);
+            ModLog.create(winston, svr, serverDocument, "Block", member, null, strikeMessage);
         };
 
         // Perform action, message admins, and message user
@@ -421,7 +421,7 @@ module.exports = (db, auth, config) => {
                             ch.createMessage(`${userMessage}, so I muted you in the channel. Contact a moderator to resolve this.`);
                         });
                         bot.messageBotAdmins(svr, serverDocument, `${adminMessage}, so I muted them in the channel.`);
-                        ModLog.create(svr, serverDocument, "Mute", member, null, strikeMessage);
+                        ModLog.create(winston, svr, serverDocument, "Mute", member, null, strikeMessage);
                     }
                 });
                 break;
@@ -431,7 +431,7 @@ module.exports = (db, auth, config) => {
                         ch.createMessage(`${userMessage}, so I kicked you from the server. Goodbye.`);
                     });
                     bot.messageBotAdmins(svr, serverDocument, `${adminMessage}, so I kicked them from the server.`);
-                    ModLog.create(svr, serverDocument, "Kick", member, null, strikeMessage);
+                    ModLog.create(winston, svr, serverDocument, "Kick", member, null, strikeMessage);
                 }).catch(blockMember);
                 break;
             case "ban":
@@ -440,7 +440,7 @@ module.exports = (db, auth, config) => {
                         ch.createMessage(`${userMessage}, so I banned you from the server. Goodbye.`);
                     });
                     bot.messageBotAdmins(svr, serverDocument, `${adminMessage}, so I banned them from the server.`);
-                    ModLog.create(svr, serverDocument, "Ban", member, null, strikeMessage);
+                    ModLog.create(winston, svr, serverDocument, "Ban", member, null, strikeMessage);
                 }).catch(blockMember);
                 break;
             case "none":
@@ -449,7 +449,7 @@ module.exports = (db, auth, config) => {
                     ch.createMessage(`${userMessage}, and the chat moderators have again been notified about this.`);
                 });
                 bot.messageBotAdmins(svr, serverDocument, `${adminMessage}, but I didn't do anything about it.`);
-                ModLog.create(svr, serverDocument, "Warning", member, null, strikeMessage);
+                ModLog.create(winston, svr, serverDocument, "Warning", member, null, strikeMessage);
                 break;
         }
 

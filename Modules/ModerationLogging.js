@@ -18,7 +18,7 @@ const getEntryText = (id, type, affected_user_str, creator_str, reason) => {
 };
 
 module.exports = {
-    create: (svr, serverDocument, type, member, creator, reason, callback) => {
+    create: (winston, svr, serverDocument, type, member, creator, reason, callback) => {
         if(serverDocument.modlog.isEnabled && serverDocument.modlog.channel_id) {
             const ch = svr.channels.get(serverDocument.modlog.channel_id);
             if(ch && ch.type == 0) {
@@ -46,11 +46,17 @@ module.exports = {
                         reason
                     });
                     serverDocument.save(err => {
-                        if(callback) {
-                            callback(err, serverDocument.modlog.current_id);
+                        if(err) {
+                            winston.error("error while saving create modlog");
+                            //callback(err, serverDocument.modlog.current_id);
                         }
                     });
-                }).catch(callback);
+                }).catch(err => {
+                    if(err) {
+	                    winston.error("error while creating modlog");
+                    }
+
+                });
             } else {
                 if(callback) {
                     callback(new Error("Invalid modlog channel"));

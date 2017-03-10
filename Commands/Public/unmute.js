@@ -18,7 +18,7 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
 						msg.channel.createMessage(`I couldn't unmute **@${bot.getName(msg.channel.guild, serverDocument, member)}** in this channel 😴`);
 					} else {
 						msg.channel.createMessage(`**@${bot.getName(msg.channel.guild, serverDocument, member)}** can speak in #${msg.channel.name} now 🔈`);
-						ModLog.create(msg.channel.guild, serverDocument, "Unmute", member, msg.member, reason);
+						ModLog.create(winston, msg.channel.guild, serverDocument, "Unmute", member, msg.member, reason);
 					}
 				});
 			} else {

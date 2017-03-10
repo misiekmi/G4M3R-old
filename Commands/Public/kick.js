@@ -22,7 +22,7 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
                         description: `**@${bot.getName(msg.channel.guild, serverDocument, member)}** has been kicked 👋`
                     }
                 });
-                ModLog.create(msg.channel.guild, serverDocument, "Kick", member, msg.member, reason);
+                ModLog.create(winston, msg.channel.guild, serverDocument, "Kick", member, msg.member, reason);
             }).catch(err => {
                 winston.error(`Failed to kick member '${member.user.username}' from server '${msg.channel.guild.name}'`, { svrid: msg.channel.guild.name, usrid: member.id }, err);
                 msg.channel.createMessage({

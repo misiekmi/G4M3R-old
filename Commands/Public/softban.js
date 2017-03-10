@@ -13,7 +13,7 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
 		if(member) {
 			member.ban().then(() => {
 				msg.channel.createMessage(`Bye-bye **@${bot.getName(msg.channel.guild, serverDocument, member)}** 🔨`);
-				ModLog.create(msg.channel.guild, serverDocument, "Softban", member, msg.member, reason);
+				ModLog.create(winston, msg.channel.guild, serverDocument, "Softban", member, msg.member, reason);
 			}).catch(err => {
 				winston.error(`Failed to softban member '${member.user.username}' from server '${msg.channel.guild.name}'`, {svrid: msg.channel.guild.name, usrid: member.id}, err);
 				msg.channel.createMessage(`I couldn't softban **@${bot.getName(msg.channel.guild, serverDocument, member)}** 😂`);

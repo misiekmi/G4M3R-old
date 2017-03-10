@@ -28,36 +28,40 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
                         serverDocument.members.push({ _id: member.id });
                         targetMemberDocument = serverDocument.members.id(member.id);
                     }
+
                     targetMemberDocument.strikes.push({
-                        _id: msg.author.id,
-                        reason: reason || "No reason"
+	                    _id: msg.author.id,
+	                    reason: reason || "No reason"
                     });
+
                     member.user.getDMChannel().then(ch => {
-                                ch.createMessage({
-                                            embed: {
-                                                author: {
-                                                    name: bot.user.username,
-                                                    icon_url: bot.user.avatarURL,
-                                                    url: "https://github.com/pedall/G4M3R"
-                                                },
-                                                color: 0xFF0000,
-                                                title: `You just got a warning / strike from **@${bot.getName(msg.channel.guild, serverDocument, msg.channel.guild.members.get(msg.author.id), true)}** on **${msg.channel.guild.name}**${reason ? ":" : ""}`,
-                                                description: `${reason ? (`\`\`\`${reason}\`\`\``) : ""}`
-						}
-					});
-					msg.channel.createMessage({
-						embed: {
-                            author: {
-                                name: bot.user.username,
-                                icon_url: bot.user.avatarURL,
-                                url: "https://github.com/pedall/G4M3R"
-                            },
-                            color: 0x00FF00,
-							description: `Ok, **@${bot.getName(msg.channel.guild, serverDocument, member)}** now has ${targetMemberDocument.strikes.length} strike${targetMemberDocument.strikes.length == 1 ? "" : "s"} 🚦 I warned them via PM ⚠`
-						}
-					});
-					ModLog.create(msg.channel.guild, serverDocument, "Warning", member, msg.member, reason);
-				}).catch();
+                        ch.createMessage({
+                                    embed: {
+                                        author: {
+                                            name: bot.user.username,
+                                            icon_url: bot.user.avatarURL,
+                                            url: "https://github.com/pedall/G4M3R"
+                                        },
+                                        color: 0xFF0000,
+                                        title: `You just got a warning / strike from **@${bot.getName(msg.channel.guild, serverDocument, msg.channel.guild.members.get(msg.author.id), true)}** on **${msg.channel.guild.name}**${reason ? ":" : ""}`,
+                                        description: `${reason ? (`\`\`\`${reason}\`\`\``) : ""}`
+										}
+									});
+						msg.channel.createMessage({
+							embed: {
+	                            author: {
+	                                name: bot.user.username,
+	                                icon_url: bot.user.avatarURL,
+	                                url: "https://github.com/pedall/G4M3R"
+	                            },
+	                            color: 0x00FF00,
+								description: `Ok, **@${bot.getName(msg.channel.guild, serverDocument, member)}** now has ${targetMemberDocument.strikes.length} strike${targetMemberDocument.strikes.length == 1 ? "" : "s"} 🚦 I warned them via PM ⚠`
+							}
+						});
+
+						ModLog.create(winston, msg.channel.guild, serverDocument, "Warning", member, msg.member, reason);
+					}).catch();
+
 			}
 		} else {
 			msg.channel.createMessage({

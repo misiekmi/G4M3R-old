@@ -73,7 +73,7 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
 										roles: member.roles
 									}).then(() => {
 										msg.channel.createMessage(`@${bot.getName(msg.channel.guild, serverDocument, member)} no longer has the role ${role.name} 🐙`);
-										ModLog.create(msg.channel.guild, serverDocument, "Remove Role", member, msg.member);
+										ModLog.create(winston, msg.channel.guild, serverDocument, "Remove Role", member, msg.member);
 									}).catch(err => {
 										msg.channel.createMessage(`Uh-oh, I couldn't remove @${bot.getName(msg.channel.guild, serverDocument, member)} from ${role.name}`);
 										winston.error(`Failed to remove member '${member.user.username}' from role '${role.name}' on server '${msg.channel.guild.name}'`, {svrid: msg.channel.guild.id, usrid: member.id}, err);
@@ -84,7 +84,7 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
 										roles: member.roles
 									}).then(() => {
 										msg.channel.createMessage(`@${bot.getName(msg.channel.guild, serverDocument, member)} now has the role ${role.name} 🎓`);
-										ModLog.create(msg.channel.guild, serverDocument, "Add Role", member, msg.member);
+										ModLog.create(winston, msg.channel.guild, serverDocument, "Add Role", member, msg.member);
 									}).catch(err => {
 										msg.channel.createMessage(`Uh-oh, I couldn't add @${bot.getName(msg.channel.guild, serverDocument, member)} to ${role.name}`);
 										winston.error(`Failed to add member '${member.user.username}' to role '${role.name}' on server '${msg.channel.guild.name}'`, {svrid: msg.channel.guild.id, usrid: member.id}, err);

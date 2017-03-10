@@ -20,7 +20,7 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
 						msg.channel.createMessage(`I couldn't mute **@${bot.getName(msg.channel.guild, serverDocument, member)}** in this channel 😴 *Thanks Discord*`);
 					} else {
 						msg.channel.createMessage(`**@${bot.getName(msg.channel.guild, serverDocument, member)}** can't speak in #${msg.channel.name} anymore 🔇`);
-						ModLog.create(msg.channel.guild, serverDocument, "Mute", member, msg.member, reason);
+						ModLog.create(winston, msg.channel.guild, serverDocument, "Mute", member, msg.member, reason);
 					}
 				});
 			}
