@@ -845,7 +845,7 @@ module.exports = (bot, db, auth, config, winston) => {
                                         if(eventDocument[i].attendees) {
                                             noAttendees = eventDocument[i].attendees.length;
 
-                                            //TODO: Fix attendees not showing up in events web modals
+
                                             for (let j = 0; j < eventDocument[i].attendees.length; j++) {
                                                 attendeesNames.push({
                                                     id: `${bot.getUserOrNickname(eventDocument[i].attendees[j]._id, serv)}`
@@ -867,10 +867,12 @@ module.exports = (bot, db, auth, config, winston) => {
                                             maxAttendees: eventDocument[i].attendee_max,
                                             actualAttendees: noAttendees,
                                             attendeesNames: attendeesNames,
-                                            tags: eventDocument[i].tags.join(", "),
+                                            tags: eventDocument[i].tags,
                                             isPublic: eventDocument[i].isPublic,
-                                            endDate: moment_timezone(eventDocument[i].end).tz(data.tz).format(`${data.dateFormat}`),
-                                            startDate: moment_timezone(eventDocument[i].start).tz(data.tz).format(`${data.dateFormat}`)
+	                                        endDate: moment_timezone(eventDocument[i].end).tz(data.tz).format(`${data.dateFormat}`),
+	                                        startDate: moment_timezone(eventDocument[i].start).tz(data.tz).format(`${data.dateFormat}`),
+	                                        endDateNice: moment_timezone(eventDocument[i].end).tz(data.tz).format(configFile.moment_date_format),
+	                                        startDateNice: moment_timezone(eventDocument[i].start).tz(data.tz).format(configFile.moment_date_format)
                                         });
                                     }
                                 } else {
@@ -927,43 +929,42 @@ module.exports = (bot, db, auth, config, winston) => {
                                     let serverName = serv.name;
                                     data.userIsAttendee = false;
                                     data.rawEventMyCount = eventDocument.length;
-                                    data.attendeesNames = "";
+	                                let attendeesNames = [];
 
                                     authorName = bot.getUserOrNickname(eventDocument[i]._author, serv);
 
-                                    if(eventDocument[i].attendees) {
-                                        noAttendees = eventDocument[i].attendees.length;
+	                                if(eventDocument[i].attendees) {
+		                                noAttendees = eventDocument[i].attendees.length;
 
-                                        //TODO: Fix attendees not showing up in events web modals
-                                        for (let j = 0; j < eventDocument[i].attendees.length; j++) {
 
-                                            if (j % 2 === 1) {
-                                                data.attendeesNames += `\`${bot.getUserOrNickname(eventDocument[i].attendees[j]._id, serv)}\`\n`;
-                                            } else {
-                                                data.attendeesNames += `\`${bot.getUserOrNickname(eventDocument[i].attendees[j]._id, serv)}\`, `;
-                                            }
+		                                for (let j = 0; j < eventDocument[i].attendees.length; j++) {
+			                                attendeesNames.push({
+				                                id: `${bot.getUserOrNickname(eventDocument[i].attendees[j]._id, serv)}`
+			                                });
 
-                                            if (eventDocument[i].attendees[j]._id == req.user.id) {
-                                                data.userIsAttendee = true;
-                                            }
-                                        }
-                                    }
+			                                if (eventDocument[i].attendees[j]._id == req.user.id) {
+				                                data.userIsAttendee = true;
+			                                }
+		                                }
+	                                }
 
-                                    eventData.push({
-                                        id: eventDocument[i]._no,
-                                        author: authorName,
-                                        server: serverName,
-                                        clan: eventDocument[i]._clan,
-                                        title: eventDocument[i].title,
-                                        description: eventDocument[i].description,
-                                        maxAttendees: eventDocument[i].attendee_max,
-                                        actualAttendees: noAttendees,
-                                        attendees: data.attendeesNames,
-                                        tags: eventDocument[i].tags.join(", "),
-                                        isPublic: eventDocument[i].isPublic,
-                                        endDate: moment_timezone(eventDocument[i].end).tz(data.tz).format(`${data.dateFormat}`),
-                                        startDate: moment_timezone(eventDocument[i].start).tz(data.tz).format(`${data.dateFormat}`)
-                                    });
+	                                eventData.push({
+		                                id: eventDocument[i]._no,
+		                                author: authorName,
+		                                server: serverName,
+		                                clan: eventDocument[i]._clan,
+		                                title: eventDocument[i].title,
+		                                description: eventDocument[i].description,
+		                                maxAttendees: eventDocument[i].attendee_max,
+		                                actualAttendees: noAttendees,
+		                                attendeesNames: attendeesNames,
+		                                tags: eventDocument[i].tags,
+		                                isPublic: eventDocument[i].isPublic,
+		                                endDate: moment_timezone(eventDocument[i].end).tz(data.tz).format(`${data.dateFormat}`),
+		                                startDate: moment_timezone(eventDocument[i].start).tz(data.tz).format(`${data.dateFormat}`),
+		                                endDateNice: moment_timezone(eventDocument[i].end).tz(data.tz).format(`${configFile.moment_date_format}`),
+		                                startDateNice: moment_timezone(eventDocument[i].start).tz(data.tz).format(`${configFile.moment_date_format}`)
+	                                });
                                 }
                             } else {
                                 winston.error(err);
