@@ -250,12 +250,18 @@ table th {
     display: block !important;
   }
 
-  .table th.is-hidden tr.is-hidden tr.is-hidden {
+  .is-hidden-table {
     display: none;
   }
 
-  .is-smaller {
+  .is-smaller-1 {
     width: 30%;
+  }
+  .is-smaller-2 {
+    width: 25%;
+  }
+  .is-smaller-3 {
+    width: 20%;
   }
 }
 

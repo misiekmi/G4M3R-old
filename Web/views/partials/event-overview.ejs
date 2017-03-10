@@ -1,26 +1,26 @@
 <div class="columns">
 	<div class="column is-12">
-		<table class="table">
+		<table class="table" style="overflow-x: scroll;">
 			<thead>
 			<tr>
-				<th class="is-smaller">Title</th>
-				<th><abbr title="Author">by</abbr></th>
-				<th>Server (ID)</th>
+				<th class="is-smaller-1">Title</th>
+				<th class="is-smaller-3"><abbr title="Author">by</abbr></th>
+				<th class="is-smaller-2">Server (ID)</th>
 				<th><abbr title="Attendees">Slots</abbr></th>
-				<th class="is-hidden">Starts</th>
-				<th class="is-hidden">Ends</th>
-				<th class="is-hidden">Join / Leave</th>
+				<th class="is-hidden-mobile">Starts</th>
+				<th class="is-hidden-mobile">Ends</th>
+				<th class="is-hidden-mobile">Join / Leave</th>
 			</tr>
 			</thead>
 			<tfoot>
 			<tr>
-				<th class="is-smaller">Title</th>
-				<th><abbr title="Author">by</abbr></th>
-				<th>Server (ID)</th>
+				<th class="is-smaller-1">Title</th>
+				<th class="is-smaller-3"><abbr title="Author">by</abbr></th>
+				<th class="is-smaller-2">Server (ID)</th>
 				<th><abbr title="Attendees">Slots</abbr></th>
-				<th class="is-hidden">Starts</th>
-				<th class="is-hidden">Ends</th>
-				<th class="is-hidden">Join / Leave</th>
+				<th class="is-hidden-mobile">Starts</th>
+				<th class="is-hidden-mobile">Ends</th>
+				<th class="is-hidden-mobile">Join / Leave</th>
 			</tr>
 			</tfoot>
 			<tbody>
@@ -38,13 +38,13 @@
 				<td>
 					( <%= eventData[i].actualAttendees %> / <%= eventData[i].maxAttendees %> )
 				</td>
-				<td class="is-hidden">
+				<td class="is-hidden-mobile">
                     <%= eventData[i].startDate %>
 				</td>
-				<td class="is-hidden">
+				<td class="is-hidden-mobile">
                     <%= eventData[i].endDate %>
 				</td>
-				<td class="is-hidden">
+				<td class="is-hidden-mobile">
                     <% if (data.userIsAttendee) { %>
 					<a class="button is-small is-danger is-hovered" href="/events/myevents">
 										<span class="icon is-small">
