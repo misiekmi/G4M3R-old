@@ -169,7 +169,7 @@ module.exports = (bot, db, config, winston) => {
 						setTimeout(() => {
                             startStreamingRSS();
                             //TODO: reduce to 15000 when testing (originally 600000)
-						}, 600000);
+						}, 15000);
 					}
 				};
 				sendStreamingRSSToServer(0);
