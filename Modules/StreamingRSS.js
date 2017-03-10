@@ -12,7 +12,7 @@ module.exports = (bot, winston, svr, serverDocument, feedDocument, callback) => 
                 const getNewArticles = forceAdd => {
                     let adding = forceAdd;
                     for(let i = articles.length - 1; i >= 0; i--) {
-                        if(articles[i].link == feedDocument.streaming.last_article_title) {
+                        if(articles[i].link.indexOf(feedDocument.streaming.last_article_title) >= 0 ) {
                             adding = true;
                         } else if(adding) {
                             info.push(`\`${moment(articles[i].published).format("MMMM DD, YYYY [at] hh:mmA Z")}\` **${articles[i].title}**\n${articles[i].link}`);
@@ -23,9 +23,9 @@ module.exports = (bot, winston, svr, serverDocument, feedDocument, callback) => 
                 info.slice(1);
 
 
-               if(info.length == 0) {
+               /*if(info.length == 0) {
                     getNewArticles(true);
-                }
+                }*/
             }
 
             if(info.length > 0) {
