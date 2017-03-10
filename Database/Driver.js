@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 
-/* INFO:disabled cause maybe the reason for server save fails
+/*
+//INFO:disabled cause maybe the reason for server save fails
 mongoose.Promise = require("bluebird");
 */
 
