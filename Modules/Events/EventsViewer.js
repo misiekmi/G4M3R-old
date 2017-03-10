@@ -254,6 +254,7 @@ Viewer.prototype.getEditorView = function() {
             embed.description = "" +
                 `Current title: \n\`\`${this.edits_made.title?this.edits_made.title:this.event.title}\`\`\n\n` +
                 `Enter the new title for the event`;
+	        embed.footer = {text: `## Options: [C]ancel, [Q]uit // max. 100 chars`};
             break;
         case 2:
             let start = this.edits_made.start ?
@@ -278,19 +279,22 @@ Viewer.prototype.getEditorView = function() {
                 `Current Description: \n\`\`\`md\n${this.edits_made.description?
                     this.edits_made.description:this.event.description}\n\`\`\`\n` +
                 "Enter a new description for the event.";
+	        embed.footer = {text: `## Options: [C]ancel, [Q]uit // max. 300 chars`};
             break;
         case 5:
             embed.description = "" +
                 `Current maximum member count: \`\`${this.edits_made.attendee_max?
                     this.edits_made.attendee_max:this.event.attendee_max}\`\`\n\n` +
                 "Enter a new maximum member count for the event.";
+	        embed.footer = {text: `## Options: [C]ancel, [Q]uit // max. 999999 members`};
             break;
         case 6:
             embed.description = "" +
                 `Current set tags: ${this.edits_made.tags?
                     (this.edits_made.tags.length>0 ? "``" + this.edits_made.tags.join(", ") + "``" : ""):
                     (this.event.tags.length>0 ? "``" + this.event.tags.join(", ") + "``" : "")}\n\n` +
-                "Enter a new set of tags for the event.";
+                "Enter a new set of tags for the event.\n\n(Divide multiple tags by comma)";
+	        embed.footer = {text: `## Options: [C]ancel, [Q]uit // max. 10 tags`};
             break;
         default:
             embed.description = `Something went wrong if this is being read!`;
