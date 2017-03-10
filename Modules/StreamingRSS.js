@@ -23,9 +23,9 @@ module.exports = (bot, winston, svr, serverDocument, feedDocument, callback) => 
                 info.slice(1);
 
 
-               /*if(info.length == 0) {
+               if(info.length == 0) {
                     getNewArticles(true);
-                }*/
+                }
             }
 
             if(info.length > 0) {
