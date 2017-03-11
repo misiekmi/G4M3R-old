@@ -326,6 +326,7 @@ module.exports = (db, auth, config) => {
         return "";
     };
 
+    //TODO: Delete stats & ranks?
     // Check if a user has leveled up a rank
     bot.checkRank = (winston, svr, serverDocument, member, memberDocument, override) => {
         if (member && member.id != bot.user.id && !member.user.bot && svr) {

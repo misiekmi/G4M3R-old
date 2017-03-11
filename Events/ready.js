@@ -152,10 +152,13 @@ module.exports = (bot, db, config, winston) => {
 							const sendStreamingRSSFeed = j => {
 								if(j<serverDocument.config.rss_feeds.length) {
 									if(serverDocument.config.rss_feeds[j].streaming.isEnabled) {
-										sendStreamingRSSUpdates(bot, winston, svr, serverDocuments[i].config.rss_feeds[j], () => {
+										sendStreamingRSSUpdates(bot, winston, svr, serverDocument, serverDocument.config.rss_feeds[j], () => {
 											sendStreamingRSSFeed(++j);
 										});
-									}
+                                    } else {
+                                    	sendStreamingRSSFeed(++j);
+                                    }
+
 								} else {
 									sendStreamingRSSToServer(++i);
 								}
@@ -164,10 +167,12 @@ module.exports = (bot, db, config, winston) => {
 						}
 					} else {
 						setTimeout(() => {
-							sendStreamingRSSToServer(0);
+                            startStreamingRSS();
+                            //TODO: reduce to 15000 when testing (originally 600000)
 						}, 600000);
 					}
 				};
+				sendStreamingRSSToServer(0);
 			}
 		});
 	};
@@ -182,21 +187,24 @@ module.exports = (bot, db, config, winston) => {
 						const svr = bot.guilds.get(serverDocument._id);
 						if(svr) {
 							const checkIfStreaming = j => {
-								if(j<serverDocuments.config.streamers_data.length) {
-									sendStreamerMessage(winston, svr, serverDocuments[i], serverDocuments.config.streamers_data[j], () => {
+								if(j<serverDocument.config.streamers_data.length) {
+									sendStreamerMessage(winston, svr, serverDocument, serverDocument.config.streamers_data[j], () => {
 										checkIfStreaming(++j);
 									});
 								} else {
 									checkStreamersForServer(++i);
 								}
 							};
+                            checkIfStreaming(0);
 						}
 					} else {
 						setTimeout(() => {
-							checkStreamersForServer(0);
-						}, 600000);
+                            checkStreamers();
+                            //TODO: reduce to 15000 when testing (originally 600000)
+						},600000);
 					}
 				};
+				checkStreamersForServer(0);
 			}
 		});
 	};

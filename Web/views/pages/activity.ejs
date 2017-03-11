@@ -96,15 +96,15 @@
 
 	<section id="frame" class="section">
 		<div class="container">
-			<% if(mode=="servers") { %>
-				<% include ../partials/servers-section %>
-				<script>
-				switchLayout();
-				showSelections();
-				</script>
-			<% } else { %>
-				<% include ../partials/users-section %>
-			<% } %>
+            <% if(mode=="servers") { %>
+            <% include ../partials/servers-section %>
+			<script>
+                switchLayout();
+                showSelections();
+			</script>
+            <% } else { %>
+            <% include ../partials/users-section %>
+            <% } %>
 		</div>
 	</section>
 

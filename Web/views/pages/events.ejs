@@ -50,7 +50,16 @@
 								<span class="icon">
 									<i class="fa fa-gamepad"></i>
 								</span>
+                                <% if (mode == 'overview') { %>
+								Overview&ensp;
+
+								<span class="tag is-small is-primary">
+										<%= data.rawEventOverviewCount %>
+									</span>
+
+                                <% } else { %>
 									<span>Overview</span>
+                                <% } %>
 							</a>
 						</li>
 						<li class="<%= mode=='myevents' ? 'is-active' : '' %>">
@@ -58,7 +67,16 @@
 								<span class="icon">
 									<i class="fa fa-calendar"></i>
 								</span>
-									<span>My Events</span>
+                                <% if (mode == 'myevents') { %>
+								My Events&ensp;
+
+								<span class="tag is-small is-primary">
+									<%= data.rawEventMyCount %>
+								</span>
+
+                                <% } else { %>
+								<span>My Events</span>
+                                <% } %>
 							</a>
 						</li>
 						<li class="<%= mode=='config' ? 'is-active' : '' %>">

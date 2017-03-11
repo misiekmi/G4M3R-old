@@ -127,7 +127,7 @@ Viewer.prototype.getEventView = function() {
                 } else {
                     attendeesNames += `\`${this.bot.getUserOrNickname(this.event.attendees[i]._id, this.msg.channel.guild)}\`, `;
                 }
-                //attendeesNames += `<@`+this.event.attendees[i]._id+`>, `;
+                //attendeesNames += `<@`+this.event.attendees[i]._id+`>, `; TODO: when android @mention is fixed in embeds replace
                 hasAttendees = true;
             }
         }
