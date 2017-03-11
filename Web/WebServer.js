@@ -750,7 +750,8 @@ module.exports = (bot, db, auth, config, winston) => {
             }
         });
 
-        // Events tab
+
+        // Events pages tab
         app.get("/events", (req, res) => {
             res.redirect("/events/overview");
         });
@@ -821,42 +822,33 @@ module.exports = (bot, db, auth, config, winston) => {
                     });
 
                 } else if (req.path === "/events/myevents") {
-
                     const addEventData = () => {
-                        db.events.find( { _author: usr.id }, (err, eventDocument) => {
-                            if (!err && eventDocument) {
-
-                                for(let i=0;i<eventDocument.length;i++) {
-                                    let noAttendees = 0;
+                        return db.events.find( { _author: usr.id }, (err, eventDocuments) => {
+                            if (!err && eventDocuments) {
+                                for(let i=0;i<eventDocuments.length;i++) {
                                     let arrayAttendees = [];
-                                    let authorName = "";
-                                    let user = usr.username;
-                                    let serv = {};
-                                    serv = bot.guilds.find(guild=>{ return guild.id === eventDocument[i]._server; });
-                                    let serverName = serv.name;
+                                    let serverObject = bot.guilds.find(guild=>{ return guild.id === eventDocuments[i]._server; });
+                                    let authorName = bot.getUserOrNickname(eventDocuments[i]._author, serverObject);
 
-                                    authorName = bot.getUserOrNickname(eventDocument[i]._author, serv);
-
-                                    if(eventDocument[i].attendees) {
-                                        noAttendees = eventDocument[i].attendees.length;
-                                        for (let j=0;j<eventDocument[i].attendees.length;j++) {
+                                    if(eventDocuments[i].attendees) {
+                                        for (let j=0;j<eventDocuments[i].attendees.length;j++) {
                                             arrayAttendees.push({
-                                                attendees: eventDocument[i].attendees._id
+                                                attendees: eventDocuments[i].attendees._id
                                             });
                                         }
                                     }
 
                                     eventData.push({
-                                        id: eventDocument[i]._no,
+                                        id: eventDocuments[i]._no,
                                         author: authorName,
-                                        server: serverName,
-                                        clan: eventDocument[i]._clan,
-                                        title: eventDocument[i].title,
-                                        description: eventDocument[i].description,
-                                        maxAttendees: eventDocument[i].attendee_max,
-                                        actualAttendees: noAttendees,
+                                        server: serverObject.name,
+                                        clan: eventDocuments[i]._clan,
+                                        title: eventDocuments[i].title,
+                                        description: eventDocuments[i].description,
+                                        maxAttendees: eventDocuments[i].attendee_max,
+                                        actualAttendees: eventDocuments[i].attendees.length,
                                         attendees: arrayAttendees,
-                                        isPublic: eventDocument[i].isPublic
+                                        isPublic: eventDocuments[i].isPublic
                                     });
                                 }
                             } else {
@@ -865,29 +857,14 @@ module.exports = (bot, db, auth, config, winston) => {
                         });
                     };
 
-                    if (eventData) {
-                        addEventData();
-
-                        db.users.findOne({_id: req.user.id}, (err) => {
-                            if (err) {
-                                winston.warn(err);
-                            } else {
-                                renderPage(eventData);
-                            }
-
-                        });
-                    } else {
-                        renderPage();
-                    }
-
+                    addEventData().then(() => {
+                        renderPage(eventData);
+                    })
                 }
-
-
             } else {
                 res.redirect("/login");
             }
         });
-
 
 
         // Extension gallery
