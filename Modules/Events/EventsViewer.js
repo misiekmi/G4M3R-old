@@ -119,7 +119,7 @@ Viewer.prototype.getEventView = function() {
 
     if (this.event.attendees.length > 0) {
         for (let i = 0; i < this.event.attendees.length; i++) {
-            if (i > 14) { //showing max 15 attendees
+            if (i > 14) { // showing max 15 attendees
                 break;
             } else {
                 if (i % 2 === 1) {

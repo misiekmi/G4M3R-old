@@ -57,7 +57,7 @@
                     <%= eventData[i].tags %>
 				</td>
 				<td>
-                    <% if (data.userIsAttendee) { %>
+                    <% if (false) { %>
 					<a class="button is-small is-danger is-hovered" href="/events/myevents">
 										<span class="icon is-small">
 											<i class="fa fa-sign-out"></i>
@@ -101,13 +101,13 @@
 						<strong>Slots:</strong> ( <%= eventData[i].actualAttendees %> / <%= eventData[i].maxAttendees %>
 						)
 						<br>
-                        <% if(eventData[i].attendeesNames) { %>
+                        <% if(eventData[i].attendees.length > 0) { %>
 						<strong>Attendees:</strong>
-							<% for(var j = 0;j < eventData[i].attendeesNames.length;j++) { %>
-						<span class="tag is is-primary">
-							<%= eventData[i].attendeesNames[j].id %>
-							<button class="delete is-small"></button>
-						</span>
+							<% for(var j = 0;j < eventData[i].attendees.length;j++) { %>
+							<span class="tag is is-primary">
+								<%= eventData[i].attendees[j].id %>
+								<button class="delete is-small"></button>
+							</span>
 							<% } %>
 						<br>
                         <% } else { %>
@@ -123,7 +123,7 @@
                         <% } %>
 					</section>
 					<footer class="modal-card-foot">
-                        <% if(data.userIsAttendee) { %>
+                        <% if(false) { %>
 						<a class="button is-danger">Leave Event</a>
                         <% } else { %>
 						<a class="button is-success">Join Event</a>
@@ -138,8 +138,8 @@
 	</div>
 </div>
 <div class="content">
-	<em><strong>Your timezone:</strong> <%= data.tz %></em>
+	<em><strong>Your timezone:</strong> <%= 0 %></em>
 	<strong>//</strong>
-	<em><strong>date format:</strong> <%= data.dateFormat %></em>
+	<em><strong>date format:</strong> <%= 0 %></em>
 </div>
 
