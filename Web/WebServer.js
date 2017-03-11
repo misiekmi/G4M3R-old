@@ -40,6 +40,8 @@ const createMessageOfTheDay = require("./../Modules/MessageOfTheDay.js");
 const Giveaways = require("./../Modules/Giveaways.js");
 const Polls = require("./../Modules/Polls.js");
 const Trivia = require("./../Modules/Trivia.js");
+const moment_timezone = require("moment-timezone");
+const configFile = require("./../Configuration/config.json");
 
 const app = express();
 app.use(compression());
@@ -810,6 +812,7 @@ module.exports = (bot, db, auth, config, winston) => {
                                     isPublic: eventDocuments[i].isPublic,
                                     startDate: eventDocuments[i].start,
                                     endDate: eventDocuments[i].end,
+                                    tags: eventDocuments[i].tags,
                                     userHasJoined: userHasJoined
                                 });
                             }
@@ -851,6 +854,7 @@ module.exports = (bot, db, auth, config, winston) => {
                                     isPublic: eventDocuments[i].isPublic,
                                     startDate: eventDocuments[i].start,
                                     endDate: eventDocuments[i].end,
+                                    tags: eventDocuments[i].tags,
                                     userHasJoined: userHasJoined
                                 });
                             }
