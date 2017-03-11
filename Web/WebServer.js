@@ -836,9 +836,7 @@ module.exports = (bot, db, auth, config, winston) => {
                                     if(eventDocuments[i].attendees[j]._id === req.user.id) {
                                         userHasJoined = true;
                                     }
-                                    arrayAttendees.push({
-                                        attendees: eventDocuments[i].attendees._id
-                                    });
+                                    arrayAttendees.push(bot.getUserOrNickname(eventDocuments[i].attendees[j]._id, serverObject));
                                 }
 
                                 eventData.push({
