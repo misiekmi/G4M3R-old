@@ -762,107 +762,120 @@ module.exports = (bot, db, auth, config, winston) => {
             eventState = req.path.substring(req.path.lastIndexOf("/") + 1);
             const pageTitle = `${eventState.charAt(0).toUpperCase() + eventState.slice(1)} - G4M3R Events`;
 
-            const renderPage = (eventData) => {
+            const renderPage = (eventData, userDocument) => {
                 res.render("pages/events.ejs", {
                     authUser: req.isAuthenticated() ? getAuthUser(req.user) : null,
                     isMaintainer: req.isAuthenticated() ? config.maintainers.indexOf(req.user.id) > -1 : false,
                     pageTitle,
                     activeSearchQuery: req.query.id || req.query.q,
                     mode: eventState,
-                    eventData
+                    date_format: configFile.moment_date_format,
+                    eventData,
+                    userDocument
                 });
             };
 
             if (req.isAuthenticated()) {
                 lastPage = "events";
                 const usr = bot.users.get(req.user.id);
+                db.users.findOne({
+                    _id: req.user.id
+                }).then(userDocument=> {
+                    if (req.path === "/events/overview") {
+                        let servers = [];
+                        for (let l = 0; l < req.user.guilds.length; l++) {
+                            servers.push(req.user.guilds[l].id)
+                        }
 
-                if (req.path === "/events/overview") {
-                    let servers = [];
-                    for(let l = 0; l < req.user.guilds.length; l++) {
-                        servers.push(req.user.guilds[l].id)
+                        db.events.find({_server: {$in: servers}}, (err, eventDocuments) => {
+                            let eventData = [];
+                            if (!err && eventDocuments) {
+                                for (let i = 0; i < eventDocuments.length; i++) {
+                                    let arrayAttendees = [];
+                                    let serverObject = bot.guilds.find(guild => {
+                                        return guild.id === eventDocuments[i]._server;
+                                    });
+                                    let authorName = bot.getUserOrNickname(eventDocuments[i]._author, serverObject);
+
+                                    let userHasJoined = false;
+                                    for (let j = 0; j < eventDocuments[i].attendees.length; j++) {
+                                        if (eventDocuments[i].attendees[j]._id === req.user.id) {
+                                            userHasJoined = true;
+                                        }
+                                        arrayAttendees.push(bot.getUserOrNickname(eventDocuments[i].attendees[j]._id, serverObject));
+                                    }
+
+                                    eventData.push({
+                                        id: eventDocuments[i]._no,
+                                        author: authorName,
+                                        server: serverObject.name,
+                                        clan: eventDocuments[i]._clan,
+                                        title: eventDocuments[i].title,
+                                        description: eventDocuments[i].description,
+                                        maxAttendees: eventDocuments[i].attendee_max,
+                                        actualAttendees: eventDocuments[i].attendees.length,
+                                        attendees: arrayAttendees,
+                                        isPublic: eventDocuments[i].isPublic,
+                                        startDate: moment_timezone(eventDocuments[i].start)
+                                            .tz(userDocument.timezone).format(configFile.moment_date_format),
+                                        endDate: moment_timezone(eventDocuments[i].end)
+                                            .tz(userDocument.timezone).format(configFile.moment_date_format),
+                                        tags: eventDocuments[i].tags,
+                                        userHasJoined: userHasJoined
+                                    });
+                                }
+                            } else {
+                                winston.error(err);
+                            }
+
+                            renderPage(eventData, userDocument);
+                        });
+                    } else if (req.path === "/events/myevents") {
+                        db.events.find({_author: usr.id}, (err, eventDocuments) => {
+                            let eventData = [];
+                            if (!err && eventDocuments) {
+                                for (let i = 0; i < eventDocuments.length; i++) {
+                                    let arrayAttendees = [];
+                                    let serverObject = bot.guilds.find(guild => {
+                                        return guild.id === eventDocuments[i]._server;
+                                    });
+                                    let authorName = bot.getUserOrNickname(eventDocuments[i]._author, serverObject);
+
+                                    let userHasJoined = false;
+                                    for (let j = 0; j < eventDocuments[i].attendees.length; j++) {
+                                        if (eventDocuments[i].attendees[j]._id === req.user.id) {
+                                            userHasJoined = true;
+                                        }
+                                        arrayAttendees.push(bot.getUserOrNickname(eventDocuments[i].attendees[j]._id, serverObject));
+                                    }
+
+                                    eventData.push({
+                                        id: eventDocuments[i]._no,
+                                        author: authorName,
+                                        server: serverObject.name,
+                                        clan: eventDocuments[i]._clan,
+                                        title: eventDocuments[i].title,
+                                        description: eventDocuments[i].description,
+                                        maxAttendees: eventDocuments[i].attendee_max,
+                                        actualAttendees: eventDocuments[i].attendees.length,
+                                        attendees: arrayAttendees,
+                                        isPublic: eventDocuments[i].isPublic,
+                                        startDate: moment_timezone(eventDocuments[i].start)
+                                            .tz(userDocument.timezone).format(configFile.moment_date_format),
+                                        endDate: moment_timezone(eventDocuments[i].end)
+                                            .tz(userDocument.timezone).format(configFile.moment_date_format),
+                                        tags: eventDocuments[i].tags,
+                                        userHasJoined: userHasJoined
+                                    });
+                                }
+                            } else {
+                                winston.error(err);
+                            }
+
+                            renderPage(eventData, userDocument);
+                        });
                     }
-
-                    db.events.find( { _server: { $in: servers} }, (err, eventDocuments) => {
-                        let eventData = [];
-                        if (!err && eventDocuments) {
-                            for(let i=0;i<eventDocuments.length;i++) {
-                                let arrayAttendees = [];
-                                let serverObject = bot.guilds.find(guild=>{ return guild.id === eventDocuments[i]._server; });
-                                let authorName = bot.getUserOrNickname(eventDocuments[i]._author, serverObject);
-
-                                let userHasJoined = false;
-                                for (let j=0;j<eventDocuments[i].attendees.length;j++) {
-                                    if(eventDocuments[i].attendees[j]._id === req.user.id) {
-                                        userHasJoined = true;
-                                    }
-                                    arrayAttendees.push(bot.getUserOrNickname(eventDocuments[i].attendees[j]._id, serverObject));
-                                }
-
-                                eventData.push({
-                                    id: eventDocuments[i]._no,
-                                    author: authorName,
-                                    server: serverObject.name,
-                                    clan: eventDocuments[i]._clan,
-                                    title: eventDocuments[i].title,
-                                    description: eventDocuments[i].description,
-                                    maxAttendees: eventDocuments[i].attendee_max,
-                                    actualAttendees: eventDocuments[i].attendees.length,
-                                    attendees: arrayAttendees,
-                                    isPublic: eventDocuments[i].isPublic,
-                                    startDate: eventDocuments[i].start,
-                                    endDate: eventDocuments[i].end,
-                                    tags: eventDocuments[i].tags,
-                                    userHasJoined: userHasJoined
-                                });
-                            }
-                        } else {
-                            winston.error(err);
-                        }
-
-                        renderPage(eventData);
-                    });
-                } else if (req.path === "/events/myevents") {
-                    db.events.find( { _author: usr.id }, (err, eventDocuments) => {
-                        let eventData = [];
-                        if (!err && eventDocuments) {
-                            for(let i=0;i<eventDocuments.length;i++) {
-                                let arrayAttendees = [];
-                                let serverObject = bot.guilds.find(guild=>{ return guild.id === eventDocuments[i]._server; });
-                                let authorName = bot.getUserOrNickname(eventDocuments[i]._author, serverObject);
-
-                                let userHasJoined = false;
-                                for (let j=0;j<eventDocuments[i].attendees.length;j++) {
-                                    if(eventDocuments[i].attendees[j]._id === req.user.id) {
-                                        userHasJoined = true;
-                                    }
-                                    arrayAttendees.push(bot.getUserOrNickname(eventDocuments[i].attendees[j]._id, serverObject));
-                                }
-
-                                eventData.push({
-                                    id: eventDocuments[i]._no,
-                                    author: authorName,
-                                    server: serverObject.name,
-                                    clan: eventDocuments[i]._clan,
-                                    title: eventDocuments[i].title,
-                                    description: eventDocuments[i].description,
-                                    maxAttendees: eventDocuments[i].attendee_max,
-                                    actualAttendees: eventDocuments[i].attendees.length,
-                                    attendees: arrayAttendees,
-                                    isPublic: eventDocuments[i].isPublic,
-                                    startDate: eventDocuments[i].start,
-                                    endDate: eventDocuments[i].end,
-                                    tags: eventDocuments[i].tags,
-                                    userHasJoined: userHasJoined
-                                });
-                            }
-                        } else {
-                            winston.error(err);
-                        }
-
-                        renderPage(eventData);
-                    });
-                }
+                });
             } else {
                 res.redirect("/login");
             }

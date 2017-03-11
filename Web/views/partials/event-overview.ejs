@@ -96,12 +96,12 @@
 	                        <% } %>
 							<hr>
 							<strong>Tags (<%= eventData[i].tags.length%>): </strong>
-							<% if(eventData[i].tags) { %>
+							<% if(eventData[i].tags.length > 0) { %>
 								<% for(j = 0;j < eventData[i].tags.length;j++) { %>
 								<span class="tag is-small is-info" style="color:white">
-										<%= eventData[i].tags[j] %>
+									<%= eventData[i].tags[j] %>
 									<!--<button class="delete is-small"></button>-->
-									</span>
+								</span>
 								<% } %>
 							<% } else { %>
 							<em>no tags defined yet!</em>
@@ -124,7 +124,7 @@
 	</div>
 </div>
 <div class="content">
-	<em><strong>Your timezone:</strong> <%= 0 %></em>
-	<em class="is-hidden-mobile"><strong>// date format:</strong> <%= 0 %></em>
+	<em><strong>Your timezone:</strong> <%= userDocument.timezone %></em>
+	<em class="is-hidden-mobile"><strong>// date format:</strong> <%= date_format %></em>
 </div>
 
