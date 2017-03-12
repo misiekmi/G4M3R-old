@@ -761,6 +761,10 @@ module.exports = (bot, db, auth, config, winston) => {
         app.get("/events/(|overview|myevents)", (req, res) => {
             eventState = req.path.substring(req.path.lastIndexOf("/") + 1);
             const pageTitle = `${eventState.charAt(0).toUpperCase() + eventState.slice(1)} - G4M3R Events`;
+            const data = {};
+
+            data.dateFormat = "dddd MMM Do[,] YYYY [at] HH:mm";
+            data.dateFormatString = "dddd MMM Do, YYYY at HH:mm";
 
             const renderPage = (eventData, userDocument) => {
                 res.render("pages/events.ejs", {
@@ -771,13 +775,16 @@ module.exports = (bot, db, auth, config, winston) => {
                     mode: eventState,
                     date_format: configFile.moment_date_format,
                     eventData,
-                    userDocument
+                    userDocument,
+                    data
                 });
             };
 
             if (req.isAuthenticated()) {
                 lastPage = "events";
                 const usr = bot.users.get(req.user.id);
+
+
                 db.users.findOne({
                     _id: req.user.id
                 }).then(userDocument=> {
@@ -817,9 +824,13 @@ module.exports = (bot, db, auth, config, winston) => {
                                         attendees: arrayAttendees,
                                         isPublic: eventDocuments[i].isPublic,
                                         startDate: moment_timezone(eventDocuments[i].start)
-                                            .tz(userDocument.timezone).format(configFile.moment_date_format),
+                                            .tz((userDocument.timezone ? userDocument.timezone : configFile.moment_timezone)).format(data.dateFormat),
                                         endDate: moment_timezone(eventDocuments[i].end)
-                                            .tz(userDocument.timezone).format(configFile.moment_date_format),
+                                            .tz((userDocument.timezone ? userDocument.timezone : configFile.moment_timezone)).format(data.dateFormat),
+                                        startDateNice: moment_timezone(eventDocuments[i].start)
+                                            .tz((userDocument.timezone ? userDocument.timezone : configFile.moment_timezone)).format(configFile.moment_date_format),
+                                        endDateNice: moment_timezone(eventDocuments[i].end)
+                                            .tz((userDocument.timezone ? userDocument.timezone : configFile.moment_timezone)).format(configFile.moment_date_format),
                                         tags: eventDocuments[i].tags,
                                         userHasJoined: userHasJoined
                                     });
@@ -861,9 +872,13 @@ module.exports = (bot, db, auth, config, winston) => {
                                         attendees: arrayAttendees,
                                         isPublic: eventDocuments[i].isPublic,
                                         startDate: moment_timezone(eventDocuments[i].start)
-                                            .tz(userDocument.timezone).format(configFile.moment_date_format),
+                                            .tz((userDocument.timezone ? userDocument.timezone : configFile.moment_timezone)).format(data.dateFormat),
                                         endDate: moment_timezone(eventDocuments[i].end)
-                                            .tz(userDocument.timezone).format(configFile.moment_date_format),
+                                            .tz((userDocument.timezone ? userDocument.timezone : configFile.moment_timezone)).format(data.dateFormat),
+                                        startDateNice: moment_timezone(eventDocuments[i].start)
+                                            .tz((userDocument.timezone ? userDocument.timezone : configFile.moment_timezone)).format(configFile.moment_date_format),
+                                        endDateNice: moment_timezone(eventDocuments[i].end)
+                                            .tz((userDocument.timezone ? userDocument.timezone : configFile.moment_timezone)).format(configFile.moment_date_format),
                                         tags: eventDocuments[i].tags,
                                         userHasJoined: userHasJoined
                                     });

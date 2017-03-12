@@ -79,9 +79,9 @@
 							</div>
 							<hr>
 
-							<strong>Starts:</strong> <%= eventData[i].startDate %>
+							<strong>Starts:</strong> <%= eventData[i].startDateNice %>
 							<br>
-							<strong>Ends:</strong> <%= eventData[i].endDate %>
+							<strong>Ends:</strong> <%= eventData[i].endDateNice %>
 							<hr>
 							<strong>Attendees [</strong> <%= eventData[i].actualAttendees %> / <%= eventData[i].maxAttendees %> <strong>] :</strong>
 	                        <% if(eventData[i].attendees.length > 0) { %>
@@ -125,6 +125,6 @@
 </div>
 <div class="content">
 	<em><strong>Your timezone:</strong> <%= userDocument.timezone %></em>
-	<em class="is-hidden-mobile"><strong>// date format:</strong> <%= date_format %></em>
+	<em class="is-hidden-mobile"><strong>// date format:</strong> <%= data.dateFormatString %></em>
 </div>
 
