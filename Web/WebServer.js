@@ -842,7 +842,7 @@ module.exports = (bot, db, auth, config, winston) => {
                             renderPage(eventData, userDocument);
                         });
                     } else if (req.path === "/events/myevents") {
-                        db.events.find({_author: usr.id}, (err, eventDocuments) => {
+                        db.events.find({$or: [{"_author": usr.id}, {"attendees._id": usr.id}]}, (err, eventDocuments) => {
                             let eventData = [];
                             if (!err && eventDocuments) {
                                 for (let i = 0; i < eventDocuments.length; i++) {
