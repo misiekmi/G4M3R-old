@@ -1,3 +1,25 @@
+<script>
+    function joinEvent(eventID) {
+        $.ajax({
+            type: "POST",
+            url: "/events/overview",
+            data: {
+                "join": true,
+                "eventID": eventID
+            }
+        })
+    }
+
+    function leaveEvent(eventID) {
+        $.ajax({
+            type: "POST",
+            url: "/events/overview",
+            data: {
+                "eventID": eventID
+            }
+        })
+    }
+</script>
 <div class="columns">
 	<div class="column is-12">
 		<table class="table" style="overflow-x: scroll;overflow-y: scroll">
@@ -27,13 +49,13 @@
             <% for(var i=0; i<eventData.length; i++) { %>
 			<tr class="modal-button" data-target="#event-<%= i %>-modal">
 				<td>
-                   <strong><%= eventData[i].title %></strong>
+					<strong><%= eventData[i].title %></strong>
 				</td>
 				<td>
 					<span class="tag is-small is-dark" style="color: white"><%= eventData[i].author %></span>
 				</td>
 				<td>
-					<%= eventData[i].server %> <span class="tag is-small is-primary"><%= eventData[i].no %></span>
+                    <%= eventData[i].server %> <span class="tag is-small is-primary"><%= eventData[i].no %></span>
 				</td>
 				<td>
 					<div class="tag is-small is-danger tooltip">
@@ -84,28 +106,28 @@
 							<strong>Ends:</strong> <%= eventData[i].endDateNice %>
 							<hr>
 							<strong>Attendees [</strong> <%= eventData[i].actualAttendees %> / <%= eventData[i].maxAttendees %> <strong>] :</strong>
-	                        <% if(eventData[i].attendees.length > 0) { %>
-								<% for(var j = 0;j < eventData[i].attendees.length;j++) { %>
-								<span class="tag is-small is-primary">
+                            <% if(eventData[i].attendees.length > 0) { %>
+                            <% for(var j = 0;j < eventData[i].attendees.length;j++) { %>
+							<span class="tag is-small is-primary">
 								<%= eventData[i].attendees[j] %>
 								<button class="delete is-small"></button>
 							</span>
-								<% } %>
-	                        <% } else { %>
+                            <% } %>
+                            <% } else { %>
 							<em>no attendees joined yet!</em>
-	                        <% } %>
+                            <% } %>
 							<hr>
 							<strong>Tags (<%= eventData[i].tags.length%>): </strong>
-							<% if(eventData[i].tags.length > 0) { %>
-								<% for(j = 0;j < eventData[i].tags.length;j++) { %>
-								<span class="tag is-small is-info" style="color:white">
+                            <% if(eventData[i].tags.length > 0) { %>
+                            <% for(j = 0;j < eventData[i].tags.length;j++) { %>
+							<span class="tag is-small is-info" style="color:white">
 									<%= eventData[i].tags[j] %>
-									<!--<button class="delete is-small"></button>-->
+								<!--<button class="delete is-small"></button>-->
 								</span>
-								<% } %>
-							<% } else { %>
+                            <% } %>
+                            <% } else { %>
 							<em>no tags defined yet!</em>
-	                        <% } %>
+                            <% } %>
 						</div>
 					</section>
 					<footer class="modal-card-foot">
