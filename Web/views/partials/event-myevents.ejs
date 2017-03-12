@@ -30,7 +30,7 @@
 					<strong><%= eventData[i].title %></strong>
 				</td>
 				<td>
-                    <span class="tag is-small is-dark" style="color: white"><%= eventData[i].author %>
+					<span class="tag is-small is-dark" style="color: white"><%= eventData[i].author %></span>
 				</td>
 				<td>
 					<%= eventData[i].server %> <span class="tag is-small is-primary"><%= eventData[i].id %></span>
@@ -45,7 +45,7 @@
 					<span class="tag is-small is-light"><strong><%= eventData[i].endDate %></strong></span>
 				</td>
 				<td class="is-hidden-mobile">
-					<% if (data.userIsAttendee) { %>
+					<% if (eventData[i].userHasJoined) { %>
 					<a class="button is-small is-danger is-hovered" href="/events/myevents">
 										<span class="icon is-small">
 											<i class="fa fa-sign-out"></i>
@@ -79,16 +79,16 @@
 							</div>
 							<hr>
 
-							<strong>Starts:</strong> <%= eventData[i].startDateNice %>
+							<strong>Starts:</strong> <%= eventData[i].startDate %>
 							<br>
-							<strong>Ends:</strong> <%= eventData[i].endDateNice %>
+							<strong>Ends:</strong> <%= eventData[i].endDate %>
 							<hr>
 							<strong>Attendees [</strong> <%= eventData[i].actualAttendees %> / <%= eventData[i].maxAttendees %> <strong>] :</strong>
-							<% if(eventData[i].attendeesNames) { %>
+							<% if(eventData[i].attendees.length > 0) { %>
 
-							<% for(var j = 0;j < eventData[i].attendeesNames.length;j++) { %>
+							<% for(var j = 0;j < eventData[i].attendees.length;j++) { %>
 							<span class="tag is-small is-primary">
-								<%= eventData[i].attendeesNames[j].id %>
+								<%= eventData[i].attendees[j] %>
 								<button class="delete is-small"></button>
 							</span>
 							<% } %>
@@ -97,20 +97,20 @@
 							<% } %>
 							<hr>
 							<strong>Tags (<%= eventData[i].tags.length%>): </strong>
-							<% if(eventData[i].tags) { %>
-							<% for(j = 0;j < eventData[i].tags.length;j++) { %>
-							<span class="tag is-small is-info" style="color:white">
-										<%= eventData[i].tags[j] %>
+							<% if(eventData[i].tags.length > 0) { %>
+								<% for(j = 0;j < eventData[i].tags.length;j++) { %>
+								<span class="tag is-small is-info" style="color:white">
+									<%= eventData[i].tags[j] %>
 								<!--<button class="delete is-small"></button>-->
-									</span>
-							<% } %>
+								</span>
+								<% } %>
 							<% } else { %>
 							<em>no tags defined yet!</em>
 							<% } %>
 						</div>
 					</section>
 					<footer class="modal-card-foot">
-						<% if(data.userIsAttendee) { %>
+                        <% if(eventData[i].userHasJoined) { %>
 						<a class="button is-danger">Leave Event</a>
 						<% } else { %>
 						<a class="button is-success">Join Event</a>
@@ -125,7 +125,7 @@
 	</div>
 </div>
 <div class="content">
-	<em><strong>Your timezone:</strong> <%= data.tz %></em>
-	<em class="is-hidden-mobile"><strong>// date format:</strong> <%= data.dateFormat %></em>
+	<em><strong>Your timezone:</strong> <%= userDocument.timezone %></em>
+	<em class="is-hidden-mobile"><strong>// date format:</strong> <%= date_format %></em>
 </div>
 

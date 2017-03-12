@@ -752,263 +752,134 @@ module.exports = (bot, db, auth, config, winston) => {
             }
         });
 
-        // Events tab
+
+        // Events pages tab
         app.get("/events", (req, res) => {
             res.redirect("/events/overview");
         });
-        var eventState = "";
+        let eventState = "";
         app.get("/events/(|overview|myevents)", (req, res) => {
             eventState = req.path.substring(req.path.lastIndexOf("/") + 1);
-            const pageTitle = `${eventState.charAt(0).toUpperCase() + eventState.slice(1)} - G4M3R Events`
+            const pageTitle = `${eventState.charAt(0).toUpperCase() + eventState.slice(1)} - G4M3R Events`;
 
-            const renderPage = (serverData, eventData, data) => {
+            const renderPage = (eventData, userDocument) => {
                 res.render("pages/events.ejs", {
                     authUser: req.isAuthenticated() ? getAuthUser(req.user) : null,
                     isMaintainer: req.isAuthenticated() ? config.maintainers.indexOf(req.user.id) > -1 : false,
                     pageTitle,
-                    serverData,
                     activeSearchQuery: req.query.id || req.query.q,
                     mode: eventState,
+                    date_format: configFile.moment_date_format,
                     eventData,
-                    data
+                    userDocument
                 });
             };
 
             if (req.isAuthenticated()) {
-                lastPage = "events"
-                const serverData = [];
-                const eventData = [];
+                lastPage = "events";
                 const usr = bot.users.get(req.user.id);
-                const data = {};
-
-
-                const userDocument = db.users.findOne({_id: req.user.id}, (err) => {
-                    if (err) {
-                        winston.warn(err);
-                    }
-
-                });
-
-                data.tz = (userDocument.timezone ? userDocument.timezone : configFile.moment_timezone);
-                data.dateFormat = "YYYY/MM/DD HH:mm";
-
-                const addServerData = (i, callback) => {
-                    if (req.user.guilds && i < req.user.guilds.length) {
-                        const svr = bot.guilds.get(req.user.guilds[i].id);
-                        if (svr && usr) {
-                            db.servers.findOne({_id: svr.id}, (err, serverDocument) => {
-                                if (!err && serverDocument) {
-                                    const member = svr.members.get(usr.id);
-                                    if (bot.getUserBotAdmin(svr, serverDocument, member) >= 0) {
-                                        serverData.push({
-                                            name: req.user.guilds[i].name,
-                                            id: req.user.guilds[i].id,
-                                            icon: req.user.guilds[i].icon ? (`https://cdn.discordapp.com/icons/${req.user.guilds[i].id}/${req.user.guilds[i].icon}.jpg`) : "/static/img/discord-icon.png"
-                                        });
-
-                                    }
-                                    addServerData(++i, callback);
-                                }
-                            });
-                        } else {
-                            addServerData(++i, callback);
+                db.users.findOne({
+                    _id: req.user.id
+                }).then(userDocument=> {
+                    if (req.path === "/events/overview") {
+                        let servers = [];
+                        for (let l = 0; l < req.user.guilds.length; l++) {
+                            servers.push(req.user.guilds[l].id)
                         }
 
-                    } else {
-                        callback();
-                    }
-                };
+                        db.events.find({_server: {$in: servers}}, (err, eventDocuments) => {
+                            let eventData = [];
+                            if (!err && eventDocuments) {
+                                for (let i = 0; i < eventDocuments.length; i++) {
+                                    let arrayAttendees = [];
+                                    let serverObject = bot.guilds.find(guild => {
+                                        return guild.id === eventDocuments[i]._server;
+                                    });
+                                    let authorName = bot.getUserOrNickname(eventDocuments[i]._author, serverObject);
 
-
-                if (req.path === "/events/overview") {
-
-                    const addEventData = () => {
-
-                        var userServers = getUserServers(req);
-                        data.rawEventOverviewCount = 0;
-                        for(let l = 0; l < req.user.guilds.length; l++) {
-
-                            db.events.find( { _server: req.user.guilds[l].id }, (err, eventDocument) => {
-                                if (!err && eventDocument) {
-
-                                    for(let i=0;i<eventDocument.length;i++) {
-                                        let noAttendees = 0;
-                                        let authorName = "";
-                                        let serv = {};
-                                        serv = bot.guilds.find(guild=>{ return guild.id === eventDocument[i]._server; });
-                                        let serverName = serv.name;
-                                        authorName = bot.getUserOrNickname(eventDocument[i]._author, serv);
-                                        data.userIsAttendee = false;
-                                        data.rawEventOverviewCount++
-                                        let attendeesNames = [];
-
-                                        if(eventDocument[i].attendees) {
-                                            noAttendees = eventDocument[i].attendees.length;
-
-
-                                            for (let j = 0; j < eventDocument[i].attendees.length; j++) {
-                                                attendeesNames.push({
-                                                    id: `${bot.getUserOrNickname(eventDocument[i].attendees[j]._id, serv)}`
-                                                });
-
-                                                if (eventDocument[i].attendees[j]._id == req.user.id) {
-                                                    data.userIsAttendee = true;
-                                                }
-                                            }
+                                    let userHasJoined = false;
+                                    for (let j = 0; j < eventDocuments[i].attendees.length; j++) {
+                                        if (eventDocuments[i].attendees[j]._id === req.user.id) {
+                                            userHasJoined = true;
                                         }
-
-                                        eventData.push({
-                                            id: eventDocument[i]._no,
-                                            author: authorName,
-                                            server: serverName,
-                                            clan: eventDocument[i]._clan,
-                                            title: eventDocument[i].title,
-                                            description: eventDocument[i].description,
-                                            maxAttendees: eventDocument[i].attendee_max,
-                                            actualAttendees: noAttendees,
-                                            attendeesNames: attendeesNames,
-                                            tags: eventDocument[i].tags,
-                                            isPublic: eventDocument[i].isPublic,
-	                                        endDate: moment_timezone(eventDocument[i].end).tz(data.tz).format(`${data.dateFormat}`),
-	                                        startDate: moment_timezone(eventDocument[i].start).tz(data.tz).format(`${data.dateFormat}`),
-	                                        endDateNice: moment_timezone(eventDocument[i].end).tz(data.tz).format(configFile.moment_date_format),
-	                                        startDateNice: moment_timezone(eventDocument[i].start).tz(data.tz).format(configFile.moment_date_format)
-                                        });
+                                        arrayAttendees.push(bot.getUserOrNickname(eventDocuments[i].attendees[j]._id, serverObject));
                                     }
-                                } else {
-                                    winston.error(err);
-                                }
-                            });
-                        }
-                    };
 
-                    if (serverData && eventData) {
-                        addServerData(0, () => {
-                            serverData.sort((a, b) => {
-                                return a.name.localeCompare(b.name);
-                            });
-                        });
-
-                        addEventData(() => {
-                            eventData.sort((a, b) => {
-                                return a.title.localeCompare(b.title);
-                            });
-                        });
-
-                        db.users.findOne({_id: req.user.id}, (err) => {
-                            if (err) {
-                                winston.warn(err);
-                            } else {
-                                renderPage(
-                                    serverData,
-                                    eventData,
-                                    data
-                                );
-                            }
-
-                        });
-                    } else {
-                        renderPage();
-                    }
-
-                } else if (req.path === "/events/myevents") {
-
-
-                    const addEventData = () => {
-                        data.rawEventMyCount = 0;
-
-
-                        db.events.find({$or: [{"_author": usr.id}, {"attendees._id": usr.id}]}, (err, eventDocument) => {
-                            if (!err && eventDocument) {
-
-                                for(let i=0;i<eventDocument.length;i++) {
-                                    let noAttendees = 0;
-                                    let authorName = "";
-                                    let serv = {};
-                                    serv = bot.guilds.find(guild=>{ return guild.id === eventDocument[i]._server; });
-                                    let serverName = serv.name;
-                                    data.userIsAttendee = false;
-                                    data.rawEventMyCount = eventDocument.length;
-	                                let attendeesNames = [];
-
-                                    authorName = bot.getUserOrNickname(eventDocument[i]._author, serv);
-
-	                                if(eventDocument[i].attendees) {
-		                                noAttendees = eventDocument[i].attendees.length;
-
-
-		                                for (let j = 0; j < eventDocument[i].attendees.length; j++) {
-			                                attendeesNames.push({
-				                                id: `${bot.getUserOrNickname(eventDocument[i].attendees[j]._id, serv)}`
-			                                });
-
-			                                if (eventDocument[i].attendees[j]._id == req.user.id) {
-				                                data.userIsAttendee = true;
-			                                }
-		                                }
-	                                }
-
-	                                eventData.push({
-		                                id: eventDocument[i]._no,
-		                                author: authorName,
-		                                server: serverName,
-		                                clan: eventDocument[i]._clan,
-		                                title: eventDocument[i].title,
-		                                description: eventDocument[i].description,
-		                                maxAttendees: eventDocument[i].attendee_max,
-		                                actualAttendees: noAttendees,
-		                                attendeesNames: attendeesNames,
-		                                tags: eventDocument[i].tags,
-		                                isPublic: eventDocument[i].isPublic,
-		                                endDate: moment_timezone(eventDocument[i].end).tz(data.tz).format(`${data.dateFormat}`),
-		                                startDate: moment_timezone(eventDocument[i].start).tz(data.tz).format(`${data.dateFormat}`),
-		                                endDateNice: moment_timezone(eventDocument[i].end).tz(data.tz).format(`${configFile.moment_date_format}`),
-		                                startDateNice: moment_timezone(eventDocument[i].start).tz(data.tz).format(`${configFile.moment_date_format}`)
-	                                });
+                                    eventData.push({
+                                        id: eventDocuments[i]._no,
+                                        author: authorName,
+                                        server: serverObject.name,
+                                        clan: eventDocuments[i]._clan,
+                                        title: eventDocuments[i].title,
+                                        description: eventDocuments[i].description,
+                                        maxAttendees: eventDocuments[i].attendee_max,
+                                        actualAttendees: eventDocuments[i].attendees.length,
+                                        attendees: arrayAttendees,
+                                        isPublic: eventDocuments[i].isPublic,
+                                        startDate: moment_timezone(eventDocuments[i].start)
+                                            .tz(userDocument.timezone).format(configFile.moment_date_format),
+                                        endDate: moment_timezone(eventDocuments[i].end)
+                                            .tz(userDocument.timezone).format(configFile.moment_date_format),
+                                        tags: eventDocuments[i].tags,
+                                        userHasJoined: userHasJoined
+                                    });
                                 }
                             } else {
                                 winston.error(err);
                             }
-                        });
-                    };
 
-                    if (serverData && eventData) {
-                        addServerData(0, () => {
-                            serverData.sort((a, b) => {
-                                return a.name.localeCompare(b.name);
-                            });
+                            renderPage(eventData, userDocument);
                         });
+                    } else if (req.path === "/events/myevents") {
+                        db.events.find({_author: usr.id}, (err, eventDocuments) => {
+                            let eventData = [];
+                            if (!err && eventDocuments) {
+                                for (let i = 0; i < eventDocuments.length; i++) {
+                                    let arrayAttendees = [];
+                                    let serverObject = bot.guilds.find(guild => {
+                                        return guild.id === eventDocuments[i]._server;
+                                    });
+                                    let authorName = bot.getUserOrNickname(eventDocuments[i]._author, serverObject);
 
-                        addEventData(() => {
-                            eventData.sort((a, b) => {
-                                return a.title.localeCompare(b.title);
-                            });
-                        });
+                                    let userHasJoined = false;
+                                    for (let j = 0; j < eventDocuments[i].attendees.length; j++) {
+                                        if (eventDocuments[i].attendees[j]._id === req.user.id) {
+                                            userHasJoined = true;
+                                        }
+                                        arrayAttendees.push(bot.getUserOrNickname(eventDocuments[i].attendees[j]._id, serverObject));
+                                    }
 
-                        db.users.findOne({_id: req.user.id}, (err) => {
-                            if (err) {
-                                winston.warn(err);
+                                    eventData.push({
+                                        id: eventDocuments[i]._no,
+                                        author: authorName,
+                                        server: serverObject.name,
+                                        clan: eventDocuments[i]._clan,
+                                        title: eventDocuments[i].title,
+                                        description: eventDocuments[i].description,
+                                        maxAttendees: eventDocuments[i].attendee_max,
+                                        actualAttendees: eventDocuments[i].attendees.length,
+                                        attendees: arrayAttendees,
+                                        isPublic: eventDocuments[i].isPublic,
+                                        startDate: moment_timezone(eventDocuments[i].start)
+                                            .tz(userDocument.timezone).format(configFile.moment_date_format),
+                                        endDate: moment_timezone(eventDocuments[i].end)
+                                            .tz(userDocument.timezone).format(configFile.moment_date_format),
+                                        tags: eventDocuments[i].tags,
+                                        userHasJoined: userHasJoined
+                                    });
+                                }
                             } else {
-                                renderPage(
-                                    serverData,
-                                    eventData,
-                                    data
-                                );
+                                winston.error(err);
                             }
 
+                            renderPage(eventData, userDocument);
                         });
-                    } else {
-                        renderPage();
                     }
-
-                }
-
-
+                });
             } else {
                 res.redirect("/login");
             }
         });
-
 
 
         // Extension gallery
@@ -4321,7 +4192,6 @@ module.exports = (bot, db, auth, config, winston) => {
             db.users.findOne({
                 _id: req.user.id
             }).then(userDocument=>{
-                console.log(userDocument);
                 res.render("pages/user-locale.ejs", {
                     authUser: req.isAuthenticated() ? getAuthUser(req.user) : null,
                     serverData: {
