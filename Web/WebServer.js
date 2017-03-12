@@ -759,12 +759,12 @@ module.exports = (bot, db, auth, config, winston) => {
                 res.render("pages/events.ejs", {
                     authUser: req.isAuthenticated() ? getAuthUser(req.user) : null,
                     isMaintainer: req.isAuthenticated() ? config.maintainers.indexOf(req.user.id) > -1 : false,
-                    pageTitle,
+                    pageTitle: pageTitle,
                     activeSearchQuery: req.query.id || req.query.q,
                     mode: eventState,
                     date_format: configFile.moment_date_format,
-                    eventData,
-                    userDocument,
+                    eventData: eventData,
+                    userDocument: userDocument,
                     data
                 });
             };
@@ -773,7 +773,7 @@ module.exports = (bot, db, auth, config, winston) => {
                 lastPage = "events";
                 const usr = bot.users.get(req.user.id);
 
-                db.users.find({
+                db.users.findOne({
                     _id: req.user.id
                 }).then(userDocument => {
                     if (req.path === "/events/overview") {
@@ -812,13 +812,17 @@ module.exports = (bot, db, auth, config, winston) => {
                                         attendees: arrayAttendees,
                                         isPublic: eventDocuments[i].isPublic,
                                         startDate: moment_timezone(eventDocuments[i].start)
-                                            .tz((userDocument.timezone ? userDocument.timezone : configFile.moment_timezone)).format(data.dateFormat),
+                                            .tz((userDocument.timezone ? userDocument.timezone : configFile.moment_timezone))
+                                            .format(data.dateFormat),
                                         endDate: moment_timezone(eventDocuments[i].end)
-                                            .tz((userDocument.timezone ? userDocument.timezone : configFile.moment_timezone)).format(data.dateFormat),
+                                            .tz((userDocument.timezone ? userDocument.timezone : configFile.moment_timezone))
+                                            .format(data.dateFormat),
                                         startDateNice: moment_timezone(eventDocuments[i].start)
-                                            .tz((userDocument.timezone ? userDocument.timezone : configFile.moment_timezone)).format(configFile.moment_date_format),
+                                            .tz((userDocument.timezone ? userDocument.timezone : configFile.moment_timezone))
+                                            .format(configFile.moment_date_format),
                                         endDateNice: moment_timezone(eventDocuments[i].end)
-                                            .tz((userDocument.timezone ? userDocument.timezone : configFile.moment_timezone)).format(configFile.moment_date_format),
+                                            .tz((userDocument.timezone ? userDocument.timezone : configFile.moment_timezone))
+                                            .format(configFile.moment_date_format),
                                         tags: eventDocuments[i].tags,
                                         userHasJoined: userHasJoined
                                     });
@@ -860,13 +864,17 @@ module.exports = (bot, db, auth, config, winston) => {
                                         attendees: arrayAttendees,
                                         isPublic: eventDocuments[i].isPublic,
                                         startDate: moment_timezone(eventDocuments[i].start)
-                                            .tz((userDocument.timezone ? userDocument.timezone : configFile.moment_timezone)).format(data.dateFormat),
+                                            .tz((userDocument.timezone ? userDocument.timezone : configFile.moment_timezone))
+                                            .format(data.dateFormat),
                                         endDate: moment_timezone(eventDocuments[i].end)
-                                            .tz((userDocument.timezone ? userDocument.timezone : configFile.moment_timezone)).format(data.dateFormat),
+                                            .tz((userDocument.timezone ? userDocument.timezone : configFile.moment_timezone))
+                                            .format(data.dateFormat),
                                         startDateNice: moment_timezone(eventDocuments[i].start)
-                                            .tz((userDocument.timezone ? userDocument.timezone : configFile.moment_timezone)).format(configFile.moment_date_format),
+                                            .tz((userDocument.timezone ? userDocument.timezone : configFile.moment_timezone))
+                                            .format(configFile.moment_date_format),
                                         endDateNice: moment_timezone(eventDocuments[i].end)
-                                            .tz((userDocument.timezone ? userDocument.timezone : configFile.moment_timezone)).format(configFile.moment_date_format),
+                                            .tz((userDocument.timezone ? userDocument.timezone : configFile.moment_timezone))
+                                            .format(configFile.moment_date_format),
                                         tags: eventDocuments[i].tags,
                                         userHasJoined: userHasJoined
                                     });
@@ -878,14 +886,12 @@ module.exports = (bot, db, auth, config, winston) => {
                             renderPage(eventData, userDocument);
                         });
                     }
-                })
-                    .catch(err => {
-                        if (err) {
-                            res.sendStatus(500);
-                            winston.error("Webserver - Events - User not found in DB");
-                        }
-                    });
-
+                }).catch(err => {
+                    if (err) {
+                        res.sendStatus(500);
+                        winston.error("Webserver - Events - User not found in DB");
+                    }
+                });
             } else {
                 res.redirect("/login");
             }
