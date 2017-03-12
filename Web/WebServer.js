@@ -898,36 +898,34 @@ module.exports = (bot, db, auth, config, winston) => {
                 res.redirect("/login");
             }
         });
-    io.of("/events/overview").on("connection", socket => {
+    io.of("/events").on("connection", socket => {
         socket.on("disconnect", () => {
         });
     });
-    io.of("/events/myevents").on("connection", socket => {
-        socket.on("disconnect", () => {
-        });
-    });
-        app.post("/events", (req, res) => {
-            if(req.isAuthenticated()) {
-                db.events.findOne({
-                    _id: req.body.eventID
-                }).then(eventDocument=> {
-                    let index = eventDocument.attendees.find(user=>{ return user._id === req.user.id });
-                    let serverObject = bot.guilds.find(guild => {
-                        return guild.id === eventDocument._server;
-                    });
-                    let usr = req.user.id;
-
-                    if(index) {
-                        eventDocument.attendees.splice(index, 1);
-                    } else {
-                        eventDocument.attendees.push({ _id: req.user.id, _timestamp: Date.now()})
-                    }
-                    saveEventUserAction(eventDocument, usr, serverObject, req, res);
+    app.post("/events", (req, res) => {
+        if (req.isAuthenticated()) {
+            db.events.findOne({
+                _id: req.body.eventID
+            }).then(eventDocument => {
+                let index = eventDocument.attendees.find(user => {
+                    return user._id === req.user.id
                 });
-            } else {
-                res.redirect("/login");
-            }
-        });
+                let serverObject = bot.guilds.find(guild => {
+                    return guild.id === eventDocument._server;
+                });
+                let usr = req.user.id;
+
+                if (index) {
+                    eventDocument.attendees.splice(index, 1);
+                } else {
+                    eventDocument.attendees.push({_id: req.user.id, _timestamp: Date.now()})
+                }
+                saveEventUserAction(eventDocument, usr, serverObject, req, res);
+            });
+        } else {
+            res.redirect("/login");
+        }
+    });
 
     // Save eventDocument after user action in events web UI
     const saveEventUserAction = (eventDocument, usr, svr, req, res) => {

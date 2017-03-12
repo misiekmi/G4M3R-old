@@ -1,5 +1,4 @@
 module.exports = (bot, db, config, winston, userDocument, msg, suffix) => {
-    //TODO: NOT WORKING IN PM YET SINCE STILL FOCUSSED ON MSG IN A SERVER CHANNEL
     const commands = {};
     let category_text = {};
     let distinctCategories = [];
