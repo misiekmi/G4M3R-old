@@ -36,7 +36,11 @@
 					<%= eventData[i].server %> <span class="tag is-small is-primary"><%= eventData[i].id %></span>
 				</td>
 				<td>
-					<span class="tag is-small is-danger"><strong style="color: white"><%= eventData[i].actualAttendees %> / <%= eventData[i].maxAttendees %></strong></span>
+					<div class="tag is-small is-danger tooltip">
+						<strong style="color: white"><%= eventData[i].actualAttendees %>
+							/ <%= eventData[i].maxAttendees %></strong>
+						<span class="tooltiptext">some attendees coming soon!</span>
+					</div>
 				</td>
 				<td class="is-hidden-mobile">
 					<span class="tag is-small is-light"><strong><%= eventData[i].startDate %></strong></span>
