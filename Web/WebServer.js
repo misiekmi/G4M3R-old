@@ -19,10 +19,8 @@ const fs = require("fs");
 const writeFile = require("write-file-atomic");
 const base64 = require("node-base64-image");
 const sizeof = require("object-sizeof");
-const moment = require("moment");
 const textDiff = require("text-diff");
 const diff = new textDiff();
-var lastPage = "";
 const showdown = require("showdown");
 const md = new showdown.Converter({
     tables: true,
@@ -40,8 +38,10 @@ const createMessageOfTheDay = require("./../Modules/MessageOfTheDay.js");
 const Giveaways = require("./../Modules/Giveaways.js");
 const Polls = require("./../Modules/Polls.js");
 const Trivia = require("./../Modules/Trivia.js");
+const moment = require("moment");
 const moment_timezone = require("moment-timezone");
 const configFile = require("./../Configuration/config.json");
+var lastPage = "";
 
 const app = express();
 app.use(compression());
