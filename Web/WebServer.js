@@ -801,7 +801,8 @@ module.exports = (bot, db, auth, config, winston) => {
                                     }
 
                                     eventData.push({
-                                        id: eventDocuments[i]._no,
+                                        id: eventDocuments[i]._id,
+                                        no: eventDocuments[i]._no,
                                         author: authorName,
                                         server: serverObject.name,
                                         clan: eventDocuments[i]._clan,
@@ -853,7 +854,8 @@ module.exports = (bot, db, auth, config, winston) => {
                                     }
 
                                     eventData.push({
-                                        id: eventDocuments[i]._no,
+                                        id: eventDocuments[i]._id,
+                                        no: eventDocuments[i]._no,
                                         author: authorName,
                                         server: serverObject.name,
                                         clan: eventDocuments[i]._clan,
@@ -891,6 +893,23 @@ module.exports = (bot, db, auth, config, winston) => {
                         res.sendStatus(500);
                         winston.error("Webserver - Events - User not found in DB");
                     }
+                });
+            } else {
+                res.redirect("/login");
+            }
+        });
+        app.post("/events", (req, res) => {
+            if(req.isAuthenticated()) {
+                db.events.findOne({
+                    _id: req.body.eventID
+                }).then(eventDocument=> {
+                    let index = eventDocument.attendees.find(user=>{ return user._id === req.user.id });
+                    if(index) {
+                        eventDocument.attendees.splice(index, 1);
+                    } else {
+                        eventDocument.attendees.push({ _id: req.user.id, _timestamp: Date.now()})
+                    }
+                    eventDocument.save();
                 });
             } else {
                 res.redirect("/login");

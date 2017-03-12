@@ -33,7 +33,7 @@
 					<span class="tag is-small is-dark" style="color: white"><%= eventData[i].author %></span>
 				</td>
 				<td>
-					<%= eventData[i].server %> <span class="tag is-small is-primary"><%= eventData[i].id %></span>
+					<%= eventData[i].server %> <span class="tag is-small is-primary"><%= eventData[i].no %></span>
 				</td>
 				<td>
 					<div class="tag is-small is-danger tooltip">
@@ -50,16 +50,12 @@
 				</td>
 				<td class="is-hidden-mobile">
                     <% if (eventData[i].userHasJoined) { %>
-					<a class="button is-small is-danger is-hovered" href="/events/myevents">
-										<span class="icon is-small">
-											<i class="fa fa-sign-out"></i>
-										</span>
+					<a class="button is-small is-danger is-hovered" onclick="leaveEvent('<%=eventData[i].id%>');window.location.reload()">
+						<span class="icon is-small"><i class="fa fa-sign-out"></i></span>
 					</a>
                     <% } else { %>
-					<a class="button is-small is-success is-hovered" href="/events/myevents">
-											<span class="icon is-small">
-												<i class="fa fa-sign-in"></i>
-											</span>
+					<a class="button is-small is-success is-hovered" onclick="joinEvent('<%=eventData[i].id%>');window.location.reload()">
+						<span class="icon is-small"><i class="fa fa-sign-in"></i></span>
 					</a>
                     <% } %>
 				</td>
@@ -69,7 +65,7 @@
 				<div class="modal-card">
 					<header class="modal-card-head">
 						<p class="modal-card-title">
-							<Strong>Event &#127380;<%= eventData[i].id %></Strong>
+							<Strong>Event &#127380;<%= eventData[i].no %></Strong>
 							<em class="content is-medium">&nbsp; // by <%= eventData[i].author %></em>
 						</p>
 					</header>
@@ -114,9 +110,9 @@
 					</section>
 					<footer class="modal-card-foot">
                         <% if(eventData[i].userHasJoined) { %>
-						<a class="button is-danger">Leave Event</a>
+						<a class="button is-danger" onclick="leaveEvent('<%=eventData[i].id%>');window.location.reload()">Leave Event</a>
                         <% } else { %>
-						<a class="button is-success">Join Event</a>
+						<a class="button is-success" onclick="joinEvent('<%=eventData[i].id%>');window.location.reload()">Join Event</a>
                         <% } %>
 					</footer>
 				</div>
