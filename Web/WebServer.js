@@ -276,17 +276,6 @@ module.exports = (bot, db, auth, config, winston) => {
             return data;
         };
 
-        //get all servers as ID for a user
-        function getUserServers(req) {
-            const userServers = [];
-            if (req.user.guilds) {
-                for (let i = 0; i < req.user.guilds.length; i++) {
-                    userServers.push(req.user.guilds[i].id);
-                }
-                return userServers;
-            }
-        }
-
         app.get("/api/servers", (req, res) => {
             const params = {
                 "config.public_data.isShown": true
@@ -784,10 +773,9 @@ module.exports = (bot, db, auth, config, winston) => {
                 lastPage = "events";
                 const usr = bot.users.get(req.user.id);
 
-
-                db.users.findOne({
+                db.users.find({
                     _id: req.user.id
-                }).then(userDocument=> {
+                }).then(userDocument => {
                     if (req.path === "/events/overview") {
                         let servers = [];
                         for (let l = 0; l < req.user.guilds.length; l++) {
@@ -890,7 +878,14 @@ module.exports = (bot, db, auth, config, winston) => {
                             renderPage(eventData, userDocument);
                         });
                     }
-                });
+                })
+                    .catch(err => {
+                        if (err) {
+                            res.sendStatus(500);
+                            winston.error("Webserver - Events - User not found in DB");
+                        }
+                    });
+
             } else {
                 res.redirect("/login");
             }
