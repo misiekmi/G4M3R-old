@@ -105,7 +105,6 @@ Viewer.prototype.getPageView = function(page_no) {
 Viewer.prototype.getEventView = function() {
     this.mode = 2;
     let attendeesNames = "";
-    let hasAttendees = false;
     let username = this.bot.getUserOrNickname(this.event._author, this.msg.channel.guild);
     let tag_content = "";
 
@@ -117,18 +116,21 @@ Viewer.prototype.getEventView = function() {
         icon_url: "http://frid.li/sSVIJ"
     };
 
+    let userHasJoined = false;
     if (this.event.attendees.length > 0) {
         for (let i = 0; i < this.event.attendees.length; i++) {
-            if (i > 14) { // showing max 15 attendees
-                break;
-            } else {
+            if(this.event.attendees[i]._id === this.user._id) {
+                userHasJoined = true;
+            }
+            if (i < 14) { // showing max 15 attendees
                 if (i % 2 === 1) {
                     attendeesNames += `\`${this.bot.getUserOrNickname(this.event.attendees[i]._id, this.msg.channel.guild)}\`\n`;
                 } else {
                     attendeesNames += `\`${this.bot.getUserOrNickname(this.event.attendees[i]._id, this.msg.channel.guild)}\`, `;
                 }
                 //attendeesNames += `<@`+this.event.attendees[i]._id+`>, `; TODO: when android @mention is fixed in embeds replace
-                hasAttendees = true;
+            } else if(userHasJoined) {
+                break;
             }
         }
     }
@@ -159,7 +161,7 @@ Viewer.prototype.getEventView = function() {
         inline: true
     }, {
         name: `Attendees joined`,
-        value: `${hasAttendees ? `${attendeesNames}` : `(no attendees)`}`,
+        value: `${this.event.attendees.length>0 ? `${attendeesNames}` : `(no attendees)`}`,
         inline: true
     }, {
         name: `Tags`,
@@ -167,9 +169,10 @@ Viewer.prototype.getEventView = function() {
         inline: false
     }];
 
-    embed.footer = {text: `## Options: [J]oin, [L]eave, ` +
-    (hasAttendees ? `[A]ttendees, ` : "") +
-    (auth.toDeleteOrEdit(this.server, this.event, this.member)?`[E]dit, [D]elete, [K]ick `:"") +
+    embed.footer = {text: `## Options: ` +
+    (userHasJoined ? `[L]eave, ` : `[J]oin, `) +
+    (this.event.attendees.length > 15 ? `[A]ttendees, ` : "") +
+    (auth.toDeleteOrEdit(this.server, this.event, this.member)?`[E]dit, [D]elete, [K]ick, `:"") +
     `[B]ack, [Q]uit`};
 
     return {embed: embed};
@@ -509,36 +512,32 @@ Viewer.prototype.getKickView = function() {
 };
 
 Viewer.prototype.kickUser = function(userID, silent) {
-    let userexists;
+    let user_exists;
     this.mode = 8;
-    try {
-        for(let i=0; i<this.event.attendees.length; i++) {
-            if(this.event.attendees[i]._id===userID) {
-                this.event.attendees.splice(i, 1);
-                userexists = true;
-                this.event.save((err)=> {
-                    if (err) {
-                        this.winston.error(`Failed to remove user from event`, { _id: viewer.event._id }, err);
-                    }
-                });
-                break;
-            }
+    for(let i=0; i<this.event.attendees.length; i++) {
+        if(this.event.attendees[i]._id===userID) {
+            this.event.attendees.splice(i, 1);
+            user_exists = true;
+            this.event.save((err)=> {
+                if (err) {
+                    this.winston.error(`Failed to remove user from event`, { _id: this.event._id }, err);
+                }
+            });
+            break;
         }
-    } catch (e) {
-        console.log(e);
     }
 
     let embed = {};
-    if(silent&&userexists) {
+    if(silent && user_exists) {
         embed.color = parseInt(config.colors.green, 16);
-    } else if(silent&&!userexists) {
+    } else if(silent && !user_exists) {
         embed.color = parseInt(config.colors.orange, 16);
     } else {
         embed.color = parseInt(config.colors.blue, 16);
         embed.footer = {text: `## Options: [B]ack, [Q]uit`};
     }
 
-    if(userexists) {
+    if(user_exists) {
         embed.title = `User Kicked from Event #⃣ ${this.event._no}`;
         embed.description = "User has been kicked from the event.";
 
