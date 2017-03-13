@@ -760,7 +760,7 @@ module.exports = (bot, db, auth, config, winston) => {
         data.dateFormat = "dddd MMM Do[,] YYYY [at] HH:mm";
         data.dateFormatString = "dddd MMM Do, YYYY at HH:mm";
 
-        const renderPage = (eventData, userDocument) => {
+        const renderPage = (eventData, userDocument, servers) => {
             res.render("pages/events.ejs", {
                 authUser: req.isAuthenticated() ? getAuthUser(req.user) : null,
                 isMaintainer: req.isAuthenticated() ? config.maintainers.indexOf(req.user.id) > -1 : false,
@@ -770,6 +770,7 @@ module.exports = (bot, db, auth, config, winston) => {
                 date_format: configFile.moment_date_format,
                 eventData: eventData,
                 userDocument: userDocument,
+                servers: servers,
                 data
             });
         };
@@ -777,17 +778,19 @@ module.exports = (bot, db, auth, config, winston) => {
         if (req.isAuthenticated()) {
             lastPage = "events";
             const usr = bot.users.get(req.user.id);
+            const servers = bot.guilds.filter(srv => {  // find all servers the bot sees
+                return srv.members.find(mem => {        // and that the user has joined
+                    return mem.id === req.user.id;
+                })
+            });
 
             db.users.findOne({
                 _id: req.user.id
             }).then(userDocument => {
                 if (req.path === "/events/overview") {
-                    let servers = [];
-                    for (let l = 0; l < req.user.guilds.length; l++) {
-                        servers.push(req.user.guilds[l].id)
-                    }
+                    let serverIDs = servers.map(server => {return server.id});
 
-                    db.events.find({_server: {$in: servers}}, (err, eventDocuments) => {
+                    db.events.find({_server: {$in: serverIDs}}, (err, eventDocuments) => {
                         let eventData = [];
                         if (!err && eventDocuments) {
                             for (let i = 0; i < eventDocuments.length; i++) {
@@ -837,9 +840,10 @@ module.exports = (bot, db, auth, config, winston) => {
                             winston.error(err);
                         }
 
-                        renderPage(eventData, userDocument);
+                        renderPage(eventData, userDocument, servers);
                     });
-                } else if (req.path === "/events/myevents") {
+                }
+                else if (req.path === "/events/myevents") {
                     db.events.find({$or: [{"_author": usr.id}, {"attendees._id": usr.id}]}, (err, eventDocuments) => {
                         let eventData = [];
                         if (!err && eventDocuments) {
@@ -890,7 +894,7 @@ module.exports = (bot, db, auth, config, winston) => {
                             winston.error(err);
                         }
 
-                        renderPage(eventData, userDocument);
+                        renderPage(eventData, userDocument, servers);
                     });
                 }
             }).catch(err => {
