@@ -772,7 +772,6 @@ module.exports = (bot, db, auth, config, winston) => {
             };
 
             if (req.isAuthenticated()) {
-                lastPage = "events"
                 const serverData = [];
                 const eventData = [];
                 const usr = bot.users.get(req.user.id);
