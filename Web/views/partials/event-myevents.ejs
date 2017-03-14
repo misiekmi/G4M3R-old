@@ -1,3 +1,51 @@
+<script>
+    function showSelections() {
+        document.getElementById("server-select").value = "<%= data.serverFilter %>";
+        document.getElementById("sort-select").value = "<%= data.sortOrder %>";
+        document.getElementById("count-select").value = "<%= data.itemsPerPage %>";
+    }
+</script>
+
+<nav class="level">
+	<div class="level-left">
+		<div class="level-item">
+			<span class="select">
+				<select id="server-select" onchange="window.location.href = '/events/myevents?count=<%= data.itemsPerPage %>&page=<%= data.currentPage %>&sort=<%= data.sortOrder %>&server=' + this.value;">
+					<option value="All">All Servers</option>
+                    <% for(var i=0; i<data.servers.length; i++) { %>
+					<option value="<%= data.servers[i].id %>"><%= data.servers[i].name %></option>
+                    <% } %>
+				</select>
+			</span>
+		</div>
+	</div>
+	<div class="level-right">
+		<div class="level-item">
+			<span class="select">
+				<select id="sort-select" onchange="window.location.href = '/events/myevents?count=<%= data.itemsPerPage %>&page=<%= data.currentPage %>&sort=' + this.value + '&server=<%= data.serverFilter%>';">
+					<option value="start">Start</option>
+					<option value="end">End</option>
+					<option value="server">Server</option>
+					<option value="author">Author</option>
+				</select>
+			</span>
+		</div>
+		<div class="level-item">
+			<span class="select">
+				<select id="count-select" onchange="window.location.href = '/events/myevents?count=' + this.value + '&page=<%= data.currentPage %>&sort=<%= data.sortOrder %>&server=<%= data.serverFilter%>';">
+					<option value="0">All Items</option>
+					<option value="8">8 items/page</option>
+					<option value="16">16 items/page</option>
+					<option value="24">24 items/page</option>
+					<option value="32">32 items/page</option>
+					<option value="48">48 items/page</option>
+					<option value="64">64 items/page</option>
+				</select>
+			</span>
+		</div>
+	</div>
+</nav>
+
 <div class="columns">
 	<div class="column is-12">
 		<table class="table" style="overflow-x: scroll;overflow-y: scroll">
@@ -24,35 +72,35 @@
 			</tr>
 			</tfoot>
 			<tbody>
-			<% for(var i=0; i<eventData.length; i++) { %>
+			<% for(var i=0; i<data.eventData.length; i++) { %>
 			<tr class="modal-button" data-target="#event-<%= i %>-modal">
 				<td>
-					<strong><%= eventData[i].title %></strong>
+					<strong><%= data.eventData[i].title %></strong>
 				</td>
 				<td>
-					<span class="tag is-small is-dark" style="color: white"><%= eventData[i].author %></span>
+					<span class="tag is-small is-dark" style="color: white"><%= data.eventData[i].author %></span>
 				</td>
 				<td>
-					<%= eventData[i].server %> <span class="tag is-small is-primary"><%= eventData[i].no %></span>
+					<%= data.eventData[i].server %> <span class="tag is-small is-primary"><%= data.eventData[i].no %></span>
 				</td>
 				<td>
-					<span class="tag is-small is-danger"><strong style="color: white"><%= eventData[i].actualAttendees %> / <%= eventData[i].maxAttendees %></strong></span>
+					<span class="tag is-small is-danger"><strong style="color: white"><%= data.eventData[i].actualAttendees %> / <%= data.eventData[i].maxAttendees %></strong></span>
 				</td>
 				<td class="is-hidden-mobile">
-					<span class="tag is-small is-light"><strong><%= eventData[i].startDate %></strong></span>
+					<span class="tag is-small is-light"><strong><%= data.eventData[i].startDate %></strong></span>
 				</td>
 				<td class="is-hidden-mobile">
-					<span class="tag is-small is-light"><strong><%= eventData[i].endDate %></strong></span>
+					<span class="tag is-small is-light"><strong><%= data.eventData[i].endDate %></strong></span>
 				</td>
 				<td class="is-hidden-mobile">
-					<% if (eventData[i].userHasJoined) { %>
-					<a class="button is-small is-danger is-hovered" onclick="leaveEvent('<%=eventData[i].id%>')">
+					<% if (data.eventData[i].userHasJoined) { %>
+					<a class="button is-small is-danger is-hovered" onclick="leaveEvent('<%=data.eventData[i].id%>')">
 										<span class="icon is-small">
 											<i class="fa fa-sign-out"></i>
 										</span>
 					</a>
 					<% } else { %>
-					<a class="button is-small is-success is-hovered" onclick="joinEvent('<%=eventData[i].id%>')">
+					<a class="button is-small is-success is-hovered" onclick="joinEvent('<%=data.eventData[i].id%>')">
 											<span class="icon is-small">
 												<i class="fa fa-sign-in"></i>
 											</span>
@@ -65,30 +113,30 @@
 				<div class="modal-card">
 					<header class="modal-card-head">
 						<p class="modal-card-title">
-							<Strong>Event &#127380;<%= eventData[i].no %></Strong>
-							<em class="content is-medium">&nbsp; // by <%= eventData[i].author %></em>
+							<Strong>Event &#127380;<%= data.eventData[i].no %></Strong>
+							<em class="content is-medium">&nbsp; // by <%= data.eventData[i].author %></em>
 						</p>
 					</header>
 					<section class="modal-card-body">
 						<div class="content" style="line-height: 170%">
 							<div class="title is-4">
-								<strong><%= eventData[i].title %></strong>
+								<strong><%= data.eventData[i].title %></strong>
 							</div>
 							<div class="subtitle is-6">
-								<strong>on <%= eventData[i].server %></strong>
+								<strong>on <%= data.eventData[i].server %></strong>
 							</div>
 							<hr>
 
-                            <strong>Starts:</strong> <%= eventData[i].startDateNice %>
+                            <strong>Starts:</strong> <%= data.eventData[i].startDateNice %>
 							<br>
-                            <strong>Ends:</strong> <%= eventData[i].endDateNice %>
+                            <strong>Ends:</strong> <%= data.eventData[i].endDateNice %>
 							<hr>
-							<strong>Attendees [</strong> <%= eventData[i].actualAttendees %> / <%= eventData[i].maxAttendees %> <strong>] :</strong>
-							<% if(eventData[i].attendees.length > 0) { %>
+							<strong>Attendees [</strong> <%= data.eventData[i].actualAttendees %> / <%= data.eventData[i].maxAttendees %> <strong>] :</strong>
+							<% if(data.eventData[i].attendees.length > 0) { %>
 
-							<% for(var j = 0;j < eventData[i].attendees.length;j++) { %>
+							<% for(var j = 0;j < data.eventData[i].attendees.length;j++) { %>
 							<span class="tag is-small is-primary">
-								<%= eventData[i].attendees[j] %>
+								<%= data.eventData[i].attendees[j] %>
 								<button class="delete is-small"></button>
 							</span>
 							<% } %>
@@ -96,11 +144,11 @@
 							<em>no attendees joined yet!</em>
 							<% } %>
 							<hr>
-							<strong>Tags (<%= eventData[i].tags.length%>): </strong>
-							<% if(eventData[i].tags.length > 0) { %>
-								<% for(j = 0;j < eventData[i].tags.length;j++) { %>
+							<strong>Tags (<%= data.eventData[i].tags.length%>): </strong>
+							<% if(data.eventData[i].tags.length > 0) { %>
+								<% for(j = 0;j < data.eventData[i].tags.length;j++) { %>
 								<span class="tag is-small is-info" style="color:white">
-									<%= eventData[i].tags[j] %>
+									<%= data.eventData[i].tags[j] %>
 								<!--<button class="delete is-small"></button>-->
 								</span>
 								<% } %>
@@ -110,10 +158,10 @@
 						</div>
 					</section>
 					<footer class="modal-card-foot">
-                        <% if(eventData[i].userHasJoined) { %>
-						<a class="button is-danger" onclick="leaveEvent('<%=eventData[i].id%>')">Leave Event</a>
+                        <% if(data.eventData[i].userHasJoined) { %>
+						<a class="button is-danger" onclick="leaveEvent('<%=data.eventData[i].id%>')">Leave Event</a>
                         <% } else { %>
-						<a class="button is-success" onclick="joinEvent('<%=eventData[i].id%>')">Join Event</a>
+						<a class="button is-success" onclick="joinEvent('<%=data.eventData[i].id%>')">Join Event</a>
                         <% } %>
 					</footer>
 				</div>
@@ -125,8 +173,57 @@
 	</div>
 </div>
 <div class="content">
-    <em><strong>Your timezone:</strong> <span class="tag is-small is-light"><%= userDocument.timezone %></span></em><br>
-    <em class="is-hidden-mobile"><strong>date format:</strong><span
-                class="tag is-small is-light"> <%= data.dateFormatString %></span></em>
+    <em><strong>Your timezone:</strong> <span class="tag is-small is-light"><%= data.userDocument.timezone %></span></em><br>
+    <em class="is-hidden-mobile"><strong>date format:</strong><span class="tag is-small is-light"> <%= date.formatString %></span></em>
 </div>
+<% if(data.numPages>1) { %>
+<br>
+<nav class="pagination">
+	<ul>
+        <% if(data.currentPage>2) { %>
+		<li>
+			<a class="button" href="/activity/servers?q=<%= activeSearchQuery %>&count=<%= data.itemsPerPage %>&page=1&sort=<%= data.sortOrder %>&category=<%= data.selectedCategory %>&publiconly=<%= data.isPublicOnly %>">
+				1
+			</a>
+		</li>
+        <% } %>
+        <% if(data.currentPage>3) { %>
+		<li>
+			<span>...</span>
+		</li>
+        <% } %>
+        <% if(data.currentPage>1) { %>
+		<li>
+			<a class="button" href="/activity/servers?q=<%= activeSearchQuery %>&count=<%= data.itemsPerPage %>&page=<%= data.currentPage-1 %>&sort=<%= data.sortOrder %>&category=<%= data.selectedCategory %>&publiconly=<%= data.isPublicOnly %>">
+                <%= data.currentPage-1 %>
+			</a>
+		</li>
+        <% } %>
+		<li>
+			<a class="button is-primary" href="/activity/servers?q=<%= activeSearchQuery %>&count=<%= data.itemsPerPage %>&page=<%= data.currentPage %>&sort=<%= data.sortOrder %>&category=<%= data.selectedCategory %>&publiconly=<%= data.isPublicOnly %>">
+                <%= data.currentPage %>
+			</a>
+		</li>
+        <% if(data.currentPage<data.numPages) { %>
+		<li>
+			<a class="button" href="/activity/servers?q=<%= activeSearchQuery %>&count=<%= data.itemsPerPage %>&page=<%= data.currentPage+1 %>&sort=<%= data.sortOrder %>&category=<%= data.selectedCategory %>&publiconly=<%= data.isPublicOnly %>">
+                <%= data.currentPage+1 %>
+			</a>
+		</li>
+        <% } %>
+        <% if(data.currentPage<data.numPages-2) { %>
+		<li>
+			<span>...</span>
+		</li>
+        <% } %>
+        <% if(data.currentPage<data.numPages-1) { %>
+		<li>
+			<a class="button" href="/activity/servers?q=<%= activeSearchQuery %>&count=<%= data.itemsPerPage %>&page=<%= data.numPages %>&sort=<%= data.sortOrder %>&category=<%= data.selectedCategory %>&publiconly=<%= data.isPublicOnly %>">
+                <%= data.numPages %>
+			</a>
+		</li>
+        <% } %>
+	</ul>
+</nav>
+<% } %>
 

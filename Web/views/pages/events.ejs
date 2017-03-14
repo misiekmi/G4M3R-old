@@ -84,8 +84,8 @@
 								Overview&ensp;
 
 								<span class="tag is-small is-primary">
-										<%= eventData.length %>
-									</span>
+									<%= data.eventData.length %>
+								</span>
 
                                 <% } else { %>
 									<span>Overview</span>
@@ -101,7 +101,7 @@
 								My Events&ensp;
 
 								<span class="tag is-small is-primary">
-									<%= eventData.length %>
+									<%= data.eventData.length %>
 								</span>
 
                                 <% } else { %>
@@ -126,54 +126,15 @@
 
 	<section id="frame"	class="section is-white">
 		<div class="container">
-			<nav class="level">
-				<div class="level-left">
-					<p>Show :</p>
-					<div class="level-item">
-			<span class="select">
-				<select id="category-select">
-					<option value="All">All Servers</option>
-                    <% for(var i=0; i<servers.length; i++) { %>
-					<option value="<%= servers[i].id %>"><%= servers[i].name %></option>
-                    <% } %>
-				</select>
-			</span>
-					</div>
-				</div>
-				<div class="level-right">
-					<p>Sort by :</p>
-					<div class="level-item">
-			<span class="select">
-				<select id="category-select">
-					<option>Start</option>
-					<option>End</option>
-					<option>Server</option>
-					<option>Author</option>
-				</select>
-			</span>
-					</div>
-					<div class="level-item">
-			<span class="select">
-				<select id="count-select">
-					<option value="0">All Items</option>
-					<option value="8">8 items/page</option>
-					<option value="16">16 items/page</option>
-					<option value="24">24 items/page</option>
-					<option value="32">32 items/page</option>
-					<option value="48">48 items/page</option>
-					<option value="64">64 items/page</option>
-				</select>
-			</span>
-					</div>
-				</div>
-			</nav>
-
             <% if(mode == "overview") { %>
 				<% include ../partials/event-overview %>
             <% } %>
             <% if(mode == "myevents") { %>
                 <% include ../partials/event-myevents %>
             <% } %>
+			<script>
+                showSelections();
+			</script>
 		</div>
 	</section>
 
