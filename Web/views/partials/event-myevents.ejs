@@ -6,11 +6,11 @@
     }
 </script>
 
-<nav class="level">
+<nav class="level is-mobile">
 	<div class="level-left">
 		<div class="level-item">
 			<span class="select">
-				<select id="server-select" onchange="window.location.href = '/events/myevents?count=<%= data.itemsPerPage %>&page=<%= data.currentPage %>&sort=<%= data.sortOrder %>&server=' + this.value;">
+				<select id="server-select" onchange="window.location.href = '/events/overview?count=<%= data.itemsPerPage %>&page=<%= data.currentPage %>&sort=<%= data.sortOrder %>&server=' + this.value;">
 					<option value="All">All Servers</option>
                     <% for(var i=0; i<data.servers.length; i++) { %>
 					<option value="<%= data.servers[i].id %>"><%= data.servers[i].name %></option>
@@ -22,7 +22,7 @@
 	<div class="level-right">
 		<div class="level-item">
 			<span class="select">
-				<select id="sort-select" onchange="window.location.href = '/events/myevents?count=<%= data.itemsPerPage %>&page=<%= data.currentPage %>&sort=' + this.value + '&server=<%= data.serverFilter%>';">
+				<select id="sort-select" onchange="window.location.href = '/events/overview?count=<%= data.itemsPerPage %>&page=<%= data.currentPage %>&sort=' + this.value + '&server=<%= data.serverFilter%>';">
 					<option value="start">Start</option>
 					<option value="end">End</option>
 					<option value="server">Server</option>
@@ -32,7 +32,7 @@
 		</div>
 		<div class="level-item">
 			<span class="select">
-				<select id="count-select" onchange="window.location.href = '/events/myevents?count=' + this.value + '&page=<%= data.currentPage %>&sort=<%= data.sortOrder %>&server=<%= data.serverFilter%>';">
+				<select id="count-select" onchange="window.location.href = '/events/overview?count=' + this.value + '&page=<%= data.currentPage %>&sort=<%= data.sortOrder %>&server=<%= data.serverFilter%>';">
 					<option value="0">All Items</option>
 					<option value="8">8 items/page</option>
 					<option value="16">16 items/page</option>
@@ -48,7 +48,7 @@
 
 <div class="columns">
 	<div class="column is-12">
-		<table class="table" style="overflow-x: scroll;overflow-y: scroll">
+		<table id="event-table" class="table" style="overflow-x: scroll;overflow-y: scroll">
 			<thead style="background: #daf1f6;color:black">
 			<tr>
 				<th class="is-smaller-1"><strong>Title</strong></th>
@@ -72,7 +72,7 @@
 			</tr>
 			</tfoot>
 			<tbody>
-			<% for(var i=0; i<data.eventData.length; i++) { %>
+            <% for(var i=0; i<data.eventData.length; i++) { %>
 			<tr class="modal-button" data-target="#event-<%= i %>-modal">
 				<td>
 					<strong><%= data.eventData[i].title %></strong>
@@ -81,10 +81,13 @@
 					<span class="tag is-small is-dark" style="color: white"><%= data.eventData[i].author %></span>
 				</td>
 				<td>
-					<%= data.eventData[i].server %> <span class="tag is-small is-primary"><%= data.eventData[i].no %></span>
+                    <%= data.eventData[i].server %> <span class="tag is-small is-primary"><%= data.eventData[i].no %></span>
 				</td>
 				<td>
-					<span class="tag is-small is-danger"><strong style="color: white"><%= data.eventData[i].actualAttendees %> / <%= data.eventData[i].maxAttendees %></strong></span>
+					<div class="tag is-small is-danger">
+						<strong style="color: white"><%= data.eventData[i].actualAttendees %>
+							/ <%= data.eventData[i].maxAttendees %></strong>
+					</div>
 				</td>
 				<td class="is-hidden-mobile">
 					<span class="tag is-small is-light"><strong><%= data.eventData[i].startDate %></strong></span>
@@ -93,19 +96,15 @@
 					<span class="tag is-small is-light"><strong><%= data.eventData[i].endDate %></strong></span>
 				</td>
 				<td class="is-hidden-mobile">
-					<% if (data.eventData[i].userHasJoined) { %>
-					<a class="button is-small is-danger is-hovered" onclick="leaveEvent('<%=data.eventData[i].id%>')">
-										<span class="icon is-small">
-											<i class="fa fa-sign-out"></i>
-										</span>
+                    <% if (data.eventData[i].userHasJoined) { %>
+					<a id="event-action-button" class="button is-small is-danger is-hovered" onclick="doEventAction('<%=data.eventData[i].id%>', 'leave')">
+						<span class="icon is-small"><i class="fa fa-sign-out"></i></span>
 					</a>
-					<% } else { %>
-					<a class="button is-small is-success is-hovered" onclick="joinEvent('<%=data.eventData[i].id%>')">
-											<span class="icon is-small">
-												<i class="fa fa-sign-in"></i>
-											</span>
+                    <% } else { %>
+					<a id="event-action-button" class="button is-small is-success is-hovered" onclick="doEventAction('<%=data.eventData[i].id%>', 'join')">
+						<span class="icon is-small"><i class="fa fa-sign-in"></i></span>
 					</a>
-					<% } %>
+                    <% } %>
 				</td>
 			</tr>
 			<div id="event-<%= i %>-modal" class="modal">
@@ -127,54 +126,54 @@
 							</div>
 							<hr>
 
-                            <strong>Starts:</strong> <%= data.eventData[i].startDateNice %>
+							<strong>Starts:</strong> <%= data.eventData[i].startDateNice %>
 							<br>
-                            <strong>Ends:</strong> <%= data.eventData[i].endDateNice %>
+							<strong>Ends:</strong> <%= data.eventData[i].endDateNice %>
 							<hr>
 							<strong>Attendees [</strong> <%= data.eventData[i].actualAttendees %> / <%= data.eventData[i].maxAttendees %> <strong>] :</strong>
-							<% if(data.eventData[i].attendees.length > 0) { %>
-
-							<% for(var j = 0;j < data.eventData[i].attendees.length;j++) { %>
+                            <% if(data.eventData[i].attendees.length > 0) { %>
+                            <% for(var j = 0;j < data.eventData[i].attendees.length;j++) { %>
 							<span class="tag is-small is-primary">
 								<%= data.eventData[i].attendees[j] %>
 								<button class="delete is-small"></button>
 							</span>
-							<% } %>
-							<% } else { %>
+                            <% } %>
+                            <% } else { %>
 							<em>no attendees joined yet!</em>
-							<% } %>
+                            <% } %>
 							<hr>
 							<strong>Tags (<%= data.eventData[i].tags.length%>): </strong>
-							<% if(data.eventData[i].tags.length > 0) { %>
-								<% for(j = 0;j < data.eventData[i].tags.length;j++) { %>
-								<span class="tag is-small is-info" style="color:white">
+                            <% if(data.eventData[i].tags.length > 0) { %>
+                            <% for(j = 0;j < data.eventData[i].tags.length;j++) { %>
+							<span class="tag is-small is-info" style="color:white">
 									<%= data.eventData[i].tags[j] %>
 								<!--<button class="delete is-small"></button>-->
 								</span>
-								<% } %>
-							<% } else { %>
+                            <% } %>
+                            <% } else { %>
 							<em>no tags defined yet!</em>
-							<% } %>
+                            <% } %>
 						</div>
 					</section>
 					<footer class="modal-card-foot">
                         <% if(data.eventData[i].userHasJoined) { %>
-						<a class="button is-danger" onclick="leaveEvent('<%=data.eventData[i].id%>')">Leave Event</a>
+						<a id="event-action-button" class="button is-danger" onclick="doEventAction('<%=data.eventData[i].id%>', 'leave')">Leave Event</a>
                         <% } else { %>
-						<a class="button is-success" onclick="joinEvent('<%=data.eventData[i].id%>')">Join Event</a>
+						<a id="event-action-button" class="button is-success" onclick="doEventAction('<%=data.eventData[i].id%>', 'join')">Join Event</a>
                         <% } %>
 					</footer>
 				</div>
 				<button class="modal-close"></button>
 			</div>
-			<% } %>
+            <% } %>
 			</tbody>
 		</table>
 	</div>
 </div>
 <div class="content">
-    <em><strong>Your timezone:</strong> <span class="tag is-small is-light"><%= data.userDocument.timezone %></span></em><br>
-    <em class="is-hidden-mobile"><strong>date format:</strong><span class="tag is-small is-light"> <%= date.formatString %></span></em>
+	<em><strong>Your timezone:</strong> <span class="tag is-small is-light"><%= (data.userDocument.timezone ? data.userDocument.timezone : configFile.moment_timezone) %></span></em><br>
+	<em class="is-hidden-mobile"><strong>date format:</strong><span
+				class="tag is-small is-light"> <%= date.formatString %></span></em>
 </div>
 <% if(data.numPages>1) { %>
 <br>
@@ -226,4 +225,3 @@
 	</ul>
 </nav>
 <% } %>
-
