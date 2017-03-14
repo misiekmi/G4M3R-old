@@ -26,7 +26,34 @@
 	</script>
 
 
+	<script>
+        function joinEvent(eventID) {
+            $.ajax({
+                type: "POST",
+                url: "/events",
+                data: {
+                    "join": true,
+                    "eventID": eventID
+                },
+                success: function() {
+                    window.location.reload();
+                }
+            })
+        }
 
+        function leaveEvent(eventID) {
+            $.ajax({
+                type: "POST",
+                url: "/events",
+                data: {
+                    "eventID": eventID
+                },
+                success: function() {
+                    window.location.reload();
+                }
+            })
+        }
+	</script>
 </head>
 <body>
 	<section id="header" class="hero is-primary is-small is-bold" style="background: url('/header-image');background-size: cover;">
@@ -57,8 +84,8 @@
 								Overview&ensp;
 
 								<span class="tag is-small is-primary">
-										<%= eventData.length %>
-									</span>
+									<%= data.eventData.length %>
+								</span>
 
                                 <% } else { %>
 									<span>Overview</span>
@@ -74,7 +101,7 @@
 								My Events&ensp;
 
 								<span class="tag is-small is-primary">
-									<%= eventData.length %>
+									<%= data.eventData.length %>
 								</span>
 
                                 <% } else { %>
@@ -105,6 +132,9 @@
             <% if(mode == "myevents") { %>
                 <% include ../partials/event-myevents %>
             <% } %>
+			<script>
+                showSelections();
+			</script>
 		</div>
 	</section>
 
