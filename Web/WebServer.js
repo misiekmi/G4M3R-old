@@ -770,6 +770,7 @@ module.exports = (bot, db, auth, config, winston) => {
                 mode: eventState,
                 date_format: configFile.moment_date_format,
                 date,
+                configFile,
                 data
             });
         };
@@ -936,7 +937,7 @@ module.exports = (bot, db, auth, config, winston) => {
             }).catch(err => {
                 if (err) {
                     res.sendStatus(500);
-                    winston.error("Webserver - Events - User not found in DB");
+                    winston.error("Webserver - Events - User not found in DB", err);
                 }
             });
         } else {
@@ -952,22 +953,33 @@ module.exports = (bot, db, auth, config, winston) => {
             db.events.findOne({
                 _id: req.body.eventID
             }).then(eventDocument => {
-                //let index = eventDocument.attendees.find(user => {
-                //    return user._id === req.user.id
-                //});
-                let wasMember = false;
-                for (let i = 0; i < eventDocument.attendees.length; i++) {
-                    if (eventDocument.attendees[i]._id === req.user.id) {
-                        wasMember = true;
-                        eventDocument.attendees.splice(i, 1);
-                        break;
-                    }
-                }
 
-                if (!wasMember && (eventDocument.attendees.length < eventDocument.attendee_max)) {
-                    eventDocument.attendees.push({_id: req.user.id, _timestamp: Date.now()})
+                switch(req.body.action) {
+                    case "join": case"leave":
+                        let wasMember = false;
+
+                        for (let i = 0; i < eventDocument.attendees.length; i++) {
+                            if (eventDocument.attendees[i]._id === req.user.id) {
+                                wasMember = true;
+                                eventDocument.attendees.splice(i, 1);
+                                break;
+                            }
+                        }
+
+                        if (!wasMember && (eventDocument.attendees.length < eventDocument.attendee_max)) {
+                            eventDocument.attendees.push({_id: req.user.id, _timestamp: Date.now()})
+                        }
+                        saveEventUserAction(eventDocument, req, res);
+                        break;
+                    case "edit":
+                        break;
+                    case "kickUser":
+                        break;
+                    case "remove":
+                        break;
+                    case "add":
+                        break;
                 }
-                saveEventUserAction(eventDocument, req, res);
             });
         } else {
             res.redirect("/login");

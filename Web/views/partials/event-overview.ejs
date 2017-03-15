@@ -6,7 +6,7 @@
     }
 </script>
 
-<nav class="level">
+<nav class="level is-mobile">
 	<div class="level-left">
 		<div class="level-item">
 			<span class="select">
@@ -48,7 +48,7 @@
 
 <div class="columns">
 	<div class="column is-12">
-		<table class="table" style="overflow-x: scroll;overflow-y: scroll">
+		<table id="event-table" class="table" style="overflow-x: scroll;overflow-y: scroll">
 			<thead style="background: #daf1f6;color:black">
 			<tr>
 				<th class="is-smaller-1"><strong>Title</strong></th>
@@ -75,19 +75,18 @@
             <% for(var i=0; i<data.eventData.length; i++) { %>
 			<tr class="modal-button" data-target="#event-<%= i %>-modal">
 				<td>
-                   <strong><%= data.eventData[i].title %></strong>
+					<strong><%= data.eventData[i].title %></strong>
 				</td>
 				<td>
 					<span class="tag is-small is-dark" style="color: white"><%= data.eventData[i].author %></span>
 				</td>
 				<td>
-					<%= data.eventData[i].server %> <span class="tag is-small is-primary"><%= data.eventData[i].no %></span>
+                    <%= data.eventData[i].server %> <span class="tag is-small is-primary"><%= data.eventData[i].no %></span>
 				</td>
 				<td>
-					<div class="tag is-small is-danger tooltip">
+					<div class="tag is-small is-danger">
 						<strong style="color: white"><%= data.eventData[i].actualAttendees %>
 							/ <%= data.eventData[i].maxAttendees %></strong>
-						<span class="tooltiptext">some attendees coming soon!</span>
 					</div>
 				</td>
 				<td class="is-hidden-mobile">
@@ -98,11 +97,11 @@
 				</td>
 				<td class="is-hidden-mobile">
                     <% if (data.eventData[i].userHasJoined) { %>
-					<a class="button is-small is-danger is-hovered" onclick="leaveEvent('<%=data.eventData[i].id%>')">
+					<a id="event-action-button" class="button is-small is-danger is-hovered" onclick="doEventAction('<%=data.eventData[i].id%>', 'leave')">
 						<span class="icon is-small"><i class="fa fa-sign-out"></i></span>
 					</a>
                     <% } else { %>
-					<a class="button is-small is-success is-hovered" onclick="joinEvent('<%=data.eventData[i].id%>')">
+					<a id="event-action-button" class="button is-small is-success is-hovered" onclick="doEventAction('<%=data.eventData[i].id%>', 'join')">
 						<span class="icon is-small"><i class="fa fa-sign-in"></i></span>
 					</a>
                     <% } %>
@@ -132,35 +131,35 @@
 							<strong>Ends:</strong> <%= data.eventData[i].endDateNice %>
 							<hr>
 							<strong>Attendees [</strong> <%= data.eventData[i].actualAttendees %> / <%= data.eventData[i].maxAttendees %> <strong>] :</strong>
-	                        <% if(data.eventData[i].attendees.length > 0) { %>
-								<% for(var j = 0;j < data.eventData[i].attendees.length;j++) { %>
-								<span class="tag is-small is-primary">
+                            <% if(data.eventData[i].attendees.length > 0) { %>
+                            <% for(var j = 0;j < data.eventData[i].attendees.length;j++) { %>
+							<span class="tag is-small is-primary">
 								<%= data.eventData[i].attendees[j] %>
 								<button class="delete is-small"></button>
 							</span>
-								<% } %>
-	                        <% } else { %>
+                            <% } %>
+                            <% } else { %>
 							<em>no attendees joined yet!</em>
-	                        <% } %>
+                            <% } %>
 							<hr>
 							<strong>Tags (<%= data.eventData[i].tags.length%>): </strong>
-							<% if(data.eventData[i].tags.length > 0) { %>
-								<% for(j = 0;j < data.eventData[i].tags.length;j++) { %>
-								<span class="tag is-small is-info" style="color:white">
+                            <% if(data.eventData[i].tags.length > 0) { %>
+                            <% for(j = 0;j < data.eventData[i].tags.length;j++) { %>
+							<span class="tag is-small is-info" style="color:white">
 									<%= data.eventData[i].tags[j] %>
-									<!--<button class="delete is-small"></button>-->
+								<!--<button class="delete is-small"></button>-->
 								</span>
-								<% } %>
-							<% } else { %>
+                            <% } %>
+                            <% } else { %>
 							<em>no tags defined yet!</em>
-	                        <% } %>
+                            <% } %>
 						</div>
 					</section>
 					<footer class="modal-card-foot">
                         <% if(data.eventData[i].userHasJoined) { %>
-						<a class="button is-danger" onclick="leaveEvent('<%=data.eventData[i].id%>')">Leave Event</a>
+						<a id="event-action-button" class="button is-danger" onclick="doEventAction('<%=data.eventData[i].id%>', 'leave')">Leave Event</a>
                         <% } else { %>
-						<a class="button is-success" onclick="joinEvent('<%=data.eventData[i].id%>')">Join Event</a>
+						<a id="event-action-button" class="button is-success" onclick="doEventAction('<%=data.eventData[i].id%>', 'join')">Join Event</a>
                         <% } %>
 					</footer>
 				</div>
@@ -172,7 +171,7 @@
 	</div>
 </div>
 <div class="content">
-	<em><strong>Your timezone:</strong> <span class="tag is-small is-light"><%= data.userDocument.timezone %></span></em><br>
+	<em><strong>Your timezone:</strong> <span class="tag is-small is-light"><%= (data.userDocument.timezone ? data.userDocument.timezone : configFile.moment_timezone) %></span></em><br>
 	<em class="is-hidden-mobile"><strong>date format:</strong><span
 				class="tag is-small is-light"> <%= date.formatString %></span></em>
 </div>
