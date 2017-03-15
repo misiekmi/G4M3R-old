@@ -181,7 +181,7 @@
 	<ul>
         <% if(data.currentPage>2) { %>
 		<li>
-			<a class="button" href="/events/myevents?count=<%= data.itemsPerPage %>&page=<%= data.currentPage-1 %>&sort=<%= data.sortOrder %>&server=<%= data.serverFilter %>">
+			<a class="button" href="/events/myevents?count=<%= data.itemsPerPage %>&page=1&sort=<%= data.sortOrder %>&server=<%= data.serverFilter %>">
 				1
 			</a>
 		</li>
@@ -199,13 +199,13 @@
 		</li>
         <% } %>
 		<li>
-			<a class="button is-primary" href="/events/myevents?count=<%= data.itemsPerPage %>&page=<%= data.currentPage-1 %>&sort=<%= data.sortOrder %>&server=<%= data.serverFilter %>">
+			<a class="button is-primary" href="/events/myevents?count=<%= data.itemsPerPage %>&page=<%= data.currentPage %>&sort=<%= data.sortOrder %>&server=<%= data.serverFilter %>">
                 <%= data.currentPage %>
 			</a>
 		</li>
         <% if(data.currentPage<data.numPages) { %>
 		<li>
-			<a class="button" href="/events/myevents?count=<%= data.itemsPerPage %>&page=<%= data.currentPage-1 %>&sort=<%= data.sortOrder %>&server=<%= data.serverFilter %>">
+			<a class="button" href="/events/myevents?count=<%= data.itemsPerPage %>&page=<%= data.currentPage+1 %>&sort=<%= data.sortOrder %>&server=<%= data.serverFilter %>">
                 <%= data.currentPage+1 %>
 			</a>
 		</li>
@@ -217,7 +217,7 @@
         <% } %>
         <% if(data.currentPage<data.numPages-1) { %>
 		<li>
-			<a class="button" href="/events/myevents?count=<%= data.itemsPerPage %>&page=<%= data.currentPage-1 %>&sort=<%= data.sortOrder %>&server=<%= data.serverFilter %>">
+			<a class="button" href="/events/myevents?count=<%= data.itemsPerPage %>&page=<%= data.numPages %>&sort=<%= data.sortOrder %>&server=<%= data.serverFilter %>">
                 <%= data.numPages %>
 			</a>
 		</li>

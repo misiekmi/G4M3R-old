@@ -776,9 +776,9 @@ module.exports = (bot, db, auth, config, winston) => {
         };
         // query the db for events, adds event data to an array, and then renders page
         const addEventsAndRenderPage = (matchCriteria, sortParams, userDocument, servers, serverIDs, count, page) => {
-            db.servers.count(matchCriteria, (err, rawCount) => {
+            db.events.count(matchCriteria, (err, rawCount) => {
                 if (err || rawCount == null) {
-                    rawCount = serverIDs.length;
+                    rawCount = 0;
                 }
                 db.events.aggregate([{
                     $match: matchCriteria
