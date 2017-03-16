@@ -251,7 +251,7 @@ table th {
 @media screen and (max-width: 768px) {
   .is-block-mobile {
     display: block !important;
-  }
+  }a
 
   .is-hidden-table {
     display: none;
@@ -265,6 +265,9 @@ table th {
   }
   .is-smaller-3 {
     width: 20%;
+  }
+  .header-title-small {
+    font-size: 50%;
   }
 }
 
