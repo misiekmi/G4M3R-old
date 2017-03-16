@@ -2046,7 +2046,7 @@ module.exports = (bot, db, auth, config, winston) => {
                 }
                 // place the user console link at the top
                 serverData.unshift({
-                    name: req.user.username + "'s Admin Console",
+                    name: req.user.username + "'s User Settings",
                     id: 'user',
                     icon: getAuthUser(req.user).avatar,
                     botJoined: true,
