@@ -11,17 +11,17 @@
 	function mediaStyle(mq) {
 		if(mq.matches) {
 			$(".header-search-box").removeClass("is-large");
-			$(".header-icon").removeClass("is-large");
-			$(".header-title").removeClass("is-1");
-			$(".header-title").addClass("is-3");
+			$("#header-icon").removeClass("is-large");
+			$("#header-title").removeClass("is-1").addClass("is-3");
+			//$("#header-title").addClass("is-3");
 
 			document.getElementById("frame").style.paddingLeft = "15px";
 			document.getElementById("frame").style.paddingRight = "15px";
 		} else {
 			$(".header-search-box").addClass("is-large");
-			$(".header-icon").addClass("is-large");
-			$(".header-title").removeClass("is-3");
-			$(".header-title").addClass("is-1");
+			$("#header-icon").addClass("is-large");
+			$("#header-title").removeClass("is-3").addClass("is-1");
+			//$("#header-title").addClass("is-1");
 
 			document.getElementById("frame").style.paddingLeft = "0px";
 			document.getElementById("frame").style.paddingRight = "0px";
@@ -58,8 +58,8 @@
 	</div>
 	<div class="hero-body">
 		<div class="container has-text-centered">
-			<h1 class="title is-1 header-title">
-					<span class="icon is-large header-icon">
+			<h1 id="header-title" class="title is-1">
+					<span id="header-icon" class="icon is-large">
                         <i class="fa fa-bolt"></i>
                     </span>
 				Your <strong>events</strong> area.
