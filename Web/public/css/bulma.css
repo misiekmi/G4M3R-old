@@ -284,10 +284,10 @@ table th {
     width: 20%;
   }
   .title.is-mobile-header {
-    font-size: 30px;
+    font-size: 40px;
   }
   .hero-body.is-mobile-header {
-    padding: 10px;
+    padding: 12px;
   }
 }
 
