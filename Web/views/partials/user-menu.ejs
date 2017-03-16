@@ -13,20 +13,18 @@
 	</p>
 	<ul class="menu-list">
 		<li>
-            <% if(["/dashboard/profile", "/dashboard/profile/locale"].indexOf(currentPage)>-1) { %>
-			<a class="<%= currentPage=='/dashboard/profile' ? 'is-active' : '' %>" href="<%= currentPage=='/dashboard/profile' ? '#' : ('/dashboard/profile?svrid=user') %>">Profile</a>
-			<ul>
-				<li>
-                    <% if(currentPage=="/dashboard/profile/locale") { %>
-					<a class="is-active" href="#">Locale</a>
-                    <% } else { %>
-					<a href="/dashboard/profile/locale?svrid=user">Locale</a>
-                    <% } %>
-				</li>
-			</ul>
-            <% } else { %>
-			<a href="/dashboard/profile?svrid=user">Profile &#9662;</a>
-            <% } %>
+			<% if(currentPage=="/dashboard/profile") { %>
+			<a class="is-active" href="#">Profile</a>
+			<% } else { %>
+			<a href="/dashboard/profile?svrid=user">Profile</a>
+			<% } %>
+		</li>
+		<li>
+			<% if(currentPage=="/dashboard/locale") { %>
+			<a class="is-active" href="#">Localization</a>
+			<% } else { %>
+			<a href="/dashboard/locale?svrid=user">Localization</a>
+			<% } %>
 		</li>
 		<li>
             <% if(currentPage=="/dashboard/notifications") { %>

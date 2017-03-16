@@ -4345,7 +4345,7 @@ module.exports = (bot, db, auth, config, winston) => {
     });
 
     // User console locale options
-    app.get("/dashboard/profile/locale", (req, res) => {
+    app.get("/dashboard/locale", (req, res) => {
         checkAuth(req, res, () => {
             db.users.findOne({
                 _id: req.user.id
@@ -4368,11 +4368,11 @@ module.exports = (bot, db, auth, config, winston) => {
             })
         });
     });
-    io.of("/dashboard/profile/locale").on("connection", socket => {
+    io.of("/dashboard/locale").on("connection", socket => {
         socket.on("disconnect", () => {
         });
     });
-    app.post("/dashboard/profile/locale", (req, res) => {
+    app.post("/dashboard/locale", (req, res) => {
         checkAuth(req, res, consolemember => {
             db.users.findOne({
                 _id: req.user.id
