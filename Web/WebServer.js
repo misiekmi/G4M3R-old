@@ -139,7 +139,10 @@ module.exports = (bot, db, auth, config, winston) => {
         callbackURL: `${config.hosting_url}login/callback`,
         scope: discordOAuthScopes
     }, (accessToken, refreshToken, profile, done) => {
-        process.nextTick(() => {
+        //process.nextTick(() => {
+        //    return done(null, profile);
+        //});
+        db.users.findOrCreate({_id: profile.id}, (err, userDocument) => {
             return done(null, profile);
         });
     }));
@@ -693,40 +696,39 @@ module.exports = (bot, db, auth, config, winston) => {
         res.json(servers);
     });
 
+    // TODO rework this function
     // Check authentication for console
     const checkAuth = (req, res, next) => {
         if (req.isAuthenticated()) {
-            const usr = bot.users.get(req.user.id);
-            if (usr) {
-                if (req.query.svrid == "user") {
-                    next(usr, {magic_cookie: 'ZzRtM3IueHl6'});
-                } else if (req.query.svrid == "maintainer") {
-                    if (config.maintainers.indexOf(req.user.id) > -1) {
-                        next(usr);
-                    } else {
-                        res.redirect("/dashboard");
-                    }
+            // get user from bot's user list, if nonexistant create a dummy using req
+            const usr = bot.users.get(req.user.id) ? bot.users.get(req.user.id) : {id: req.user.id};
+
+            if (req.query.svrid == "user") {
+                next(usr, {magic_cookie: 'ZzRtM3IueHl6'});
+            } else if (req.query.svrid == "maintainer") {
+                if (config.maintainers.indexOf(req.user.id) > -1) {
+                    next(usr);
                 } else {
-                    const svr = bot.guilds.get(req.query.svrid);
-                    if (svr && usr) {
-                        db.servers.findOne({_id: svr.id}, (err, serverDocument) => {
-                            if (!err && serverDocument) {
-                                const member = svr.members.get(usr.id);
-                                if (bot.getUserBotAdmin(svr, serverDocument, member) >= 3) {
-                                    next(member, svr, serverDocument);
-                                } else {
-                                    res.redirect("/dashboard");
-                                }
-                            } else {
-                                res.redirect("/error");
-                            }
-                        });
-                    } else {
-                        res.redirect("/error");
-                    }
+                    res.redirect("/dashboard");
                 }
             } else {
-                res.redirect("/error");
+                const svr = bot.guilds.get(req.query.svrid);
+                if (svr && usr) {
+                    db.servers.findOne({_id: svr.id}, (err, serverDocument) => {
+                        if (!err && serverDocument) {
+                            const member = svr.members.get(usr.id);
+                            if (bot.getUserBotAdmin(svr, serverDocument, member) >= 3) {
+                                next(member, svr, serverDocument);
+                            } else {
+                                res.redirect("/dashboard");
+                            }
+                        } else {
+                            res.redirect("/error");
+                        }
+                    });
+                } else {
+                    res.redirect("/error");
+                }
             }
         } else {
             res.redirect("/login");
@@ -853,7 +855,6 @@ module.exports = (bot, db, auth, config, winston) => {
         };
 
         if (req.isAuthenticated()) {
-            const usr = bot.users.get(req.user.id);
             const servers = bot.guilds.filter(srv => {  // find all servers the bot sees
                 return srv.members.find(mem => {        // and that the user has joined
                     return mem.id === req.user.id;
@@ -928,7 +929,7 @@ module.exports = (bot, db, auth, config, winston) => {
                         addEventsAndRenderPage(matchCriteria, sortParams, userDocument, servers, serverIDs, count, page);
                     } else if (req.path === "/events/myevents") {
 
-                        matchCriteria["$or"] = [{"_author": usr.id}, {"attendees._id": usr.id}];
+                        matchCriteria["$or"] = [{"_author": req.user.id}, {"attendees._id": req.user.id}];
                         addEventsAndRenderPage(matchCriteria, sortParams, userDocument, servers, serverIDs, count, page);
                     }
                 } else {
@@ -4280,7 +4281,7 @@ module.exports = (bot, db, auth, config, winston) => {
     });
 
 
-    // User console overview !!! I have no idea what I'm doing -notem
+    // User console overview
     app.get("/dashboard/user", (req, res) => {
         checkAuth(req, res, () => {
             db.users.findOne({
@@ -4292,7 +4293,6 @@ module.exports = (bot, db, auth, config, winston) => {
                         name: req.user.username + "'s",
                         id: req.user.id,
                         icon: getAuthUser(req.user).avatar,
-                        isMaintainer: false
                     },
                     currentPage: req.path,
                     userDocument: userDocument
@@ -4314,7 +4314,6 @@ module.exports = (bot, db, auth, config, winston) => {
                             name: req.user.username + "'s",
                             id: req.user.id,
                             icon: getAuthUser(req.user).avatar,
-                            isMaintainer: false
                         },
                         currentPage: req.path,
                         userDocument: userDocument
@@ -4332,7 +4331,7 @@ module.exports = (bot, db, auth, config, winston) => {
     app.post("/dashboard/profile", (req, res) => {
         checkAuth(req, res, consolemember => {
             db.users.findOne({
-                _id: consolemember.id
+                _id: req.user.id
             }).then(userDocument => {
                 if (req.body.profile_is_public === "on") {
                     userDocument.isProfilePublic = true;
@@ -4358,7 +4357,6 @@ module.exports = (bot, db, auth, config, winston) => {
                             name: req.user.username + "'s",
                             id: req.user.id,
                             icon: getAuthUser(req.user).avatar,
-                            isMaintainer: false
                         },
                         currentPage: req.path,
                         userDocument: userDocument,
@@ -4377,7 +4375,7 @@ module.exports = (bot, db, auth, config, winston) => {
     app.post("/dashboard/profile/locale", (req, res) => {
         checkAuth(req, res, consolemember => {
             db.users.findOne({
-                _id: consolemember.id
+                _id: req.user.id
             }).then(userDocument => {
                 if (req.body.user_location) {
                     userDocument.location = req.body.user_location;
@@ -4407,7 +4405,6 @@ module.exports = (bot, db, auth, config, winston) => {
                             name: req.user.username + "'s",
                             id: req.user.id,
                             icon: getAuthUser(req.user).avatar,
-                            isMaintainer: false
                         },
                         currentPage: req.path,
                         userDocument: userDocument
@@ -4425,7 +4422,7 @@ module.exports = (bot, db, auth, config, winston) => {
     app.post("/dashboard/notifications", (req, res) => {
         checkAuth(req, res, consolemember => {
             db.users.findOne({
-                _id: consolemember.id
+                _id: req.user.id
             }).then(userDocument => {
                 let notif = 0;
                 if (req.body.notify_dm === "on") {
