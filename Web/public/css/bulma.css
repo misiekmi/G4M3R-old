@@ -241,17 +241,34 @@ table th {
   }
 }
 
-.is-block {
-  display: block;
+.icon.is-mobile-header {
+  display: inline-block;
+  font-size: 42px;
+  height: 48px;
+  line-height: 48px;
+  text-align: center;
+  vertical-align: top;
+  width: 48px;
 }
 
-
-
+.title.is-mobile-header {
+  font-size: 40px;
+}
 
 @media screen and (max-width: 768px) {
   .is-block-mobile {
     display: block !important;
   }a
+
+  .icon.is-mobile-header {
+   display: inline-block;
+   font-size: 14px;
+   height: 16px;
+   line-height: 16px;
+   text-align: center;
+   vertical-align: top;
+   width: 16px;
+  }
 
   .is-hidden-table {
     display: none;
@@ -266,7 +283,7 @@ table th {
   .is-smaller-3 {
     width: 20%;
   }
-  .header-title-small {
+  .title.is-mobile-header {
     font-size: 12px;
   }
 }
