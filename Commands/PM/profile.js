@@ -111,18 +111,80 @@ module.exports = (bot, db, config, winston, userDocument, msg, suffix, commandDa
 					});
 				});
 			});
-	} else if (suffix && suffix.toLowerCase() != "me") {
-		if (suffix.indexOf("|") > -1) {
-			const args = suffix.split("|");
-			if (args.length == 2 && args[0]) {
-				const key = args[0].trim();
-				const saveUserDocument = () => {
-					if (!args[1] == "" || !args[1] == null) {
-						userDocument.save(err => {
-							if (err) {
-								winston.error("Failed to save user data for adding profile field", {
-									usrid: msg.author.id
-								}, err);
+		} else if (suffix && suffix.toLowerCase() != "me") {
+			if (suffix.indexOf("|") > -1) {
+				const args = suffix.split("|");
+				if (args.length == 2 && args[0]) {
+					const key = args[0].trim();
+					const saveUserDocument = () => {
+						if (!args[1] == "" || !args[1] == null) {
+							userDocument.save(err => {
+								if (err) {
+									winston.error("Failed to save user data for adding profile field", {
+										usrid: msg.author.id
+									}, err);
+									msg.channel.createMessage({
+										embed: {
+											author: {
+												name: bot.user.username,
+												icon_url: bot.user.avatarURL,
+												url: "https://github.com/pedall/G4M3R"
+											},
+											color: 0xFF0000,
+											title: "Error",
+											description: "Oops, something went wrong while saving that. 😾"
+										}
+									});
+								} else {
+									msg.addReaction("\uD83D\uDC4C");
+								}
+							});
+						} else {
+							msg.channel.createMessage({
+								embed: {
+									author: {
+										name: bot.user.username,
+										icon_url: bot.user.avatarURL,
+										url: "https://github.com/pedall/G4M3R"
+									},
+									color: 0xFF0000,
+									title: "Error",
+									description: `Couldn't save data! Make sure \`${commandData.name} ${suffix}|<value>\` has been used correctly! You need a value to the tag!`
+								}
+							});
+						}
+					};
+					const setProfileField = remove => {
+						if (remove) {
+							delete userDocument.profile_fields[key];
+						} else {
+							if (!userDocument.profile_fields) {
+								userDocument.profile_fields = {};
+							}
+
+							if (!args[1] == "" || !args[1] == null) {
+								userDocument.profile_fields[key] = args[1].trim();
+							}
+						}
+						userDocument.markModified("profile_fields");
+						saveUserDocument();
+					};
+					if (key.toLowerCase() == "location") {
+						if (!args[1] || args[1].trim() == ".") {
+							userDocument.location = null;
+						} else {
+							userDocument.location = args[1].trim();
+						}
+						saveUserDocument();
+					} else if (key.toLowerCase() === "timezone") {
+						if (!args[1] || args[1].trim() == ".") {
+							userDocument.timezone = null;
+							saveUserDocument();
+						} else {
+							if (moment.tz.zone(args[1].trim())) {
+								userDocument.timezone = args[1].trim();
+								saveUserDocument();
+							} else {
 								msg.channel.createMessage({
 									embed: {
 										author: {
@@ -131,58 +193,24 @@ module.exports = (bot, db, config, winston, userDocument, msg, suffix, commandDa
 											url: "https://github.com/pedall/G4M3R"
 										},
 										color: 0xFF0000,
-										title: "Error",
-										description: "Oops, something went wrong while saving that. 😾"
+										description: "That isn't a timezone I understand.\n" +
+											"See (http://momentjs.com/timezone/) for available zone names (ex. Europe/Berlin)"
 									}
 								});
-							} else {
-								msg.addReaction("\uD83D\uDC4C");
 							}
-						});
-					} else {
-						msg.channel.createMessage({
-							embed: {
-								author: {
-									name: bot.user.username,
-									icon_url: bot.user.avatarURL,
-									url: "https://github.com/pedall/G4M3R"
-								},
-								color: 0xFF0000,
-								title: "Error",
-								description: `Couldn't save data! Make sure \`${commandData.name} ${suffix}|<value>\` has been used correctly! You need a value to the tag!`
-							}
-						});
-					}
-				};
-				const setProfileField = remove => {
-					if (remove) {
-						delete userDocument.profile_fields[key];
-					} else {
-						if (!userDocument.profile_fields) {
-							userDocument.profile_fields = {};
 						}
+					}
 
-						if (!args[1] == "" || !args[1] == null) {
-							userDocument.profile_fields[key] = args[1].trim();
-						}
-					}
-					userDocument.markModified("profile_fields");
-					saveUserDocument();
-				};
-				if (key.toLowerCase() == "location") {
-					if (!args[1] || args[1].trim() == ".") {
-						userDocument.location = null;
-					} else {
-						userDocument.location = args[1].trim();
-					}
-					saveUserDocument();
-				} else if (key.toLowerCase() === "timezone") {
-					if (!args[1] || args[1].trim() == ".") {
-						userDocument.timezone = null;
-						saveUserDocument();
-					} else {
-						if (moment.tz.zone(args[1].trim())) {
-							userDocument.timezone = args[1].trim();
+				} else if (userDocument.profile_fields && userDocument.profile_fields[key]) {
+					if (!args[1] || args[1].trim() == ".") {} else if (key.toLowerCase() == "weatherunit") {
+						if (!args[1] || args[1].trim() == ".") {
+							userDocument.weatherunit = null;
+							saveUserDocument();
+						} else if (args[1].trim().toLowerCase() == "fahrenheit" || args[1].trim().toLowerCase() == "f") {
+							userDocument.weatherunit = "Fahrenheit";
+							saveUserDocument();
+						} else if (args[1].trim().toLowerCase() == "celsius" || args[1].trim().toLowerCase() == "c") {
+							userDocument.weatherunit = "Celsius";
 							saveUserDocument();
 						} else {
 							msg.channel.createMessage({
@@ -193,25 +221,94 @@ module.exports = (bot, db, config, winston, userDocument, msg, suffix, commandDa
 										url: "https://github.com/pedall/G4M3R"
 									},
 									color: 0xFF0000,
-									description: "That isn't a timezone I understand." +
-										" See (http://momentjs.com/timezone/) for available zone names (ex. Europe/Berlin) 😾"
+									description: `Invalid weather unit specified. Please specify either fahrenheit or celsius.`
 								}
 							});
 						}
+					} else if (userDocument.profile_fields && userDocument.profile_fields[key]) {
+						if (!args[1] || args[1].trim() == ".") {
+							setProfileField(true);
+						} else {
+							msg.channel.createMessage({
+								embed: {
+									author: {
+										name: bot.user.username,
+										icon_url: bot.user.avatarURL,
+										url: "https://github.com/pedall/G4M3R"
+									},
+									color: 0x9ECDF2,
+									title: "Key already set",
+									description: `You've already set ${key} to \`${userDocument.profile_fields[key]}\`. Would you like to overwrite it?`
+								}
+							}).then(() => {
+								bot.awaitMessage(msg.channel.id, msg.author.id, message => {
+									if (config.yes_strings.includes(message.content.toLowerCase().trim())) {
+										setProfileField()
+									}
+								});
+							});
+						}
+					} else {
+						setProfileField();
 					}
+				} else {
+					winston.warn(`Invalid parameters '${suffix}' provided for ${commandData.name} command`, {
+						usrid: msg.author.id
+					});
+					msg.channel.createMessage({
+						embed: {
+							author: {
+								name: bot.user.username,
+								icon_url: bot.user.avatarURL,
+								url: "https://github.com/pedall/G4M3R"
+							},
+							color: 0xFF0000,
+							title: "Error",
+							description: `That's not how you set a field in your profile. Use \`${commandData.name} <key>|<value>\``
+						}
+					});
 				}
-
-			} else if (userDocument.profile_fields && userDocument.profile_fields[key]) {
-				if (!args[1] || args[1].trim() == ".") {} else if (key.toLowerCase() == "weatherunit") {
-					if (!args[1] || args[1].trim() == ".") {
-						userDocument.weatherunit = null;
-						saveUserDocument();
-					} else if (args[1].trim().toLowerCase() == "fahrenheit" || args[1].trim().toLowerCase() == "f") {
-						userDocument.weatherunit = "Fahrenheit";
-						saveUserDocument();
-					} else if (args[1].trim().toLowerCase() == "celsius" || args[1].trim().toLowerCase() == "c") {
-						userDocument.weatherunit = "Celsius";
-						saveUserDocument();
+			} else {
+				if (suffix.toLowerCase() == "location" && userDocument.location) {
+					msg.channel.createMessage({
+						embed: {
+							author: {
+								name: bot.user.username,
+								icon_url: bot.user.avatarURL,
+								url: "https://github.com/pedall/G4M3R"
+							},
+							color: 0x9ECDF2,
+							title: "Here's the location you've set",
+							description: userDocument.location
+						}
+					});
+				} else if (suffix.toLowerCase() == "weatherunit" && userDocument.weatherunit) {
+					msg.channel.createMessage({
+						embed: {
+							author: {
+								name: bot.user.username,
+								icon_url: bot.user.avatarURL,
+								url: "https://github.com/pedall/G4M3R"
+							},
+							color: 0x9ECDF2,
+							title: "Here's the weather unit you've set",
+							description: userDocument.weatherunit
+						}
+					});
+				} else if (suffix.toLowerCase() == "timezone") {
+					if(userDocument.timezone) {
+						msg.channel.createMessage({
+							embed: {
+								author: {
+									name: bot.user.username,
+									icon_url: bot.user.avatarURL,
+									url: "https://github.com/pedall/G4M3R"
+								},
+								color: 0x9ECDF2,
+								title: "Here's the timezone you've set",
+								description: userDocument.timezone
+							}
+						});
 					} else {
 						msg.channel.createMessage({
 							embed: {
@@ -221,124 +318,42 @@ module.exports = (bot, db, config, winston, userDocument, msg, suffix, commandDa
 									url: "https://github.com/pedall/G4M3R"
 								},
 								color: 0xFF0000,
-								description: `Invalid weather unit specified. Please specify either fahrenheit or celsius.`
+								description: "If you want to set a timezone write: \`profile timezone | \<your timezone\>\`\n" +
+								"See **<http://momentjs.com/timezone/>** for available timezones (e.g. Europe/Berlin)"
 							}
 						});
 					}
-				} else if (userDocument.profile_fields && userDocument.profile_fields[key]) {
-					if (!args[1] || args[1].trim() == ".") {
-						setProfileField(true);
-					} else {
-						msg.channel.createMessage({
-							embed: {
-								author: {
-									name: bot.user.username,
-									icon_url: bot.user.avatarURL,
-									url: "https://github.com/pedall/G4M3R"
-								},
-								color: 0x9ECDF2,
-								title: "Key already set",
-								description: `You've already set ${key} to \`${userDocument.profile_fields[key]}\`. Would you like to overwrite it?`
-							}
-						}).then(() => {
-							bot.awaitMessage(msg.channel.id, msg.author.id, message => {
-								if (config.yes_strings.includes(message.content.toLowerCase().trim())) {
-									setProfileField()
-								}
-							});
-						});
-					}
+				} else if (userDocument.profile_fields && userDocument.profile_fields[suffix]) {
+					msg.channel.createMessage({
+						embed: {
+							author: {
+								name: bot.user.username,
+								icon_url: bot.user.avatarURL,
+								url: "https://github.com/pedall/G4M3R"
+							},
+							color: 0x9ECDF2,
+							title: `Here's the field for __${suffix}__`,
+							description: userDocument.profile_fields[suffix]
+						}
+					});
 				} else {
-					setProfileField();
+					msg.channel.createMessage({
+						embed: {
+							author: {
+								name: bot.user.username,
+								icon_url: bot.user.avatarURL,
+								url: "https://github.com/pedall/G4M3R"
+							},
+							color: 0xFF0000,
+							title: "Warning",
+							description: `Field \`${suffix}\` is not found in your profile. Set it with \`${commandData.name} ${suffix}|<value>\``
+						}
+					});
 				}
-			} else {
-				winston.warn(`Invalid parameters '${suffix}' provided for ${commandData.name} command`, {
-					usrid: msg.author.id
-				});
-				msg.channel.createMessage({
-					embed: {
-						author: {
-							name: bot.user.username,
-							icon_url: bot.user.avatarURL,
-							url: "https://github.com/pedall/G4M3R"
-						},
-						color: 0xFF0000,
-						title: "Error",
-						description: `That's not how you set a field in your profile. Use \`${commandData.name} <key>|<value>\``
-					}
-				});
 			}
 		} else {
-			if (suffix.toLowerCase() == "location" && userDocument.location) {
-				msg.channel.createMessage({
-					embed: {
-						author: {
-							name: bot.user.username,
-							icon_url: bot.user.avatarURL,
-							url: "https://github.com/pedall/G4M3R"
-						},
-						color: 0x9ECDF2,
-						title: "Here's the location you've set",
-						description: userDocument.location
-					}
-				});
-			} else if (suffix.toLowerCase() == "weatherunit" && userDocument.weatherunit) {
-				msg.channel.createMessage({
-					embed: {
-						author: {
-							name: bot.user.username,
-							icon_url: bot.user.avatarURL,
-							url: "https://github.com/pedall/G4M3R"
-						},
-						color: 0x9ECDF2,
-						title: "Here's the weather unit you've set",
-						description: userDocument.weatherunit
-					}
-				});
-			} else if (suffix.toLowerCase() == "timezone" && userDocument.timezone) {
-				msg.channel.createMessage({
-					embed: {
-						author: {
-							name: bot.user.username,
-							icon_url: bot.user.avatarURL,
-							url: "https://github.com/pedall/G4M3R"
-						},
-						color: 0x9ECDF2,
-						title: "Here's the timezone you've set",
-						description: userDocument.timezone
-					}
-				});
-			} else if (userDocument.profile_fields && userDocument.profile_fields[suffix]) {
-				msg.channel.createMessage({
-					embed: {
-						author: {
-							name: bot.user.username,
-							icon_url: bot.user.avatarURL,
-							url: "https://github.com/pedall/G4M3R"
-						},
-						color: 0x9ECDF2,
-						title: `Here's the field for __${suffix}__`,
-						description: userDocument.profile_fields[suffix]
-					}
-				});
-			} else {
-				msg.channel.createMessage({
-					embed: {
-						author: {
-							name: bot.user.username,
-							icon_url: bot.user.avatarURL,
-							url: "https://github.com/pedall/G4M3R"
-						},
-						color: 0xFF0000,
-						title: "Warning",
-						description: `Field \`${suffix}\` is not found in your profile. Set it with \`${commandData.name} ${suffix}|<value>\``
-					}
-				});
-			}
+			msg.channel.createMessage({
+				embed: getUserProfile(bot, config, msg.author, userDocument, msg.author.username)
+			});
 		}
-	} else {
-		msg.channel.createMessage({
-			embed: getUserProfile(bot, config, msg.author, userDocument, msg.author.username)
-		});
-	}
-};
+	};

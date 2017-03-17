@@ -7,6 +7,7 @@ function Viewer(bot, msg, db, winston, serverDocument, eventDocuments, userDocum
     this.bot = bot;
     this.msg = msg;
     this.db = db;
+    this.winston = winston;
     this.server = serverDocument;
     this.events = eventDocuments;
     this.user = userDocument;
@@ -48,14 +49,14 @@ Viewer.prototype.setEvent = function(event_no) {
 };
 
 /// generate a list view embed
-Viewer.prototype.getPageView = function(page_no, winston) {
+Viewer.prototype.getPageView = function(page_no) {
     this.mode = 1;
 
     let embed = {};
     if (config.colors) {
         embed.color = parseInt(config.colors.blue, 16);
     } else {
-        winston.warn("missing colors in config.json");
+        this.winston.warn("missing colors in config.json");
     }
 
     embed.description = "";
@@ -104,7 +105,6 @@ Viewer.prototype.getPageView = function(page_no, winston) {
 Viewer.prototype.getEventView = function() {
     this.mode = 2;
     let attendeesNames = "";
-    let hasAttendees = false;
     let username = this.bot.getUserOrNickname(this.event._author, this.msg.channel.guild);
     let tag_content = "";
 
@@ -116,19 +116,22 @@ Viewer.prototype.getEventView = function() {
         icon_url: "http://frid.li/sSVIJ"
     };
 
+    let userHasJoined = false;
     if (this.event.attendees.length > 0) {
         for (let i = 0; i < this.event.attendees.length; i++) {
-            if (i > 14) { //showing max 15 attendees
-                break;
-            } else {
+            if(this.event.attendees[i]._id === this.user._id) {
+                userHasJoined = true;
+            }
+            if (i < 14) { // showing max 15 attendees
                 if (i % 2 === 1) {
                     attendeesNames += `\`${this.bot.getUserOrNickname(this.event.attendees[i]._id, this.msg.channel.guild)}\`\n`;
                 } else {
                     attendeesNames += `\`${this.bot.getUserOrNickname(this.event.attendees[i]._id, this.msg.channel.guild)}\`, `;
                 }
-                //attendeesNames += `<@`+this.event.attendees[i]._id+`>, `;
-                hasAttendees = true;
-            }1
+                //attendeesNames += `<@`+this.event.attendees[i]._id+`>, `; TODO: when android @mention is fixed in embeds replace
+            } else if(userHasJoined) {
+                break;
+            }
         }
     }
 
@@ -158,7 +161,7 @@ Viewer.prototype.getEventView = function() {
         inline: true
     }, {
         name: `Attendees joined`,
-        value: `${hasAttendees ? `${attendeesNames}` : `(no attendees)`}`,
+        value: `${this.event.attendees.length>0 ? `${attendeesNames}` : `(no attendees)`}`,
         inline: true
     }, {
         name: `Tags`,
@@ -166,9 +169,10 @@ Viewer.prototype.getEventView = function() {
         inline: false
     }];
 
-    embed.footer = {text: `## Options: [J]oin, [L]eave, ` +
-    (hasAttendees ? `[A]ttendees, ` : "") +
-    (auth.toDeleteOrEdit(this.server, this.event, this.member)?`[E]dit, [D]elete, `:"") +
+    embed.footer = {text: `## Options: ` +
+    (userHasJoined ? `[L]eave, ` : `[J]oin, `) +
+    (this.event.attendees.length > 15 ? `[A]ttendees, ` : "") +
+    (auth.toDeleteOrEdit(this.server, this.event, this.member)?`[E]dit, [D]elete, [K]ick, `:"") +
     `[B]ack, [Q]uit`};
 
     return {embed: embed};
@@ -253,6 +257,7 @@ Viewer.prototype.getEditorView = function() {
             embed.description = "" +
                 `Current title: \n\`\`${this.edits_made.title?this.edits_made.title:this.event.title}\`\`\n\n` +
                 `Enter the new title for the event`;
+	        embed.footer = {text: `## Options: [C]ancel, [Q]uit // max. 100 chars`};
             break;
         case 2:
             let start = this.edits_made.start ?
@@ -277,19 +282,22 @@ Viewer.prototype.getEditorView = function() {
                 `Current Description: \n\`\`\`md\n${this.edits_made.description?
                     this.edits_made.description:this.event.description}\n\`\`\`\n` +
                 "Enter a new description for the event.";
+	        embed.footer = {text: `## Options: [C]ancel, [Q]uit // max. 300 chars`};
             break;
         case 5:
             embed.description = "" +
                 `Current maximum member count: \`\`${this.edits_made.attendee_max?
                     this.edits_made.attendee_max:this.event.attendee_max}\`\`\n\n` +
                 "Enter a new maximum member count for the event.";
+	        embed.footer = {text: `## Options: [C]ancel, [Q]uit // max. 999999 members`};
             break;
         case 6:
             embed.description = "" +
                 `Current set tags: ${this.edits_made.tags?
                     (this.edits_made.tags.length>0 ? "``" + this.edits_made.tags.join(", ") + "``" : ""):
                     (this.event.tags.length>0 ? "``" + this.event.tags.join(", ") + "``" : "")}\n\n` +
-                "Enter a new set of tags for the event.";
+                "Enter a new set of tags for the event.\n\n(Divide multiple tags by comma)";
+	        embed.footer = {text: `## Options: [C]ancel, [Q]uit // max. 10 tags`};
             break;
         default:
             embed.description = `Something went wrong if this is being read!`;
@@ -453,6 +461,9 @@ Viewer.prototype.getErrorView = function(error, bad_input, silent) {
         case 5:
             embed.description = `\"${bad_input}\" is not valid amount!`;
             break;
+        case 6:
+            embed.description = `\"${bad_input}\" is too much input for this field! Please shorten your input string.`;
+            break;
         default:
             embed.description = `Unknown error!`;
             break;
@@ -486,6 +497,57 @@ Viewer.prototype.getEventAttendeesView = function(event) {
     }
 
     return {embed: embed};
+};
+
+Viewer.prototype.getKickView = function() {
+    this.mode = 7;
+
+    let embed = {};
+    embed.title = `Kick a User from Event #⃣ ${this.event._no}`;
+    embed.description = "Input the user you wish to kick from the event as a mention or input their user ID.";
+    embed.color = parseInt(config.colors.blue, 16);
+    embed.footer = {text: `## Options: [C]ancel, [Q]uit`};
+
+    return {embed: embed};
+};
+
+Viewer.prototype.kickUser = function(userID, silent) {
+    let user_exists;
+    this.mode = 8;
+    for(let i=0; i<this.event.attendees.length; i++) {
+        if(this.event.attendees[i]._id===userID) {
+            this.event.attendees.splice(i, 1);
+            user_exists = true;
+            this.event.save((err)=> {
+                if (err) {
+                    this.winston.error(`Failed to remove user from event`, { _id: this.event._id }, err);
+                }
+            });
+            break;
+        }
+    }
+
+    let embed = {};
+    if(silent && user_exists) {
+        embed.color = parseInt(config.colors.green, 16);
+    } else if(silent && !user_exists) {
+        embed.color = parseInt(config.colors.orange, 16);
+    } else {
+        embed.color = parseInt(config.colors.blue, 16);
+        embed.footer = {text: `## Options: [B]ack, [Q]uit`};
+    }
+
+    if(user_exists) {
+        embed.title = `User Kicked from Event #⃣ ${this.event._no}`;
+        embed.description = "User has been kicked from the event.";
+
+        return {embed: embed};
+    } else {
+        embed.title = `User has not joined Event #⃣ ${this.event._no}`;
+        embed.description = "The user could not be found in the event's list of attendees.";
+
+        return {embed: embed};
+    }
 };
 
 module.exports = Viewer;

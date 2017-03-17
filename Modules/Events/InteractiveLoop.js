@@ -15,7 +15,7 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
         },
         (callback) => {
             msg.channel.createMessage(embed).then(bot_message => {
-                let timeout = setTimeout(() => { bot_message.delete(); }, 30000); //delete message in 1/2 minute
+                let timeout = setTimeout(() => { bot_message.delete(); }, 60000); //delete message in 1/2 minute
                 bot.awaitMessage(msg.channel.id, msg.author.id, usr_message => {
                     bot.removeMessageListener(msg.channel.id, msg.author.id);
                     clearTimeout(timeout); //clear the active timeout
@@ -51,23 +51,26 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                         // go to next page
                         else if (usr_input_str === `+` && page_size * current_page_no < viewer.events.length) {
                             current_page_no++;
-                            embed = viewer.getPageView(current_page_no, winston);
+                            embed = viewer.getPageView(current_page_no);
                         }
                         // go to previous page
                         else if (usr_input_str == `-` && current_page_no > 1) {
                             current_page_no--;
-                            embed = viewer.getPageView(current_page_no, winston);
+                            embed = viewer.getPageView(current_page_no);
                         }
                     } else if (viewer.mode === 2) { // event view mode
                         // return to eventDocument list page
                         if (usr_input_str == "back" || usr_input_str == "b") {
-                            embed = viewer.getPageView(current_page_no, winston);
+                            embed = viewer.getPageView(current_page_no);
                         } else if ((usr_input_str == "edit" || usr_input_str == "e") &&
                             (auth.toDeleteOrEdit(viewer.server, viewer.event, viewer.member))) {
                             embed = viewer.getEventEditView();
                         } else if ((usr_input_str == "delete" || usr_input_str == "d") &&
                             (auth.toDeleteOrEdit(viewer.server, viewer.event, viewer.member))) {
                             embed = viewer.deleteEvent(viewer.event);
+                        } else if ((usr_input_str == "kick" || usr_input_str == "k") &&
+                            (auth.toDeleteOrEdit(viewer.server, viewer.event, viewer.member))) {
+                            embed = viewer.getKickView(viewer.event);
                         } else if (usr_input_str == "join" || usr_input_str == "j") {
                             msg.channel.createMessage(viewer.joinEvent(viewer.event, msg));
                             cancel = true;
@@ -127,10 +130,15 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                             } else {
                                 let time, error;
                                 switch (viewer.edit_mode) {
-                                    case 1:
-                                        viewer.edits_made.title = usr_input_no;
+                                    case 1: // title
+                                        if(usr_input_no.length <= 100) {            // length of title limit
+                                            viewer.edits_made.title = usr_input_no;
+                                        } else {
+                                            embed = viewer.getErrorView(6, usr_input_no);
+                                            error = true;
+                                        }
                                         break;
-                                    case 2:
+                                    case 2: // start time
                                         time = moment.tz(usr_message.content.trim(), formats, false, viewer.timezone); // parse start time
                                         if (time.isValid()) {
                                             viewer.edits_made.start = time;
@@ -139,7 +147,7 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                                             error = true;
                                         }
                                         break;
-                                    case 3:
+                                    case 3: // end time
                                         time = moment.tz(usr_message.content.trim(), formats, false, viewer.timezone); // parse start time
                                         if (time.isValid()) {
                                             viewer.edits_made.end = time;
@@ -148,20 +156,39 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                                             error = true;
                                         }
                                         break;
-                                    case 4:
-                                        viewer.edits_made.description = usr_input_no;
+                                    case 4: // description
+                                        if(usr_input_no.length <= 300) {                    // length of desc limit
+                                            viewer.edits_made.description = usr_input_no;
+                                        } else {
+                                            embed = viewer.getErrorView(6, usr_input_no);
+                                            error = true;
+                                        }
                                         break;
-                                    case 5:
-                                        if (usr_input_no >= 0 && usr_input_no <= 999999) { //added upper limit 999999
+                                    case 5: // number of player slots
+                                        if (usr_input_no >= 0 && usr_input_no <= 999999) {  //added upper limit 999999
                                             viewer.edits_made.attendee_max = usr_input_no;
                                         } else {
                                             embed = viewer.getErrorView(5, usr_input_no);
                                             error = true;
                                         }
                                         break;
-                                    case 6:
+                                    case 6: // tags
                                         let tags = usr_input_no.split(",");
-                                        viewer.edits_made.tags = tags;
+
+                                        let within_limits = tags.length <= 10;  // number of tag limit
+                                        for(let i=0; i<tags.length; i++) {
+                                            if(tags[i].length>=15) {            // length of each tag limit
+                                                within_limits = false;
+                                            }
+                                        }
+
+                                        if(within_limits) {
+                                            viewer.edits_made.tags = tags;
+                                        } else {
+                                            embed = viewer.getErrorView(6, usr_input_no);
+                                            error = true;
+                                        }
+                                        break;
                                 }
 
                                 if (!error) {
@@ -171,19 +198,30 @@ module.exports = (bot, db, winston, serverDocument, msg, viewer, embed) => {
                         }
                     } else if (viewer.mode === 4) { // back to list or quit
                         if (usr_input_str === "back" || usr_input_str === "b") {
-                            embed = viewer.getPageView(current_page_no, winston);
+                            embed = viewer.getPageView(current_page_no);
                         }
                     } else if (viewer.mode === 5) { // error mode
                         if(viewer.previous_mode === 3) {
                             embed = viewer.getEventEditView();
                         } else {
-                            embed = viewer.getPageView(current_page_no, winston);
+                            embed = viewer.getPageView(current_page_no);
                         }
                     } else if (viewer.mode === 6) { // error mode
                         if(viewer.previous_mode === 2) {
                             embed = viewer.getEventView();
                         } else {
                             cancel = true;
+                        }
+                    } else if (viewer.mode === 7) { // kick user mode
+                        console.log(viewer.event.attendees);
+                        if(usr_input_str==="cancel"||usr_input_str==="c") {
+                            embed = viewer.getEventView();
+                        } else {
+                            embed = viewer.kickUser(usr_input_no.replace("<@","").replace(">",""));
+                        }
+                    } else if (viewer.mode === 8) { // return from kick to event view
+                        if (usr_input_str === "back" || usr_input_str === "b") {
+                            embed = viewer.getEventView();
                         }
                     }
                     bot_message.delete();

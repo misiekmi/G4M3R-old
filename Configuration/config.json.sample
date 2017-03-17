@@ -24,7 +24,7 @@
     "oauth_link": "",
     "discord_link": "",
     "donate_charities": [],
-    "moment_date_format": "ddd MMMM Do YYYY [at] HH:mm",
+    "moment_date_format": "dddd MMM Do [']YY [at] HH:mm [(]z[)]",
     "moment_timezone": "Europe/Berlin",
     "colors": {
         "orange": "0xff8c00",

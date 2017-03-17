@@ -12,8 +12,9 @@ module.exports = (bot, db, config, winston, msg) => {
                     channelDocument = serverDocument.channels.id(msg.channel.id);
                 }
 
+                //TODO: Delete stats & ranks?
                 // Decrement today's message count for server
-                serverDocument.messages_today--;
+                //serverDocument.messages_today--;
                 // Count server stats if enabled in this channel
                 if (channelDocument.isStatsEnabled) {
                     // Decrement this week's message count for member

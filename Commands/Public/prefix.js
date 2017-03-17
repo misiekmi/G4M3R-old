@@ -5,6 +5,12 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
 		} else {
 			serverDocument.config.command_prefix = suffix;
 			msg.channel.createMessage(`🐬 OK, the new prefix for this server is \`${suffix}\``);
+
+			serverDocument.save(err => {
+				if(err) {
+					winston.error("Error while saving the new prefix");
+				}
+			});
 		}
 	} else {
 		msg.channel.createMessage(`I am sure that you already know this... The command prefix for this server is \`${bot.getCommandPrefix(msg.channel.guild, serverDocument)}\``);

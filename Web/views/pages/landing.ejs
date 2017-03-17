@@ -10,7 +10,8 @@
 			font-size: 42px;
 		}
 	}
-	@media screen and (min-width: 321px) and (max-width: 768px) {
+
+    @media screen and (min-width: 321px) and (max-width: 767px) {
 		#G4M3R-title {
 			font-size: 46px;
 		}
@@ -23,8 +24,20 @@
 		#G4M3R-discord {
 			height: 31px;
 		}
+		#G4M3R-header-title {
+            font-size: 16px;
+		}
+		#G4M3R-header-subtitle {
+            font-size: 12px;
+		}
+
+        #G4M3R-hidden {
+            visibility: hidden;
+	        display: none !important;
+        }
 	}
-	@media screen and (min-width: 769px) {
+
+    @media screen and (min-width: 768px) {
 		#G4M3R-title {
 			font-size: 96px;
 		}
@@ -35,8 +48,19 @@
 			font-size: 30px;
 		}
 		#G4M3R-discord {
-			height: 42px;
+            height: 42px;
 		}
+		#G4M3R-header-title {
+            font-size: 20px;
+		}
+		#G4M3R-header-subtitle {
+            font-size: 16px;
+		}
+
+        #G4M3R-hidden {
+            visibility: visible;
+	        display: flex !important;
+        }
 	}
 	</style>
 	<script>
@@ -50,45 +74,42 @@
 	</script>
 </head>
 <body>
-<section id="header" class="hero is-primary is-small is-bold" style="background: url('/header-image');background-size: cover;">
-	<div class="hero-head">
-        <% include ../partials/header %>
-	</div>
-</section>
-
-<section id="notification" class="hero is-primary is-small is-bold">
-	<div class="hero-head">
-		<div class="container has-text-centered">
-			<div class="columns is-vcentered">
-					<div class="column is-narrow">
-					<img src="/static/img/exclamation-black-nobackground.png" style="border-radius: 100%;width:100px;">
-				</div>
-				<div class="column is-8">
-					<div class="notification is-primary is-small">
-						<h1 class="title is-3 has-text-left" style="font-family: Montserrat;color: white">
-								<span>
-									<strong>G4M3R is searching for additional developers</strong>
-								</span>
-						</h1>
-						<h2 class="subtitle is-5 has-text-left" style="font-family: Montserrat;color: white">
-							If you know NodeJS, Eris and Bulma CSS and are interested, talk to us.
-						</h2>
-					</div>
-				</div>
-				<div class="column is-2 is-centered">
-					<a class="button is-light is-large" href="https://discord.gg/mtJyQjW">
+	<section class="hero is-info is-small ">
+        <div class="hero-body" style="padding: 5px;color:white">
+			<div class="container">
+                <div class="media">
+                    <div class="media-content">
+                        <div class="content has-text-centered">
+                            <p>
+	                            <h4 id="G4M3R-header-title" class="title is-4">
+	                                <strong style="color:white">G4M3R is searching for additional developers</strong>&emsp;
+	                            </h4>
+	                            <h6 id="G4M3R-header-subtitle" class="subtitle is-6">
+	                                If you are interested in working with us on G4M3R and know
+	                                <strong><u>NodeJS</u></strong>, <strong><u>Eris</u></strong> and
+		                            <strong><u>Bulma CSS</u></strong>, talk to us.
+	                            </h6>
+                            </p>
+                        </div>
+                    </div>
+                    <div id="G4M3R-hidden" class="media-right is-vcentered is-centered" style="padding: 20px">
+                        <a id="G4M3R-hidden" class="button is-light" href="https://discord.gg/mtJyQjW">
 							<span class="icon">
 								<i class="fa fa-sign-in"></i>
 							</span>
-						<p>Join our Server</p>
-					</a>
-				</div>
+                            <p>Join our Server</p>
+                        </a>
+                    </div>
+                </div>
 			</div>
 		</div>
-	</div>
-</section>
-
-	<section id="start" class="hero is-primary is-fullheight is-bold" style="background: url('/header-image');background-size: cover;">
+	</section>
+	<section id="header" class="hero is-primary is-small is-bold" style="background: url('/header-image');background-size: cover;">
+		<div class="hero-head">
+			<% include ../partials/header %>
+		</div>
+	</section>
+	<section id="start" class="hero is-primary is-medium is-bold" style="background: url('/header-image');background-size: cover;">
 		<div class="hero-body">
 			<div class="container">
 				<div class="columns is-vcentered">
@@ -126,7 +147,7 @@
 							The only event system out there!
 						</h2>
 						<br>
-						<img src="/static/img/events.gif" style="width:400px;">
+						<img src="/static/img/events.gif" style="width:500px;">
 					</div>
 				</div>
 			</div>
@@ -675,12 +696,15 @@
 										</div>
 
 										<div class="content">
-											I should give Gilbert a quote <span class="icon">
-											<i class="fa fa-question-circle"></i>
-										</span>
-											<br>
-											<a href="https://github.com/HilbertGilbertson">GitHub</a>
+												I should give Gilbert a quote
+											<span class="icon">
+												<i class="fa fa-question-circle"></i>
+											</span>
+												<br>
+												<a href="https://github.com/HilbertGilbertson">GitHub</a>
 										</div>
+									</div>
+								</div>
 							</center>
 						</div>
 					</div>

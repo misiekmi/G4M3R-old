@@ -1,4 +1,10 @@
 const mongoose = require("mongoose");
+
+/*
+//INFO:disabled cause maybe the reason for server save fails
+mongoose.Promise = require("bluebird");
+*/
+
 const findOrCreate = require("mongoose-findorcreate");
 const serverSchema = require("./Schemas/serverSchema.js");
 const userSchema = require("./Schemas/userSchema.js");

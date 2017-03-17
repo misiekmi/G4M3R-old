@@ -2,7 +2,7 @@
 <html>
 <head>
 	<title><%= pageTitle %></title>
-	<% include ../partials/head %>
+    <% include ../partials/head %>
 
 	<script>
 	var mq = window.matchMedia("screen and (max-width: 768px)");
@@ -11,12 +11,20 @@
 	function mediaStyle(mq) {
 		if(mq.matches) {
 			$(".header-search-box").removeClass("is-large");
+			$(".header-icon").removeClass("is-large");
+			$('#header-title').removeClass("is-1").addClass("is-3");
+
 			document.getElementById("frame").style.paddingLeft = "15px";
 			document.getElementById("frame").style.paddingRight = "15px";
+
 		} else {
 			$(".header-search-box").addClass("is-large");
+			$(".header-icon").addClass("is-large");
+			$('#header-title').removeClass("is-3").addClass("is-1");
+
 			document.getElementById("frame").style.paddingLeft = "0px";
 			document.getElementById("frame").style.paddingRight = "0px";
+
 		}
 	}
 
@@ -24,43 +32,90 @@
 		return this.replace(new RegExp(target, "g"), replacement);
 	};
 	</script>
+
+
+	<script>
+
+        function doEventAction(eventID, action) {
+            $.ajax({
+                type: "POST",
+                url: "/events",
+                data: {
+                    "eventID": eventID,
+					"action": action
+                },
+                success: function() {
+                    window.location.reload();
+                }
+            })
+        }
+	</script>
 </head>
 <body>
-	<section id="header" class="hero is-primary is-small is-bold" style="background: url('/header-image');background-size: cover;">
-		<div class="hero-head">
-			<% include ../partials/header %>
-		</div>
-		<div class="hero-body">
-			<div class="container has-text-centered">
-				<h1 class="title is-1">
-					<span class="icon is-large">
+<section id="header" class="hero is-primary is-small is-bold" style="background: url('/header-image');background-size: cover;">
+	<div class="hero-head">
+        <% include ../partials/header %>
+	</div>
+	<div class="hero-body is-mobile-header">
+		<div class="container has-text-centered">
+			<div class="title is-mobile-header">
+					<span class="icon is-mobile-header">
                         <i class="fa fa-bolt"></i>
                     </span>
-					Your <strong>events</strong> area.
-				</h1>
+				Your <strong>events</strong> area.
 			</div>
 		</div>
-		<div class="hero-foot">
-			<nav class="tabs is-boxed is-fullwidth">
-				<div class="container">
-					<ul>
-                        <% if(authUser) { %>
-						<li class="<%= mode=='overview' ? 'is-active' : '' %>">
-							<a href="/events/overview">
+	</div>
+	<div class="hero-foot">
+		<nav class="tabs is-boxed is-fullwidth">
+			<div class="container">
+				<ul>
+                    <% if(authUser) { %>
+					<!-- hide add events for prod
+					<li class="<%= mode=='add' ? 'is-active' : '' %>">
+						<a href="/events/add">
+							<span class="icon">
+								<i class="fa fa-plus"></i>
+							</span>
+							Add
+						</a>
+					</li>
+					-->
+					<li class="<%= mode=='overview' ? 'is-active' : '' %>">
+						<a href="/events/overview">
 								<span class="icon">
 									<i class="fa fa-gamepad"></i>
 								</span>
-									<span>Overview</span>
-							</a>
-						</li>
-						<li class="<%= mode=='myevents' ? 'is-active' : '' %>">
-							<a href="/events/myevents">
+                            <% if (mode == 'overview') { %>
+							Overview&ensp;
+
+							<span class="tag is-small is-primary">
+									<%= data.eventData.length %>
+								</span>
+
+                            <% } else { %>
+							<span>Overview</span>
+                            <% } %>
+						</a>
+					</li>
+					<li class="<%= mode=='myevents' ? 'is-active' : '' %>">
+						<a href="/events/myevents">
 								<span class="icon">
 									<i class="fa fa-calendar"></i>
 								</span>
-									<span>My Events</span>
+                            <% if (mode == 'myevents') { %>
+							My Events&ensp;
+
+							<span class="tag is-small is-primary">
+									<%= data.eventData.length %>
+								</span>
+
+                                <% } else { %>
+								<span>My Events</span>
+                                <% } %>
 							</a>
 						</li>
+						<!-- hiding event config
 						<li class="<%= mode=='config' ? 'is-active' : '' %>">
 							<a href="/events/config">
 								<span class="icon">
@@ -69,6 +124,7 @@
 								<span>Event Config</span>
 							</a>
 						</li>
+						-->
 						<% } %>
 					</ul>
 				</div>
@@ -76,35 +132,43 @@
 		</div>
 	</section>
 
-	<section id="frame"	class="section is-white">
-		<div class="container">
-            <% if(mode == "overview") { %>
-				<% include ../partials/event-overview %>
-            <% } %>
-            <% if(mode == "myevents") { %>
-                <% include ../partials/event-myevents %>
-            <% } %>
-		</div>
-	</section>
+<section id="frame"	class="section is-white">
+	<div class="container">
+        <% if(mode == "overview") { %>
+        <% include ../partials/event-overview %>
+        <% } %>
+        <% if(mode == "myevents") { %>
+        <% include ../partials/event-myevents %>
+        <% } %>
+<!-- not shown in prod
+		<% //if(mode == "add") { %>
+		<% //include ../partials/event-add %>
+		<% //} %>
+-->
+		<script>
+            showSelections();
+		</script>
+	</div>
+</section>
 
-	<section class="hero is-small is-black">
-		<div class="hero-body">
-			<div class="container">
-				<div class="has-text-centered">
-					<p class="hero-buttons">
-						<a class="button is-primary is-outlined is-large" href="/wiki/Extensions">
+<section class="hero is-small is-black">
+	<div class="hero-body">
+		<div class="container">
+			<div class="has-text-centered">
+				<p class="hero-buttons">
+					<a class="button is-primary is-outlined is-large" href="/wiki/Extensions">
 							<span class="icon">
 								<i class="fa fa-book"></i>
 							</span>
-							<span>Read the event docs</span>
-						</a>
-					</p>
-					<br>
-				</div>
+						<span>Read the event docs</span>
+					</a>
+				</p>
+				<br>
 			</div>
 		</div>
-	</section>
+	</div>
+</section>
 
-	<% include ../partials/footer %>
-	<% include ../partials/scroll-top-button %>
+<% include ../partials/footer %>
+<% include ../partials/scroll-top-button %>
 </body>
