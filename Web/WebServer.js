@@ -3358,9 +3358,9 @@ module.exports = (bot, db, auth, config, winston) => {
     });
 
     // Admin console event channels
-    app.get("/dashboard/management/event-channels", (req, res) => {
+    app.get("/dashboard/management/event-settings", (req, res) => {
         checkAuth(req, res, (consolemember, svr, serverDocument) => {
-            res.render("pages/admin-event-channels.ejs", {
+            res.render("pages/admin-event-settings.ejs", {
                 authUser: req.isAuthenticated() ? getAuthUser(req.user) : null,
                 serverData: {
                     name: svr.name,
@@ -3373,11 +3373,11 @@ module.exports = (bot, db, auth, config, winston) => {
             });
         });
     });
-    io.of("/dashboard/management/event-channels").on("connection", socket => {
+    io.of("/dashboard/management/event-settings").on("connection", socket => {
         socket.on("disconnect", () => {
         });
     });
-    app.post("/dashboard/management/event-channels", (req, res) => {
+    app.post("/dashboard/management/event-settings", (req, res) => {
         checkAuth(req, res, (consolemember, svr, serverDocument) => {
             if (req.body.announce_channel && req.body.announce_channel !== "none") {
                 serverDocument.event_channels.announce = req.body.announce_channel;
