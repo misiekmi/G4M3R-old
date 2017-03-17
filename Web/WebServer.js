@@ -756,7 +756,7 @@ module.exports = (bot, db, auth, config, winston) => {
         res.redirect("/events/overview");
     });
     let eventState = "";
-    app.get("/events/(|overview|myevents)", (req, res) => {
+    app.get("/events/(|overview|myevents|add)", (req, res) => {
         eventState = req.path.substring(req.path.lastIndexOf("/") + 1);
         const pageTitle = `${eventState.charAt(0).toUpperCase() + eventState.slice(1)} - G4M3R Events`;
 
@@ -773,6 +773,7 @@ module.exports = (bot, db, auth, config, winston) => {
                 activeSearchQuery: req.query.id || req.query.q,
                 mode: eventState,
                 date_format: configFile.moment_date_format,
+                time_zone: configFile.moment_timezone,
                 date,
                 configFile,
                 data
@@ -933,6 +934,10 @@ module.exports = (bot, db, auth, config, winston) => {
 
                         matchCriteria["$or"] = [{"_author": req.user.id}, {"attendees._id": req.user.id}];
                         addEventsAndRenderPage(matchCriteria, sortParams, userDocument, servers, serverIDs, count, page);
+
+                    } else if (req.path === "/events/add") {
+
+                        renderPage();
                     }
                 } else {
                     res.redirect("/error");
@@ -989,7 +994,7 @@ module.exports = (bot, db, auth, config, winston) => {
         }
     });
 
-    // Save eventDocument after user action in events web UI
+	    // Save eventDocument after user action in events web UI
     const saveEventUserAction = (eventDocument, req, res) => {
         eventDocument.save(err => {
             io.of(req.path).emit("update");

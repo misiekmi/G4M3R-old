@@ -71,6 +71,14 @@
 			<div class="container">
 				<ul>
                     <% if(authUser) { %>
+					<li class="<%= mode=='add' ? 'is-active' : '' %>">
+						<a href="/events/add">
+							<span class="icon">
+								<i class="fa fa-plus"></i>
+							</span>
+							Add
+						</a>
+					</li>
 					<li class="<%= mode=='overview' ? 'is-active' : '' %>">
 						<a href="/events/overview">
 								<span class="icon">
@@ -130,6 +138,9 @@
         <% if(mode == "myevents") { %>
         <% include ../partials/event-myevents %>
         <% } %>
+		<% if(mode == "add") { %>
+		<% include ../partials/event-add %>
+		<% } %>
 		<script>
             showSelections();
 		</script>
