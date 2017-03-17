@@ -207,7 +207,9 @@ module.exports = (bot, db, config, winston, msg) => {
                             winston.info(`Handling first-time spam from member '${msg.author.username}' on server '${msg.channel.guild.name}' in channel '${msg.channel.name}'`, { svrid: msg.channel.guild.id, chid: msg.channel.id, usrid: msg.author.id });
 
                             // Message user and tell them to stop
-                            msg.author.getDMChannel().createMessage(`Stop spamming in #${msg.channel.name} on ${msg.channel.guild.name}. The chat moderators have been notified about this.`);
+                            msg.author.getDMChannel().then(channel=>{
+                                channel.createMessage(`Stop spamming in #${msg.channel.name} on ${msg.channel.guild.name}. The chat moderators have been notified about this.`);
+                            });
 
                             // Message bot admins about user spamming
                             bot.messageBotAdmins(msg.channel.guild, serverDocument, `**@${bot.getName(msg.channel.guild, serverDocument, msg.member, true)}** is spamming in #${msg.channel.name} on ${msg.channel.guild.name}`);
