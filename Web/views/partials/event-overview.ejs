@@ -84,10 +84,17 @@
                     <%= data.eventData[i].server %> <span class="tag is-small is-primary"><%= data.eventData[i].no %></span>
 				</td>
 				<td>
-					<div class="tag is-small is-danger">
-						<strong style="color: white"><%= data.eventData[i].actualAttendees %>
-							/ <%= data.eventData[i].maxAttendees %></strong>
-					</div>
+					<% if(data.eventData[i].actualAttendees !== data.eventData[i].maxAttendees) { %>
+						<div class="tag is-small is-success">
+							<strong style="color: white"><%= data.eventData[i].actualAttendees %>
+								/ <%= data.eventData[i].maxAttendees %></strong>
+						</div>
+					<% } else { %>
+						<div class="tag is-small is-danger">
+							<strong style="color: white"><%= data.eventData[i].actualAttendees %>
+								/ <%= data.eventData[i].maxAttendees %></strong>
+						</div>
+					<% } %>
 				</td>
 				<td class="is-hidden-mobile">
 					<span class="tag is-small is-light"><strong><%= data.eventData[i].startDate %></strong></span>
@@ -125,7 +132,6 @@
 								<strong>on <%= data.eventData[i].server %></strong>
 							</div>
 							<hr>
-
 							<strong>Starts:</strong> <%= data.eventData[i].startDateNice %>
 							<br>
 							<strong>Ends:</strong> <%= data.eventData[i].endDateNice %>
