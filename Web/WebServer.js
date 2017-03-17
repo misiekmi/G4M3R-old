@@ -2591,7 +2591,8 @@ module.exports = (bot, db, auth, config, winston) => {
     app.post("/dashboard/commands/trivia-sets", (req, res) => {
         checkAuth(req, res, (consolemember, svr, serverDocument) => {
             if (req.body["new-name"] && req.body["new-items"] && !serverDocument.config.trivia_sets.id(req.body["new-name"])) {
-                serverDocument.config.trivia_sets.push({
+
+	            serverDocument.config.trivia_sets.push({
                     _id: req.body["new-name"],
                     items: JSON.parse(req.body["new-items"])
                 });

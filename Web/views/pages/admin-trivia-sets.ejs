@@ -21,23 +21,35 @@
 			$("#new-trivia-file").addClass("is-danger");
 		}
 
+		const isSuccess = false;
 		if(newTriviaName.val() && newTriviaFile) {
-			var reader = new FileReader();
-	        reader.onload = function(event) {
-	            $.ajax({
-					type: "POST",
-					url: "<%= currentPage %>?svrid=<%= serverData.id %>",
-					data: {
-						"new-name": newTriviaName.val(),
-						"new-items": event.target.result,
-					},
-					success: function() {
-						saveFormState();
-						$("#form").submit();
-					}
-				});
-	        };
-	        reader.readAsText(newTriviaFile);
+			let fileTypes = ['json'];  //acceptable file types
+			let extension = newTriviaFile.name.split('.').pop().toLowerCase(),  //file extension from input file
+			isSuccess = fileTypes.indexOf(extension) > -1;  //is extension in acceptable types
+
+
+			if (isSuccess) {
+				var reader = new FileReader();
+
+				reader.onload = function(event) {
+
+					$.ajax({
+						type: "POST",
+						url: "<%= currentPage %>?svrid=<%= serverData.id %>",
+						data: {
+							"new-name": newTriviaName.val(),
+							"new-items": event.target.result,
+						},
+						success: function() {
+							saveFormState();
+							$("#form").submit();
+						}
+					});
+				};
+				reader.readAsText(newTriviaFile);
+			} else {
+				//some notification for user!
+			}
 		}
 	}
 	</script>
