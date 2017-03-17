@@ -61,6 +61,8 @@ app.engine("ejs", ejs.renderFile);
 app.set("views", `${__dirname}/views`);
 app.set("view engine", "ejs");
 
+//testing tags
+
 const findQueryUser = (query, list) => {
     let usr = list.get(query);
     if (!usr) {
