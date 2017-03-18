@@ -14,7 +14,7 @@ module.exports = (bot, db, config, winston) => {
 	winston.info("All shards connected");
 
 	// Set existing reminders to send message when they expire
-	const setReminders = () => {
+	const setReminders = async () => {
 		db.users.find({reminders: {$not: {$size: 0}}}, (err, userDocuments) => {
 			if(err) {
 				winston.error("Failed to get reminders", err);
@@ -29,7 +29,7 @@ module.exports = (bot, db, config, winston) => {
 	};
 
 	// Set existing countdowns in servers to send message when they expire
-	const setCountdowns = () => {
+	const setCountdowns = async () => {
 		db.servers.find({"config.countdown_data": {$not: {$size: 0}}}, (err, serverDocuments) => {
 			if(err) {
 				winston.error("Failed to get countdowns", err);
@@ -44,7 +44,7 @@ module.exports = (bot, db, config, winston) => {
 	};
 
 	// Set existing giveaways to end when they expire
-	const setGiveaways = () => {
+	const setGiveaways = async () => {
 		db.servers.find({
 			channels: {
 				$elemMatch: {
@@ -75,7 +75,7 @@ module.exports = (bot, db, config, winston) => {
 	};
 
 	// Start streaming RSS timer
-	const startStreamingRSS = () => {
+	const startStreamingRSS = async () => {
 		db.servers.find({}, (err, serverDocuments) => {
 			if(!err && serverDocuments) {
 				const sendStreamingRSSToServer = i => {
@@ -112,7 +112,7 @@ module.exports = (bot, db, config, winston) => {
 	};
 
 	// Periodically check if people are streaming
-	const checkStreamers = () => {
+	const checkStreamers = async () => {
 		db.servers.find({}, (err, serverDocuments) => {
 			if(!err && serverDocuments) {
 				const checkStreamersForServer = i => {
@@ -144,7 +144,7 @@ module.exports = (bot, db, config, winston) => {
 	};
 
 	// Start message of the day timer
-	const startMessageOfTheDay = () => {
+	const startMessageOfTheDay = async () => {
 		db.servers.find({"config.message_of_the_day.isEnabled": true}, (err, serverDocuments) => {
 			if(err) {
 				winston.error("Failed to find server data for message of the day", err);
@@ -160,7 +160,7 @@ module.exports = (bot, db, config, winston) => {
 	};
 
 	// Start all timer extensions (third-party)
-	const runTimerExtensions = () => {
+	const runTimerExtensions = async () => {
 		db.servers.find({"extensions": {$not: {$size: 0}}}, (err, serverDocuments) => {
 			if(err) {
 				winston.error("Failed to find server data to start timer extensions", err);
@@ -197,22 +197,39 @@ module.exports = (bot, db, config, winston) => {
 		require("./../Modules/Events/EventTimeChecker")(bot,winston,db);
 	};
 
-	setReminders();
-	setCountdowns();
-	setGiveaways();
-	startStreamingRSS();
-	checkStreamers();
-	startMessageOfTheDay();
-	runTimerExtensions();
+
+	(async () => {
+		await setReminders();
+	})();
+	(async () => {
+		await setCountdowns();
+	})();
+	(async () => {
+		await setGiveaways();
+	})();
+	(async () => {
+		await startStreamingRSS();
+	})();
+	(async () => {
+		await checkStreamers();
+	})();
+	(async () => {
+		await startMessageOfTheDay();
+	})();
+	(async () => {
+		await runTimerExtensions();
+	})();
 	postData(winston, auth, bot.guilds.size, bot.user.id);
 	startWebServer(bot, db, auth, config, winston);
+
 
 
 	(async () => {
 		await showStartupMessage();
 	})();
-
-    startEventTimeChecker();
+	(async () => {
+		await startEventTimeChecker();
+	})();
 
 
 	// Set bot's "now playing" game
@@ -243,7 +260,7 @@ module.exports = (bot, db, config, winston) => {
 
 	// Ensure that all servers have a database documents
 	const guildIterator = bot.guilds.entries();
-	const checkServerData = (svr, newServerDocuments, callback) => {
+	const checkServerData = async (svr, newServerDocuments, callback) => {
 		db.servers.findOne({_id: svr.id}, (err, serverDocument) => {
 			if(err) {
 				winston.error("Failed to find server data", {svrid: svr.id}, err);
@@ -267,6 +284,7 @@ module.exports = (bot, db, config, winston) => {
 			}
 		});
 	};
+
 	checkServerData(guildIterator.next().value[1], [], newServerDocuments => {
 		if(newServerDocuments.length>0) {
 			winston.info(`Created documents for ${newServerDocuments.length} new servers`);
