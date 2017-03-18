@@ -242,7 +242,7 @@ module.exports = (bot, db, config, winston, userDocument, msg, suffix, commandDa
 							}).then(() => {
 								bot.awaitMessage(msg.channel.id, msg.author.id, message => {
 									if (config.yes_strings.includes(message.content.toLowerCase().trim())) {
-			1							setProfileField(false);
+										setProfileField(false);
 									}
 								});
 							});
