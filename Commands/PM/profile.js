@@ -155,7 +155,7 @@ module.exports = (bot, db, config, winston, userDocument, msg, suffix, commandDa
 						}
 					};
 
-					const seßtProfileField = remove => {
+					const setProfileField = remove => {
 						if (remove) {
 							delete userDocument.profile_fields[key];
 						} else {
@@ -242,7 +242,7 @@ module.exports = (bot, db, config, winston, userDocument, msg, suffix, commandDa
 							}).then(() => {
 								bot.awaitMessage(msg.channel.id, msg.author.id, message => {
 									if (config.yes_strings.includes(message.content.toLowerCase().trim())) {
-										setProfileField(false);
+			1							setProfileField(false);
 									}
 								});
 							});
