@@ -12,26 +12,6 @@ module.exports = (bot, db, config, winston, msg) => {
                     channelDocument = serverDocument.channels.id(msg.channel.id);
                 }
 
-                //TODO: Delete stats & ranks?
-                // Decrement today's message count for server
-                //serverDocument.messages_today--;
-                // Count server stats if enabled in this channel
-                if (channelDocument.isStatsEnabled) {
-                    // Decrement this week's message count for member
-                    const memberDocument = serverDocument.members.id(msg.author.id);
-                    if (memberDocument && memberDocument.messages > 0 && msg.timestamp > serverDocument.stats_timestamp) {
-                        memberDocument.messages--;
-
-                        // Save changes to serverDocument
-                        serverDocument.save(err => {
-                            if (err) {
-                                winston.error("Failed to save server data for messageDeleted", { svrid: msg.channel.guild.id }, err);
-                            }
-                        });
-                    }
-                }
-
-
                 // Send message_deleted_message if necessary
                 if (serverDocument.config.moderation.isEnabled && serverDocument.config.moderation.status_messages.message_deleted_message.isEnabled && serverDocument.config.moderation.status_messages.message_deleted_message.enabled_channel_ids.indexOf(msg.channel.id) > -1 && !channelDocument.isMessageDeletedDisabled) {
                     winston.info(`Message by member '${msg.author.username}' on server '${msg.channel.guild.name}' deleted`, { svrid: msg.channel.guild.id, chid: msg.channel.id, usrid: msg.author.id });
