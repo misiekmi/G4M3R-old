@@ -206,7 +206,12 @@ module.exports = (bot, db, config, winston) => {
 	runTimerExtensions();
 	postData(winston, auth, bot.guilds.size, bot.user.id);
 	startWebServer(bot, db, auth, config, winston);
-	showStartupMessage();
+
+
+	(async () => {
+		await showStartupMessage();
+	})();
+
     startEventTimeChecker();
 
 

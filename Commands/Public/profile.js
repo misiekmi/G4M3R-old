@@ -39,24 +39,6 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
 					targetMemberDocument = serverDocument.members.id(member.id);
 				}
 				embed_fields.push({
-					name: `💬 Message Amount`,
-					value: `${targetMemberDocument.messages} text message${targetMemberDocument.messages == 1 ? "" : "s"} this week`,
-					inline: true
-				});
-				if(targetMemberDocument.voice > 0) {
-					const voiceActivityDuration = moment.duration(targetMemberDocument.voice*6000).humanize();
-					embed_fields.push({
-						name: "🎙 Voice Activity",
-						value: `${voiceActivityDuration.charAt(0).toUpperCase()}${voiceActivityDuration.slice(1)} active on voice chat this week`,
-						inline: true
-					});
-				}
-				embed_fields.push({
-					name: `🏆 Rank: `,
-					value: `${targetMemberDocument.rank || (serverDocument.configs.ranks_list[0] || {_id: "None"})._id}`,
-					inline: true
-				});
-				embed_fields.push({
 					name: `❎ Strikes: `,
 					value: `${targetMemberDocument.strikes.length} so far`,
 					inline: true
