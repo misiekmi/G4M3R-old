@@ -13,72 +13,6 @@ const startWebServer = require("./../Web/WebServer.js");
 module.exports = (bot, db, config, winston) => {
 	winston.info("All shards connected");
 
-	// Count a server's stats (games, clearing, etc.);
-	const statsCollector = () => {
-		const guildIterator = bot.guilds.entries();
-		const countServerStats = (svr, guildIterator) => {
-			db.servers.findOne({_id: svr.id}, (err, serverDocument) => {
-				if(!err && serverDocument) {
-					// Clear stats for server if older than a week
-					if((Date.now() - serverDocument.stats_timestamp)>604800000) {
-						clearStats(bot, db, winston, svr, serverDocument, () => {
-							// Next server
-							try {
-								countServerStats(guildIterator.next().value[1], guildIterator);
-							} catch(err) {
-								setTimeout(statsCollector, 900000);
-							}
-						});
-					} else {
-						// Iterate through all members
-						svr.members.forEach(member => {
-							if(member.id!=bot.user.id && !member.user.bot) {
-								// If member is playing game, add 1 (equal to five minutes) to game tally
-								const game = bot.getGame(member);
-								if(game && member.status=="online") {
-									let gameDocument = serverDocument.games.id(game);
-									if(!gameDocument) {
-										serverDocument.games.push({_id: game});
-										gameDocument = serverDocument.games.id(game);
-									}
-									gameDocument.time_played++;
-								}
-
-								// Kick member if they're inactive and autokick is on
-								const memberDocument = serverDocument.members.id(member.id);
-								if(memberDocument && serverDocument.config.moderation.isEnabled && serverDocument.config.moderation.autokick_members.isEnabled && (Date.now() - memberDocument.last_active)>serverDocument.config.moderation.autokick_members.max_inactivity && !memberDocument.cannotAutokick && bot.getUserBotAdmin(svr, serverDocument, member)==0) {
-									member.kick().then(() => {
-										winston.info(`Kicked member '${member.user.username}' due to inactivity on server '${svr.name}'`, {svrid: svr.id, usrid: member.id});
-									}).catch(err => {
-										memberDocument.cannotAutokick = true;
-										winston.error(`Failed to kick member '${member.user.username}' due to inactivity on server '${svr.name}'`, {svrid: svr.id, usrid: member.id}, err);
-									});
-								}
-							}
-						});
-
-						// Save changes to serverDocument
-						serverDocument.save(err => {
-							if(err) {
-								winston.error("Failed to save server data for stats", {svrid: svr.id});
-							}
-
-							// Next server
-							try {
-								countServerStats(guildIterator.next().value[1], guildIterator);
-							} catch(err) {
-								setTimeout(() => {
-									statsCollector();
-								}, 900000);
-							}
-						});
-					}
-				}
-			});
-		};
-		countServerStats(guildIterator.next().value[1], guildIterator);
-	};
-
 	// Set existing reminders to send message when they expire
 	const setReminders = () => {
 		db.users.find({reminders: {$not: {$size: 0}}}, (err, userDocuments) => {
@@ -263,32 +197,18 @@ module.exports = (bot, db, config, winston) => {
 		require("./../Modules/Events/EventTimeChecker")(bot,winston,db);
 	};
 
-	// Set messages_today to 0 for all servers
-	const startMessageCount = () => {
-		db.servers.update({}, {messages_today: 0}, {multi: true}, err => {
-			if(err) {
-				winston.error("Failed to start message counter");
-			} else {
-				const clearMessageCount = () => {
-					db.servers.update({}, {messages_today: 0}, {multi: true}).exec();
-				};
-				clearMessageCount();
-				setInterval(clearMessageCount, 86400000);
-			}
-			statsCollector();
-			setReminders();
-			setCountdowns();
-			setGiveaways();
-			startStreamingRSS();
-			checkStreamers();
-			startMessageOfTheDay();
-			runTimerExtensions();
-			postData(winston, auth, bot.guilds.size, bot.user.id);
-			startWebServer(bot, db, auth, config, winston);
-			showStartupMessage();
-            startEventTimeChecker();
-		});
-	};
+	setReminders();
+	setCountdowns();
+	setGiveaways();
+	startStreamingRSS();
+	checkStreamers();
+	startMessageOfTheDay();
+	runTimerExtensions();
+	postData(winston, auth, bot.guilds.size, bot.user.id);
+	startWebServer(bot, db, auth, config, winston);
+	showStartupMessage();
+    startEventTimeChecker();
+
 
 	// Set bot's "now playing" game
 	const setBotGame = () => {
@@ -302,7 +222,6 @@ module.exports = (bot, db, config, winston) => {
 			};
 		}
 		bot.editStatus(config.status, game);
-		startMessageCount();
 	};
 
 	// Delete data for old servers
@@ -317,7 +236,7 @@ module.exports = (bot, db, config, winston) => {
 		});
 	};
 
-	// Ensure that all servers hava database documents
+	// Ensure that all servers have a database documents
 	const guildIterator = bot.guilds.entries();
 	const checkServerData = (svr, newServerDocuments, callback) => {
 		db.servers.findOne({_id: svr.id}, (err, serverDocument) => {

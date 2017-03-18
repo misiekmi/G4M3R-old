@@ -86,8 +86,6 @@
 		<div class="level-item">
 			<span class="select">
 				<select id="sort-select" onchange="window.location.href = '/activity/servers?q=<%= activeSearchQuery %>&count=<%= data.itemsPerPage %>&page=<%= data.currentPage %>&sort=' + this.value + '&category=<%= data.selectedCategory %>&publiconly=<%= data.isPublicOnly %>';">
-					<option value="messages-asc">Messages Today (ascending)</option>
-					<option value="messages-des">Messages Today (descending)</option>
 					<option value="members-asc">Members (ascending)</option>
 					<option value="members-des">Members (descending)</option>
 				</select>
@@ -146,10 +144,6 @@
 								<p class="title"><%= data.serverData[i].members %></p>
 							</div>
 							<div class="level-item has-text-centered">
-								<p class="heading">Message<%= data.serverData[i].messages==1 ? "" : "s" %></p>
-								<p class="title"><%= data.serverData[i].messages %></p>
-							</div>
-							<div class="level-item has-text-centered">
 								<p class="heading">Created</p>
 								<p class="title" title="<%= data.serverData[i].rawCreated %>"><%= data.serverData[i].relativeCreated %>d</p>
 							</div>
@@ -204,7 +198,6 @@
 			<tr>
 				<th>Name</th>
 				<th>Members</th>
-				<th>Messages</th>
 				<th>Owner</th>
 			</tr>
 			</thead>
@@ -224,9 +217,6 @@
 				</td>
 				<td>
                     <%= data.serverData[i].members %>
-				</td>
-				<td>
-                    <%= data.serverData[i].messages %>
 				</td>
 				<td>
 					<img class="image is-24x24" src="<%= data.serverData[i].owner.avatar %>" alt="<%= data.serverData[i].owner.id %>" style="border-radius: 100%;float:left;">

@@ -461,227 +461,201 @@ module.exports = (bot, db, auth, config, winston) => {
         res.redirect("/activity/servers");
     });
     app.get("/activity/(|servers|users)", (req, res) => {
-        db.servers.aggregate({
-            $group: {
-                _id: null,
-                total: {
-                    $sum: {
-                        $add: ["$messages_today"]
-                    }
-                },
-                active: {
-                    $sum: {
-                        $cond: [
-                            {$gt: ["$messages_today", 0]},
-                            1,
-                            0
-                        ]
-                    }
-                }
+        let activeServers = bot.guilds.size;
+
+        const renderPage = data => {
+            res.render("pages/activity.ejs", {
+                authUser: req.isAuthenticated() ? getAuthUser(req.user) : null,
+                rawServerCount: bot.guilds.size,
+                rawUserCount: bot.users.size,
+                numActiveServers: activeServers,
+                activeSearchQuery: req.query.q,
+                mode: req.path.substring(req.path.lastIndexOf("/") + 1),
+                data
+            });
+        };
+
+        if (req.path == "/activity/servers") {
+            if (!req.query.q) {
+                req.query.q = "";
             }
-        }, (err, result) => {
-            let messageCount = 0;
-            let activeServers = bot.guilds.size;
-            if (!err && result) {
-                messageCount = result[0].total;
-                activeServers = result[0].active;
+            let count;
+            if (!req.query.count || isNaN(req.query.count)) {
+                count = 16;
+            } else {
+                count = parseInt(req.query.count) || bot.guilds.size;
+            }
+            let page;
+            if (!req.query.page || isNaN(req.query.page)) {
+                page = 1;
+            } else {
+                page = parseInt(req.query.page);
+            }
+            if (!req.query.sort) {
+                req.query.sort = "messages-des";
+            }
+            if (!req.query.category) {
+                req.query.category = "All";
+            }
+            if (!req.query.publiconly) {
+                req.query.publiconly = false;
             }
 
-            const renderPage = data => {
-                res.render("pages/activity.ejs", {
-                    authUser: req.isAuthenticated() ? getAuthUser(req.user) : null,
-                    rawServerCount: bot.guilds.size,
-                    rawUserCount: bot.users.size,
-                    totalMessageCount: messageCount,
-                    numActiveServers: activeServers,
-                    activeSearchQuery: req.query.q,
-                    mode: req.path.substring(req.path.lastIndexOf("/") + 1),
-                    data
-                });
+            const matchCriteria = {
+                "config.public_data.isShown": true
             };
-
-            if (req.path == "/activity/servers") {
-                if (!req.query.q) {
-                    req.query.q = "";
-                }
-                let count;
-                if (!req.query.count || isNaN(req.query.count)) {
-                    count = 16;
-                } else {
-                    count = parseInt(req.query.count) || bot.guilds.size;
-                }
-                let page;
-                if (!req.query.page || isNaN(req.query.page)) {
-                    page = 1;
-                } else {
-                    page = parseInt(req.query.page);
-                }
-                if (!req.query.sort) {
-                    req.query.sort = "messages-des";
-                }
-                if (!req.query.category) {
-                    req.query.category = "All";
-                }
-                if (!req.query.publiconly) {
-                    req.query.publiconly = false;
-                }
-
-                const matchCriteria = {
-                    "config.public_data.isShown": true
+            if (req.query.q) {
+                const query = req.query.q.toLowerCase();
+                matchCriteria._id = {
+                    $in: bot.guilds.filter(svr => {
+                        return svr.name.toLowerCase().indexOf(query) > -1 || svr.id == query;
+                    }).map(svr => {
+                        return svr.id;
+                    })
                 };
-                if (req.query.q) {
-                    const query = req.query.q.toLowerCase();
-                    matchCriteria._id = {
-                        $in: bot.guilds.filter(svr => {
-                            return svr.name.toLowerCase().indexOf(query) > -1 || svr.id == query;
-                        }).map(svr => {
-                            return svr.id;
-                        })
-                    };
-                } else {
-                    matchCriteria._id = {
-                        $in: Array.from(bot.guilds.keys())
-                    };
-                }
-                if (req.query.category != "All") {
-                    matchCriteria["config.public_data.server_listing.category"] = req.query.category;
-                }
-                if (req.query.publiconly == "true") {
-                    matchCriteria["config.public_data.server_listing.isEnabled"] = true;
-                }
+            } else {
+                matchCriteria._id = {
+                    $in: Array.from(bot.guilds.keys())
+                };
+            }
+            if (req.query.category != "All") {
+                matchCriteria["config.public_data.server_listing.category"] = req.query.category;
+            }
+            if (req.query.publiconly == "true") {
+                matchCriteria["config.public_data.server_listing.isEnabled"] = true;
+            }
 
-                let sortParams;
-                switch (req.query.sort) {
-                    case "members-asc":
-                        sortParams = {
-                            "member_count": 1
-                        };
-                        break;
-                    case "members-des":
-                        sortParams = {
-                            "member_count": -1
-                        };
-                        break;
-                    case "messages-asc":
-                        sortParams = {
-                            "messages_today": 1
-                        };
-                        break;
-                    case "messages-des":
-                    default:
-                        sortParams = {
-                            "messages_today": -1
-                        };
-                        break;
-                }
+            let sortParams;
+            switch (req.query.sort) {
+                case "members-asc":
+                    sortParams = {
+                        "member_count": 1
+                    };
+                    break;
+                case "members-des":
+                    sortParams = {
+                        "member_count": -1
+                    };
+                    break;
+                case "messages-asc":
+                    sortParams = {
+                        "messages_today": 1
+                    };
+                    break;
+                case "messages-des":
+                default:
+                    sortParams = {
+                        "messages_today": -1
+                    };
+                    break;
+            }
 
-                db.servers.count(matchCriteria, (err, rawCount) => {
-                    if (err || rawCount == null) {
-                        rawCount = bot.guilds.size;
-                    }
-                    db.servers.aggregate([{
-                        $match: matchCriteria
-                    },
-                        {
-                            $project: {
-                                "messages_today": 1,
-                                "config.public_data": 1,
-                                "config.command_prefix": 1,
-                                "member_count": {
-                                    $size: "$members"
-                                }
+            db.servers.count(matchCriteria, (err, rawCount) => {
+                if (err || rawCount == null) {
+                    rawCount = bot.guilds.size;
+                }
+                db.servers.aggregate([{
+                    $match: matchCriteria
+                },
+                    {
+                        $project: {
+                            "config.public_data": 1,
+                            "config.command_prefix": 1,
+                            "member_count": {
+                                $size: "$members"
                             }
-                        },
-                        {
-                            $sort: sortParams
-                        },
-                        {
-                            $skip: count * (page - 1)
-                        },
-                        {
-                            $limit: count
                         }
-                    ], (err, serverDocuments) => {
-                        let serverData = [];
-                        if (!err && serverDocuments) {
-                            serverData = serverDocuments.map(serverDocument => {
-                                return getServerData(serverDocument);
-                            });
-                        }
-
-                        let pageTitle = "Servers";
-                        if (req.query.q) {
-                            pageTitle = `Search for server "${req.query.q}"`;
-                        }
-                        renderPage({
-                            pageTitle,
-                            itemsPerPage: req.query.count == 0 ? "0" : count.toString(),
-                            currentPage: page,
-                            numPages: Math.ceil(rawCount / (count == 0 ? rawCount : count)),
-                            serverData,
-                            selectedCategory: req.query.category,
-                            isPublicOnly: req.query.publiconly,
-                            sortOrder: req.query.sort
+                    },
+                    {
+                        $sort: sortParams
+                    },
+                    {
+                        $skip: count * (page - 1)
+                    },
+                    {
+                        $limit: count
+                    }
+                ], (err, serverDocuments) => {
+                    let serverData = [];
+                    if (!err && serverDocuments) {
+                        serverData = serverDocuments.map(serverDocument => {
+                            return getServerData(serverDocument);
                         });
+                    }
+
+                    let pageTitle = "Servers";
+                    if (req.query.q) {
+                        pageTitle = `Search for server "${req.query.q}"`;
+                    }
+                    renderPage({
+                        pageTitle,
+                        itemsPerPage: req.query.count == 0 ? "0" : count.toString(),
+                        currentPage: page,
+                        numPages: Math.ceil(rawCount / (count == 0 ? rawCount : count)),
+                        serverData,
+                        selectedCategory: req.query.category,
+                        isPublicOnly: req.query.publiconly,
+                        sortOrder: req.query.sort
                     });
                 });
-            } else if (req.path == "/activity/users") {
-                if (!req.query.q) {
-                    req.query.q = "";
-                }
+            });
+        } else if (req.path == "/activity/users") {
+            if (!req.query.q) {
+                req.query.q = "";
+            }
 
-                if (req.query.q) {
-                    const usr = findQueryUser(req.query.q, bot.users);
-                    if (usr) {
-                        db.users.findOrCreate({_id: usr.id}, (err, userDocument) => {
-                            if (err || !userDocument) {
-                                userDocument = {};
-                            }
-                            const userProfile = getUserData(usr, userDocument);
-                            renderPage({
-                                pageTitle: `${userProfile.username}'s Profile`,
-                                userProfile
-                            });
-                        });
-                    } else {
-                        renderPage({pageTitle: `Search for user "${req.query.q}"`});
-                    }
-                } else {
-                    db.users.aggregate({
-                        $group: {
-                            _id: null,
-                            publicProfilesCount: {
-                                $sum: {
-                                    $cond: [
-                                        {$ne: ["$isProfilePublic", false]},
-                                        1,
-                                        0
-                                    ]
-                                }
-                            },
-                            reminderCount: {
-                                $sum: {
-                                    $size: "$reminders"
-                                }
-                            }
+            if (req.query.q) {
+                const usr = findQueryUser(req.query.q, bot.users);
+                if (usr) {
+                    db.users.findOrCreate({_id: usr.id}, (err, userDocument) => {
+                        if (err || !userDocument) {
+                            userDocument = {};
                         }
-                    }, (err, result) => {
-                        let publicProfilesCount = 0;
-                        let reminderCount = 0;
-                        if (!err && result) {
-                            publicProfilesCount = result[0].publicProfilesCount;
-                            reminderCount = result[0].reminderCount;
-                        }
-
+                        const userProfile = getUserData(usr, userDocument);
                         renderPage({
-                            pageTitle: "Users",
-                            publicProfilesCount,
-                            reminderCount
+                            pageTitle: `${userProfile.username}'s Profile`,
+                            userProfile
                         });
                     });
+                } else {
+                    renderPage({pageTitle: `Search for user "${req.query.q}"`});
                 }
+            } else {
+                db.users.aggregate({
+                    $group: {
+                        _id: null,
+                        publicProfilesCount: {
+                            $sum: {
+                                $cond: [
+                                    {$ne: ["$isProfilePublic", false]},
+                                    1,
+                                    0
+                                ]
+                            }
+                        },
+                        reminderCount: {
+                            $sum: {
+                                $size: "$reminders"
+                            }
+                        }
+                    }
+                }, (err, result) => {
+                    let publicProfilesCount = 0;
+                    let reminderCount = 0;
+                    if (!err && result) {
+                        publicProfilesCount = result[0].publicProfilesCount;
+                        reminderCount = result[0].reminderCount;
+                    }
+
+                    renderPage({
+                        pageTitle: "Users",
+                        publicProfilesCount,
+                        reminderCount
+                    });
+                });
             }
-        });
+        }
+
     });
 
     // Header image provider
