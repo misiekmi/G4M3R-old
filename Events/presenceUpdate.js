@@ -11,7 +11,8 @@ module.exports = (bot, db, config, winston, member, oldpresence) => {
 						if(ch) {
 							const channelDocument = serverDocument.channels.id(ch.id);
 							if(!channelDocument || channelDocument.bot_enabled) {
-								ch.createMessage(serverDocument.config.moderation.status_messages.member_online_message.messages.random().replaceAll("@user", `**@${bot.getName(member.guild, serverDocument, member)}**`).replaceAll("@mention", member.mention));
+								//TODO: maybe part of the replaceAll problem
+								//ch.createMessage(serverDocument.config.moderation.status_messages.member_online_message.messages.random().replaceAll("@user", `**@${bot.getName(member.guild, serverDocument, member)}**`).replaceAll("@mention", member.mention));
 							}
 						}
 					}
@@ -30,7 +31,7 @@ module.exports = (bot, db, config, winston, member, oldpresence) => {
 
 					// Send member_game_updated_message if necessary
 					if(bot.getGame(oldpresence)!=bot.getGame(member) && serverDocument.config.moderation.status_messages.member_game_updated_message.isEnabled) {
-						winston.info(`Member '${member.user.username}' started playing '${bot.getGame(member)}`, {svrid: member.guild.id, usrid: member.id});
+						winston.info(`Member '${member.user.username}' started playing '${bot.getGame(member)}`, {sv1rid: member.guild.id, usrid: member.id});
 						const ch = member.guild.channels.get(serverDocument.config.moderation.status_messages.member_game_updated_message.channel_id);
 						if(ch) {
 							const channelDocument = serverDocument.channels.id(ch.id);
@@ -47,7 +48,8 @@ module.exports = (bot, db, config, winston, member, oldpresence) => {
 						if(ch) {
 							const channelDocument = serverDocument.channels.id(ch.id);
 							if(!channelDocument || channelDocument.bot_enabled) {
-								ch.createMessage(serverDocument.config.moderation.status_messages.member_offline_message.messages.random().replaceAll("@user", `**@${bot.getName(member.guild, serverDocument, member)}**`).replaceAll("@mention", member.mention));
+								//TODO: maybe part of the replaceAll problem
+								//ch.createMessage(serverDocument.config.moderation.status_messages.member_offline_message.messages.random().replaceAll("@user", `**@${bot.getName(member.guild, serverDocument, member)}**`).replaceAll("@mention", member.mention));
 							}
 						}
 					}
