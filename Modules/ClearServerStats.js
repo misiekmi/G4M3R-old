@@ -1,26 +1,5 @@
-const computeRankScore = require("./RankScoreCalculator.js");
-
 // Clear activity stats for a server
 module.exports = (bot, db, winston, svr, serverDocument, callback) => {
-    // Rank members by activity score for the week
-    const topMembers = [];
-    serverDocument.members.forEach(memberDocument => {
-        const member = svr.members.get(memberDocument._id);
-        if (member && member.id != bot.user.id && !member.user.bot) {
-            const activityScore = computeRankScore(memberDocument.messages, memberDocument.voice);
-            topMembers.push([member, activityScore]);
-            memberDocument.rank_score += activityScore / 10;
-            memberDocument.rank = bot.checkRank(winston, svr, serverDocument, member, memberDocument, true);
-            memberDocument.messages = 0;
-            memberDocument.voice = 0;
-        } else {
-            memberDocument.remove();
-        }
-    });
-    topMembers.sort((a, b) => {
-        return a[1] - b[1];
-    });
-
 
     // Reset game and command data
     serverDocument.games = [];

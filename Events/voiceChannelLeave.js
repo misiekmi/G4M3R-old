@@ -1,5 +1,3 @@
-const voiceStatsCollector = require("./../Modules/VoiceStatsCollector.js");
-
 // User left server voice channel
 module.exports = (bot, db, config, winston, member, ch) => {
 	if(member.id!=bot.user.id && !member.user.bot && (!ch.guild.afkChannelID || ch.id!=ch.guild.afkChannelID)) {
@@ -35,9 +33,6 @@ module.exports = (bot, db, config, winston, member, ch) => {
 					}
 				});
 
-                //TODO: Delete stats (collection only)
-				// Stop timing voice activity
-				voiceStatsCollector.stopTiming(bot, winston, ch.guild, serverDocument, member);
 			} else {
 				winston.error("Failed to find server data for voiceChannelLeft", {svrid: ch.guild.id}, err);
 			}

@@ -2086,11 +2086,6 @@ module.exports = (bot, db, auth, config, winston) => {
                         topCommandUsage = serverDocument.command_usage[cmd];
                     }
                 }
-                //TODO: Delete stats messages
-                const topMemberID = serverDocument.members.sort((a, b) => {
-                    return b.messages - a.messages;
-                })[0];
-                const topMember = svr.members.get(topMemberID ? topMemberID._id : null);
                 const memberIDs = svr.members.map(a => {
                     return a.id;
                 });
@@ -2099,11 +2094,8 @@ module.exports = (bot, db, auth, config, winston) => {
                         "$in": memberIDs
                     }
                 }).limit(1).exec((err, userDocuments) => {
-                    //TODO: Delete stats
-                    let richestMember;
-                    if (!err && userDocuments && userDocuments.length > 0) {
-                        richestMember = svr.members.get(userDocuments[0]._id);
-                    }
+
+                    //TODO: Delete stats (also games?)
                     const topGame = serverDocument.games.sort((a, b) => {
                         return b.time_played - a.time_played;
                     })[0];
@@ -2120,20 +2112,9 @@ module.exports = (bot, db, auth, config, winston) => {
                             }
                         },
                         currentPage: req.path,
-                        messagesToday: serverDocument.messages_today,
-                        topCommand,
+	                    topCommand,
                         memberCount: svr.members.size,
-                        topMember: topMember ? {
-                                username: topMember.user.username,
-                                id: topMember.id,
-                                avatar: topMember.user.avatarURL || "/static/img/discord-icon.png"
-                            } : null,
                         topGame: topGame ? topGame._id : null,
-                        richestMember: richestMember ? {
-                                username: richestMember.user.username,
-                                id: richestMember.id,
-                                avatar: richestMember.user.avatarURL || "/static/img/discord-icon.png"
-                            } : null
                     });
                 });
             }
@@ -2678,118 +2659,6 @@ module.exports = (bot, db, auth, config, winston) => {
                 }
                 serverDocument.config.tag_reaction.messages.spliceNullElements();
             }
-
-            saveAdminConsoleOptions(consolemember, svr, serverDocument, req, res);
-        });
-    });
-
-    //TODO: Delete stats
-    // Admin console stats collection
-    app.get("/dashboard/stats-points/stats-collection", (req, res) => {
-        checkAuth(req, res, (consolemember, svr, serverDocument) => {
-            res.render("pages/admin-stats-collection.ejs", {
-                authUser: req.isAuthenticated() ? getAuthUser(req.user) : null,
-                serverData: {
-                    name: svr.name,
-                    id: svr.id,
-                    icon: svr.iconURL || "/static/img/discord-icon.png"
-                },
-                channelData: getChannelData(svr),
-                currentPage: req.path,
-                configData: {
-                    commands: {
-                        games: serverDocument.config.commands.games,
-                        messages: serverDocument.config.commands.messages,
-                        stats: serverDocument.config.commands.stats
-                    }
-                },
-                commandDescriptions: {
-                    games: bot.getPublicCommandMetadata("games").description,
-                    messages: bot.getPublicCommandMetadata("messages").description,
-                    stats: bot.getPublicCommandMetadata("stats").description
-                },
-                commandCategories: {
-                    games: bot.getPublicCommandMetadata("games").category,
-                    messages: bot.getPublicCommandMetadata("messages").category,
-                    stats: bot.getPublicCommandMetadata("stats").category
-                }
-            });
-        });
-    });
-    io.of("/dashboard/stats-points/stats-collection").on("connection", socket => {
-        socket.on("disconnect", () => {
-        });
-    });
-    app.post("/dashboard/stats-points/stats-collection", (req, res) => {
-        checkAuth(req, res, (consolemember, svr, serverDocument) => {
-            parseCommandOptions(svr, serverDocument, "stats", req.body);
-            parseCommandOptions(svr, serverDocument, "games", req.body);
-            parseCommandOptions(svr, serverDocument, "messages", req.body);
-
-            saveAdminConsoleOptions(consolemember, svr, serverDocument, req, res);
-        });
-    });
-
-    //TODO: Delete stats - ranks also since nothing is counted
-    // Admin console ranks
-    app.get("/dashboard/stats-points/ranks", (req, res) => {
-        checkAuth(req, res, (consolemember, svr, serverDocument) => {
-            res.render("pages/admin-ranks.ejs", {
-                authUser: req.isAuthenticated() ? getAuthUser(req.user) : null,
-                serverData: {
-                    name: svr.name,
-                    id: svr.id,
-                    icon: svr.iconURL || "/static/img/discord-icon.png"
-                },
-                channelData: getChannelData(svr),
-                roleData: getRoleData(svr),
-                currentPage: req.path,
-                configData: {
-                    ranks_list: serverDocument.config.ranks_list.map(a => {
-                        a.members = serverDocument.members.filter(memberDocument => {
-                            return memberDocument.rank == a._id;
-                        }).length;
-                        return a;
-                    })
-                }
-            });
-        });
-    });
-    io.of("/dashboard/stats-points/ranks").on("connection", socket => {
-        socket.on("disconnect", () => {
-        });
-    });
-    app.post("/dashboard/stats-points/ranks", (req, res) => {
-        checkAuth(req, res, (consolemember, svr, serverDocument) => {
-            if (req.body["new-name"] && req.body["new-max_score"] && !serverDocument.config.ranks_list.id(req.body["new-name"])) {
-                serverDocument.config.ranks_list.push({
-                    _id: req.body["new-name"],
-                    max_score: req.body["new-max_score"],
-                    role_id: req.body["new-role_id"] || null
-                });
-            } else {
-                for (let i = 0; i < serverDocument.config.ranks_list.length; i++) {
-                    if (req.body[`rank-${i}-removed`] != null) {
-                        serverDocument.config.ranks_list[i] = null;
-                    } else {
-                        serverDocument.config.ranks_list[i].max_score = parseInt(req.body[`rank-${i}-max_score`]);
-                        if (serverDocument.config.ranks_list[i].role_id || req.body[`rank-${i}-role_id`]) {
-                            serverDocument.config.ranks_list[i].role_id = req.body[`rank-${i}-role_id`];
-                        }
-                    }
-                }
-                if (req.body["ranks_list-reset"] != null) {
-                    for (let i = 0; i < serverDocument.members.length; i++) {
-                        if (serverDocument.members[i].rank && serverDocument.members[i].rank != serverDocument.config.ranks_list[0]._id) {
-                            serverDocument.members[i].rank = serverDocument.config.ranks_list[0]._id;
-                        }
-                    }
-                }
-            }
-            serverDocument.config.ranks_list.spliceNullElements();
-            serverDocument.config.ranks_list = serverDocument.config.ranks_list.sort((a, b) => {
-                return a.max_score - b.max_score;
-            });
 
             saveAdminConsoleOptions(consolemember, svr, serverDocument, req, res);
         });

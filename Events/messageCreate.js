@@ -115,28 +115,6 @@ module.exports = (bot, db, config, winston, msg) => {
                 }
                 const memberBotAdmin = bot.getUserBotAdmin(msg.channel.guild, serverDocument, msg.member);
 
-                //TODO: Delete stats & ranks?
-                // Increment today's message count for server
-                serverDocument.messages_today++;
-                // Count server stats if enabled in this channel
-                if (channelDocument.isStatsEnabled) {
-                    // Increment this week's message count for member
-                    memberDocument.messages++;
-                    //TODO: keep lastactive for auto-moderation
-                    // Set now as the last active time for member
-                    memberDocument.last_active = Date.now();
-                    //TODO: Delete stats & ranks?
-                    // Check if the user has leveled up a rank
-                    bot.checkRank(winston, msg.channel.guild, serverDocument, msg.member, memberDocument);
-
-                    // Save changes to serverDocument TODO: remove stats & message collection
-                    serverDocument.save(err => {
-                        if(err) {
-                            winston.error("Failed to save server data for messageCreated", {svrid: msg.channel.guild.id}, err);
-                        }
-                    });
-                }
-
                 // Check for start command from server admin
                 if (!channelDocument.bot_enabled && memberBotAdmin > 0) {
                     const startCommand = bot.checkCommandTag(msg.content, serverDocument);

@@ -75,23 +75,6 @@
 		</li>
 	</ul>
 	<p class="menu-label">
-		Stats
-	</p>
-	<ul class="menu-list">
-		<li>
-			<% if(currentPage=="/dashboard/stats-points/stats-collection") { %>
-				<a class="is-active" href="#">Stats Collection</a>
-			<% } else { %>
-				<a href="/dashboard/stats-points/stats-collection?svrid=<%= serverData.id %>">Stats Collection</a>
-			<% } %>
-			<% if(currentPage=="/dashboard/stats-points/ranks") { %>
-				<a class="is-active" href="#">Ranks</a>
-			<% } else { %>
-				<a href="/dashboard/stats-points/ranks?svrid=<%= serverData.id %>">Ranks</a>
-			<% } %>
-		</li>
-	</ul>
-	<p class="menu-label">
 		Management
 	</p>
 	<ul class="menu-list">
@@ -100,50 +83,6 @@
 				<a class="is-active" href="#">Admins</a>
 			<% } else { %>
 				<a href="/dashboard/management/admins?svrid=<%= serverData.id %>">Admins</a>
-			<% } %>
-			<% if(["/dashboard/management/moderation", "/dashboard/management/blocked", "/dashboard/management/muted", "/dashboard/management/strikes", "/dashboard/management/status-messages", "/dashboard/management/filters"].indexOf(currentPage)>-1) { %>
-				<a class="<%= currentPage=='/dashboard/management/moderation' ? 'is-active' : '' %>" href="<%= currentPage=='/dashboard/management/moderation' ? '#' : ('/dashboard/management/moderation?svrid=' + serverData.id) %>">Moderation</a>
-				<ul>
-					<li>
-						<% if(currentPage=="/dashboard/management/blocked") { %>
-							<a class="is-active" href="#">Blocked</a>
-						<% } else { %>
-							<a href="/dashboard/management/blocked?svrid=<%= serverData.id %>">Blocked</a>
-						<% } %>
-					</li>
-					<li>
-						<% if(currentPage=="/dashboard/management/muted") { %>
-							<a class="is-active" href="#">Muted</a>
-						<% } else { %>
-							<a href="/dashboard/management/muted?svrid=<%= serverData.id %>">Muted</a>
-						<% } %>
-					</li>
-					<li>
-						<% if(currentPage=="/dashboard/management/strikes") { %>
-							<a class="is-active" href="#">Strikes</a>
-						<% } else { %>
-							<a href="/dashboard/management/strikes?svrid=<%= serverData.id %>">Strikes</a>
-						<% } %>
-					</li>
-					<% if(configData.moderation.isEnabled) { %>
-						<li>
-							<% if(currentPage=="/dashboard/management/status-messages") { %>
-								<a class="is-active" href="#">Status Messages</a>
-							<% } else { %>
-								<a href="/dashboard/management/status-messages?svrid=<%= serverData.id %>">Status Messages</a>
-							<% } %>
-						</li>
-						<li>
-							<% if(currentPage=="/dashboard/management/filters") { %>
-								<a class="is-active" href="#">Filters</a>
-							<% } else { %>
-								<a href="/dashboard/management/filters?svrid=<%= serverData.id %>">Filters</a>
-							<% } %>
-						</li>
-					<% } %>
-				</ul>
-			<% } else { %>
-				<a href="/dashboard/management/moderation?svrid=<%= serverData.id %>">Moderation &#9662;</a>
 			<% } %>
 			<% if(currentPage=="/dashboard/management/message-of-the-day") { %>
 				<a class="is-active" href="#">Message of the Day</a>
@@ -169,6 +108,50 @@
 				<a class="is-active" href="#">Logs</a>
 			<% } else { %>
 				<a href="/dashboard/management/logs?svrid=<%= serverData.id %>">Logs</a>
+			<% } %>
+		</li>
+	</ul>
+	<p class="menu-label">
+		Moderation
+	</p>
+	<ul class="menu-list">
+		<li>
+			<% if(currentPage=="/dashboard/management/moderation") { %>
+			<a class="is-active" href="#">Moderation</a>
+			<% } else { %>
+			<a href="/dashboard/management/moderation?svrid=<%= serverData.id %>">Moderation</a>
+			<% } %>
+
+			<% if(currentPage=="/dashboard/management/blocked") { %>
+			<a class="is-active" href="#">Blocked</a>
+			<% } else { %>
+			<a href="/dashboard/management/blocked?svrid=<%= serverData.id %>">Blocked</a>
+			<% } %>
+
+			<% if(currentPage=="/dashboard/management/muted") { %>
+			<a class="is-active" href="#">Muted</a>
+			<% } else { %>
+			<a href="/dashboard/management/muted?svrid=<%= serverData.id %>">Muted</a>
+			<% } %>
+
+			<% if(currentPage=="/dashboard/management/strikes") { %>
+			<a class="is-active" href="#">Strikes</a>
+			<% } else { %>
+			<a href="/dashboard/management/strikes?svrid=<%= serverData.id %>">Strikes</a>
+			<% } %>
+
+			<% if(configData.moderation.isEnabled) { %>
+				<% if(currentPage=="/dashboard/management/status-messages") { %>
+				<a class="is-active" href="#">Status Messages</a>
+				<% } else { %>
+				<a href="/dashboard/management/status-messages?svrid=<%= serverData.id %>">Status Messages</a>
+				<% } %>
+
+				<% if(currentPage=="/dashboard/management/filters") { %>
+				<a class="is-active" href="#">Filters</a>
+				<% } else { %>
+				<a href="/dashboard/management/filters?svrid=<%= serverData.id %>">Filters</a>
+				<% } %>
 			<% } %>
 		</li>
 	</ul>

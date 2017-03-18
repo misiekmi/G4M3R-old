@@ -45,18 +45,6 @@
 									server owner
 								</h2>
 							</div>
-							<br>
-							<div class="container has-text-centered">
-								<h1 class="title">
-									<strong><%= messagesToday %></strong>
-								</h1>
-								<h2 class="subtitle">
-									<span class="icon">
-					                    <i class="fa fa-comments-o"></i>
-					                </span>
-									message<%= messagesToday==1 ? "" : "s" %> today
-								</h2>
-							</div>
 							<% if(topCommand) { %>
 								<br>
 								<div class="container has-text-centered">
@@ -71,18 +59,6 @@
 									</h2>
 								</div>
 							<% } %>
-							<% if(topMember) { %>
-								<br>
-								<div class="container has-text-centered">
-									<h1 class="title">
-										@<strong><%= topMember.username %></strong>
-									</h1>
-									<h2 class="subtitle">
-										<img src="<%= topMember.avatar %>" style="border-radius: 100%;width: 24px;vertical-align: middle;" alt="<%= topMember.id %>">
-										top member
-									</h2>
-								</div>
-							<% } %>
 							<% if(topGame) { %>
 								<br>
 								<div class="container has-text-centered">
@@ -94,18 +70,6 @@
 						                    <i class="fa fa-gamepad"></i>
 						                </span>
 										most-played game
-									</h2>
-								</div>
-							<% } %>
-							<% if(richestMember) { %>
-								<br>
-								<div class="container has-text-centered">
-									<h1 class="title">
-										@<strong><%= richestMember.username %></strong>
-									</h1>
-									<h2 class="subtitle">
-										<img src="<%= richestMember.avatar %>" style="border-radius: 100%;width: 24px;vertical-align: middle;" alt="<%= richestMember.id %>">
-										richest member
 									</h2>
 								</div>
 							<% } %>

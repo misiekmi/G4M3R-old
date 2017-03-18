@@ -1,6 +1,7 @@
 "use strict";
 
 // represents eris/VoiceState
+//TODO: monitor if needs to be deleted cause of voice stats
 module.exports = class VoiceState {
 	constructor(erisVoiceState) {
 		this.channelID = erisVoiceState.channelID;

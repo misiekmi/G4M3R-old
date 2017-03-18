@@ -18,7 +18,6 @@ const eventHandlers = {
 	presenceUpdate: require("./Events/presenceUpdate.js"),
 	userUpdate: require("./Events/userUpdate.js"),
 	voiceChannelJoin: require("./Events/voiceChannelJoin.js"),
-	voiceStateUpdate: require("./Events/voiceStateUpdate.js"),
 	voiceChannelLeave: require("./Events/voiceChannelLeave.js")
 };
 const database = require("./Database/Driver.js");
@@ -246,48 +245,6 @@ database.initialize(config.db_url, err => {
 					eventHandlers.userUpdate(bot, db, config, winston, usr, oldusrdata);
 				});
 				userUpdateDomain.on("error", err => {
-					winston.error(err);
-				});
-			}
-		});
-
-        //TODO: Delete stats (collection only)
-		// User joined server voice channel
-		bot.on("voiceChannelJoin", (member, ch) => {
-			if(bot.isReady) {
-				const voiceChannelJoinDomain = domain.create();
-				voiceChannelJoinDomain.run(() => {
-					eventHandlers.voiceChannelJoin(bot, db, config, winston, member, ch);
-				});
-				voiceChannelJoinDomain.on("error", err => {
-					winston.error(err);
-				});
-			}
-		});
-
-        //TODO: Delete stats (can be deleted completely)
-		// User voice connection details updated on server (muted, deafened, etc.)
-		bot.on("voiceStateUpdate", (member, oldvoice) => {
-			if(bot.isReady) {
-				const voiceStateUpdateDomain = domain.create();
-				voiceStateUpdateDomain.run(() => {
-					eventHandlers.voiceStateUpdate(bot, db, config, winston, member, oldvoice);
-				});
-				voiceStateUpdateDomain.on("error", err => {
-					winston.error(err);
-				});
-			}
-		});
-
-        //TODO: Delete stats (collection only)
-		// User left server voice channel
-		bot.on("voiceChannelLeave", (member, ch) => {
-			if(bot.isReady) {
-				const voiceChannelJoinDomain = domain.create();
-				voiceChannelJoinDomain.run(() => {
-					eventHandlers.voiceChannelLeave(bot, db, config, winston, member, ch);
-				});
-				voiceChannelJoinDomain.on("error", err => {
 					winston.error(err);
 				});
 			}

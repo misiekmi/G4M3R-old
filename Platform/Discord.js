@@ -1,6 +1,5 @@
 /*jshint -W041*/
 const commands = require("./../Configuration/commands.json");
-const computeRankScore = require("./../Modules/RankScoreCalculator.js");
 const removeMd = require("remove-markdown");
 const reload = require("require-reload")(require);
 const ModLog = require("./../Modules/ModerationLogging.js");
@@ -322,54 +321,6 @@ module.exports = (db, auth, config) => {
             return member.game;
         } else if (member.game && member.game.name) {
             return member.game.name;
-        }
-        return "";
-    };
-
-    //TODO: Delete stats & ranks?
-    // Check if a user has leveled up a rank
-    bot.checkRank = (winston, svr, serverDocument, member, memberDocument, override) => {
-        if (member && member.id != bot.user.id && !member.user.bot && svr) {
-            const currentRankscore = memberDocument.rank_score + (override ? 0 : computeRankScore(memberDocument.messages, memberDocument.voice));
-            for (let i = 0; i < serverDocument.config.ranks_list.length; i++) {
-                if (currentRankscore <= serverDocument.config.ranks_list[i].max_score || i == serverDocument.config.ranks_list.length - 1) {
-                    if (memberDocument.rank != serverDocument.config.ranks_list[i]._id && !override) {
-                        memberDocument.rank = serverDocument.config.ranks_list[i]._id;
-                        if (serverDocument.config.ranks_list) {
-                            if (serverDocument.config.moderation.isEnabled && serverDocument.config.moderation.status_messages.member_rank_updated_message.isEnabled) {
-                                // Send member_rank_updated_message if necessary
-                                if (serverDocument.config.moderation.status_messages.member_rank_updated_message.type == "message") {
-                                    const ch = svr.channels.get(serverDocument.config.moderation.status_messages.member_rank_updated_message.channel_id);
-                                    if (ch) {
-                                        const channelDocument = serverDocument.channels.id(ch.id);
-                                        if (!channelDocument || channelDocument.bot_enabled) {
-                                            ch.createMessage(`Congratulations ${member.mention}, you've leveled up to **${memberDocument.rank}** 🏆`);
-                                        }
-                                    }
-                                } else if (serverDocument.config.moderation.status_messages.member_rank_updated_message.type == "pm") {
-                                    member.user.getDMChannel().then(ch => {
-                                        ch.createMessage(`Congratulations, you've leveled up to **${memberDocument.rank}** on ${svr.name} 🏆`);
-                                    });
-                                }
-                            }
-
-                            // Assign new rank role if necessary
-                            if (serverDocument.config.ranks_list[i].role_id) {
-                                const role = svr.roles.get(serverDocument.config.ranks_list[i].role_id);
-                                if (role) {
-                                    member.roles.push(role.id);
-                                    member.edit({
-                                        roles: member.roles
-                                    }).then().catch(err => {
-                                        winston.error(`Failed to add member '${member.user.username} to role '${role.name}' on server '${svr.name}' for rank level up`, { svrid: svr.id, usrid: member.id, roleid: role.id }, err);
-                                    });
-                                }
-                            }
-                        }
-                    }
-                    return serverDocument.config.ranks_list[i]._id;
-                }
-            }
         }
         return "";
     };
