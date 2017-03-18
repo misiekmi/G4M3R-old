@@ -111,13 +111,13 @@ module.exports = (bot, db, config, winston, userDocument, msg, suffix, commandDa
 					});
 				});
 			});
-		} else if (suffix && suffix.toLowerCase() != "me") {
+		} else if (suffix && suffix.toLowerCase() !== "me") {
 			if (suffix.indexOf("|") > -1) {
 				const args = suffix.split("|");
 				if (args.length == 2 && args[0]) {
 					const key = args[0].trim();
 					const saveUserDocument = () => {
-						if (!args[1] == "" || !args[1] == null) {
+						if (args[1] !== "" || args[1] !== null) {
 							userDocument.save(err => {
 								if (err) {
 									winston.error("Failed to save user data for adding profile field", {
@@ -154,7 +154,8 @@ module.exports = (bot, db, config, winston, userDocument, msg, suffix, commandDa
 							});
 						}
 					};
-					const setProfileField = remove => {
+
+					const seßtProfileField = remove => {
 						if (remove) {
 							delete userDocument.profile_fields[key];
 						} else {
@@ -162,13 +163,14 @@ module.exports = (bot, db, config, winston, userDocument, msg, suffix, commandDa
 								userDocument.profile_fields = {};
 							}
 
-							if (!args[1] == "" || !args[1] == null) {
+							if (args[1] !== "" || args[1] !== null) {
 								userDocument.profile_fields[key] = args[1].trim();
 							}
 						}
 						userDocument.markModified("profile_fields");
 						saveUserDocument();
 					};
+
 					if (key.toLowerCase() == "location") {
 						if (!args[1] || args[1].trim() == ".") {
 							userDocument.location = null;
@@ -199,10 +201,7 @@ module.exports = (bot, db, config, winston, userDocument, msg, suffix, commandDa
 								});
 							}
 						}
-					}
-
-				} else if (userDocument.profile_fields && userDocument.profile_fields[key]) {
-					if (!args[1] || args[1].trim() == ".") {} else if (key.toLowerCase() == "weatherunit") {
+					}  else if (key.toLowerCase() == "weatherunit") {
 						if (!args[1] || args[1].trim() == ".") {
 							userDocument.weatherunit = null;
 							saveUserDocument();
@@ -243,13 +242,13 @@ module.exports = (bot, db, config, winston, userDocument, msg, suffix, commandDa
 							}).then(() => {
 								bot.awaitMessage(msg.channel.id, msg.author.id, message => {
 									if (config.yes_strings.includes(message.content.toLowerCase().trim())) {
-										setProfileField()
+										setProfileField(false);
 									}
 								});
 							});
 						}
 					} else {
-						setProfileField();
+						setProfileField(false);
 					}
 				} else {
 					winston.warn(`Invalid parameters '${suffix}' provided for ${commandData.name} command`, {
