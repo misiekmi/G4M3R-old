@@ -1,26 +1,26 @@
 module.exports = (bot, db, config, winston, userDocument, msg, suffix) => {
-        if (suffix) {
-            const getCommandHelp = (name, type, usage, description, examples) => {
-                    let title_content, page_content, footer_content;
-                    //footer_content = `Please go to the Wiki for more details`;
+    if (suffix) {
+        const getCommandHelp = (name, type, usage, description, examples) => {
+                let title_content, page_content, footer_content;
+                //footer_content = `Please go to the Wiki for more details`;
 
-                    let embed_author = {
-                        name: `Please go to the Wiki for more details`,
-                        icon_url: bot.user.avatarURL,
-                        url: config.hosting_url
-                    };
+                let embed_author = {
+                    name: `Please go to the Wiki for more details`,
+                    icon_url: bot.user.avatarURL,
+                    url: config.hosting_url
+                };
 
-                    let msg_color = 0xffffff; //white color
-                    title_content = ``;
-                    page_content = `${description ? (`**Description:** \`${description}\``) : "**Description:** \`no description\`"}`;
-					page_content += `\n\n${usage ? (`**Usage:** \`${usage}\``) : "**Usage:** \`no usage\`"}`;
-					page_content += `\n${examples ? (`**Examples:** \`${examples}\``) : "**Examples:** \`no example\`"}`;
-					//TODO: Delete after Testing page_content += `\n**WIKI Link:** <${config.hosting_url}wiki/Commands#${name}>`;
+                let msg_color = 0xffffff; //white color
+                //title_content = ``;
+                page_content = `${description ? (`**Description:** \`${description}\``) : "**Description:** \`no description\`"}`;
+				page_content += `\n\n${usage ? (`**Usage:** \`${usage}\``) : "**Usage:** \`no usage\`"}`;
+				page_content += `\n${examples ? (`**Examples:** \`${examples}\``) : "**Examples:** \`no example\`"}`;
+				//TODO: Delete after Testing page_content += `\n**WIKI Link:** <${config.hosting_url}wiki/Commands#${name}>`;
 
-                    
 
-                    return { embed: { author: embed_author, color: msg_color, description: page_content } };
-			};
+
+                return { embed: { author: embed_author, color: msg_color, description: page_content } };
+		};
 
 		const info = [];
 		const pmcommand = bot.getPMCommandMetadata(suffix);
@@ -36,35 +36,25 @@ module.exports = (bot, db, config, winston, userDocument, msg, suffix) => {
 			info.push(getCommandHelp(suffix, "public", publiccommand.usage, publiccommand.description, publiccommand.examples));
 			info.push(`**WIKI Link:** <${config.hosting_url}wiki/Commands#${suffix}>`);
 		}
-	
+
 		if(info.length==0) {
 			info.push(`No such command \`${suffix}\``);
 		}
 		bot.sendArray(msg.channel, info);
-		
+
 	} else {
-        
-		let title_content, page_content, footer_content, fields_content;
-		
+
+		let fields_content;
+		//let title_content, page_content, footer_content;
+
 		let msg_color = 0xffffff; //white color
-		
+
 		let embed_author = {
 			name: `Type the respective command for more infos`,
 			icon_url: bot.user.avatarURL,
 			url: config.hosting_url
 		};
-		
-		/*
-		title_content = ``; 
-		page_content = `\n
-		\`commands\` (to get all command categories)\n
-		\`commands <category>\` (do not type the whole name 😅)\n
-		\`commands pm\` (to get all commands in PM mode)\n
-		\`commands all\` (to get all commands at once)`;
-		
-		footer_content = `To get an overview type the respective command (e.g. commands all)`;
-		*/
-		
+
 		fields_content = [
 			{
 				name: "commands",
@@ -93,7 +83,7 @@ module.exports = (bot, db, config, winston, userDocument, msg, suffix) => {
 				author: embed_author,
 				color: msg_color,
 				fields: fields_content,
-			} 
+			}
 		});
 
 		msg.channel.createMessage(`**##** *Link to WIKI: (<${config.hosting_url}wiki/Commands>)*\n` +
