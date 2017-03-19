@@ -11,7 +11,8 @@ module.exports = (bot, db, config, winston, member, oldpresence) => {
 						if(ch) {
 							const channelDocument = serverDocument.channels.id(ch.id);
 							if(!channelDocument || channelDocument.bot_enabled) {
-								ch.createMessage(serverDocument.config.moderation.status_messages.member_online_message.messages.random().replaceAll("@user", `**@${bot.getName(member.guild, serverDocument, member)}**`).replaceAll("@mention", member.mention));
+								//INFO: error with replaceAll on undefined?
+								//ch.createMessage(serverDocument.config.moderation.status_messages.member_online_message.messages.random().replaceAll("@user", `**@${bot.getName(member.guild, serverDocument, member)}**`).replaceAll("@mention", member.mention));
 							}
 						}
 					}
@@ -47,7 +48,8 @@ module.exports = (bot, db, config, winston, member, oldpresence) => {
 						if(ch) {
 							const channelDocument = serverDocument.channels.id(ch.id);
 							if(!channelDocument || channelDocument.bot_enabled) {
-								ch.createMessage(serverDocument.config.moderation.status_messages.member_offline_message.messages.random().replaceAll("@user", `**@${bot.getName(member.guild, serverDocument, member)}**`).replaceAll("@mention", member.mention));
+								//INFO: error with replaceAll on undefined?
+								//ch.createMessage(serverDocument.config.moderation.status_messages.member_offline_message.messages.random().replaceAll("@user", `**@${bot.getName(member.guild, serverDocument, member)}**`).replaceAll("@mention", member.mention));
 							}
 						}
 					}
