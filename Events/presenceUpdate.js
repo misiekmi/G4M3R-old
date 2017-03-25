@@ -1,11 +1,12 @@
 // User status changed (afk, new game, etc.)
 module.exports = (bot, db, config, winston, member, oldpresence) => {
-	if(member.id!=bot.user.id && !member.user.bot) {
+    if (member.id !== bot.user.id && !member.user.bot) {
 		db.servers.findOne({_id: member.guild.id}, (err, serverDocument) => {
 			if(!err && serverDocument) {
 				if(serverDocument.config.moderation.isEnabled) {
 					// Send member_online_message if necessary
-					if(oldpresence.status=="offline" && member.status=="online" && serverDocument.config.moderation.status_messages.member_online_message.isEnabled) {
+                    /* TODO: deactivated due to lots of errors
+                     if(oldpresence.status==="offline" && member.status==="online" && serverDocument.config.moderation.status_messages.member_online_message.isEnabled) {
 						winston.info(`Member '${member.user.username}' came online`, {svrid: member.guild.id, usrid: member.id});
 						const ch = member.guild.channels.get(serverDocument.config.moderation.status_messages.member_online_message.channel_id);
 						if(ch) {
@@ -16,6 +17,7 @@ module.exports = (bot, db, config, winston, member, oldpresence) => {
 							}
 						}
 					}
+                     */
 
 					// Send member_streaming_message if necessary
 					if(member.game && member.game.type!=0 && (!oldpresence.game || oldpresence.game.type!=1) && serverDocument.config.moderation.status_messages.member_streaming_message.isEnabled && (serverDocument.config.moderation.status_messages.member_streaming_message.enabled_user_ids.length==0 || serverDocument.config.moderation.status_messages.member_streaming_message.enabled_user_ids.indexOf(member.id)>-1)) {
