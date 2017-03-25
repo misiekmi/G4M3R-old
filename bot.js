@@ -253,7 +253,7 @@ database.initialize(config.db_url, err => {
 
         //TODO: Delete stats (collection only)
 		// User joined server voice channel
-		bot.on("voiceChannelJoin", (member, ch) => {
+		/*		bot.on("voiceChannelJoin", (member, ch) => {
 			if(bot.isReady) {
 				const voiceChannelJoinDomain = domain.create();
 				voiceChannelJoinDomain.run(() => {
@@ -263,11 +263,11 @@ database.initialize(config.db_url, err => {
 					winston.error(err);
 				});
 			}
-		});
+		 });*/
 
         //TODO: Delete stats (can be deleted completely)
 		// User voice connection details updated on server (muted, deafened, etc.)
-		bot.on("voiceStateUpdate", (member, oldvoice) => {
+		/*		bot.on("voiceStateUpdate", (member, oldvoice) => {
 			if(bot.isReady) {
 				const voiceStateUpdateDomain = domain.create();
 				voiceStateUpdateDomain.run(() => {
@@ -277,10 +277,11 @@ database.initialize(config.db_url, err => {
 					winston.error(err);
 				});
 			}
-		});
+		 });*/
 
         //TODO: Delete stats (collection only)
 		// User left server voice channel
+		/*
 		bot.on("voiceChannelLeave", (member, ch) => {
 			if(bot.isReady) {
 				const voiceChannelJoinDomain = domain.create();
@@ -292,5 +293,6 @@ database.initialize(config.db_url, err => {
 				});
 			}
 		});
+		 */
 	}
 });
