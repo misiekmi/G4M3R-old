@@ -225,7 +225,7 @@ database.initialize(config.db_url, err => {
 			}
 		});
 
-		// User status changed (afk, new game, etc.)
+/*		// User status changed (afk, new game, etc.)
 		bot.on("presenceUpdate", (member, oldpresence) => {
 			if(bot.isReady) {
 				const presenceUpdateDomain = domain.create();
@@ -236,7 +236,7 @@ database.initialize(config.db_url, err => {
 					winston.error(err);
 				});
 			}
-		});
+		});*/
 
 		// User updated (name, avatar, etc.)
 		bot.on("userUpdate", (usr, oldusrdata) => {
