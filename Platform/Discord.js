@@ -228,10 +228,12 @@ module.exports = (db, auth, config) => {
             return "";
         } else {
             let searchedUser = svr.members.get(_id);
-            if (searchedUser.nick === null) {
-                return searchedUser.username;
-            } else {
-                return searchedUser.nick;
+            if (searchedUser) {
+                if (searchedUser.nick === null) {
+                    return searchedUser.username;
+                } else {
+                    return searchedUser.nick;
+                }
             }
         }
 
