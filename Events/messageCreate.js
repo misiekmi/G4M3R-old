@@ -487,7 +487,11 @@ module.exports = (bot, db, config, winston, msg) => {
                     }
                 }
             } else {
-                winston.error("Failed to find server data for message", { svrid: msg.channel.guild.id, chid: msg.channel.id, usrid: msg.author.id }, err);
+                winston.error("Failed to find server data for messageCreated", {
+                    svrid: msg.channel.guild.id,
+                    chid: msg.channel.id,
+                    usrid: msg.author.id
+                }, err);
             }
         });
     }
