@@ -117,7 +117,7 @@ module.exports = (db, auth, config) => {
             return ((str.indexOf("everyone") == 0 || str.indexOf("here") == 0) ? (`\u200b${str}`) : str).replaceAll("@everyone", "@\u200beveryone").replaceAll("@here", "@\u200bhere").replaceAll("<@", "<@\u200b");
         };
 
-        return cleanName(((serverDocument.config.name_display.use_nick && !ignoreNick) ? (svr.members.get(member.id).nick || member.username) : member.username) + (serverDocument.config.name_display.show_discriminator ? (`#${member.discriminator}`) : ""));
+        return cleanName(((serverDocument.config.name_display.use_nick && !ignoreNick) ? (member.nick || member.username) : member.username) + (serverDocument.config.name_display.show_discriminator ? (`#${member.discriminator}`) : ""));
     };
 
     // bot command handler

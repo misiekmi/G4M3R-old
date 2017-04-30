@@ -236,7 +236,7 @@ module.exports = (bot, db, config, winston, msg) => {
                             db.users.findOrCreate({ _id: msg.author.id }, (err, userDocument) => {
                                 if (!err && userDocument) {
                                     // Handle this as a violation
-                                    bot.handleViolation(winston, msg.channel.guild, serverDocument, msg.channel, msg.member, userDocument, memberDocument, `You continued to spam in #${msg.channel.name} on ${msg.channel.guild.name}`, `**@${bot.getName(msg.channel.guild, serverDocument, msg.author, true)}** continues to spam in #${msg.channel.name} on ${msg.channel.guild.name}`, `Second-time spam violation in #${msg.channel.name}`, serverDocument.config.moderation.filters.spam_filter.action, serverDocument.config.moderation.filters.spam_filter.violator_role_id);
+                                    bot.handleViolation(winston, msg.channel.guild, serverDocument, msg.channel, msg.member, userDocument, memberDocument, `You continued to spam in #${msg.channel.name} on ${msg.channel.guild.name}`, `**@${bot.getName(msg.channel.guild, serverDocument, msg.member, true)}** continues to spam in #${msg.channel.name} on ${msg.channel.guild.name}`, `Second-time spam violation in #${msg.channel.name}`, serverDocument.config.moderation.filters.spam_filter.action, serverDocument.config.moderation.filters.spam_filter.violator_role_id);
                                 } else {
                                     winston.error("Failed to find or create user data for message spam filter violation", { usrid: msg.author.id }, err);
                                 }
@@ -267,7 +267,7 @@ module.exports = (bot, db, config, winston, msg) => {
                         db.users.findOrCreate({ _id: msg.author.id }, (err, userDocument) => {
                             if (!err && userDocument) {
                                 // Handle this as a violation
-                                bot.handleViolation(winston, msg.channel.guild, serverDocument, msg.channel, msg.member, userDocument, memberDocument, `You put ${totalMentions} mentions in a message in #${msg.channel.name} on ${msg.channel.guild.name}`, `**@${bot.getName(msg.channel.guild, serverDocument, msg.author, true)}** mentioned ${totalMentions} members/roles in a message in #${msg.channel.name} on ${msg.channel.guild.name}`, `Mention spam (${totalMentions} members/roles) in #${msg.channel.name}`, serverDocument.config.moderation.filters.mention_filter.action, serverDocument.config.moderation.filters.mention_filter.violator_role_id);
+                                bot.handleViolation(winston, msg.channel.guild, serverDocument, msg.channel, msg.member, userDocument, memberDocument, `You put ${totalMentions} mentions in a message in #${msg.channel.name} on ${msg.channel.guild.name}`, `**@${bot.getName(msg.channel.guild, serverDocument, msg.member, true)}** mentioned ${totalMentions} members/roles in a message in #${msg.channel.name} on ${msg.channel.guild.name}`, `Mention spam (${totalMentions} members/roles) in #${msg.channel.name}`, serverDocument.config.moderation.filters.mention_filter.action, serverDocument.config.moderation.filters.mention_filter.violator_role_id);
                             } else {
                                 winston.error("Failed to find or create user data for message mention filter violation", { usrid: msg.author.id }, err);
                             }
