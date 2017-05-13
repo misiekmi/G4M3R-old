@@ -210,6 +210,7 @@ module.exports = (bot, db, config, winston) => {
 	};
 
 	// Start message of the day timer
+/* deactivated message of the day
 	const startMessageOfTheDay = () => {
 		db.servers.find({"config.message_of_the_day.isEnabled": true}, (err, serverDocuments) => {
 			if(err) {
@@ -224,6 +225,7 @@ module.exports = (bot, db, config, winston) => {
 			}
 		});
 	};
+*/
 
 	// Start all timer extensions (third-party)
 	const runTimerExtensions = () => {

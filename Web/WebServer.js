@@ -3320,9 +3320,11 @@ module.exports = (bot, db, auth, config, winston) => {
             serverDocument.config.message_of_the_day.channel_id = req.body.channel_id;
             serverDocument.config.message_of_the_day.interval = parseInt(req.body.interval);
 
+/* deactivated message of the day
             if (!alreadyEnabled && serverDocument.config.message_of_the_day.isEnabled) {
                 createMessageOfTheDay(bot, winston, svr, serverDocument.config.message_of_the_day);
             }
+*/
 
             saveAdminConsoleOptions(consolemember, svr, serverDocument, req, res);
         });
