@@ -283,7 +283,7 @@ module.exports = (bot, db, config, winston) => {
 			setGiveaways();
 			startStreamingRSS();
 			checkStreamers();
-			startMessageOfTheDay();
+			//startMessageOfTheDay();
 			runTimerExtensions();
 			postData(winston, auth, bot.guilds.size, bot.user.id);
 			startWebServer(bot, db, auth, config, winston);
