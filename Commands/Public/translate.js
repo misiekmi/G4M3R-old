@@ -1,6 +1,8 @@
 const translate = require("./../../Modules/MicrosoftTranslate.js");
 
 module.exports = (bot, db, config, winston, userDocument, serverDocument, channelDocument, memberDocument, msg, suffix, commandData) => {
+	return msg.channel.createMessage('Translate command deactivated');
+/*
 	const target = suffix.substring(suffix.lastIndexOf(" ")+1);
 	suffix = suffix.substring(0, suffix.lastIndexOf(" "));
 	if(suffix.endsWith(" to")) {
@@ -21,4 +23,5 @@ module.exports = (bot, db, config, winston, userDocument, serverDocument, channe
 		winston.warn(`Invalid parameters '${suffix}' provided for ${commandData.name} command`, {svrid: msg.channel.guild.id, chid: msg.channel.id, usrid: msg.author.id});
 		msg.channel.createMessage(`${msg.author.mention} Um i'm v confused. pls use \`${bot.getCommandPrefix(msg.channel.guild, serverDocument)}${commandData.name} ${commandData.usage}\``);
 	}
-};
+*/
+}
