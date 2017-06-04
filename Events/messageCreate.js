@@ -276,9 +276,9 @@ module.exports = (bot, db, config, winston, msg) => {
                 }
 
                 // Only keep responding if the bot is on in the channel and author isn't blocked on the server
-/*                if (channelDocument.bot_enabled && serverDocument.config.blocked.indexOf(msg.author.id) == -1) {
+                if (channelDocument.bot_enabled && serverDocument.config.blocked.indexOf(msg.author.id) == -1) {
                     // Translate message if neccesary
-                    const translatedDocument = serverDocument.config.translated_messages.id(msg.author.id);
+/*                    const translatedDocument = serverDocument.config.translated_messages.id(msg.author.id);
                     if (translatedDocument) {
                         translate(msg.cleanContent, translatedDocument.source_language, "EN", (err, res) => {
                             if (err) {
