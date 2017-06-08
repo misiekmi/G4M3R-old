@@ -251,6 +251,14 @@ database.initialize(config.db_url, err => {
 			}
 		});
 
+		process.on("unhandledRejection", (reason, promise) => {
+		  console.error(`Uncaught Promise Error: \n`, promise);
+		});
+
+		process.on("uncaughtException", (err) => {
+		  console.error(`Uncaught Exception:\n`, err);
+		});
+
         //TODO: Delete stats (collection only)
 		// User joined server voice channel
 		/*		bot.on("voiceChannelJoin", (member, ch) => {
@@ -294,5 +302,6 @@ database.initialize(config.db_url, err => {
 			}
 		});
 		 */
+
 	}
 });
