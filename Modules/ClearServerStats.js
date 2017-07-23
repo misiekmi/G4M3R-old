@@ -35,7 +35,7 @@ module.exports = (bot, db, winston, svr, serverDocument, callback) => {
         if (err) {
             winston.error(`Failed to clear stats for server '${svr.name}'`, { svrid: svr.id });
         } else {
-            winston.info(`Cleared stats for server '${svr.name}'`, { svrid: svr.id });
+            // winston.info(`Cleared stats for server '${svr.name}'`, { svrid: svr.id });
         }
         callback();
     });
