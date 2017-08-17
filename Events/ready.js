@@ -46,6 +46,7 @@ module.exports = (bot, db, config, winston) => {
 
 								// Kick member if they're inactive and autokick is on
 								const memberDocument = serverDocument.members.id(member.id);
+/*
 								if(memberDocument && serverDocument.config.moderation.isEnabled && serverDocument.config.moderation.autokick_members.isEnabled && (Date.now() - memberDocument.last_active)>serverDocument.config.moderation.autokick_members.max_inactivity && !memberDocument.cannotAutokick && bot.getUserBotAdmin(svr, serverDocument, member)==0) {
 									member.kick().then(() => {
 										winston.info(`Kicked member '${member.user.username}' due to inactivity on server '${svr.name}'`, {svrid: svr.id, usrid: member.id});
@@ -54,6 +55,7 @@ module.exports = (bot, db, config, winston) => {
 										winston.error(`Failed to kick member '${member.user.username}' due to inactivity on server '${svr.name}'`, {svrid: svr.id, usrid: member.id}, err);
 									});
 								}
+*/
 							}
 						});
 
@@ -282,13 +284,13 @@ module.exports = (bot, db, config, winston) => {
 			setCountdowns();
 			setGiveaways();
 			startStreamingRSS();
-			checkStreamers();
+			// checkStreamers();
 			//startMessageOfTheDay();
-			runTimerExtensions();
+			// runTimerExtensions();
 			postData(winston, auth, bot.guilds.size, bot.user.id);
 			startWebServer(bot, db, auth, config, winston);
 			showStartupMessage();
-            startEventTimeChecker();
+      startEventTimeChecker();
 		});
 	};
 
