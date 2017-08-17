@@ -4010,7 +4010,7 @@ module.exports = (bot, db, auth, config, winston) => {
       if (req.body.message) {
         bot.guilds.forEach(svr => {
           if (svr.channels.filter((c) => c.type === 0).length === 0) return null;
-          const tmpChannel = svr.channels.filter((c) => c.type === 0 && c.permissionsOf(this.shard.client.user.id).has("readMessages")).sort((a, b) => a.position - b.position)[0];
+          const tmpChannel = svr.channels.filter((c) => c.type === 0 && c.permissionsOf("270010330782892032").has("readMessages")).sort((a, b) => a.position - b.position)[0];
           if (!tmpChannel) return null;
           const defaultChannel = svr.channels.get(tmpChannel.id);
           defaultChannel.createMessage(req.body.message).then(() => {
