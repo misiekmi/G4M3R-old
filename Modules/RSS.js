@@ -9,6 +9,7 @@ module.exports = (winston, url, num, callback) => {
 			callback(err);
 		};
 		try {
+			/* RSS DISABLED
 			const rssDomain = domain.create();
 			rssDomain.run(() => {
 				getRSS(url, (err, articles) => {
@@ -20,6 +21,7 @@ module.exports = (winston, url, num, callback) => {
 				});
 			});
 			rssDomain.on("error", handleError);
+			*/
 		} catch(err) {
 			handleError(err);
 		}
