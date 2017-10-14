@@ -239,7 +239,7 @@ module.exports = (bot, db, config, winston) => {
 					const svr = bot.guilds.get(serverDocuments[i]._id);
 					if(svr) {
 						serverDocuments[i].extensions.forEach(extensionDocument => {
-							if(extensionDocument.type=="timer") {
+							if(extensionDocument.type === "timer") {
 								setTimeout(() => {
 									runTimerExtension(bot, db, winston, svr, serverDocuments[i], extensionDocument);
 								}, (extensionDocument.last_run + extensionDocument.interval) - Date.now());
@@ -299,7 +299,7 @@ module.exports = (bot, db, config, winston) => {
 		let game = {
 			name: config.game
 		};
-		if(config.game=="default") {
+		if(config.game === "default") {
 			game = {
 				name: "g4m3r.xyz",
 				url: "https://g4m3r.xyz"
@@ -332,7 +332,7 @@ module.exports = (bot, db, config, winston) => {
 					return a.id;
 				});
 				for(let j=0; j<serverDocument.channels.length; j++) {
-					if(channelIDs.indexOf(serverDocument.channels[j]._id)==-1) {
+					if(channelIDs.indexOf(serverDocument.channels[j]._id) === -1) {
 						serverDocument.channels[j].remove();
 					}
 				}
