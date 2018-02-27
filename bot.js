@@ -1,6 +1,6 @@
 // Import and setup files and modules
 const Discord = require('discord.js');
-const client = new Discord.Client();
+const client = new Discord.Bot();
 const eventHandlers = {
   ready: require("./Events/ready.js"),
   shardReady: require("./Events/shardReady.js"),
@@ -308,4 +308,4 @@ database.initialize(config.db_url, err => {
   }
 });
 
-client.login(process.env.BOT_TOKEN);
+bot.login(process.env.BOT_TOKEN);
